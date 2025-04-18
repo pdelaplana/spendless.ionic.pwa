@@ -1,0 +1,9 @@
+/* full screen modal styles */
+ion-modal {
+  --max-height: 100%;
+  --max-width: 100%;
+
+  --border-radius: 5px;
+  --height: 100%;
+  --width: 100%;
+}

@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "periods",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "closedAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "startAt",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
