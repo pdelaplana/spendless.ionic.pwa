@@ -6,7 +6,7 @@ import type { IPeriod } from '@/domain/Period';
 import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useState } from 'react';
-import { RegisterOptions, type SubmitHandler, useForm } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 
 interface PeriodFormData {
   id?: string;
@@ -73,7 +73,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
       <ActionButton
         expand='full'
         fill='solid'
-        className='ion-margin-bottom'
+        className='ion-margin-bottom ion-margin-start ion-margin-end'
         onClick={handleSubmit(onSubmit)}
         isLoading={false}
         isDisabled={!isDirty}

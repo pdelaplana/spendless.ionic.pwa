@@ -1,32 +1,21 @@
 import { BasePageLayout, CenterContainer } from '@/components/layouts';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useMemo } from 'react';
-import { StyledIonList } from './styles/SpendingPage.styled';
 import { StyledItem } from '@/components/shared';
-import { IonIcon, IonLabel } from '@ionic/react';
+import { IonLabel } from '@ionic/react';
 import { t } from 'i18next';
 import { chevronForward } from 'ionicons/icons';
-import { useSpendModal } from './modals/SpendModal';
-import type { ISpend } from '@/domain/Spend';
 import { SpendIcon } from './components/base/icons/SpendIcon';
 import useFormatters from '@/hooks/ui/useFormatters';
+import { StyledIonList } from '@/styles/IonList.styled';
+import { useSpendActions } from './hooks/useSpendActions';
 
 const ScheduledSpendingPage: React.FC = () => {
-  const { account, currentPeriod, spending, updateSpend, resetMutationState, refetchSpending } =
-    useSpendingAccount();
+  const { spending } = useSpendingAccount();
 
   const { formatDate, formatCurrency } = useFormatters();
 
-  const { open: openSpendModal } = useSpendModal();
-
-  const handleSaveSpend = async (spend: ISpend) => {
-    if (spend.id) {
-      await updateSpend({ accountId: account?.id || '', spendId: spend.id, data: spend });
-    }
-    resetMutationState();
-
-    refetchSpending();
-  };
+  const { editSpendHandler } = useSpendActions();
 
   const futureSpending = useMemo(() => {
     return spending.filter((spend) => spend.date > new Date());
@@ -44,17 +33,17 @@ const ScheduledSpendingPage: React.FC = () => {
     >
       <CenterContainer>
         {futureSpending.length > 0 && (
-          <StyledIonList>
+          <StyledIonList className='ion-margin-top'>
             {futureSpending
               .sort((a, b) => a.date.getTime() - b.date.getTime())
               .map((spend, index) => (
                 <StyledItem
                   key={spend.id}
-                  onClick={() => openSpendModal(spend, handleSaveSpend)}
+                  onClick={() => editSpendHandler(spend)}
                   detail
                   detailIcon={chevronForward}
                   button
-                  lines={index === futureSpending.length ? 'none' : 'full'}
+                  lines={index === futureSpending.length - 1 ? 'none' : 'full'}
                 >
                   <SpendIcon category={spend.category} />
                   <IonLabel>

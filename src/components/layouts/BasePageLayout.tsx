@@ -13,6 +13,7 @@ import {
   IonText,
   IonMenu,
   IonMenuButton,
+  IonMenuToggle,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
 import { exitOutline, personCircleOutline } from 'ionicons/icons';
@@ -24,6 +25,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import '@i18n/config';
 import { ROUTES } from '@/routes/routes.constants';
+import { LetterIcon } from '../shared';
 
 interface BasePageProps extends PropsWithChildren {
   title: string;
@@ -101,10 +103,18 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
 
       <IonPage id='main-content'>
         {showHeader && (
-          <StyledHeader className='primary ion-no-border' mode='ios'>
+          <StyledHeader id='mainHeader' className='primary ion-no-border' mode='ios'>
             <IonToolbar color={'light'}>
               <IonButtons slot='start'>
-                {!showBackButton && showMenu && menu && <IonMenuButton color='primary' />}
+                {!showBackButton && showMenu && menu && (
+                  <IonMenuButton color='primary'>
+                    <LetterIcon
+                      letter={'S'}
+                      backgroundColor='var(--ion-color-primary)'
+                      size='default'
+                    />
+                  </IonMenuButton>
+                )}
 
                 {showBackButton && (
                   <IonBackButton

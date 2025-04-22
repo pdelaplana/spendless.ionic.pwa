@@ -9,15 +9,18 @@ import {
   useDeleteSpend,
   useFetchSpendingByAccountId,
 } from '@/hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useClosePeriod,
   useCreatePeriod,
+  useDeletePeriod,
+  useDeleteSpendingByPeriod,
   useFetchCurrentPeriod,
   useFetchPeriods,
   useUpdatePeriod,
 } from '@/hooks/api';
 import type { IPeriod } from '@/domain/Period';
+import { create } from 'ionicons/icons';
 
 export const SpendingAccountProvider: React.FC<{ userId: string; children: ReactNode }> = ({
   userId,
@@ -66,6 +69,14 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     reset: resetUpdatePeriod,
   } = useUpdatePeriod();
   const {
+    mutateAsync: deletePeriod,
+    isPending: isDeletingPeriod,
+    isSuccess: isDeletingPeriodSuccess,
+    isError: isDeletingPeriodFailed,
+    error: deletePeriodError,
+    reset: resetDeletePeriod,
+  } = useDeletePeriod();
+  const {
     mutateAsync: closePeriod,
     isPending: isClosingPeriod,
     isSuccess: isClosingPeriodSuccess,
@@ -98,6 +109,14 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     error: deleteSpendError,
     reset: resetDeleteSpend,
   } = useDeleteSpend();
+  const {
+    mutateAsync: deleteSpendingForPeriod,
+    isPending: isDeletingSpendingForPeriod,
+    isSuccess: isDeletingSpendingForPeriodSuccess,
+    isError: isDeletingSpendingForPeriodFailed,
+    error: deleteSpendingForPeriodError,
+    reset: resetDeleteSpendingForPeriod,
+  } = useDeleteSpendingByPeriod();
 
   // Use state to track the current date range
   const [dateRange, setDateRange] = useState<{ startAt?: Date; endAt?: Date }>({
@@ -105,8 +124,13 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     endAt: undefined, // Default to current date
   });
 
+  const [selectedPeriod, setSelectedPeriod] = useState<IPeriod | undefined>(undefined);
+
   const {
     data: spending,
+    hasPreviousPage: hasPreviousSpending,
+    fetchNextPage: fetchNextPageSpending,
+    hasNextPage: hasNextPageSpending,
     isFetching: isFetchingSpending,
     isError: isFetchingSpendingError,
     isSuccess: isFetchingSpendingSuccess,
@@ -114,7 +138,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     refetch: refetchSpending,
   } = useFetchSpendingByAccountId(
     spendingAccount?.id,
-    currentPeriod?.id,
+    selectedPeriod?.id ?? currentPeriod?.id,
     dateRange.startAt,
     dateRange.endAt,
   );
@@ -151,23 +175,52 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     });
   };
 
+  const deleteClosedPeriod = async (periodId: string) => {
+    if (periodId !== currentPeriod?.id) {
+      await deleteSpendingForPeriod({
+        accountId: spendingAccount?.id || '',
+        periodId,
+      });
+      await deletePeriod({
+        accountId: spendingAccount?.id || '',
+        periodId,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (selectedPeriod === undefined) {
+      setSelectedPeriod(currentPeriod ?? undefined);
+    }
+  }, [currentPeriod, selectedPeriod]);
+
   return (
     <SpendingAccountContext.Provider
       value={{
         account: spendingAccount ?? undefined,
-        currentPeriod: currentPeriod ?? undefined,
         periods: periods ?? [],
         spending: spending?.pages?.flatMap((page) => page.spending) ?? [],
         startAt: dateRange.startAt,
         endAt: dateRange.endAt,
         setDateRange: (startAt?: Date, endAt?: Date) => setDateRange({ startAt, endAt }),
 
+        selectedPeriod: selectedPeriod,
+        setSelectedPeriod: setSelectedPeriod,
+
+        hasNextPageSpending,
+        fetchNextPageSpending,
+
         updateAccount,
         deleteAccount,
 
-        createPeriod,
-        updatePeriod,
-        closePeriod,
+        createPeriod: async ({ data }) =>
+          createPeriod({ accountId: spendingAccount?.id ?? '', data }),
+        updatePeriod: async ({ periodId, data }) =>
+          updatePeriod({ accountId: spendingAccount?.id ?? '', periodId, data }),
+
+        closePeriod: async ({ periodId }) =>
+          closePeriod({ accountId: spendingAccount?.id ?? '', periodId }),
+        deleteClosedPeriod: async ({ periodId }) => deleteClosedPeriod(periodId),
 
         startPeriod,
 

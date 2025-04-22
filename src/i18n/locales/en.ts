@@ -5,6 +5,12 @@ export default {
       loading: 'Loading...',
       error: 'Error',
       success: 'Success',
+      toast: {
+        info: 'Information',
+        success: 'Success',
+        error: 'Error',
+        warning: 'Warning',
+      },
     },
     auth: {
       signout: {
@@ -12,20 +18,25 @@ export default {
         message: 'Are you sure you want to sign out?',
       },
     },
-    spend: {
+    spending: {
       categories: {
         need: 'Essentials',
         want: 'Wants',
-        culture: 'Culture and Entertainment',
+        culture: 'Culture & Entertainment',
         unexpected: 'Unexpected Expenses',
       },
+      deleteSpend: 'Delete Spending',
+      deleteSpendMessage: 'Are you sure you want to delete this spending?',
       futureSpending: 'Scheduled Spending',
       noSpending: 'No spending recorded for this period',
       noSpendingDescription: 'You can add spending by clicking the button below.',
+      viewingClosedPeriodMessage:
+        'You are viewing a previous spending period. Close to return current period.',
+      loadMore: 'Load More',
     },
     periods: {
       title: 'Spending Periods',
-      description: 'Spending period from {{date}}',
+      description: '{{startDate}} to {{endDate}}',
     },
     meta: {
       title: '{{title}} - {{appName}}',

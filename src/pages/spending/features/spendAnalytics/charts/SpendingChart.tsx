@@ -5,6 +5,7 @@ import type { ISpend } from '@/domain/Spend';
 import useFormatters from '@/hooks/ui/useFormatters';
 import styled from '@emotion/styled';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ChartContainer = styled.div`
   padding: 0rem;
@@ -21,6 +22,7 @@ interface SpendingChartProps {
 
 const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
   const { formatCurrency } = useFormatters();
+  const { t } = useTranslation();
 
   const data = useMemo(() => {
     const categories = spending.reduce(
@@ -34,8 +36,14 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
       {} as Record<string, number>,
     );
 
+    // Create labels with both translated category name and amount
+    const labelsWithAmounts = Object.entries(categories).map(([category, amount]) => {
+      const translatedCategory = t(`spending.categories.${category}`);
+      return `${translatedCategory}: ${formatCurrency(amount)}`;
+    });
+
     return {
-      labels: Object.keys(categories),
+      labels: labelsWithAmounts,
       datasets: [
         {
           data: Object.values(categories),
@@ -49,13 +57,13 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
         },
       ],
     };
-  }, [spending]);
+  }, [spending, t, formatCurrency]);
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'right' as const,
+        position: 'bottom' as const,
       },
       title: {
         display: true,
@@ -64,7 +72,19 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
       tooltip: {
         callbacks: {
           label: (tooltipItem: TooltipItem<'doughnut'>) => {
-            return formatCurrency(tooltipItem.raw as number);
+            const categoryIndex = tooltipItem.dataIndex;
+            const categoryKey = Object.keys(
+              spending.reduce(
+                (acc, spend) => {
+                  acc[spend.category] = true;
+                  return acc;
+                },
+                {} as Record<string, boolean>,
+              ),
+            )[categoryIndex];
+
+            const amount = tooltipItem.raw as number;
+            return `${t(`spend.categories.${categoryKey}`)}: ${formatCurrency(amount)}`;
           },
         },
       },

@@ -1,5 +1,14 @@
-import { IonItem } from '@ionic/react';
+import { IonItem, IonItemDivider, IonList } from '@ionic/react';
 import styled from 'styled-components';
+
+export const StyledIonList = styled(IonList)`
+  --background-color: var(--ion-color-light);
+`;
+
+export const StyledItemDivider = styled(IonItemDivider)`
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-primary);
+`;
 
 export const StyledItem = styled(IonItem)`
   --inner-padding-end: 10px;

@@ -1,26 +1,34 @@
 import { useSpendingAccount } from '@/providers/spendingAccount';
-import { ROUTES } from '@/routes/routes.constants';
 import { usePeriodModal } from '../modals/PeriodModal';
-import { useIonRouter } from '@ionic/react';
+import { usePeriodListModal } from '../modals/PeriodListModal';
+import { usePrompt } from '@/hooks';
 
 export const usePeriodActions = () => {
-  const { account, currentPeriod, updatePeriod, startPeriod, refetchSpending, resetMutationState } =
-    useSpendingAccount();
+  const {
+    selectedPeriod,
+    periods,
+    setSelectedPeriod,
+    updatePeriod,
+    deleteClosedPeriod,
+    startPeriod,
+    refetchSpending,
+    resetMutationState,
+  } = useSpendingAccount();
+
+  const { showConfirmPrompt } = usePrompt();
 
   const { open: openPeriodModal } = usePeriodModal();
-
-  const { push } = useIonRouter();
+  const { open: openPeriodListModal } = usePeriodListModal();
 
   const editCurrentPeriodHandler = () => {
-    if (currentPeriod) {
+    if (selectedPeriod) {
       openPeriodModal(
         {
-          ...currentPeriod,
+          ...selectedPeriod,
         },
         async (data) => {
           await updatePeriod({
-            accountId: account?.id || '',
-            periodId: currentPeriod.id || '',
+            periodId: selectedPeriod.id || '',
             data,
           });
           resetMutationState();
@@ -54,12 +62,31 @@ export const usePeriodActions = () => {
   };
 
   const openSpendingPeriodsPage = () => {
-    push(ROUTES.SPENDING_PERIODS);
+    const pastPeriods = periods.filter((period) => period.closedAt);
+    openPeriodListModal(pastPeriods, (period) => {
+      setSelectedPeriod(period);
+    });
+  };
+
+  const deleteClosedPeriodHandler = (periodId: string) => {
+    showConfirmPrompt({
+      title: 'Delete Period',
+      message: 'Are you sure you want to delete this period?',
+      onConfirm: async () => {
+        await deleteClosedPeriod({ periodId });
+        resetMutationState();
+        refetchSpending();
+      },
+      onCancel: () => {
+        // Handle cancel action
+      },
+    });
   };
 
   return {
     editCurrentPeriodHandler,
     startNewPeriodHandler,
+    deleteClosedPeriodHandler,
     openSpendingPeriodsPage,
   };
 };

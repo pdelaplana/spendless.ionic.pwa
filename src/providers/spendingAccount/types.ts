@@ -4,32 +4,34 @@ import type { CreateSpendDTO, ISpend } from '@/domain/Spend';
 
 export interface SpendingAccountContextType {
   account?: IAccount | undefined;
-  currentPeriod: IPeriod | undefined;
-  periods: IPeriod[];
+
+  selectedPeriod: IPeriod | undefined;
+  periods: (IPeriod & { actualSpend: number })[];
   spending: ISpend[];
   startAt?: Date;
   endAt?: Date;
 
+  hasNextPageSpending: boolean;
+  fetchNextPageSpending: () => void;
+
   setDateRange: (startAt?: Date, endAt?: Date) => void;
+  setSelectedPeriod: (period: IPeriod | undefined) => void;
 
   refetchSpending: () => void;
 
   updateAccount: ({ id, data }: { id: string; data: Partial<IAccount> }) => Promise<IAccount>;
   deleteAccount: (id: string) => Promise<IAccount>;
 
-  createPeriod: ({
-    accountId,
-    data,
-  }: { accountId: string; data: CreatePeriodDTO }) => Promise<IPeriod>;
+  createPeriod: ({ data }: { data: CreatePeriodDTO }) => Promise<IPeriod>;
   updatePeriod: ({
-    accountId,
     periodId,
     data,
-  }: { accountId: string; periodId: string; data: Partial<IPeriod> }) => Promise<IPeriod>;
+  }: { periodId: string; data: Partial<IPeriod> }) => Promise<IPeriod>;
   closePeriod: ({
     accountId,
     periodId,
   }: { accountId: string; periodId: string }) => Promise<IPeriod>;
+  deleteClosedPeriod: ({ periodId }: { periodId: string }) => Promise<void>;
 
   startPeriod: (data: Partial<IPeriod>) => Promise<IPeriod>;
 

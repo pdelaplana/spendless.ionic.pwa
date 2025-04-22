@@ -1,14 +1,18 @@
 import { BasePageLayout, CenterContainer } from '@/components/layouts';
 import { StyledItem } from '@/components/shared';
+import { useFetchSpendingTotalsByPeriod } from '@/hooks';
+import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { StyledIonList } from '@/styles/IonList.styled';
 import { IonLabel } from '@ionic/react';
 import { useTranslation } from 'react-i18next';
-import { StyledIonList } from './styles/SpendingPage.styled';
 
 const SpendingPeriodsPage: React.FC = () => {
   const { t } = useTranslation();
 
-  const { periods } = useSpendingAccount();
+  const { account, periods } = useSpendingAccount();
+
+  const { formatCurrency, formatDate } = useFormatters();
 
   return (
     <BasePageLayout
@@ -22,12 +26,19 @@ const SpendingPeriodsPage: React.FC = () => {
     >
       <CenterContainer>
         {periods.length > 0 && (
-          <StyledIonList>
+          <StyledIonList className='ion-margin-top'>
             {periods.map((period) => (
-              <StyledItem key={period.id} lines='full'>
+              <StyledItem key={period.id} lines='full' detail button>
                 <IonLabel>
-                  <h2>{period.name}</h2>
-                  <p>{t('periods.description', { date: period.startAt })}</p>
+                  <h2>
+                    {t('periods.description', {
+                      startDate: formatDate(period.startAt),
+                      endDate: formatDate(period.endAt),
+                    })}
+                  </h2>
+                  <p>
+                    {} {formatCurrency(period.targetSpend)}/ {formatCurrency(period.actualSpend)}
+                  </p>
                 </IonLabel>
               </StyledItem>
             ))}

@@ -8,9 +8,11 @@ import { createSpend, type ISpend, type SpendCategory } from '@/domain/Spend';
 import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useMemo, useState } from 'react';
-import { type RegisterOptions, type SubmitHandler, useForm } from 'react-hook-form';
+import { type RegisterOptions, type SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { spendValidation } from '@/domain/validation/spendValidation';
+import { usePrompt } from '@/hooks';
+import useFormatters from '@/hooks/ui/useFormatters';
 
 interface SpendFormData {
   id?: string;
@@ -18,7 +20,7 @@ interface SpendFormData {
   periodId?: string;
   date: string;
   category: SpendCategory;
-  amount: number;
+  amount: string;
   description: string;
   notes?: string;
 }
@@ -26,24 +28,26 @@ interface SpendFormData {
 interface SpendModalProps {
   spend?: ISpend;
   onSave: (spend: Partial<ISpend>) => void;
+  onDelete: (spendId: string) => void;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
 }
 
-const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDismiss }) => {
+const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDismiss }) => {
   const { t } = useTranslation();
+  const { showConfirmPrompt } = usePrompt();
 
   const {
     register,
     handleSubmit,
     setValue,
     getValues,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<SpendFormData>({
     defaultValues: {
       date: new Date().toISOString().split('T')[0],
-      amount: 0,
+      amount: '0',
       category: 'need',
       description: '',
     },
@@ -54,19 +58,19 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDismiss }) => 
     return [
       {
         value: 'need',
-        label: t('spend.categories.need'),
+        label: t('spending.categories.need'),
       },
       {
         value: 'want',
-        label: t('spend.categories.want'),
+        label: t('spending.categories.want'),
       },
       {
         value: 'culture',
-        label: t('spend.categories.culture'),
+        label: t('spending.categories.culture'),
       },
       {
         value: 'unexpected',
-        label: t('spend.categories.unexpected'),
+        label: t('spending.categories.unexpected'),
       },
     ];
   }, [t]);
@@ -94,6 +98,17 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDismiss }) => 
     switch (action.data) {
       case 'delete':
         // Handle delete action
+        showConfirmPrompt({
+          title: t('spend.deleteSpend'),
+          message: t('spend.deleteSpendMessage'),
+          onConfirm: async () => {
+            onDelete(spend?.id ?? '');
+            onDismiss();
+          },
+          onCancel: () => {
+            // Handle cancel action
+          },
+        });
         break;
       case 'save':
         // Handle edit action
@@ -114,7 +129,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDismiss }) => 
           sheetTitle='Options...'
           expand='full'
           fill='solid'
-          className='ion-margin-bottom'
+          className='ion-margin-bottom ion-margin-start ion-margin-end'
           options={[
             {
               text: 'Delete',
@@ -133,7 +148,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDismiss }) => 
         <ActionButton
           expand='full'
           fill='solid'
-          className='ion-margin-bottom'
+          className='ion-margin-bottom ion-margin-start ion-margin-end'
           onClick={handleSubmit(onSubmit)}
           isLoading={false}
           isDisabled={false}
@@ -151,7 +166,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDismiss }) => 
         periodId: spend.periodId,
         date: spend.date?.toISOString().split('T')[0] ?? '',
         category: spend.category,
-        amount: spend.amount,
+        amount: spend.amount.toFixed(2),
         description: spend.description,
         notes: spend.notes,
       });
@@ -242,25 +257,32 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDismiss }) => 
 export default SpendModal;
 
 export const useSpendModal = (): {
-  open: (spend: ISpend, onSave: (spend: ISpend) => void) => Promise<{ role: string }>;
+  open: (
+    spend: ISpend,
+    onSave: (spend: ISpend) => void,
+    onDelete: (spendId: string) => void,
+  ) => Promise<{ role: string }>;
 } => {
   const [inputs, setInputs] = useState<{
     spend?: ISpend;
     onSave?: (spend: ISpend) => void;
+    onDelete?: (spendId: string) => void;
   }>();
 
   const [present, dismiss] = useIonModal(SpendModal, {
     spend: inputs?.spend,
     onSave: inputs?.onSave,
+    onDelete: inputs?.onDelete,
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     onDismiss: (data: any, role: string) => dismiss(data, role),
   });
 
   return {
-    open: (spend: ISpend, onSave: (spend: ISpend) => void) => {
+    open: (spend: ISpend, onSave: (spend: ISpend) => void, onDelete: (spendId: string) => void) => {
       setInputs({
         spend,
         onSave,
+        onDelete,
       });
       return new Promise((resolve) => {
         present({

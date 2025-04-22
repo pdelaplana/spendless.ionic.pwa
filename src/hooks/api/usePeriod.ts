@@ -11,6 +11,8 @@ import {
   deleteDoc,
   orderBy,
   limit,
+  getAggregateFromServer,
+  sum,
 } from 'firebase/firestore';
 import { db } from '../../infrastructure/firebase';
 import { createPeriod, type IPeriod, type CreatePeriodDTO } from '@/domain/Period';
@@ -93,13 +95,37 @@ export function useFetchPeriods(accountId: string | undefined) {
         orderBy('startAt', 'desc'),
         limit(50),
       );
+
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
         return null;
       }
 
-      return querySnapshot.docs.map((doc) => mapFromFirestore(doc.id, doc.data()));
+      // First, get all periods
+      const periods = await Promise.all(
+        querySnapshot.docs.map(async (doc) => {
+          const period = mapFromFirestore(doc.id, doc.data());
+
+          // Query all spends for this period
+          const spendQuery = query(
+            collection(db, ACCOUNTS_COLLECTION, accountId, 'spending'),
+            where('periodId', '==', period.id),
+          );
+
+          const aggregateSnapshot = await getAggregateFromServer(spendQuery, {
+            actualSpend: sum('amount'),
+          });
+
+          // Add actualSpend to the period object
+          return {
+            ...period,
+            actualSpend: aggregateSnapshot.data().actualSpend,
+          };
+        }),
+      );
+      return periods;
+      //return querySnapshot.docs.map((doc) => mapFromFirestore(doc.id, doc.data()));
     },
     enabled: !!accountId,
   });
@@ -156,18 +182,42 @@ export function useClosePeriod() {
 
   return useMutation({
     mutationFn: async ({ accountId, periodId }: { accountId: string; periodId: string }) => {
-      const docRef = doc(db, ACCOUNTS_COLLECTION, accountId, PERIODS_SUBCOLLECTION, periodId);
-      const docSnap = await getDoc(docRef);
+      try {
+        const docRef = doc(db, ACCOUNTS_COLLECTION, accountId, PERIODS_SUBCOLLECTION, periodId);
+        const docSnap = await getDoc(docRef);
 
-      if (!docSnap.exists()) {
-        throw new Error('Period not found');
+        if (!docSnap.exists()) {
+          throw new Error('Period not found');
+        }
+
+        const period = mapFromFirestore(periodId, docSnap.data());
+        const closedPeriod = { ...period, closedAt: new Date(), updatedAt: new Date() };
+
+        await setDoc(docRef, mapToFirestore(closedPeriod));
+        return closedPeriod;
+      } catch (error) {
+        console.error('Error closing period:', error);
+        throw error;
       }
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] });
+    },
+  });
+}
 
-      const period = mapFromFirestore(periodId, docSnap.data());
-      const closedPeriod = { ...period, closedAt: new Date(), updatedAt: new Date() };
+export function useDeletePeriod() {
+  const queryClient = useQueryClient();
 
-      await setDoc(docRef, mapToFirestore(closedPeriod));
-      return closedPeriod;
+  return useMutation({
+    mutationFn: async ({ accountId, periodId }: { accountId: string; periodId: string }) => {
+      try {
+        const docRef = doc(db, ACCOUNTS_COLLECTION, accountId, PERIODS_SUBCOLLECTION, periodId);
+        await deleteDoc(docRef);
+      } catch (error) {
+        console.error('Error deleting period:', error);
+        throw error;
+      }
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] });

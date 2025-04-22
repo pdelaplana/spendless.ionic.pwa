@@ -1,23 +1,23 @@
-import { StyledItem, MutationNotificationHandler } from '@/components/shared';
-import { IonLabel, IonItemGroup, IonIcon, IonFab, IonFabButton } from '@ionic/react';
+import { StyledItem, MutationNotificationHandler, Gap } from '@/components/shared';
 import {
-  addCircleOutline,
-  addCircleSharp,
-  chevronDownCircle,
-  chevronForward,
-  documentsOutline,
-} from 'ionicons/icons';
-import {
-  StyledIonList,
-  StyledItemDivider,
-  StyledDateLabel,
-  StyledTotalLabel,
-} from '../../styles/SpendingPage.styled';
+  IonLabel,
+  IonItemGroup,
+  IonIcon,
+  IonFab,
+  IonFabButton,
+  IonButton,
+  IonChip,
+  IonToast,
+  IonHeader,
+  IonCardContent,
+  IonCard,
+} from '@ionic/react';
+import { addCircleSharp, chevronForward, close, documentsOutline } from 'ionicons/icons';
+import { StyledDateLabel, StyledTotalLabel } from '../../styles/SpendingPage.styled';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useTranslation } from 'react-i18next';
-import { useAppNotifications } from '@/hooks';
 import { useSpendingAccount } from '@/providers/spendingAccount';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { CenterContainer, CenterContent } from '@/components/layouts';
 import { ROUTES } from '@/routes/routes.constants';
 import { SpendIcon } from '../../components/base';
@@ -25,16 +25,27 @@ import { useSpendTracking } from '../../hooks/useSpendTracking';
 import { usePeriodActions } from '../../hooks/usePeriodActions';
 import { useSpendActions } from '../../hooks/useSpendActions';
 import { useSpendActionSheet } from '../../hooks/useSpendActionSheet';
-import { SpendAnalyticsCharts } from '../spendAnalytics/components/SpendAnalyticsCharts';
+import { SpendAnalyticsCharts } from '../spendAnalytics';
 import { QuickActionButtons } from '../../components/common/quickActionsButtons';
+import { StyledIonList, StyledItemDivider } from '@/styles/IonList.styled';
 
-const CurrentPeriodSpendingView: React.FC = () => {
+interface PeriodSpendingViewProps {
+  periodId: string;
+  periodStartDate: Date;
+  periodEndDate: Date;
+  targetSpend: number;
+  actualSpend: number;
+}
+
+const PeriodSpendingView: React.FC = () => {
   const { t } = useTranslation();
   const { formatCurrency } = useFormatters();
   const {
-    account,
-    currentPeriod,
+    selectedPeriod,
+    setSelectedPeriod,
     spending,
+    hasNextPageSpending,
+    fetchNextPageSpending,
     didMutationFail,
     didMutationSucceed,
     resetMutationState,
@@ -45,13 +56,13 @@ const CurrentPeriodSpendingView: React.FC = () => {
   const { newSpendHandler, editSpendHandler } = useSpendActions();
   const { openActionSheet } = useSpendActionSheet();
 
-  const { totalSpending, remainingBudget } = useMemo(() => {
+  const { remainingBudget } = useMemo(() => {
     const total = currentSpending.reduce((sum, spend) => sum + spend.amount, 0);
     return {
       totalSpending: total,
-      remainingBudget: (currentPeriod?.targetSpend || 0) - total,
+      remainingBudget: (selectedPeriod?.targetSpend || 0) - total,
     };
-  }, [currentSpending, currentPeriod]);
+  }, [currentSpending, selectedPeriod]);
 
   return (
     <>
@@ -62,17 +73,38 @@ const CurrentPeriodSpendingView: React.FC = () => {
       />
 
       <CenterContainer>
+        {selectedPeriod?.closedAt && (
+          <IonCard>
+            <IonCardContent>
+              <div className='ion-flex ion-justify-content-between ion-align-items-start'>
+                <p>{`${t('spending.viewingClosedPeriodMessage')}`}</p>
+                <IonButton
+                  onClick={() => {
+                    setSelectedPeriod(undefined);
+                  }}
+                  color='primary'
+                  fill='clear'
+                  shape='round'
+                >
+                  <IonIcon icon={close} slot='icon-only' />
+                </IonButton>
+              </div>
+            </IonCardContent>
+          </IonCard>
+        )}
         {spending.length === 0 ? (
           <CenterContent>
-            <h1>{t('spend.noSpending')}</h1>
-            <p>{t('spend.noSpendingDescription')}</p>
+            <h1>{t('spending.noSpending')}</h1>
+            <p>{t('spending.noSpendingDescription')}</p>
           </CenterContent>
         ) : (
           <>
             <SpendAnalyticsCharts
               spending={spending}
               remainingBudget={remainingBudget}
-              targetSpend={currentPeriod?.targetSpend}
+              targetSpend={selectedPeriod?.targetSpend}
+              periodStartDate={selectedPeriod?.startAt}
+              periodEndDate={selectedPeriod?.endAt}
             />
 
             <QuickActionButtons
@@ -96,7 +128,7 @@ const CurrentPeriodSpendingView: React.FC = () => {
                 >
                   <IonIcon icon={documentsOutline} slot='start' />
                   <IonLabel>
-                    <h2>{t('spend.futureSpending')}</h2>
+                    <h2>{t('spending.futureSpending')}</h2>
                     <p>See your scheduled spending for this period</p>
                   </IonLabel>
                 </StyledItem>
@@ -124,7 +156,7 @@ const CurrentPeriodSpendingView: React.FC = () => {
                       <SpendIcon category={spend.category} />
                       <IonLabel>
                         <h2>{spend.description}</h2>
-                        <p>{t(`spend.categories.${spend.category}`)}</p>
+                        <p>{t(`spending.categories.${spend.category}`)}</p>
                       </IonLabel>
                       <IonLabel slot='end'>{formatCurrency(spend.amount)}</IonLabel>
                     </StyledItem>
@@ -137,16 +169,23 @@ const CurrentPeriodSpendingView: React.FC = () => {
                 </IonItemGroup>
               ))}
             </StyledIonList>
+            {hasNextPageSpending && (
+              <IonButton onClick={fetchNextPageSpending} color='primary' fill='clear' expand='full'>
+                {t('spending.loadMore')}
+              </IonButton>
+            )}
           </>
         )}
+        <Gap size={'2.3rem'} />
       </CenterContainer>
-
-      <IonFab slot='fixed' vertical='top' horizontal='end' edge>
-        <IonFabButton id='open-action-sheet' color='primary' onClick={newSpendHandler}>
-          <IonIcon icon={addCircleSharp} />
-        </IonFabButton>
-      </IonFab>
+      {!selectedPeriod?.closedAt && (
+        <IonFab slot='fixed' vertical='bottom' horizontal='end'>
+          <IonFabButton id='open-action-sheet' color='primary' onClick={newSpendHandler}>
+            <IonIcon icon={addCircleSharp} />
+          </IonFabButton>
+        </IonFab>
+      )}
     </>
   );
 };
-export default CurrentPeriodSpendingView;
+export default PeriodSpendingView;

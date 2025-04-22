@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import type { ISpend } from '@/domain/Spend';
-import { SpendingChart, SpeedometerChart } from '../charts';
+import { SpendingChart, SpeedometerChart, BurndownChart } from './charts';
 
 const ChartsContainer = styled.div`
   width: 100%;
@@ -13,10 +13,14 @@ const ChartsContainer = styled.div`
 
   .swiper {
     width: 100%;
-    height: 360px;
+    height: 400px;
   }
   .swiper-pagination {
     bottom: -1px;
+    color: #000;
+  }
+  .swiper-pagination-bullet {
+    background: var(--ion-color-primary);
   }
 `;
 
@@ -24,21 +28,37 @@ interface SpendAnalyticsChartsProps {
   spending: ISpend[];
   remainingBudget: number;
   targetSpend?: number;
+  periodStartDate?: Date;
+  periodEndDate?: Date;
 }
 
 export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
   spending,
   remainingBudget,
   targetSpend,
+  periodStartDate,
+  periodEndDate,
 }) => {
+  // Default dates if not provided
+  const startDate = periodStartDate || new Date();
+  const endDate = periodEndDate || new Date();
+
   return (
-    <ChartsContainer>
+    <ChartsContainer id='spend-analytics-charts'>
       <Swiper modules={[Pagination]} pagination={{ clickable: true }} spaceBetween={20}>
         <SwiperSlide>
           <SpeedometerChart value={remainingBudget} min={0} max={targetSpend} label='Remaining' />
         </SwiperSlide>
         <SwiperSlide>
-          <SpendingChart spending={spending} />
+          <SpendingChart spending={spending.filter((s) => s.date <= new Date())} />
+        </SwiperSlide>
+        <SwiperSlide>
+          <BurndownChart
+            spending={spending}
+            targetSpend={targetSpend}
+            startDate={startDate}
+            endDate={endDate}
+          />
         </SwiperSlide>
       </Swiper>
     </ChartsContainer>

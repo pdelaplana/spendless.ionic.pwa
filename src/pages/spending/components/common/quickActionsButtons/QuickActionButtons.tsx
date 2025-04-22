@@ -1,6 +1,12 @@
 import type { FC } from 'react';
 import { IonButton, IonIcon, IonText } from '@ionic/react';
-import { createOutline, calendar, ellipsisHorizontalOutline } from 'ionicons/icons';
+import {
+  createOutline,
+  calendar,
+  ellipsisHorizontalOutline,
+  calendarNumber,
+  calendarNumberOutline,
+} from 'ionicons/icons';
 
 interface QuickActionButtonsProps {
   onNewSpend: () => void;
@@ -25,7 +31,7 @@ export const QuickActionButtons: FC<QuickActionButtonsProps> = ({
 
       <div className='ion-text-center'>
         <IonButton shape='round' fill='solid' onClick={onEditPeriod}>
-          <IonIcon icon={calendar} slot='icon-only' />
+          <IonIcon icon={calendarNumberOutline} slot='icon-only' />
         </IonButton>
         <br />
         <IonText style={{ fontSize: 'x-small' }}> Edit Period</IonText>

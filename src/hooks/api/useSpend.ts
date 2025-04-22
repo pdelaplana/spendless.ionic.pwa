@@ -20,7 +20,7 @@ import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tansta
 
 const ACCOUNTS_COLLECTION = 'accounts';
 const SPENDING_SUBCOLLECTION = 'spending';
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 // Mapper functions to handle Firestore data conversion
 const mapToFirestore = (spend: ISpend): DocumentData => ({
@@ -273,6 +273,92 @@ export function useFetchSpendingByPeriod(
       );
       const querySnapshot = await getDocs(q);
       return querySnapshot.docs.map((doc) => mapFromFirestore(doc.id, doc.data()));
+    },
+    enabled: !!accountId && !!periodId,
+  });
+}
+
+export function useDeleteSpendingByPeriod() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ accountId, periodId }: { accountId: string; periodId: string }) => {
+      try {
+        if (!accountId || !periodId) {
+          throw new Error('Account ID and period ID are required');
+        }
+
+        // First, query all spending documents for this period
+        const q = query(
+          collection(db, ACCOUNTS_COLLECTION, accountId, SPENDING_SUBCOLLECTION),
+          where('periodId', '==', periodId),
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        // Check if there are any documents to delete
+        if (querySnapshot.empty) {
+          return { success: true, count: 0 };
+        }
+
+        // Delete each document in a batch
+        const deletePromises = querySnapshot.docs.map((doc) => deleteDoc(doc.ref));
+
+        await Promise.all(deletePromises);
+
+        return {
+          success: true,
+          count: querySnapshot.size,
+          accountId,
+          periodId,
+        };
+      } catch (error) {
+        console.error('Error deleting spending records by period:', error);
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      // Invalidate relevant queries
+      queryClient.invalidateQueries({ queryKey: ['spending', data.accountId] });
+      queryClient.invalidateQueries({ queryKey: ['spending', data.accountId, data.periodId] });
+      queryClient.invalidateQueries({
+        queryKey: ['spendingTotals', data.accountId, data.periodId],
+      });
+    },
+  });
+}
+
+export function useFetchSpendingTotalsByPeriod(
+  accountId: string | undefined,
+  periodId: string | undefined,
+) {
+  return useQuery({
+    queryKey: ['spendingTotals', accountId, periodId],
+    queryFn: async () => {
+      if (!accountId || !periodId) return { total: 0, categories: {} };
+
+      const q = query(
+        collection(db, ACCOUNTS_COLLECTION, accountId, SPENDING_SUBCOLLECTION),
+        where('periodId', '==', periodId),
+        orderBy('date', 'desc'),
+      );
+      const querySnapshot = await getDocs(q);
+
+      let total = 0;
+      const categories: Record<string, number> = {};
+
+      for (const doc of querySnapshot.docs) {
+        const data = doc.data();
+        total += data.amount;
+
+        if (categories[data.category]) {
+          categories[data.category] += data.amount;
+        } else {
+          categories[data.category] = data.amount;
+        }
+      }
+
+      return { total, categories };
     },
     enabled: !!accountId && !!periodId,
   });

@@ -1,43 +1,75 @@
 import { useIonActionSheet } from '@ionic/react';
 import { usePeriodActions } from './usePeriodActions';
 import { useSpendActions } from './useSpendActions';
-import { calendarNumberOutline, calendarClearOutline, addCircleOutline } from 'ionicons/icons';
+import {
+  calendarNumberOutline,
+  calendarClearOutline,
+  addCircleOutline,
+  trashBinOutline,
+  addOutline,
+  listOutline,
+  todayOutline,
+  calendarOutline,
+} from 'ionicons/icons';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 
 export const useSpendActionSheet = () => {
   const [present] = useIonActionSheet();
-  const { editCurrentPeriodHandler, startNewPeriodHandler, openSpendingPeriodsPage } =
-    usePeriodActions();
+  const {
+    editCurrentPeriodHandler,
+    startNewPeriodHandler,
+    deleteClosedPeriodHandler,
+    openSpendingPeriodsPage,
+  } = usePeriodActions();
   const { newSpendHandler } = useSpendActions();
+  const { selectedPeriod, setSelectedPeriod } = useSpendingAccount();
 
   const openActionSheet = () => {
-    present({
-      header: 'Actions',
-      buttons: [
-        {
-          text: 'Edit Current Period',
-          role: 'destructive',
-          data: {
-            action: 'editCurrentPeriod',
-          },
-          icon: calendarNumberOutline,
-          handler: editCurrentPeriodHandler,
+    let buttons = [
+      {
+        text: 'Edit Current Period',
+        role: 'destructive',
+        data: {
+          action: 'editCurrentPeriod',
         },
-        {
-          text: 'Start New Period',
-          data: {
-            action: 'startNewPeriod',
-          },
-          icon: calendarClearOutline,
-          handler: startNewPeriodHandler,
+        icon: calendarNumberOutline,
+        handler: editCurrentPeriodHandler,
+      },
+      {
+        text: 'Start New Period',
+        data: {
+          action: 'startNewPeriod',
         },
-        {
-          text: 'View All Periods',
-          data: {
-            action: 'viewAllPeriod',
-          },
-          icon: calendarClearOutline,
-          handler: openSpendingPeriodsPage,
+        icon: todayOutline,
+        handler: startNewPeriodHandler,
+      },
+      {
+        text: 'View All Periods',
+        data: {
+          action: 'viewAllPeriod',
         },
+        icon: calendarOutline,
+        handler: openSpendingPeriodsPage,
+      },
+    ];
+    if (selectedPeriod?.closedAt) {
+      buttons = [
+        ...buttons,
+        {
+          text: 'Delete Period',
+          data: {
+            action: 'deletePeriod',
+          },
+          icon: trashBinOutline,
+          handler: () => {
+            deleteClosedPeriodHandler(selectedPeriod.id || '');
+            setSelectedPeriod(undefined);
+          },
+        },
+      ];
+    } else if (!selectedPeriod?.closedAt) {
+      buttons = [
+        ...buttons,
         {
           text: 'New Spend',
           data: {
@@ -46,14 +78,12 @@ export const useSpendActionSheet = () => {
           icon: addCircleOutline,
           handler: newSpendHandler,
         },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          data: {
-            action: 'cancel',
-          },
-        },
-      ],
+      ];
+    }
+
+    present({
+      header: 'Actions',
+      buttons: buttons,
     });
   };
 
