@@ -125,7 +125,6 @@ export function useFetchPeriods(accountId: string | undefined) {
         }),
       );
       return periods;
-      //return querySnapshot.docs.map((doc) => mapFromFirestore(doc.id, doc.data()));
     },
     enabled: !!accountId,
   });
@@ -173,6 +172,9 @@ export function useUpdatePeriod() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] });
+    },
+    onError: (error) => {
+      console.error('Error updating period:', error);
     },
   });
 }

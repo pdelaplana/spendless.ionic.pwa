@@ -5,14 +5,13 @@ import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { ActionButton, ActionSheetButton, Gap } from '@/components/shared';
 import type { ActionOption } from '@/components/shared/base/buttons/ActionSheetButton';
 import { createSpend, type ISpend, type SpendCategory } from '@/domain/Spend';
-import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
+import { IonItem, IonLabel, IonList, IonToggle, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useMemo, useState } from 'react';
 import { type RegisterOptions, type SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { spendValidation } from '@/domain/validation/spendValidation';
 import { usePrompt } from '@/hooks';
-import useFormatters from '@/hooks/ui/useFormatters';
 
 interface SpendFormData {
   id?: string;
@@ -23,6 +22,7 @@ interface SpendFormData {
   amount: string;
   description: string;
   notes?: string;
+  recurring?: string;
 }
 
 interface SpendModalProps {
@@ -84,6 +84,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
       amount: Number(formData.amount),
       description: formData.description,
       notes: formData.notes,
+      recurring: formData.recurring === 'on',
     });
 
     if (formData.id) {
@@ -117,6 +118,24 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
 
       default:
         break;
+    }
+  };
+
+  const checkIfCanDismiss = () => {
+    if (isDirty) {
+      showConfirmPrompt({
+        title: 'Unsaved Changes',
+        message: 'You have unsaved changes. Are you sure you want to close this form?',
+        onConfirm: () => {
+          onDismiss();
+        },
+        onCancel: () => {
+          // Do nothing, keep the modal open
+        },
+      });
+    } else {
+      // No changes, dismiss immediately
+      onDismiss();
     }
   };
 
@@ -169,12 +188,13 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
         amount: spend.amount.toFixed(2),
         description: spend.description,
         notes: spend.notes,
+        recurring: spend.recurring ? 'on' : undefined,
       });
     }
   }, [spend, reset]);
 
   return (
-    <ModalPageLayout onDismiss={onDismiss} footer={footer}>
+    <ModalPageLayout onDismiss={checkIfCanDismiss} footer={footer}>
       <CenterContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines='none'>
@@ -245,6 +265,21 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
                   fill='outline'
                   validationRules={spendValidation.notes as RegisterOptions<SpendFormData>}
                 />
+              </IonLabel>
+            </IonItem>
+            <IonItem>
+              <IonLabel>
+                <IonToggle
+                  {...register('recurring')}
+                  onIonChange={(e) => {
+                    setValue('recurring', e.detail.checked ? 'on' : undefined, {
+                      shouldDirty: true,
+                    });
+                  }}
+                  checked={getValues('recurring') === 'on'}
+                >
+                  Copy to Next Period
+                </IonToggle>
               </IonLabel>
             </IonItem>
           </IonList>

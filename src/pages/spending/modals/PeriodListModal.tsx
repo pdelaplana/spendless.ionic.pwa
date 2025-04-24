@@ -8,6 +8,7 @@ import useFormatters from '@/hooks/ui/useFormatters';
 import { useTranslation } from 'react-i18next';
 import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
 import { trashBin } from 'ionicons/icons';
+import EmptyContent from '@/components/layouts/EmptyContent';
 
 interface PeriodListModalProps {
   periods: (IPeriod & { actualSpend: number })[];
@@ -23,36 +24,43 @@ const PeriodListModal: React.FC<PeriodListModalProps> = ({ periods, onDismiss })
   return (
     <ModalPageLayout onDismiss={onDismiss}>
       <CenterContainer>
-        <div className='ion-margin-start ion-margin-end'>{t('periods.title')}</div>
+        {periods.length === 0 && (
+          <EmptyContent heading={t('periods.noPeriods')} content={t('periods.empty.description')} />
+        )}
+
         {periods.length > 0 && (
-          <StyledIonList className='ion-margin-top ion-margin-start ion-margin-end'>
-            {periods.map((period) => (
-              <StyledItem
-                key={period.id}
-                lines='full'
-                button
-                onClick={() => onDismiss(period, 'select')}
-              >
-                <IonLabel>
-                  <h2>
-                    {t('periods.description', {
-                      startDate: formatDate(period.startAt),
-                      endDate: formatDate(period.endAt),
-                    })}
-                  </h2>
-                  <p>
-                    Spent {formatCurrency(period.actualSpend)} of{' '}
-                    {formatCurrency(period.targetSpend)}
-                  </p>
-                </IonLabel>
-                <div>
-                  <IonButton fill='clear' shape='round'>
-                    <IonIcon icon={trashBin} slot='icon-only' />
-                  </IonButton>
-                </div>
-              </StyledItem>
-            ))}
-          </StyledIonList>
+          <>
+            <div className='ion-margin-start ion-margin-end'>{t('periods.title')}</div>
+
+            <StyledIonList className='ion-margin-top ion-margin-start ion-margin-end'>
+              {periods.map((period) => (
+                <StyledItem
+                  key={period.id}
+                  lines='full'
+                  button
+                  onClick={() => onDismiss(period, 'select')}
+                >
+                  <IonLabel>
+                    <h2>
+                      {t('periods.description', {
+                        startDate: formatDate(period.startAt),
+                        endDate: formatDate(period.endAt),
+                      })}
+                    </h2>
+                    <p>
+                      Spent {formatCurrency(period.actualSpend)} of{' '}
+                      {formatCurrency(period.targetSpend)}
+                    </p>
+                  </IonLabel>
+                  <div>
+                    <IonButton fill='clear' shape='round'>
+                      <IonIcon icon={trashBin} slot='icon-only' />
+                    </IonButton>
+                  </div>
+                </StyledItem>
+              ))}
+            </StyledIonList>
+          </>
         )}
       </CenterContainer>
     </ModalPageLayout>

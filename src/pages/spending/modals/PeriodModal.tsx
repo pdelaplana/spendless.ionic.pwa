@@ -3,17 +3,19 @@ import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { Gap, ActionButton } from '@/components/shared';
 import type { IPeriod } from '@/domain/Period';
+import { periodValidation } from '@/domain/validation/periodValidation';
+import { usePrompt } from '@/hooks';
 import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useState } from 'react';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { type RegisterOptions, type SubmitHandler, useForm } from 'react-hook-form';
 
 interface PeriodFormData {
   id?: string;
   accountId: string;
   goals: string;
-  targetSpend: number;
-  targetSavings: number;
+  targetSpend: string;
+  targetSavings: string;
   startAt: string;
   endAt: string;
   reflection: string;
@@ -28,18 +30,18 @@ interface PeriodModalProps {
 }
 
 const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) => {
+  const { showConfirmPrompt } = usePrompt();
+
   const {
     register,
     handleSubmit,
-    setValue,
-    getValues,
     formState: { errors, isDirty },
     reset,
   } = useForm<PeriodFormData>({
     defaultValues: {
       goals: '',
-      targetSpend: 0,
-      targetSavings: 0,
+      targetSpend: '0',
+      targetSavings: '0',
       startAt: new Date().toISOString().split('T')[0],
       endAt: new Date().toISOString().split('T')[0],
       reflection: '',
@@ -54,8 +56,8 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
     const periodData: Partial<IPeriod> = {
       name: periodName,
       goals: formData.goals,
-      targetSpend: formData.targetSpend,
-      targetSavings: formData.targetSavings,
+      targetSpend: Number(formData.targetSpend),
+      targetSavings: Number(formData.targetSavings),
       startAt: new Date(formData.startAt),
       endAt: new Date(formData.endAt),
     };
@@ -65,6 +67,24 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
       onSave(periodData);
     }
     onDismiss();
+  };
+
+  const checkIfCanDismiss = () => {
+    if (isDirty) {
+      showConfirmPrompt({
+        title: 'Unsaved Changes',
+        message: 'You have unsaved changes. Are you sure you want to close this form?',
+        onConfirm: () => {
+          onDismiss();
+        },
+        onCancel: () => {
+          // Do nothing, keep the modal open
+        },
+      });
+    } else {
+      // No changes, dismiss immediately
+      onDismiss();
+    }
   };
 
   const footer = (
@@ -87,8 +107,8 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
       reset({
         id: period.id,
         goals: period.goals,
-        targetSpend: period.targetSpend,
-        targetSavings: period.targetSavings,
+        targetSpend: period.targetSpend.toFixed(2),
+        targetSavings: period.targetSavings.toFixed(2),
         startAt: period.startAt.toISOString().split('T')[0],
         endAt: period.endAt.toISOString().split('T')[0],
         reflection: period.reflection,
@@ -97,7 +117,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
   }, [period, reset]);
 
   return (
-    <ModalPageLayout onDismiss={onDismiss} footer={footer}>
+    <ModalPageLayout onDismiss={checkIfCanDismiss} footer={footer}>
       <CenterContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
           <IonList lines='none'>
@@ -111,6 +131,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.goals}
                   fill='outline'
+                  validationRules={periodValidation.goals as RegisterOptions<PeriodFormData>}
                 />
               </IonLabel>
             </IonItem>
@@ -124,6 +145,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.targetSpend}
                   fill='outline'
+                  validationRules={periodValidation.targetSpend as RegisterOptions<PeriodFormData>}
                 />
               </IonLabel>
             </IonItem>
@@ -137,6 +159,9 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.targetSavings}
                   fill='outline'
+                  validationRules={
+                    periodValidation.targetSavings as RegisterOptions<PeriodFormData>
+                  }
                 />
               </IonLabel>
             </IonItem>
@@ -150,6 +175,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.startAt}
                   fill='outline'
+                  validationRules={periodValidation.startAt as RegisterOptions<PeriodFormData>}
                 />
               </IonLabel>
             </IonItem>
@@ -163,6 +189,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.endAt}
                   fill='outline'
+                  validationRules={periodValidation.endAt as RegisterOptions<PeriodFormData>}
                 />
               </IonLabel>
             </IonItem>

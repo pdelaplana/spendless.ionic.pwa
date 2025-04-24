@@ -9,6 +9,7 @@ export interface ISpend {
   readonly description: string;
   readonly notes?: string;
   readonly periodId: string;
+  readonly recurring?: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -22,6 +23,7 @@ export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   amount: Number(data.amount ?? 0),
   description: data.description ?? '',
   notes: data.notes ?? '',
+  recurring: data.recurring ?? false,
   periodId: data.periodId ?? '',
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -36,5 +38,6 @@ export const updateSpend = (spend: ISpend, updates: Partial<ISpend>): ISpend => 
   ...(updates.amount !== undefined && { amount: Number(updates.amount) }),
   ...(updates.description && { description: updates.description }),
   ...(updates.notes !== undefined && { notes: updates.notes }),
+  ...(updates.recurring !== undefined && { recurring: updates.recurring }),
   updatedAt: new Date(),
 });

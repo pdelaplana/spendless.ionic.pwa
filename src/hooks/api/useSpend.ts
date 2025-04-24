@@ -31,6 +31,7 @@ const mapToFirestore = (spend: ISpend): DocumentData => ({
   description: spend.description,
   notes: spend.notes,
   periodId: spend.periodId,
+  recurring: spend.recurring,
   createdAt: Timestamp.fromDate(spend.createdAt),
   updatedAt: Timestamp.fromDate(spend.updatedAt),
 });
@@ -44,6 +45,7 @@ const mapFromFirestore = (id: string, data: DocumentData): ISpend => {
     description: data.description,
     notes: data.notes,
     periodId: data.periodId,
+    recurring: data.recurring,
   });
 
   return {

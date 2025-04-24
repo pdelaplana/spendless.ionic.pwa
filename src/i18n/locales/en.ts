@@ -37,6 +37,7 @@ export default {
     periods: {
       title: 'Spending Periods',
       description: '{{startDate}} to {{endDate}}',
+      noPeriods: 'No spending periods found.',
     },
     meta: {
       title: '{{title}} - {{appName}}',

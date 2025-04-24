@@ -3,7 +3,6 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { IonButton } from '@ionic/react';
 import { usePeriodModal } from '../../modals/PeriodModal';
 import type { IPeriod } from '@/domain/Period';
-import { useAppNotifications } from '@/hooks';
 import { MutationNotificationHandler } from '@/components/shared';
 
 const NoCurrentPeriodView: React.FC = () => {
