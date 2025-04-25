@@ -5,122 +5,142 @@ import { BasePageLayout, CenterContainer, Content } from '@components/layouts';
 import { useAppNotifications } from '@hooks/ui';
 import ActionButton from '@/components/shared/base/buttons/ActionButton';
 import { Gap } from '@/components/shared';
+import { get, type SubmitHandler, useForm } from 'react-hook-form';
+import { InputFormField } from '@/components/forms';
+
+interface ProfileInformationFormData {
+  displayName: string;
+  email: string;
+  phoneNumber: string | null;
+}
 
 const ProfileInformationPage: React.FC = () => {
   const { user, pendingUpdate, updateDisplayName, updateEmail } = useAuth();
 
-  const [isDirty, setIsDirty] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const {
+    register,
+    getValues,
+    handleSubmit,
+    formState: { errors, isDirty, isSubmitting },
+    reset,
+  } = useForm<ProfileInformationFormData>({
+    defaultValues: {
+      displayName: user?.displayName ?? '',
+      email: user?.email ?? '',
+      phoneNumber: user?.phoneNumber ?? null,
+    },
+  });
 
   const { showNotification } = useAppNotifications();
 
-  const [profileValues, setProfileValues] = useState<{
-    displayName: string;
-    email: string;
-    phoneNumber: string | null;
-  }>({
-    displayName: user?.displayName ?? '',
-    email: user?.email ?? '',
-    phoneNumber: user?.phoneNumber ?? null,
-  });
+  const onSubmit: SubmitHandler<ProfileInformationFormData> = async (formData) => {
+    if (formData.displayName !== user?.displayName) {
+      updateDisplayName(formData.displayName);
+    }
+    if (formData.email !== user?.email) {
+      updateEmail(formData.email);
+    }
+    showNotification('Profile updated successfully');
+  };
 
   const footer = (
     <CenterContainer>
       <Gap size='5px' />
       <ActionButton
-        isLoading={isSaving}
-        isDisabled={false}
+        isLoading={isSubmitting}
+        isDisabled={!isDirty}
         expand='full'
-        onClick={() => handleSave()}
+        onClick={() => onSubmit(getValues())}
         label={'Save'}
       />
     </CenterContainer>
   );
 
-  const handleInputChange = (e: CustomEvent, field: string) => {
-    setProfileValues({
-      ...profileValues,
-      [field]: e.detail.value,
-    });
-  };
-
-  const handleSave = () => {
-    if (isDirty) {
-      setIsSaving(true);
-      if (profileValues.displayName !== user?.displayName) {
-        updateDisplayName(profileValues.displayName);
-      }
-      if (profileValues.email !== user?.email) {
-        updateEmail(profileValues.email);
-      }
-      showNotification('Profile updated successfully');
-      setIsSaving(false);
+  useEffect(() => {
+    if (user) {
+      reset({
+        displayName: user.displayName || '',
+        email: user.email || '',
+        phoneNumber: user.phoneNumber,
+      });
     }
-  };
-
-  useEffect(() => {
-    setIsDirty(
-      profileValues.displayName !== user?.displayName ||
-        profileValues.email !== user?.email ||
-        profileValues.phoneNumber !== user?.phoneNumber,
-    );
-  }, [profileValues, user]);
-
-  useEffect(() => {
-    setIsSaving(pendingUpdate);
-  }, [pendingUpdate]);
+  }, [user, reset]);
 
   return (
     <BasePageLayout
-      title='Personal Info'
+      title='Profile Information'
+      defaultBackButtonHref='/spending'
       showProfileIcon={false}
       showSignoutButton={false}
       footer={footer}
     >
       <CenterContainer>
         <Content marginTop={'10px'}>
-          <IonList lines='none'>
-            <IonItem lines='none'>
-              <IonLabel>
-                <IonInput
-                  label='Display Name'
-                  labelPlacement='floating'
-                  placeholder='Display Name'
-                  type='text'
-                  value={profileValues.displayName}
-                  onIonChange={(e: CustomEvent) => handleInputChange(e, 'displayName')}
-                  required
-                />
-              </IonLabel>
-            </IonItem>
-            <IonItem lines='none'>
-              <IonLabel>
-                <IonInput
-                  label='Email'
-                  labelPlacement='floating'
-                  placeholder='Email'
-                  type='text'
-                  value={profileValues.email}
-                  required
-                  disabled
-                  onIonChange={(e: CustomEvent) => handleInputChange(e, 'email')}
-                />
-              </IonLabel>
-            </IonItem>
-            <IonItem lines='none'>
-              <IonLabel>
-                <IonInput
-                  label='Phone'
-                  labelPlacement='floating'
-                  placeholder='Phone'
-                  type='text'
-                  disabled
-                  value={profileValues.phoneNumber}
-                  required
-                />
-              </IonLabel>
-            </IonItem>
-          </IonList>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <IonList lines='none'>
+              <IonItem lines='none'>
+                <IonLabel>
+                  <InputFormField
+                    name='displayName'
+                    label='Display Name'
+                    placeholder='Display Name'
+                    register={register}
+                    error={errors.displayName}
+                    fill='outline'
+                    type='text'
+                  />
+                </IonLabel>
+              </IonItem>
+              <IonItem lines='none'>
+                <IonLabel>
+                  <InputFormField
+                    name='email'
+                    label='Email'
+                    placeholder='Email'
+                    register={register}
+                    error={errors.email}
+                    fill='outline'
+                    type='email'
+                    readonly={true}
+                    validationRules={{
+                      required: {
+                        value: true,
+                        message: 'Email is required',
+                      },
+                      pattern: {
+                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        message: 'Invalid email address',
+                      },
+                    }}
+                  />
+                </IonLabel>
+              </IonItem>
+              <IonItem lines='none'>
+                <IonLabel>
+                  <InputFormField
+                    name='phoneNumber'
+                    label='Phone'
+                    placeholder='Phone'
+                    register={register}
+                    error={errors.phoneNumber}
+                    fill='outline'
+                    type='text'
+                    readonly={true}
+                    validationRules={{
+                      required: {
+                        value: true,
+                        message: 'Phone number is required',
+                      },
+                      pattern: {
+                        value: /^\+?[1-9]\d{1,14}$/,
+                        message: 'Invalid phone number',
+                      },
+                    }}
+                  />
+                </IonLabel>
+              </IonItem>
+            </IonList>
+          </form>
         </Content>
       </CenterContainer>
     </BasePageLayout>
