@@ -10,6 +10,7 @@ import {
   informationCircleOutline,
   logOutOutline,
 } from 'ionicons/icons';
+import { usePrompt } from '@/hooks';
 
 const StyledHeader = styled(IonHeader)`
   border-bottom-style: inset;
@@ -18,7 +19,17 @@ const StyledHeader = styled(IonHeader)`
 `;
 
 const MainMenuContent: React.FC = () => {
-  const { user, updatePhotoUrl } = useAuth();
+  const { user, updatePhotoUrl, signout } = useAuth();
+  const { showConfirmPrompt } = usePrompt();
+
+  const signoutHandler = () => {
+    showConfirmPrompt({
+      title: 'Sign out',
+      message: 'Are you sure you want to sign out?',
+      onConfirm: signout,
+    });
+  };
+
   return (
     <>
       <IonContent className='ion-padding'>
@@ -96,7 +107,7 @@ const MainMenuContent: React.FC = () => {
               lines='none'
               detail
               button
-              routerLink='/profile/logout'
+              onClick={signoutHandler}
               className='ion-border-top'
             >
               <IonIcon slot='start' icon={logOutOutline} />
