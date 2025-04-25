@@ -2,9 +2,11 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { usePeriodModal } from '../modals/PeriodModal';
 import { usePeriodListModal } from '../modals/PeriodListModal';
 import { usePrompt } from '@/hooks';
+import { addWeeks, set } from 'date-fns';
 
 export const usePeriodActions = () => {
   const {
+    account,
     selectedPeriod,
     periods,
     setSelectedPeriod,
@@ -43,13 +45,11 @@ export const usePeriodActions = () => {
       {
         name: '',
         goals: '',
-        targetSpend: 0,
-        targetSavings: 0,
+        targetSpend: selectedPeriod?.targetSpend || 0,
+        targetSavings: selectedPeriod?.targetSavings || 0,
         startAt: new Date(),
-        endAt: new Date(),
+        endAt: addWeeks(new Date(), 4),
         reflection: '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       async (data) => {
         await startPeriod({
@@ -75,7 +75,7 @@ export const usePeriodActions = () => {
       onConfirm: async () => {
         await deleteClosedPeriod({ periodId });
         resetMutationState();
-        refetchSpending();
+        setSelectedPeriod(undefined);
       },
       onCancel: () => {
         // Handle cancel action

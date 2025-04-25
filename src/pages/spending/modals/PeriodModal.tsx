@@ -2,7 +2,7 @@ import { InputFormField } from '@/components/forms';
 import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { Gap, ActionButton } from '@/components/shared';
-import type { IPeriod } from '@/domain/Period';
+import type { CreatePeriodDTO, IPeriod } from '@/domain/Period';
 import { periodValidation } from '@/domain/validation/periodValidation';
 import { usePrompt } from '@/hooks';
 import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
@@ -201,10 +201,10 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
 };
 
 export const usePeriodModal = (): {
-  open: (period: IPeriod, onSave: (period: IPeriod) => void) => Promise<{ role: string }>;
+  open: (period: CreatePeriodDTO, onSave: (period: IPeriod) => void) => Promise<{ role: string }>;
 } => {
   const [inputs, setInputs] = useState<{
-    period?: IPeriod;
+    period?: CreatePeriodDTO;
     onSave?: (period: IPeriod) => void;
   }>();
 
@@ -216,7 +216,7 @@ export const usePeriodModal = (): {
   });
 
   return {
-    open: (period: IPeriod, onSave: (period: IPeriod) => void) => {
+    open: (period: Omit<IPeriod, 'createdAt' | 'updatedAt'>, onSave: (period: IPeriod) => void) => {
       setInputs({
         period,
         onSave,

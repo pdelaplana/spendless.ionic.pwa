@@ -63,7 +63,6 @@ export const useSpendActionSheet = () => {
           icon: trashBinOutline,
           handler: () => {
             deleteClosedPeriodHandler(selectedPeriod.id || '');
-            setSelectedPeriod(undefined);
           },
         },
       ];

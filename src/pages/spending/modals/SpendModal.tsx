@@ -12,6 +12,7 @@ import { type RegisterOptions, type SubmitHandler, useForm, Controller } from 'r
 import { useTranslation } from 'react-i18next';
 import { spendValidation } from '@/domain/validation/spendValidation';
 import { usePrompt } from '@/hooks';
+import ToggleFormField from '@/components/forms/fields/ToggleFormField';
 
 interface SpendFormData {
   id?: string;
@@ -269,17 +270,14 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
             </IonItem>
             <IonItem>
               <IonLabel>
-                <IonToggle
-                  {...register('recurring')}
-                  onIonChange={(e) => {
-                    setValue('recurring', e.detail.checked ? 'on' : undefined, {
-                      shouldDirty: true,
-                    });
-                  }}
-                  checked={getValues('recurring') === 'on'}
-                >
-                  Copy to Next Period
-                </IonToggle>
+                <ToggleFormField
+                  name='recurring'
+                  label='Copy to Next Period'
+                  register={register}
+                  setValue={setValue}
+                  getValues={getValues}
+                  error={errors.recurring}
+                />
               </IonLabel>
             </IonItem>
           </IonList>

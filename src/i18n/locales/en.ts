@@ -1,6 +1,6 @@
 export default {
   translation: {
-    appName: 'Spendless',
+    appName: 'Miodful Spending Tracker',
     common: {
       loading: 'Loading...',
       error: 'Error',

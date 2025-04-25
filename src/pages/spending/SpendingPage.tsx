@@ -5,15 +5,21 @@ import { useTranslation } from 'react-i18next';
 import PeriodSpendingView from './features/spendTracker/PeriodSpendingView';
 import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
 import { ErrorBoundary } from '@/components/shared';
+import useFormatters from '@/hooks/ui/useFormatters';
 
 const SpendingPage: React.FC = () => {
   const { t } = useTranslation();
 
   const { selectedPeriod } = useSpendingAccount();
+  const { formatDate } = useFormatters();
 
   return (
     <BasePageLayout
-      title={`${selectedPeriod?.name}`}
+      title={
+        selectedPeriod?.closedAt
+          ? `${formatDate(selectedPeriod.startAt)} to ${formatDate(selectedPeriod.endAt)}`
+          : 'Spending'
+      }
       showHeader={true}
       showBackButton={false}
       showLogo={false}

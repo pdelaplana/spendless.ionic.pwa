@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import {
   useClosePeriod,
+  useCopyRecurringSpend,
   useCreatePeriod,
   useDeletePeriod,
   useDeleteSpendingByPeriod,
@@ -20,7 +21,6 @@ import {
   useUpdatePeriod,
 } from '@/hooks/api';
 import type { IPeriod } from '@/domain/Period';
-import { create } from 'ionicons/icons';
 
 export const SpendingAccountProvider: React.FC<{ userId: string; children: ReactNode }> = ({
   userId,
@@ -120,8 +120,8 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
 
   // Use state to track the current date range
   const [dateRange, setDateRange] = useState<{ startAt?: Date; endAt?: Date }>({
-    startAt: undefined, // Default to current date
-    endAt: undefined, // Default to current date
+    startAt: undefined,
+    endAt: undefined,
   });
 
   const [selectedPeriod, setSelectedPeriod] = useState<IPeriod | undefined>(undefined);
@@ -153,26 +153,41 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
 
   const resetFetchState = () => {};
 
-  const startPeriod = async (data: Partial<IPeriod>) => {
-    if (currentPeriod) {
-      await closePeriod({
-        accountId: spendingAccount?.id || '',
-        periodId: currentPeriod?.id || '',
-      });
-    }
+  const { mutateAsync: copyRecurringSpend } = useCopyRecurringSpend();
 
-    return await createPeriod({
-      accountId: spendingAccount?.id || '',
-      data: {
-        name: 'New Period',
-        goals: '',
-        targetSpend: 0,
-        targetSavings: 0,
-        startAt: new Date(),
-        endAt: new Date(),
-        reflection: '',
-      },
-    });
+  const startPeriod = async (data: Partial<IPeriod>) => {
+    try {
+      if (currentPeriod) {
+        await closePeriod({
+          accountId: spendingAccount?.id || '',
+          periodId: currentPeriod?.id || '',
+        });
+      }
+
+      const newPeriod = await createPeriod({
+        accountId: spendingAccount?.id || '',
+        data: {
+          name: '',
+          goals: data.goals || '',
+          targetSpend: data.targetSpend || 0,
+          targetSavings: data.targetSavings || 0,
+          startAt: data.startAt || new Date(),
+          endAt: data.endAt || new Date(),
+          reflection: '',
+        },
+      });
+
+      await copyRecurringSpend({
+        fromPeriodId: currentPeriod?.id || '',
+        toPeriodId: newPeriod.id,
+        accountId: spendingAccount?.id || '',
+      });
+
+      return newPeriod;
+    } catch (error) {
+      console.error('Error starting new period:', error);
+      throw error;
+    }
   };
 
   const deleteClosedPeriod = async (periodId: string) => {
@@ -194,11 +209,18 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     }
   }, [currentPeriod, selectedPeriod]);
 
+  useEffect(() => {
+    if (selectedPeriod) {
+      refetchSpending();
+    }
+  }, [selectedPeriod, refetchSpending]);
+
   return (
     <SpendingAccountContext.Provider
       value={{
         account: spendingAccount ?? undefined,
         periods: periods ?? [],
+
         spending: spending?.pages?.flatMap((page) => page.spending) ?? [],
         startAt: dateRange.startAt,
         endAt: dateRange.endAt,
@@ -222,7 +244,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
           closePeriod({ accountId: spendingAccount?.id ?? '', periodId }),
         deleteClosedPeriod: async ({ periodId }) => deleteClosedPeriod(periodId),
 
-        startPeriod,
+        startPeriod: async (data) => startPeriod(data),
 
         createSpend,
         updateSpend,

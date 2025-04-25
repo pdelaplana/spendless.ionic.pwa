@@ -1,0 +1,34 @@
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { db } from '@/infrastructure/firebase';
+import type { IAccount } from '@/domain/Account';
+import { ACCOUNTS_COLLECTION, mapFromFirestore, mapToFirestore } from './accountUtils';
+
+export function useUpdateAccount() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<IAccount> }) => {
+      try {
+        const docRef = doc(db, ACCOUNTS_COLLECTION, id);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+          throw new Error('Account not found');
+        }
+
+        const existingAccount = mapFromFirestore(id, docSnap.data());
+        const updatedAccount = { ...existingAccount, ...data, updatedAt: new Date() };
+
+        await setDoc(docRef, mapToFirestore(updatedAccount));
+        return updatedAccount;
+      } catch (error) {
+        console.error('Error updating account:', error);
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['account', data.userId] });
+    },
+  });
+}
