@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 /// <reference types="vitest" />
 
 import legacy from '@vitejs/plugin-legacy';
@@ -7,12 +8,17 @@ import { resolve } from 'node:path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), legacy()],
+  plugins: [react(), legacy(), sentryVitePlugin({
+    org: "patrick-dela-plana",
+    project: "spendless"
+  })],
+
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
   },
+
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -25,4 +31,8 @@ export default defineConfig({
       '@i18n': resolve(__dirname, './src/i18n'),
     },
   },
+
+  build: {
+    sourcemap: true
+  }
 });

@@ -4,7 +4,7 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useTranslation } from 'react-i18next';
 import PeriodSpendingView from './features/spendTracker/PeriodSpendingView';
 import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
-import { ErrorBoundary } from '@/components/shared';
+import { SentryErrorBoundary } from '@/components/shared';
 import useFormatters from '@/hooks/ui/useFormatters';
 
 const SpendingPage: React.FC = () => {
@@ -27,10 +27,10 @@ const SpendingPage: React.FC = () => {
       showMenu={true}
       menu={<MainMenuContent />}
     >
-      <ErrorBoundary>
+      <SentryErrorBoundary>
         {selectedPeriod && <PeriodSpendingView />}
         {!selectedPeriod && <NoCurrentPeriodView />}
-      </ErrorBoundary>
+      </SentryErrorBoundary>
     </BasePageLayout>
   );
 };

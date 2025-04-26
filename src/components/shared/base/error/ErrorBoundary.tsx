@@ -1,4 +1,4 @@
-import React, { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 import {
   IonButton,
   IonCard,
@@ -8,6 +8,7 @@ import {
   IonIcon,
 } from '@ionic/react';
 import { refreshOutline, warningOutline } from 'ionicons/icons';
+import * as Sentry from '@sentry/react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -34,8 +35,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     // You can log the error to an error reporting service here
     console.error('Error caught by ErrorBoundary:', error, errorInfo);
 
-    // If Sentry is integrated, you could use:
-    // Sentry.captureException(error);
+    Sentry.captureException(error);
   }
 
   handleReset = (): void => {

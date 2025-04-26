@@ -180,7 +180,13 @@ const PeriodSpendingView: React.FC = () => {
       </CenterContainer>
       {!selectedPeriod?.closedAt && (
         <IonFab slot='fixed' vertical='bottom' horizontal='end'>
-          <IonFabButton id='open-action-sheet' color='primary' onClick={newSpendHandler}>
+          <IonFabButton
+            id='open-action-sheet'
+            color='primary'
+            onClick={() => {
+              newSpendHandler();
+            }}
+          >
             <IonIcon icon={addCircleSharp} />
           </IonFabButton>
         </IonFab>

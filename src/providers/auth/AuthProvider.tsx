@@ -1,4 +1,5 @@
 import { useState, type ReactNode, type FC, useEffect, useCallback } from 'react';
+import * as Sentry from '@sentry/react';
 import { auth, db } from '../../infrastructure/firebase';
 import {
   createUserWithEmailAndPassword,
@@ -147,6 +148,15 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       else await Preferences.remove({ key: 'authUser' });
     };
     storeUser();
+
+    // Set Sentry user context
+    if (user) {
+      Sentry.setUser({
+        id: user.uid,
+        email: user.email ?? undefined,
+        username: user.displayName ?? undefined,
+      });
+    }
   }, [user]);
 
   const signup = async (

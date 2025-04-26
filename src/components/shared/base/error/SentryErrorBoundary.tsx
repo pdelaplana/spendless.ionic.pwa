@@ -34,16 +34,16 @@ class SentryErrorBoundary extends Component<SentryErrorBoundaryProps, SentryErro
     console.error('Error caught by SentryErrorBoundary:', error, errorInfo);
 
     // Uncomment when Sentry is installed and configured
-    /*
+
     try {
       // Capture error with Sentry and get event ID for user feedback
-      import('@sentry/react').then(Sentry => {
+      import('@sentry/react').then((Sentry) => {
         const eventId = Sentry.captureException(error, {
           contexts: {
             react: {
-              componentStack: errorInfo.componentStack
-            }
-          }
+              componentStack: errorInfo.componentStack,
+            },
+          },
         });
 
         this.setState({ eventId });
@@ -51,7 +51,6 @@ class SentryErrorBoundary extends Component<SentryErrorBoundaryProps, SentryErro
     } catch (e) {
       console.error('Failed to send error to Sentry:', e);
     }
-    */
   }
 
   handleReset = (): void => {
@@ -60,13 +59,12 @@ class SentryErrorBoundary extends Component<SentryErrorBoundaryProps, SentryErro
 
   handleReportFeedback = (): void => {
     // Uncomment when Sentry is installed and configured
-    /*
+
     if (this.state.eventId) {
-      import('@sentry/react').then(Sentry => {
+      import('@sentry/react').then((Sentry) => {
         Sentry.showReportDialog({ eventId: this.state.eventId });
       });
     }
-    */
   };
 
   render(): ReactNode {

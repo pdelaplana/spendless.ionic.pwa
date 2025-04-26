@@ -3,13 +3,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { db } from '@/infrastructure/firebase';
 import { createSpend, type CreateSpendDTO } from '@/domain/Spend';
 import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION, mapToFirestore } from './spendUtils';
+import { useLogging } from '@/hooks';
+import * as Sentry from '@sentry/browser';
 
 export function useCreateSpend() {
   const queryClient = useQueryClient();
+  const { logError } = useLogging();
 
   return useMutation({
     mutationFn: async (data: CreateSpendDTO) => {
-      try {
+      return Sentry.startSpan({ name: 'useCreateSpend' }, async (span) => {
         const spendingRef = collection(
           db,
           ACCOUNTS_COLLECTION,
@@ -22,13 +25,13 @@ export function useCreateSpend() {
 
         await setDoc(newDocRef, mapToFirestore(spendWithId));
         return spendWithId;
-      } catch (error) {
-        console.error('Error creating spending record:', error);
-        throw error;
-      }
+      });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['spending', data.accountId, data.periodId] });
+    },
+    onError: (error) => {
+      logError(error);
     },
   });
 }
