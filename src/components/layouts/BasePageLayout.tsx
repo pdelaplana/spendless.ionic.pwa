@@ -103,7 +103,7 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
 
       <IonPage id='main-content'>
         {showHeader && (
-          <StyledHeader id='mainHeader' className='primary ion-no-border' mode='ios'>
+          <StyledHeader id='main-header' className='primary ion-no-border' mode='ios'>
             <IonToolbar color={'light'}>
               <IonButtons slot='start'>
                 {!showBackButton && showMenu && menu && (

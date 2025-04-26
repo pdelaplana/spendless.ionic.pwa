@@ -39,6 +39,8 @@ import AppRoutes from './routes/AppRoutes';
 
 import './app.css';
 import './positioning.css';
+import { NetworkStatusProvider } from './providers/networkStatus';
+import NetworkStatusNotifier from './components/networkStatusNotifier/NetworkStatusNotifier';
 
 setupIonicReact({ mode: 'md' });
 
@@ -54,11 +56,14 @@ const queryClient = new QueryClient({
 
 const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <IonApp>
-        <AppRoutes />
-      </IonApp>
-    </AuthProvider>
+    <NetworkStatusProvider>
+      <AuthProvider>
+        <IonApp>
+          <NetworkStatusNotifier />
+          <AppRoutes />
+        </IonApp>
+      </AuthProvider>
+    </NetworkStatusProvider>
     {import.meta.env.DEV && (
       <ReactQueryDevtools initialIsOpen={false} buttonPosition='bottom-left' />
     )}
