@@ -12,7 +12,7 @@ export function useCreateSpend() {
 
   return useMutation({
     mutationFn: async (data: CreateSpendDTO) => {
-      return Sentry.startSpan({ name: 'useCreateSpend' }, async (span) => {
+      return Sentry.startSpan({ name: 'useCreateSpend', op: 'mutation' }, async (span) => {
         const spendingRef = collection(
           db,
           ACCOUNTS_COLLECTION,
