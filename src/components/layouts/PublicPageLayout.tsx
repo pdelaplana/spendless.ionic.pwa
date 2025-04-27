@@ -11,6 +11,13 @@ import type { PropsWithChildren } from 'react';
 import HeaderLogo from '../shared/base/display/HeaderLogo';
 import { useTranslation } from 'react-i18next';
 import '@i18n/config';
+import styled from 'styled-components';
+
+const StyledHeader = styled(IonHeader)`
+  border-bottom-style: inset;
+  border-bottom-color: var(--ion-color-light-shade);
+  border-bottom-width: thin;
+`;
 
 interface PublicPageLayoutProps extends PropsWithChildren {
   title: string;
@@ -29,15 +36,15 @@ const PublicPageLayout: React.FC<PublicPageLayoutProps> = ({ title, children }) 
 
   return (
     <IonPage>
-      <IonHeader className='ion-no-border'>
+      <StyledHeader className='ion-no-border'>
         <IonToolbar>
           <div className='ion-flex ion-justify-content-center'>
             <HeaderLogo />
           </div>
           <IonButtons slot='end' />
         </IonToolbar>
-      </IonHeader>
-      <IonContent>
+      </StyledHeader>
+      <IonContent color='light'>
         <CenterContainer>{children}</CenterContainer>
       </IonContent>
     </IonPage>

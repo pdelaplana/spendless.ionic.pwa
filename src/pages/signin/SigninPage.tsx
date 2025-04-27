@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useEffect } from 'react';
+import styled from 'styled-components';
 import {
   IonInput,
   IonButton,
@@ -12,13 +13,25 @@ import {
   IonRouterLink,
   useIonRouter,
   IonNote,
+  IonCardContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonSpinner,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
 import { type SubmitHandler, useForm } from 'react-hook-form';
-import ValidationError from '@/components/forms/validation/ValidationError';
 import PublicPageLayout from '@components/layouts/PublicPageLayout';
 import InputFormField from '@/components/forms/fields/InputFormField';
 import { ROUTES } from '@/routes/routes.constants';
+import { ActionButton, Gap } from '@/components/shared';
+import { auth } from '@/infrastructure/firebase';
+import { i } from 'vite/dist/node/types.d-aGj9QkWt';
+
+const StyledIonCard = styled(IonCard)`
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+`;
 
 interface ISigninForm {
   email: string;
@@ -26,7 +39,7 @@ interface ISigninForm {
 }
 
 const SigninPage: React.FC = () => {
-  const { signin, pendingUpdate, error, isAuthenticated } = useAuth();
+  const { signin, isSigningIn, error, isAuthenticated, authStateLoading } = useAuth();
 
   const {
     register,
@@ -39,7 +52,7 @@ const SigninPage: React.FC = () => {
     try {
       const user = await signin(formData.email, formData.password);
       if (user) {
-        reset();
+        //reset();
       }
     } catch (e) {
       // Error will be handled by useAuth
@@ -49,95 +62,105 @@ const SigninPage: React.FC = () => {
   const { push } = useIonRouter();
 
   useEffect(() => {
-    if (isAuthenticated) push('/home', 'root', 'replace');
-  }, [isAuthenticated, push]);
+    if (isAuthenticated && !isSigningIn) {
+      window.history.pushState(null, '', ROUTES.ROOT);
+
+      push(ROUTES.ROOT, 'root', 'replace');
+    }
+  }, [isAuthenticated, isSigningIn, push]);
 
   return (
     <PublicPageLayout title='Sign in'>
-      <IonList lines='none'>
-        <IonListHeader>
-          <IonText>
-            <h1>Sign in</h1>
-          </IonText>
-        </IonListHeader>
+      <Gap size='.65rem' />
+      <StyledIonCard>
+        <IonCardHeader>
+          <IonCardTitle className='ion-margin'>
+            <IonText>Sign in with your Spendless account</IonText>
+          </IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          <IonList lines='none'>
+            {error && (
+              <IonItem>
+                <IonNote color='danger' role='alert'>
+                  {error}
+                </IonNote>
+              </IonItem>
+            )}
 
-        {error && (
-          <IonItem>
-            <IonNote color='danger' role='alert'>
-              {error}
-            </IonNote>
-          </IonItem>
-        )}
+            <form onSubmit={handleSubmit(onSubmit)} aria-label='Sign in form'>
+              <IonItem>
+                <IonLabel>
+                  <InputFormField<ISigninForm>
+                    name='email'
+                    label='Email'
+                    type='email'
+                    fill='outline'
+                    register={register}
+                    error={errors.email}
+                    validationRules={{
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        message: 'Enter a valid email address',
+                      },
+                    }}
+                  />
+                </IonLabel>
+              </IonItem>
 
-        <form onSubmit={handleSubmit(onSubmit)} aria-label='Sign in form'>
-          <IonItem>
-            <IonLabel>
-              <InputFormField<ISigninForm>
-                name='email'
-                label='Email'
-                type='email'
-                fill='outline'
-                register={register}
-                error={errors.email}
-                validationRules={{
-                  required: 'Email is required',
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: 'Enter a valid email address',
-                  },
-                }}
-              />
-            </IonLabel>
-          </IonItem>
+              <IonItem>
+                <IonLabel>
+                  <InputFormField<ISigninForm>
+                    name='password'
+                    label='Password'
+                    type='password'
+                    fill='outline'
+                    register={register}
+                    error={errors.password}
+                    validationRules={{
+                      required: 'Password is required',
+                      minLength: {
+                        value: 6,
+                        message: 'Password must be at least 6 characters long',
+                      },
+                    }}
+                  />
+                </IonLabel>
+              </IonItem>
 
-          <IonItem>
-            <IonLabel>
-              <InputFormField<ISigninForm>
-                name='password'
-                label='Password'
-                type='password'
-                fill='outline'
-                register={register}
-                error={errors.password}
-                validationRules={{
-                  required: 'Password is required',
-                  minLength: {
-                    value: 6,
-                    message: 'Password must be at least 6 characters long',
-                  },
-                }}
-              />
-            </IonLabel>
-          </IonItem>
+              <IonItem>
+                <IonLabel>
+                  <ActionButton
+                    size='default'
+                    label='Sign in'
+                    expand='block'
+                    type='submit'
+                    disabled={isSigningIn}
+                    className='ion-no-padding ion-padding-top ion-padding-bottom'
+                    aria-busy={isSigningIn}
+                    isLoading={isSigningIn}
+                    isDisabled={false}
+                  />
+                </IonLabel>
+              </IonItem>
+            </form>
 
-          <IonItem>
-            <IonLabel>
-              <IonButton
-                size='default'
-                expand='block'
-                type='submit'
-                disabled={pendingUpdate}
-                className='ion-padding-top ion-padding-bottom'
-                aria-busy={pendingUpdate}
-              >
-                {pendingUpdate ? 'Signing in...' : 'Sign in'}
-              </IonButton>
-            </IonLabel>
-          </IonItem>
-        </form>
-
-        <IonItem>
-          <IonLabel className='ion-text-center'>
-            <IonRouterLink href='/forgot-password'>Forgot Password?</IonRouterLink>
-          </IonLabel>
-        </IonItem>
-        <IonItem>
-          <IonLabel className='ion-text-center'>
-            <IonRouterLink href={ROUTES.SIGNUP}>Don't have an account? Sign up here</IonRouterLink>
-          </IonLabel>
-        </IonItem>
-      </IonList>
-      <IonLoading isOpen={pendingUpdate} message={'Signing in...'} aria-label='Loading' />
+            <IonItem>
+              <IonLabel className='ion-text-center'>
+                <IonRouterLink href='/forgot-password'>Forgot Password?</IonRouterLink>
+              </IonLabel>
+            </IonItem>
+            <IonItem aria-label='Sign up link'>
+              <IonLabel className='ion-text-center'>
+                <IonRouterLink href={ROUTES.SIGNUP}>
+                  Don't have an account? Sign up here
+                </IonRouterLink>
+              </IonLabel>
+            </IonItem>
+          </IonList>
+        </IonCardContent>
+      </StyledIonCard>
     </PublicPageLayout>
   );
 };

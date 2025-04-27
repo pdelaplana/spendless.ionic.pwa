@@ -134,10 +134,11 @@ const AppRoutes: React.FC = () => {
     }
   }, [isAuthenticated, authStateLoading, user]);
 
+  /*
   if (authStateLoading || (!authState.isInitialized && authState.isLoading)) {
     return <IonLoading isOpen={true} message='Loading...' />;
   }
-
+  */
   return (
     <IonReactRouter>
       <IonRouterOutlet id='main'>

@@ -22,12 +22,14 @@ interface AuthState {
   user: AuthUser | null;
   error: string | null;
   isLoading: boolean;
+  isSigningIn: boolean;
   isProfileUpdating: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   error: null,
+  isSigningIn: false,
   isLoading: true,
   isProfileUpdating: false,
 };
@@ -178,7 +180,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const signin = async (email: string, password: string): Promise<UserCredential | undefined> => {
-    updateState({ isLoading: true, error: null });
+    updateState({ isSigningIn: true, error: null });
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       return userCredential;
@@ -186,7 +188,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       const authError = err as AuthError;
       updateState({ error: authError.message });
     } finally {
-      updateState({ isLoading: false });
+      updateState({ isSigningIn: false });
     }
   };
 
@@ -318,10 +320,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         updatePhotoUrl,
         updateEmail,
         error,
-        pendingUpdate: authStateLoading,
         authStateLoading,
         isAuthenticated: !!user,
         user,
+        isSigningIn: state.isSigningIn,
       }}
     >
       {children}

@@ -28,8 +28,8 @@ export interface AuthContextType {
   updatePhotoUrl: (photoURL: string) => Promise<void>;
   updateEmail: (email: string) => Promise<void>;
   error: string | null;
-  pendingUpdate: boolean;
   authStateLoading: boolean;
   isAuthenticated: boolean;
   user: AuthUser | null;
+  isSigningIn: boolean;
 }
