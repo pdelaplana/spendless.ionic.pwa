@@ -2,14 +2,10 @@ import type React from 'react';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import {
-  IonInput,
-  IonButton,
   IonItem,
   IonLabel,
-  IonLoading,
   IonText,
   IonList,
-  IonListHeader,
   IonRouterLink,
   useIonRouter,
   IonNote,
@@ -17,7 +13,6 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
-  IonSpinner,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
 import { type SubmitHandler, useForm } from 'react-hook-form';
@@ -25,8 +20,6 @@ import PublicPageLayout from '@components/layouts/PublicPageLayout';
 import InputFormField from '@/components/forms/fields/InputFormField';
 import { ROUTES } from '@/routes/routes.constants';
 import { ActionButton, Gap } from '@/components/shared';
-import { auth } from '@/infrastructure/firebase';
-import { i } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const StyledIonCard = styled(IonCard)`
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
