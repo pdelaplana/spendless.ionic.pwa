@@ -20,9 +20,10 @@ import PublicPageLayout from '@components/layouts/PublicPageLayout';
 import InputFormField from '@/components/forms/fields/InputFormField';
 import { ROUTES } from '@/routes/routes.constants';
 import { ActionButton, Gap } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const StyledIonCard = styled(IonCard)`
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 `;
 
@@ -32,6 +33,7 @@ interface ISigninForm {
 }
 
 const SigninPage: React.FC = () => {
+  const { t } = useTranslation();
   const { signin, isSigningIn, error, isAuthenticated, authStateLoading } = useAuth();
 
   const {
@@ -76,7 +78,7 @@ const SigninPage: React.FC = () => {
             {error && (
               <IonItem>
                 <IonNote color='danger' role='alert'>
-                  {error}
+                  {t('common.errors.signinFailed')}
                 </IonNote>
               </IonItem>
             )}

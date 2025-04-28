@@ -16,7 +16,7 @@ import styled from 'styled-components';
 const StyledHeader = styled(IonHeader)`
   border-bottom-style: inset;
   border-bottom-color: var(--ion-color-light-shade);
-  border-bottom-width: thin;
+  border-bottom-width: 2px;
 `;
 
 interface PublicPageLayoutProps extends PropsWithChildren {

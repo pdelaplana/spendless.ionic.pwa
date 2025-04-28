@@ -1,5 +1,5 @@
 import type React from 'react';
-import { IonButton, IonSpinner } from '@ionic/react';
+import { IonButton, IonSpinner, IonText } from '@ionic/react';
 
 interface ButtonProps extends React.ComponentProps<typeof IonButton> {
   isLoading: boolean;
@@ -21,7 +21,9 @@ const ActionButton: React.FC<ButtonProps> = ({
       {isLoading ? (
         <IonSpinner name='dots' /> // Show spinner while loading
       ) : (
-        label
+        <IonText style={{ height: '24px' }} className='ion-flex ion-align-items-center'>
+          {label}
+        </IonText>
       )}
     </IonButton>
   );

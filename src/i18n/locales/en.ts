@@ -11,6 +11,9 @@ export default {
         error: 'Error',
         warning: 'Warning',
       },
+      errors: {
+        signinFailed: 'Sign in failed. Please check your credentials or contact support.',
+      },
     },
     auth: {
       signout: {

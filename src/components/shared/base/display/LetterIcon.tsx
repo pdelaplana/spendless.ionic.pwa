@@ -14,6 +14,9 @@ const IconContainer = styled.div<{
   backgroundColor: string;
   size: string;
 }>`
+
+ background-color: var(--ion-color-primary);
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,7 +29,7 @@ const IconContainer = styled.div<{
       case 'large':
         return '40px';
       default:
-        return '32px';
+        return '30px';
     }
   }};
   height: ${(props) => {
@@ -36,17 +39,17 @@ const IconContainer = styled.div<{
       case 'large':
         return '40px';
       default:
-        return '32px';
+        return '30px';
     }
   }};
   font-size: ${(props) => {
     switch (props.size) {
       case 'small':
-        return '14px';
+        return '12px';
       case 'large':
         return '20px';
       default:
-        return '16px';
+        return '14px';
     }
   }};
   font-weight: 600;

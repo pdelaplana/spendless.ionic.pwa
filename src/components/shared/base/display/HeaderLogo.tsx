@@ -2,6 +2,7 @@ import type React from 'react';
 
 import { IonImg } from '@ionic/react';
 import styled from 'styled-components';
+import { SpendlessLogo } from './SpendlessLogo';
 
 const StyledIonImg = styled(IonImg)`
   width: 55px;
@@ -12,7 +13,8 @@ const StyledIonImg = styled(IonImg)`
 `;
 
 const HeaderLogo: React.FC = () => {
-  return <StyledIonImg src='/images/header.logo.png' alt='Spendless' data-testid='the-logo' />;
+  //return <StyledIonImg src='/images/header.logo.png' alt='Spendless' data-testid='the-logo' />;
+  return <SpendlessLogo />;
 };
 
 export default HeaderLogo;
