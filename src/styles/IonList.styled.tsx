@@ -2,9 +2,8 @@ import { IonItem, IonItemDivider, IonList } from '@ionic/react';
 import styled from 'styled-components';
 
 export const StyledIonList = styled(IonList)`
-  --background-color: var(--ion-color-light);
+  background-color: var(--color-light);
 `;
-
 export const StyledItemDivider = styled(IonItemDivider)`
   background-color: var(--ion-color-light);
   color: var(--ion-color-primary);

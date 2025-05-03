@@ -5,7 +5,7 @@ import { ACCOUNTS_COLLECTION, mapFromFirestore } from './accountUtils';
 
 export function useFetchAccountByUserId(userId: string | undefined) {
   return useQuery({
-    queryKey: ['account', userId],
+    queryKey: ['useFetchAccountByUserId', userId],
     queryFn: async () => {
       try {
         if (!userId) return null;

@@ -215,6 +215,12 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     }
   }, [selectedPeriod, refetchSpending]);
 
+  useEffect(() => {
+    if (updateAccountError) {
+      console.error('Error updating account:', updateAccountError);
+    }
+  }, [updateAccountError]);
+
   return (
     <SpendingAccountContext.Provider
       value={{

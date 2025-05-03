@@ -24,6 +24,7 @@ import SpendingPage from '@/pages/spending/SpendingPage';
 import { SpendingAccountProvider } from '@/providers/spendingAccount';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
+import SettingsPage from '@/pages/settings/SettingsPage';
 
 interface AuthState {
   isInitialized: boolean;
@@ -56,6 +57,18 @@ const SpendingRoutes = ({ userId }: { userId: string }) => {
         </ProtectedRoute>
         <ProtectedRoute path={ROUTES.SPENDING} exact={true}>
           <SpendingPage />
+        </ProtectedRoute>
+      </Switch>
+    </SpendingAccountProvider>
+  );
+};
+
+const SettingsRoutes: React.FC<{ userId: string }> = ({ userId }) => {
+  return (
+    <SpendingAccountProvider userId={userId}>
+      <Switch>
+        <ProtectedRoute path={ROUTES.SETTINGS} exact={true}>
+          <SettingsPage />
         </ProtectedRoute>
       </Switch>
     </SpendingAccountProvider>
@@ -175,6 +188,10 @@ const AppRoutes: React.FC = () => {
           {/* Protected routes */}
           <ProtectedRoute path={ROUTES.PROFILE}>
             <ProfileRoutes />
+          </ProtectedRoute>
+
+          <ProtectedRoute path={ROUTES.SETTINGS}>
+            <SettingsRoutes userId={user?.uid ?? ''} />
           </ProtectedRoute>
 
           <ProtectedRoute path={ROUTES.SPENDING}>

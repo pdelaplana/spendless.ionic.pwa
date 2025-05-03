@@ -11,6 +11,7 @@ import {
   logOutOutline,
 } from 'ionicons/icons';
 import { usePrompt } from '@/hooks';
+import { ROUTES } from '@/routes/routes.constants';
 
 const StyledHeader = styled(IonHeader)`
   border-bottom-style: inset;
@@ -68,7 +69,7 @@ const MainMenuContent: React.FC = () => {
               lines='none'
               detail
               button
-              routerLink='/profile/settings'
+              routerLink={ROUTES.SETTINGS}
               className='ion-border-top'
             >
               <IonIcon slot='start' icon={settingsOutline} />

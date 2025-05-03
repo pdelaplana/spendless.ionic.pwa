@@ -4,7 +4,7 @@ export interface IAccount {
   readonly name: string;
   readonly description?: string;
   readonly currency: string;
-  readonly spendingLimit: number;
+  readonly dateFormat?: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -16,7 +16,7 @@ export const createAccount = (data: Partial<CreateAccountDTO>): IAccount => ({
   name: data.name ?? '',
   description: data.description ?? '',
   currency: data.currency ?? 'USD',
-  spendingLimit: data.spendingLimit ?? 0,
+  dateFormat: data.dateFormat ?? 'dd/MM/yyyy',
   createdAt: new Date(),
   updatedAt: new Date(),
 });

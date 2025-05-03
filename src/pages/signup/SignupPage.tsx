@@ -56,8 +56,7 @@ const SignupPage: React.FC = () => {
         try {
           await createAccount.mutateAsync({
             userId: userCredential.user.uid,
-            spendingLimit: 0,
-            name: '',
+            name: userCredential.user.displayName || userCredential.user.email || '',
             currency: '',
           });
           push(ROUTES.ROOT);
