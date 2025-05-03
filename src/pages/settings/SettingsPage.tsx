@@ -7,7 +7,6 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
 import { IonButton, IonItem, IonLabel, IonNote, IonSelect, IonSelectOption } from '@ionic/react';
-import { ellipsisVerticalCircleOutline } from 'ionicons/icons';
 import { useEffect, useMemo } from 'react';
 
 const SettingsPage: React.FC = () => {
@@ -84,20 +83,6 @@ const SettingsPage: React.FC = () => {
             <div slot='end'>
               <IonButton color='primary'>Export</IonButton>
             </div>
-          </StyledItem>
-          <StyledItem
-            lines='none'
-            detail
-            button
-            routerLink={ROUTES.PROFILE}
-            className='ion-border-top'
-            detailIcon={ellipsisVerticalCircleOutline}
-          >
-            <IonLabel>
-              <h2>Change Phone</h2>
-              <p>Change your phone</p>
-            </IonLabel>
-            <IonNote slot='end'>Change</IonNote>
           </StyledItem>
         </StyledIonList>
         <Content>
