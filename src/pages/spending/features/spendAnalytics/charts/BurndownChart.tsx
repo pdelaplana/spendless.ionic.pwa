@@ -42,6 +42,7 @@ interface BurndownChartProps {
   targetSpend?: number;
   startDate: Date;
   endDate: Date;
+  currency?: string;
 }
 
 export const BurndownChart: FC<BurndownChartProps> = ({
@@ -49,6 +50,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
   targetSpend = 0,
   startDate,
   endDate,
+  currency,
 }) => {
   const { formatCurrency, formatDate } = useFormatters();
 
@@ -233,7 +235,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           label: (context: any) => {
             if (context.raw === null || typeof context.raw !== 'number') return '';
-            return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+            return `${context.dataset.label}: ${formatCurrency(context.raw, currency)}`;
           },
         },
       },
@@ -250,7 +252,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
       },
       y: {
         ticks: {
-          callback: (value: string | number) => formatCurrency(Number(value)),
+          callback: (value: string | number) => formatCurrency(Number(value), currency),
           stepSize: 100, // Adjusted step size for better readability
         },
         grid: {

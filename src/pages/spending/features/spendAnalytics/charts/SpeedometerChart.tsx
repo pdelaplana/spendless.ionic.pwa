@@ -37,6 +37,7 @@ interface SpeedometerChartProps {
   min?: number;
   max?: number;
   label?: string;
+  currency?: string;
 }
 
 export const SpeedometerChart: FC<SpeedometerChartProps> = ({
@@ -44,6 +45,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
   min = 0,
   max = 100,
   label = '',
+  currency = 'USD',
 }) => {
   const { formatCurrency } = useFormatters();
   const normalizedValue = Math.min(Math.max(value, min), max);
@@ -79,7 +81,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
     <ChartContainer>
       <Doughnut data={data} options={options} />
       <ValueContainer>
-        <Value>{formatCurrency(value)}</Value>
+        <Value>{formatCurrency(value, currency)}</Value>
         {label && <Label>{label}</Label>}
       </ValueContainer>
     </ChartContainer>

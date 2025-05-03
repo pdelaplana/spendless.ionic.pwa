@@ -6,9 +6,6 @@ import {
   IonFab,
   IonFabButton,
   IonButton,
-  IonChip,
-  IonToast,
-  IonHeader,
   IonCardContent,
   IonCard,
 } from '@ionic/react';
@@ -41,6 +38,7 @@ const PeriodSpendingView: React.FC = () => {
   const { t } = useTranslation();
   const { formatCurrency } = useFormatters();
   const {
+    account,
     selectedPeriod,
     setSelectedPeriod,
     spending,
@@ -158,12 +156,17 @@ const PeriodSpendingView: React.FC = () => {
                         <h2>{spend.description}</h2>
                         <p>{t(`spending.categories.${spend.category}`)}</p>
                       </IonLabel>
-                      <IonLabel slot='end'>{formatCurrency(spend.amount)}</IonLabel>
+                      <IonLabel slot='end'>
+                        {formatCurrency(spend.amount, account?.currency)}
+                      </IonLabel>
                     </StyledItem>
                   ))}
                   <StyledItem lines='none' color='light'>
                     <StyledTotalLabel slot='end'>
-                      {formatCurrency(spends.reduce((sum, spend) => sum + spend.amount, 0))}
+                      {formatCurrency(
+                        spends.reduce((sum, spend) => sum + spend.amount, 0),
+                        account?.currency,
+                      )}
                     </StyledTotalLabel>
                   </StyledItem>
                 </IonItemGroup>

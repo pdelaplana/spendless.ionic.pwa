@@ -18,9 +18,10 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface SpendingChartProps {
   spending: ISpend[];
+  currency?: string;
 }
 
-const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
+const SpendingChart: FC<SpendingChartProps> = ({ spending, currency }) => {
   const { formatCurrency } = useFormatters();
   const { t } = useTranslation();
 
@@ -39,7 +40,7 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
     // Create labels with both translated category name and amount
     const labelsWithAmounts = Object.entries(categories).map(([category, amount]) => {
       const translatedCategory = t(`spending.categories.${category}`);
-      return `${translatedCategory}: ${formatCurrency(amount)}`;
+      return `${translatedCategory}: ${formatCurrency(amount, currency)}`;
     });
 
     return {
@@ -57,7 +58,7 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
         },
       ],
     };
-  }, [spending, t, formatCurrency]);
+  }, [spending, t, formatCurrency, currency]);
 
   const options = {
     responsive: true,
@@ -84,7 +85,7 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending }) => {
             )[categoryIndex];
 
             const amount = tooltipItem.raw as number;
-            return `${t(`spend.categories.${categoryKey}`)}: ${formatCurrency(amount)}`;
+            return `${t(`spend.categories.${categoryKey}`)}: ${formatCurrency(amount, currency)}`;
           },
         },
       },
