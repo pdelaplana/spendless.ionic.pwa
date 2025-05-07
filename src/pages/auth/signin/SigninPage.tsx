@@ -34,7 +34,7 @@ interface ISigninForm {
 
 const SigninPage: React.FC = () => {
   const { t } = useTranslation();
-  const { signin, isSigningIn, error, isAuthenticated, authStateLoading } = useAuth();
+  const { signin, isSigningIn, error, isAuthenticated } = useAuth();
 
   const {
     register,

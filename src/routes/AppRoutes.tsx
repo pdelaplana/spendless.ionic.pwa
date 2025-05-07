@@ -1,4 +1,4 @@
-import SigninPage from '@/pages/signin/SigninPage';
+import SigninPage from '@/pages/auth/signin/SigninPage';
 import {
   IonIcon,
   IonLabel,
@@ -15,7 +15,7 @@ import { useAuth } from '@/providers/auth/useAuth';
 import type React from 'react';
 import { useState, useEffect } from 'react';
 import { IonReactRouter } from '@ionic/react-router';
-import SignupPage from '@/pages/signup/SignupPage';
+import SignupPage from '@/pages/auth/signup/SignupPage';
 import ProtectedRoute from './ProtectedRoute';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import ProfileInformationPage from '@/pages/profile/ProfileInformationPage';
@@ -25,6 +25,8 @@ import { SpendingAccountProvider } from '@/providers/spendingAccount';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
 import SettingsPage from '@/pages/settings/SettingsPage';
+import ForgotPasswordPage from '@/pages/auth/forgotPassword/ForgotPasswordPage';
+import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
 
 interface AuthState {
   isInitialized: boolean;
@@ -181,6 +183,20 @@ const AppRoutes: React.FC = () => {
             path={ROUTES.SIGNUP}
             render={() => {
               return !isAuthenticated ? <SignupPage /> : <Redirect to={ROUTES.ROOT} />;
+            }}
+            exact={true}
+          />
+          <Route
+            path={ROUTES.FORGOTPASSWORD}
+            render={() => {
+              return !isAuthenticated ? <ForgotPasswordPage /> : <Redirect to={ROUTES.ROOT} />;
+            }}
+            exact={true}
+          />
+          <Route
+            path={ROUTES.RESETPASSWORD}
+            render={() => {
+              return !isAuthenticated ? <ResetPasswordPage /> : <Redirect to={ROUTES.ROOT} />;
             }}
             exact={true}
           />

@@ -32,4 +32,6 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   user: AuthUser | null;
   isSigningIn: boolean;
+  sendResetPasswordEmail: (email: string) => Promise<void>;
+  confirmPasswordReset: (code: string, newPassword: string) => Promise<void>;
 }

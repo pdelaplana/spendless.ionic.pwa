@@ -1,6 +1,8 @@
+import { auth } from '@/infrastructure/firebase';
+
 export default {
   translation: {
-    appName: 'Miodful Spending Tracker',
+    appName: 'Mindful Spending Tracker',
     common: {
       loading: 'Loading...',
       error: 'Error',
@@ -12,7 +14,21 @@ export default {
         warning: 'Warning',
       },
       errors: {
+        default: 'An error occurred. Please try again later.',
         signinFailed: 'Sign in failed. Please check your credentials or contact support.',
+      },
+    },
+    server: {
+      errors: {
+        auth: {
+          'auth/expired-action-code':
+            'The password reset code has expired. Please request a new one.',
+          'auth/invalid-action-code':
+            'The password reset code is invalid. Please request a new one.',
+          'auth/user-disabled': 'This user account has been disabled.',
+          'auth/user-not-found': 'User account not found.',
+          'auth/weak-password': 'The password is too weak. Please use a stronger password.',
+        },
       },
     },
     auth: {

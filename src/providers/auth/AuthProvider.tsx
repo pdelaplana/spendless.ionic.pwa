@@ -10,11 +10,14 @@ import {
   updateEmail as updateAuthEmail,
   type AuthError,
   type UserCredential,
+  sendPasswordResetEmail,
+  confirmPasswordReset as authConfirmPasswordReset,
 } from 'firebase/auth';
 import { Preferences } from '@capacitor/preferences';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import type { AuthUser, profileFields, UserRole } from './types';
 import { AuthContext } from './context';
+import { useLogging } from '@/hooks';
 
 const dbCollection = 'userProfileExtensions';
 
@@ -37,6 +40,7 @@ const initialState: AuthState = {
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>(initialState);
   const { user, error, isLoading: authStateLoading } = state;
+  const { logError } = useLogging();
 
   // Helper function to update state partially
   const updateState = useCallback((newState: Partial<AuthState>) => {
@@ -217,7 +221,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       const userDocRef = doc(db, dbCollection, uid ?? user?.uid ?? '');
       await setDoc(userDocRef, { [key]: value }, { merge: true });
     } catch (error) {
-      console.error('Error setting profile data:', error);
+      logError(error);
     }
   };
 
@@ -308,6 +312,28 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const sendResetPasswordEmail = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to send reset email';
+      console.error('Error sending reset password email:', message);
+      logError(error);
+      throw new Error(message);
+    }
+  };
+
+  const confirmPasswordReset = async (code: string, newPassword: string) => {
+    try {
+      await authConfirmPasswordReset(auth, code, newPassword);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to confirm password reset';
+      logError(error);
+
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -324,6 +350,8 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         isAuthenticated: !!user,
         user,
         isSigningIn: state.isSigningIn,
+        sendResetPasswordEmail,
+        confirmPasswordReset,
       }}
     >
       {children}
