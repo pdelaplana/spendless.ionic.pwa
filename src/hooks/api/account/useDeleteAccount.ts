@@ -25,7 +25,7 @@ export function useDeleteAccount() {
       });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['account', data.userId] });
+      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', data.id] });
     },
     onError: (error) => {
       logError(error);

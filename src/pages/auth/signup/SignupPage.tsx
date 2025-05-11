@@ -21,6 +21,7 @@ import { ROUTES } from '@/routes/routes.constants';
 import { useAppNotifications } from '@/hooks/ui';
 import { useCreateAccount } from '@/hooks/api';
 import { ActionButton, Gap } from '@/components/shared';
+import { useTranslation } from 'react-i18next';
 
 const StyledIonCard = styled(IonCard)`
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
@@ -34,6 +35,7 @@ interface ISignupForm {
 }
 
 const SignupPage: React.FC = () => {
+  const { t } = useTranslation();
   const { signup, authStateLoading, error } = useAuth();
   const { showErrorNotification } = useAppNotifications();
   const createAccount = useCreateAccount();
@@ -56,8 +58,10 @@ const SignupPage: React.FC = () => {
         try {
           await createAccount.mutateAsync({
             userId: userCredential.user.uid,
-            name: userCredential.user.displayName || userCredential.user.email || '',
-            currency: '',
+            data: {
+              name: userCredential.user.displayName || userCredential.user.email || '',
+              currency: '',
+            },
           });
           push(ROUTES.ROOT);
         } catch (error) {
@@ -84,7 +88,7 @@ const SignupPage: React.FC = () => {
             {error && (
               <IonItem>
                 <IonNote color='danger' role='alert'>
-                  {error}
+                  {t(`server.errors.auth.${error}`)}
                 </IonNote>
               </IonItem>
             )}

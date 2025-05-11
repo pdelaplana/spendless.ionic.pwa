@@ -5,7 +5,6 @@ export const ACCOUNTS_COLLECTION = 'accounts';
 
 // Mapper functions to handle Firestore data conversion
 export const mapToFirestore = (account: IAccount): DocumentData => ({
-  userId: account.userId,
   currency: account.currency,
   dateFormat: account.dateFormat ?? 'dd/MM/yyyy',
   createdAt: Timestamp.fromDate(account.createdAt),
@@ -14,7 +13,6 @@ export const mapToFirestore = (account: IAccount): DocumentData => ({
 
 export const mapFromFirestore = (id: string, data: DocumentData): IAccount => {
   const account = createAccount({
-    userId: data.userId,
     currency: data.currency,
   });
 

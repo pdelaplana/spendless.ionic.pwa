@@ -11,18 +11,17 @@ export function useCreateAccount() {
   const { logError } = useLogging();
 
   return useMutation({
-    mutationFn: async (data: CreateAccountDTO) => {
+    mutationFn: async ({ userId, data }: { userId: string; data: CreateAccountDTO }) => {
       return Sentry.startSpan({ name: 'useCreateAccount', attributes: data }, async (span) => {
-        const docRef = doc(collection(db, ACCOUNTS_COLLECTION));
+        const docRef = doc(collection(db, ACCOUNTS_COLLECTION), userId);
         const account = createAccount(data);
-        const accountWithId = { ...account, id: docRef.id };
 
-        await setDoc(docRef, mapToFirestore(accountWithId));
-        return accountWithId;
+        await setDoc(docRef, mapToFirestore(account));
+        return { ...account, id: docRef.id };
       });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['account', data.userId] });
+      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', data.id] });
     },
     onError: (error) => {
       logError(error);

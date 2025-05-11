@@ -1,6 +1,5 @@
 export interface IAccount {
   readonly id?: string;
-  readonly userId: string;
   readonly name: string;
   readonly description?: string;
   readonly currency: string;
@@ -12,7 +11,6 @@ export interface IAccount {
 export type CreateAccountDTO = Omit<IAccount, 'id' | 'createdAt' | 'updatedAt'>;
 
 export const createAccount = (data: Partial<CreateAccountDTO>): IAccount => ({
-  userId: data.userId ?? '',
   name: data.name ?? '',
   description: data.description ?? '',
   currency: data.currency ?? 'USD',

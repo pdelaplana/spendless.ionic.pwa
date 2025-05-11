@@ -31,7 +31,7 @@ export function useUpdateAccount() {
       );
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', data.userId] });
+      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', data.id] });
     },
     onError: (error) => {
       logError(error);

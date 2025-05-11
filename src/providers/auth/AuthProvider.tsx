@@ -177,7 +177,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       return userCredential;
     } catch (err) {
       const authError = err as AuthError;
-      updateState({ error: authError.message });
+      updateState({ error: authError.code });
     } finally {
       updateState({ isLoading: false });
     }

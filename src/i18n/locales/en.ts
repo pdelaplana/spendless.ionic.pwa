@@ -28,6 +28,7 @@ export default {
           'auth/user-disabled': 'This user account has been disabled.',
           'auth/user-not-found': 'User account not found.',
           'auth/weak-password': 'The password is too weak. Please use a stronger password.',
+          'auth/email-already-in-use': 'This email is already in use. Please use a different one.',
         },
       },
     },
