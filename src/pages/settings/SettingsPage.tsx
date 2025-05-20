@@ -1,8 +1,10 @@
 import { BasePageLayout, CenterContainer, Content } from '@/components/layouts';
+import { ActionButton } from '@/components/shared';
 import DestructiveButton from '@/components/shared/base/buttons/DestructiveButton';
 import { CURRENCIES, type Currency } from '@/domain/Currencies';
 import { type DateFormat, DATEFORMATS } from '@/domain/DateFormats';
-import { useAppNotifications } from '@/hooks';
+import { useAppNotifications, usePrompt } from '@/hooks';
+import { useExportDataFunction } from '@/hooks/functions';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
@@ -18,11 +20,35 @@ const SettingsPage: React.FC = () => {
     return DATEFORMATS;
   }, []);
 
-  const { showErrorNotification } = useAppNotifications();
+  const { showConfirmPrompt } = usePrompt();
+  const { showNotification, showErrorNotification } = useAppNotifications();
 
-  const handleCurrencyChange = (currency: string) => {
+  const { mutateAsync: exportData, isPending } = useExportDataFunction();
+
+  const currencyChangeHandler = (currency: string) => {
     if (account) {
       updateAccount({ id: account.id ?? '', data: { ...account, currency } });
+    }
+  };
+
+  const exportDataHandler = async () => {
+    try {
+      showConfirmPrompt({
+        title: 'Export Data',
+        message: 'Are you sure you want to export your data?',
+
+        onConfirm: async () => {
+          await exportData();
+          showNotification(
+            'Request to export data has been sent. You will receive an email once the export is complete.',
+          );
+        },
+        onCancel: () => {},
+      });
+    } catch (error) {
+      showErrorNotification(
+        'Failed to send export data request.  Please try again later or contact your support team member.',
+      );
     }
   };
 
@@ -51,7 +77,7 @@ const SettingsPage: React.FC = () => {
               slot='end'
               value={account?.currency}
               interface={'popover'}
-              onIonChange={(e) => handleCurrencyChange(e.detail.value)}
+              onIonChange={(e) => currencyChangeHandler(e.detail.value)}
             >
               {currencies.map((currency: Currency) => (
                 <IonSelectOption key={currency.code} value={currency.code}>
@@ -81,13 +107,19 @@ const SettingsPage: React.FC = () => {
               <h2>Export Data</h2>
             </IonLabel>
             <div slot='end'>
-              <IonButton color='primary'>Export</IonButton>
+              <ActionButton
+                label={'Export'}
+                onClick={exportDataHandler}
+                isLoading={isPending}
+                isDisabled={false}
+                style={{ width: '100px' }}
+              />
             </div>
           </StyledItem>
         </StyledIonList>
         <Content>
           <DestructiveButton
-            className='ion-padding-top ion-padding-bottom'
+            className='ion-padding-top ion-padding-bottom ion-margin-start ion-margin-end'
             fill='solid'
             label={'Delete Account'}
             prompt={'Are you sure you want to delete your account? This action cannot be undone.'}
