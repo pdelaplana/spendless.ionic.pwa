@@ -1,12 +1,12 @@
-import { IonList, IonItem, IonInput, IonLabel } from '@ionic/react';
-import { useAuth } from '@providers/auth';
-import { useEffect, useState } from 'react';
+import { InputFormField } from '@/components/forms';
+import { Gap } from '@/components/shared';
+import ActionButton from '@/components/shared/base/buttons/ActionButton';
 import { BasePageLayout, CenterContainer, Content } from '@components/layouts';
 import { useAppNotifications } from '@hooks/ui';
-import ActionButton from '@/components/shared/base/buttons/ActionButton';
-import { Gap } from '@/components/shared';
-import { get, type SubmitHandler, useForm } from 'react-hook-form';
-import { InputFormField } from '@/components/forms';
+import { IonInput, IonItem, IonLabel, IonList } from '@ionic/react';
+import { useAuth } from '@providers/auth';
+import { useEffect, useState } from 'react';
+import { type SubmitHandler, get, useForm } from 'react-hook-form';
 
 interface ProfileInformationFormData {
   displayName: string;
@@ -15,7 +15,7 @@ interface ProfileInformationFormData {
 }
 
 const ProfileInformationPage: React.FC = () => {
-  const { user, pendingUpdate, updateDisplayName, updateEmail } = useAuth();
+  const { user, updateDisplayName, updateEmail } = useAuth();
 
   const {
     register,

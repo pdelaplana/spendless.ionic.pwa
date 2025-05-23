@@ -1,9 +1,9 @@
 import { CenterContainer, CenterContent } from '@/components/layouts';
+import { MutationNotificationHandler } from '@/components/shared';
+import type { IPeriod } from '@/domain/Period';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { IonButton } from '@ionic/react';
 import { usePeriodModal } from '../../modals/PeriodModal';
-import type { IPeriod } from '@/domain/Period';
-import { MutationNotificationHandler } from '@/components/shared';
 
 const NoCurrentPeriodView: React.FC = () => {
   const { account, createPeriod, didMutationSucceed, didMutationFail, resetMutationState } =
@@ -20,8 +20,6 @@ const NoCurrentPeriodView: React.FC = () => {
         startAt: new Date(),
         endAt: new Date(),
         reflection: '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
       onSavePeriod,
     );
