@@ -1,16 +1,20 @@
-import { IonButton } from '@ionic/react';
 import { usePrompt } from '@/hooks';
+import { IonButton, IonSpinner, IonText } from '@ionic/react';
 
 const DestructiveButton = ({
   label,
   prompt,
   expand,
   onClick,
+  isLoading = false,
+  isDisabled = false,
   ...rest
 }: {
   label: string;
   prompt: string;
   expand: 'full' | 'block' | undefined;
+  isLoading?: boolean;
+  isDisabled?: boolean;
   onClick: () => void;
 } & React.ComponentProps<typeof IonButton>) => {
   const { showConfirmPrompt } = usePrompt();
@@ -31,9 +35,16 @@ const DestructiveButton = ({
       size='small'
       expand={expand}
       onClick={handleClick}
+      disabled={isLoading || isDisabled}
       {...rest}
     >
-      {label}
+      {isLoading ? (
+        <IonSpinner name='dots' /> // Show spinner while loading
+      ) : (
+        <IonText style={{ height: '24px' }} className='ion-flex ion-align-items-center'>
+          {label}
+        </IonText>
+      )}
     </IonButton>
   );
 };

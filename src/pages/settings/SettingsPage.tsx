@@ -2,16 +2,18 @@ import { BasePageLayout, CenterContainer, Content } from '@/components/layouts';
 import { ActionButton } from '@/components/shared';
 import DestructiveButton from '@/components/shared/base/buttons/DestructiveButton';
 import { CURRENCIES, type Currency } from '@/domain/Currencies';
-import { type DateFormat, DATEFORMATS } from '@/domain/DateFormats';
+import { DATEFORMATS, type DateFormat } from '@/domain/DateFormats';
 import { useAppNotifications, usePrompt } from '@/hooks';
-import { useExportDataFunction } from '@/hooks/functions';
+import { useDeleteAccountFunction, useExportDataFunction } from '@/hooks/functions';
+import { useAuth } from '@/providers/auth';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
-import { IonButton, IonItem, IonLabel, IonNote, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
 import { useEffect, useMemo } from 'react';
 
 const SettingsPage: React.FC = () => {
+  const { signout } = useAuth();
   const { account, updateAccount, didMutationFail } = useSpendingAccount();
   const currencies = useMemo(() => {
     return CURRENCIES;
@@ -23,7 +25,9 @@ const SettingsPage: React.FC = () => {
   const { showConfirmPrompt } = usePrompt();
   const { showNotification, showErrorNotification } = useAppNotifications();
 
-  const { mutateAsync: exportData, isPending } = useExportDataFunction();
+  const { mutateAsync: exportData, isPending: exportDataPending } = useExportDataFunction();
+  const { mutateAsync: deleteAccount, isPending: deleteAccountPending } =
+    useDeleteAccountFunction();
 
   const currencyChangeHandler = (currency: string) => {
     if (account) {
@@ -48,6 +52,20 @@ const SettingsPage: React.FC = () => {
     } catch (error) {
       showErrorNotification(
         'Failed to send export data request.  Please try again later or contact your support team member.',
+      );
+    }
+  };
+
+  const deleteAccountHandler = async () => {
+    try {
+      await deleteAccount();
+      showNotification(
+        'Request to delete your account has been sent. You will receive an email once the export is complete.',
+      );
+      signout();
+    } catch (error) {
+      showErrorNotification(
+        'Failed to delete your account request.  Please try again later or contact your support team member.',
       );
     }
   };
@@ -110,7 +128,7 @@ const SettingsPage: React.FC = () => {
               <ActionButton
                 label={'Export'}
                 onClick={exportDataHandler}
-                isLoading={isPending}
+                isLoading={exportDataPending}
                 isDisabled={false}
                 style={{ width: '100px' }}
               />
@@ -122,9 +140,12 @@ const SettingsPage: React.FC = () => {
             className='ion-padding-top ion-padding-bottom ion-margin-start ion-margin-end'
             fill='solid'
             label={'Delete Account'}
-            prompt={'Are you sure you want to delete your account? This action cannot be undone.'}
+            prompt={
+              'Are you sure you want to delete your Spendless account?  This action cannot be undone and you will be automatically signed out of your account.'
+            }
             expand={'full'}
-            onClick={() => {}}
+            onClick={deleteAccountHandler}
+            isLoading={deleteAccountPending}
           />
         </Content>
       </CenterContainer>
