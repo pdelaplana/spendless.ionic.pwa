@@ -34,5 +34,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SPENDLESS_DEV_15971 }}'
           channelId: live
           projectId: spendless-dev-15971
-        env:
-          FIREBASE_CLI_EXPERIMENTS: webframeworks
+
