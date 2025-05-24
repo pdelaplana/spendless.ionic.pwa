@@ -1,0 +1,113 @@
+## Getting Started
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- npm or yarn
+- Firebase account
+
+### Installation
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/your-username/spendless.ionic.pwa.git
+   cd spendless.ionic.pwa
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables
+   Create a `.env` file at the root of the project with the following variables:
+   ```
+   VITE_FIREBASE_API_KEY=your-api-key
+   VITE_FIREBASE_AUTH_DOMAIN=your-auth-domain
+   VITE_FIREBASE_PROJECT_ID=your-project-id
+   VITE_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+   VITE_FIREBASE_APP_ID=your-app-id
+   VITE_SENTRY_DSN=your-sentry-dsn
+   ```
+
+4. Run the development server
+   ```bash
+   npm run dev
+   ```
+
+## Build and Deployment
+
+### Building for Production
+
+```bash
+# Regular build
+npm run build
+
+# PWA build with optimizations
+npm run build:pwa
+```
+
+### Generating PWA Assets
+
+```bash
+npm run generate-pwa-assets
+```
+
+### Local Preview
+
+```bash
+npm run preview
+```
+
+### Firebase Deployment
+
+The project is set up with GitHub Actions for automatic deployment to Firebase Hosting when changes are pushed to the main branch. For manual deployment:
+
+```bash
+firebase deploy
+```
+
+## Firebase Emulators
+
+For local development with Firebase emulators:
+
+```bash
+firebase emulators:start
+```
+
+This will start local emulators for Firestore, Functions, Hosting, and Storage.
+
+## Project Structure
+
+- `/src` - Application source code
+  - `/components` - Reusable UI components
+  - `/domain` - Business logic and data models
+  - `/hooks` - Custom React hooks
+  - `/infrastructure` - Third-party integrations
+  - `/pages` - Application pages and routes
+  - `/providers` - React context providers
+  - `/routes` - Routing configuration
+  - `/styles` - Global and component-specific styles
+  - `/theme` - Theming variables and configuration
+  - `/i18n` - Internationalization resources
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+- Ionic Framework
+- Firebase
+- React Query
+- Sentry
+- And all the open-source libraries used in this project

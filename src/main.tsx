@@ -1,8 +1,8 @@
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import * as Sentry from '@sentry/react';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import { defineCustomElements } from '@ionic/pwa-elements/loader';
-import * as Sentry from '@sentry/react';
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -28,3 +28,17 @@ root.render(
 
 // Call the element loader after the app has been rendered the first time
 defineCustomElements(window);
+
+// Register service worker for PWA functionality
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/' })
+      .then((registration) => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      })
+      .catch((error) => {
+        console.error('ServiceWorker registration failed: ', error);
+      });
+  });
+}

@@ -9,3 +9,4 @@ export { default as ErrorBoundary } from './base/error';
 export { default as SentryErrorBoundary } from './base/error';
 export { MutationNotificationHandler } from './base/notifications';
 export { default as LetterIcon } from './base/display/LetterIcon';
+export { PwaInstallPrompt } from './pwa';

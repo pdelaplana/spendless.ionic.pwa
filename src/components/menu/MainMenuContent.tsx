@@ -1,17 +1,17 @@
-import { IonHeader, IonContent, IonLabel, IonIcon, IonList } from '@ionic/react';
-import styled from 'styled-components';
-import { Content } from '../layouts';
-import { ProfilePhoto, StyledItem } from '../shared';
+import { usePrompt } from '@/hooks';
 import { useAuth } from '@/providers/auth';
+import { ROUTES } from '@/routes/routes.constants';
+import { IonContent, IonHeader, IonIcon, IonLabel, IonList } from '@ionic/react';
 import {
-  idCardOutline,
-  settingsOutline,
   helpOutline,
+  idCardOutline,
   informationCircleOutline,
   logOutOutline,
+  settingsOutline,
 } from 'ionicons/icons';
-import { usePrompt } from '@/hooks';
-import { ROUTES } from '@/routes/routes.constants';
+import styled from 'styled-components';
+import { Content } from '../layouts';
+import { ProfilePhoto, PwaInstallPrompt, StyledItem } from '../shared';
 
 const StyledHeader = styled(IonHeader)`
   border-bottom-style: inset;
@@ -117,6 +117,11 @@ const MainMenuContent: React.FC = () => {
                 <p>Sign out of your account</p>
               </IonLabel>
             </StyledItem>
+
+            {/* PWA Installation section */}
+            <div className='ion-padding ion-text-center'>
+              <PwaInstallPrompt />
+            </div>
           </IonList>
         </Content>
       </IonContent>

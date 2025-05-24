@@ -1,3 +1,23 @@
 {
-  "extends": ["development"]
+  "extends": [
+    "development"
+  ],
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not chrome <= 80",
+    "not edge <= 80",
+    "not firefox <= 95"
+  ],
+  "hints": {
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "meta[name=theme-color]"
+        ]
+      }
+    ],
+    "meta-viewport": "off"
+  }
 }
