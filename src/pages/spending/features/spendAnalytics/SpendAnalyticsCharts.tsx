@@ -1,12 +1,12 @@
-import type { FC } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
 import styled from '@emotion/styled';
+import type { FC } from 'react';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import type { ISpend } from '@/domain/Spend';
-import { SpendingChart, SpeedometerChart, BurndownChart } from './charts';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { BurndownChart, SpeedometerChart, SpendingChart } from './charts';
 
 const ChartsContainer = styled.div`
   width: 100%;
@@ -56,6 +56,7 @@ export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
             max={targetSpend}
             label='Remaining'
             currency={account?.currency}
+            endDate={endDate}
           />
         </SwiperSlide>
         <SwiperSlide>

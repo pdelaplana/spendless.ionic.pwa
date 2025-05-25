@@ -1,8 +1,9 @@
-import type { FC } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
 import useFormatters from '@/hooks/ui/useFormatters';
 import styled from '@emotion/styled';
+import { IonText } from '@ionic/react';
+import { ArcElement, Chart as ChartJS, Tooltip } from 'chart.js';
+import type { FC } from 'react';
+import { Doughnut } from 'react-chartjs-2';
 
 const ChartContainer = styled.div`
   position: relative;
@@ -30,6 +31,20 @@ const Label = styled.div`
   color: var(--ion-color-dark);
 `;
 
+const DaysToGo = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  font-weight: bold;
+
+  color: var(--ion-color-dark);
+  text-align: center;
+  width: 100%;
+  pointer-events: none; /* Prevent interaction */
+`;
+
 ChartJS.register(ArcElement, Tooltip);
 
 interface SpeedometerChartProps {
@@ -38,6 +53,7 @@ interface SpeedometerChartProps {
   max?: number;
   label?: string;
   currency?: string;
+  endDate?: Date;
 }
 
 export const SpeedometerChart: FC<SpeedometerChartProps> = ({
@@ -46,8 +62,9 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
   max = 100,
   label = '',
   currency = 'USD',
+  endDate,
 }) => {
-  const { formatCurrency } = useFormatters();
+  const { formatCurrency, formatDaysUntil } = useFormatters();
   const normalizedValue = Math.min(Math.max(value, min), max);
   const percentage = ((normalizedValue - min) / (max - min)) * 100;
 
@@ -79,6 +96,9 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
 
   return (
     <ChartContainer>
+      <DaysToGo>
+        <IonText>{formatDaysUntil(endDate)} Days To Go</IonText>
+      </DaysToGo>
       <Doughnut data={data} options={options} />
       <ValueContainer>
         <Value>{formatCurrency(value, currency)}</Value>
