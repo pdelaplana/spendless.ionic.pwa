@@ -47,7 +47,7 @@ const ToggleFormField = <TFormValues extends FieldValues>({
           : {})}
         {...(getValues
           ? {
-              checked: getValues(name) === 'on',
+              checked: getValues(name),
             }
           : {})}
       >

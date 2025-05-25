@@ -1,18 +1,18 @@
 import { InputFormField, SelectFormField } from '@/components/forms';
 import TextAreaFormField from '@/components/forms/fields/TextAreaFormField';
+import ToggleFormField from '@/components/forms/fields/ToggleFormField';
 import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { ActionButton, ActionSheetButton, Gap } from '@/components/shared';
 import type { ActionOption } from '@/components/shared/base/buttons/ActionSheetButton';
-import { createSpend, type ISpend, type SpendCategory } from '@/domain/Spend';
-import { IonItem, IonLabel, IonList, IonToggle, useIonModal } from '@ionic/react';
-import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
-import { useEffect, useMemo, useState } from 'react';
-import { type RegisterOptions, type SubmitHandler, useForm, Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { type ISpend, type SpendCategory, createSpend } from '@/domain/Spend';
 import { spendValidation } from '@/domain/validation/spendValidation';
 import { usePrompt } from '@/hooks';
-import ToggleFormField from '@/components/forms/fields/ToggleFormField';
+import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
+import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
+import { useEffect, useMemo, useState } from 'react';
+import { type RegisterOptions, type SubmitHandler, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 interface SpendFormData {
   id?: string;
@@ -23,7 +23,7 @@ interface SpendFormData {
   amount: string;
   description: string;
   notes?: string;
-  recurring?: string;
+  recurring?: boolean;
 }
 
 interface SpendModalProps {
@@ -85,7 +85,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
       amount: Number(formData.amount),
       description: formData.description,
       notes: formData.notes,
-      recurring: formData.recurring === 'on',
+      recurring: formData.recurring,
     });
 
     if (formData.id) {
@@ -189,7 +189,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
         amount: spend.amount.toFixed(2),
         description: spend.description,
         notes: spend.notes,
-        recurring: spend.recurring ? 'on' : undefined,
+        recurring: spend.recurring,
       });
     }
   }, [spend, reset]);
