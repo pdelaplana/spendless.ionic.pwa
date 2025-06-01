@@ -31,4 +31,20 @@ export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions> = {
   recurring: {
     required: 'Recurring is required',
   },
+  emotionalState: {
+    validate: (value) =>
+      ['happy', 'neutral', 'sad', 'angry', 'stressed', 'tired'].includes(value) ||
+      'Invalid emotional state',
+  },
+  satisfactionRating: {
+    min: { value: 0, message: 'Satisfaction rating must be at least 0' },
+    max: { value: 5, message: 'Satisfaction rating must be at most 5' },
+    validate: (value) => !Number.isNaN(value) || 'Please enter a valid number',
+  },
+  necessityRating: {
+    min: { value: 0, message: 'Necessity rating must be at least 0' },
+    max: { value: 5, message: 'Necessity rating must be at most 5' },
+    validate: (value) => !Number.isNaN(value) || 'Please enter a valid number',
+  },
+  personalReflections: {},
 };
