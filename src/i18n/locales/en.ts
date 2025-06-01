@@ -40,10 +40,10 @@ export default {
     },
     spending: {
       categories: {
-        need: 'Essentials',
+        need: 'Needs',
         want: 'Wants',
-        culture: 'Culture & Entertainment',
-        unexpected: 'Unexpected Expenses',
+        culture: 'Culture',
+        unexpected: 'Unexpected',
       },
       deleteSpend: 'Delete Spending',
       deleteSpendMessage: 'Are you sure you want to delete this spending?',
@@ -53,6 +53,14 @@ export default {
       viewingClosedPeriodMessage:
         'You are viewing a previous spending period. Close to return current period.',
       loadMore: 'Load More',
+      modal: {
+        details: {
+          title: 'Spending Details',
+        },
+        mindfulSection: {
+          title: 'Mindful Moment',
+        },
+      },
     },
     periods: {
       title: 'Spending Periods',

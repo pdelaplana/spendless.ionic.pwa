@@ -1,5 +1,5 @@
-import { Timestamp, type DocumentData } from 'firebase/firestore';
-import { createSpend, type ISpend } from '@/domain/Spend';
+import { type ISpend, createSpend } from '@/domain/Spend';
+import { type DocumentData, Timestamp } from 'firebase/firestore';
 
 export const ACCOUNTS_COLLECTION = 'accounts';
 export const SPENDING_SUBCOLLECTION = 'spending';
@@ -15,6 +15,10 @@ export const mapToFirestore = (spend: ISpend): DocumentData => ({
   notes: spend.notes,
   periodId: spend.periodId,
   recurring: spend.recurring,
+  emotionalState: spend.emotionalState,
+  satisfactionRating: spend.satisfactionRating,
+  necessityRating: spend.necessityRating,
+  personalReflections: spend.personalReflections,
   createdAt: Timestamp.fromDate(spend.createdAt),
   updatedAt: Timestamp.fromDate(spend.updatedAt),
 });
@@ -29,6 +33,10 @@ export const mapFromFirestore = (id: string, data: DocumentData): ISpend => {
     notes: data.notes,
     periodId: data.periodId,
     recurring: data.recurring,
+    emotionalState: data.emotionalState,
+    satisfactionRating: data.satisfactionRating,
+    necessityRating: data.necessityRating,
+    personalReflections: data.personalReflections || [],
   });
 
   return {

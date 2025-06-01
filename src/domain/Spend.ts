@@ -10,6 +10,13 @@ export interface ISpend {
   readonly notes?: string;
   readonly periodId: string;
   readonly recurring?: boolean;
+  readonly emotionalState?: string;
+  readonly satisfactionRating?: number;
+  readonly necessityRating?: number;
+  readonly personalReflections?: Array<{
+    question: string;
+    answer: string;
+  }>;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -25,6 +32,10 @@ export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   notes: data.notes ?? '',
   recurring: data.recurring ?? false,
   periodId: data.periodId ?? '',
+  emotionalState: data.emotionalState ?? 'Neutral',
+  satisfactionRating: data.satisfactionRating ?? 0,
+  necessityRating: data.necessityRating ?? 0,
+  personalReflections: data.personalReflections ?? [],
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -39,5 +50,11 @@ export const updateSpend = (spend: ISpend, updates: Partial<ISpend>): ISpend => 
   ...(updates.description && { description: updates.description }),
   ...(updates.notes !== undefined && { notes: updates.notes }),
   ...(updates.recurring !== undefined && { recurring: updates.recurring }),
+  ...(updates.emotionalState && { emotionalState: updates.emotionalState }),
+  ...(updates.satisfactionRating !== undefined && {
+    satisfactionRating: updates.satisfactionRating,
+  }),
+  ...(updates.necessityRating !== undefined && { necessityRating: updates.necessityRating }),
+  ...(updates.personalReflections && { personalReflections: updates.personalReflections }),
   updatedAt: new Date(),
 });
