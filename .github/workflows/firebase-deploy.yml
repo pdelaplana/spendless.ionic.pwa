@@ -23,20 +23,14 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install PowerShell
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget apt-transport-https software-properties-common
-          wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-          sudo dpkg -i packages-microsoft-prod.deb
-          sudo apt-get update
-          sudo apt-get install -y powershell || { echo "PowerShell installation failed"; exit 1; }
-
       - name: Install Dependencies
         run: npm ci
 
+      - name: Generate PWA Assets
+        run: npx pwa-assets-generator
+
       - name: Build PWA
-        run: npm run build:pwa
+        run: npm run build
         env:
           # Add environment variables if needed
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -46,6 +40,23 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+
+      - name: Optimize PWA Assets
+        run: |
+          # Create directory if it doesn't exist
+          mkdir -p dist/assets/icons
+
+          # Copy and optimize icons if needed
+          if [ -d "public/images/icons" ]; then
+            cp -r public/images/icons/* dist/assets/icons/
+          fi
+
+          # Ensure manifest and service worker are properly placed
+          if [ -f "dist/manifest.webmanifest" ]; then
+            echo "PWA manifest found"
+          else
+            echo "Warning: manifest.webmanifest not found"
+          fi
 
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
