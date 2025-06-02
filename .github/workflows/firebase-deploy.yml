@@ -26,12 +26,6 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Install PWA Assets Generator
-        run: npm install -D @vite-pwa/assets-generator
-
-      - name: Generate PWA Assets
-        run: npx vite-pwa-assets-generator
-
       - name: Build PWA
         run: npm run build
         env:

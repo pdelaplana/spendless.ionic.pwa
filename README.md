@@ -39,3 +39,22 @@ This application is built as a PWA, which means:
 - Fast loading with service worker caching
 - Responsive across all device types
 - Push notifications support (where available)
+
+## PWA Asset Generation Guide
+
+### Recommended Approach: Pre-commit Generation
+
+This project includes PWA (Progressive Web App) capability, which requires various icon sizes and splash screens. We recommend generating these assets locally before committing changes:
+
+```bash
+npm run generate-pwa-assets
+```
+
+Only regenerate PWA assets when:
+
+You change the app's favicon or logo
+You modify the PWA theme colors
+You update the app's name or description in the manifest
+Alternative: CI/CD Pipelin
+
+Assets are generated from public/favicon.png using the configuration in the generate-pwa-assets script in package.json.
