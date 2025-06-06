@@ -1,5 +1,5 @@
 import type { SpendCategory } from '@/domain/Spend';
-import type { SpendFormData } from '@/pages/spending/modals/spendModal/SpendModal';
+import type { SpendFormData } from '@/pages/spending/modals/spendModal';
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/react';
 import { useCallback, useMemo } from 'react';
 import { type Control, type FieldValues, type UseFormSetValue, useWatch } from 'react-hook-form';
