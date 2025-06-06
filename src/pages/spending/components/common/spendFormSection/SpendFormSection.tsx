@@ -1,8 +1,9 @@
-import { InputFormField, SelectFormField } from '@/components/forms';
+import { InputFormField } from '@/components/forms';
 import TextAreaFormField from '@/components/forms/fields/TextAreaFormField';
 import ToggleFormField from '@/components/forms/fields/ToggleFormField';
+import NiceTags from '@/components/shared/tags/NiceTags';
 import { spendValidation } from '@/domain/validation';
-import type { SpendFormData } from '@/pages/spending/modals/SpendModal';
+import type { SpendFormData } from '@/pages/spending/modals/spendModal';
 import { StyledIonCard } from '@/styles/IonCard.styled';
 import {
   IonCardContent,
@@ -12,31 +13,38 @@ import {
   IonLabel,
   IonList,
 } from '@ionic/react';
-import { useMemo } from 'react';
-import type {
-  FieldErrors,
-  FieldValues,
-  RegisterOptions,
-  UseFormGetValues,
-  UseFormRegister,
-  UseFormSetValue,
+import {
+  type Control,
+  type FieldErrors,
+  type FieldValues,
+  type RegisterOptions,
+  type UseFormGetValues,
+  type UseFormRegister,
+  type UseFormSetValue,
+  useWatch,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 interface SpendFormSectionProps<TFormValues extends FieldValues> {
   register: UseFormRegister<TFormValues>;
-  setValue?: UseFormSetValue<TFormValues>;
-  getValues?: UseFormGetValues<TFormValues>;
+  setValue: UseFormSetValue<TFormValues>;
+  getValues: UseFormGetValues<TFormValues>;
   errors: FieldErrors<TFormValues>;
+  suggestedTags?: string[];
+  control: Control<TFormValues>;
 }
 
 const SpendFormSection: React.FC<SpendFormSectionProps<SpendFormData>> = ({
   register,
   setValue,
   getValues,
+  control,
   errors,
+  suggestedTags,
 }) => {
   const { t } = useTranslation();
+
+  const initialTags = useWatch({ name: 'tags', control });
 
   return (
     <StyledIonCard>
@@ -84,6 +92,17 @@ const SpendFormSection: React.FC<SpendFormSectionProps<SpendFormData>> = ({
                 error={errors.amount}
                 fill='outline'
                 validationRules={spendValidation.amount as RegisterOptions<SpendFormData>}
+              />
+            </IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonLabel>
+              <NiceTags
+                initialTags={initialTags}
+                suggestions={suggestedTags}
+                onTagsChange={(tags: string[]) => {
+                  setValue('tags', tags, { shouldDirty: true });
+                }}
               />
             </IonLabel>
           </IonItem>

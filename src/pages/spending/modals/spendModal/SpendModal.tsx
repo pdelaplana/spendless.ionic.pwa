@@ -1,50 +1,35 @@
-import { CenterContainer, Content } from '@/components/layouts';
+import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { ActionButton, ActionSheetButton, Gap } from '@/components/shared';
 import type { ActionOption } from '@/components/shared/base/buttons/ActionSheetButton';
-import { type ISpend, type SpendCategory, createSpend } from '@/domain/Spend';
+import { type ISpend, createSpend } from '@/domain/Spend';
 import { usePrompt } from '@/hooks';
-import { useIonModal } from '@ionic/react';
-import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import CategorySection from '../components/common/categorySection/CategorySection';
-import EmotionalAwarenessSection from '../components/common/emotionalAwarenessSection/EmotionalAwarenessSection';
-import PersonalReflectionSection from '../components/common/personalReflectionSection/PersonalReflectionSection';
-import RatingSection from '../components/common/ratingSection/RatingSection';
-import SpendFormSection from '../components/common/spendFormSection/SpendFormSection';
-
-export interface SpendFormData {
-  id?: string;
-  accountId: string;
-  periodId?: string;
-  date: string;
-  category: SpendCategory;
-  amount: string;
-  description: string;
-  notes?: string;
-  recurring?: boolean;
-
-  emotionalState?: string;
-  satisfactionRating?: number;
-  necessityRating?: number;
-
-  personalReflections?: Array<{
-    question: string;
-    answer: string;
-  }>;
-}
+import CategorySection from '../../components/common/categorySection/CategorySection';
+import EmotionalAwarenessSection from '../../components/common/emotionalAwarenessSection/EmotionalAwarenessSection';
+import PersonalReflectionSection from '../../components/common/personalReflectionSection/PersonalReflectionSection';
+import RatingSection from '../../components/common/ratingSection/RatingSection';
+import SpendFormSection from '../../components/common/spendFormSection/SpendFormSection';
+import type { SpendFormData } from './types';
 
 interface SpendModalProps {
   spend?: ISpend;
   onSave: (spend: Partial<ISpend>) => void;
   onDelete: (spendId: string) => void;
+  suggestedTags?: string[];
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
 }
 
-const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDismiss }) => {
+const SpendModal: React.FC<SpendModalProps> = ({
+  spend,
+  onSave,
+  onDelete,
+  suggestedTags,
+  onDismiss,
+}) => {
   const { t } = useTranslation();
   const { showConfirmPrompt } = usePrompt();
 
@@ -79,6 +64,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
       emotionalState: formData.emotionalState,
       satisfactionRating: formData.satisfactionRating,
       necessityRating: formData.necessityRating,
+      tags: formData.tags || [],
       personalReflections:
         formData.personalReflections?.map((reflection) => ({
           question: reflection.question,
@@ -191,6 +177,7 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
         emotionalState: spend.emotionalState,
         satisfactionRating: spend.satisfactionRating,
         necessityRating: spend.necessityRating,
+        tags: spend.tags ?? [],
         personalReflections:
           spend.personalReflections?.map((reflection) => ({
             question: reflection.question,
@@ -209,7 +196,9 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
             register={register}
             setValue={setValue}
             getValues={getValues}
+            control={control}
             errors={errors}
+            suggestedTags={suggestedTags}
           />
           <Gap size={'1rem'} />
           <EmotionalAwarenessSection setValue={setValue} control={control} />
@@ -226,44 +215,3 @@ const SpendModal: React.FC<SpendModalProps> = ({ spend, onSave, onDelete, onDism
 };
 
 export default SpendModal;
-
-export const useSpendModal = (): {
-  open: (
-    spend: ISpend,
-    onSave: (spend: ISpend) => void,
-    onDelete: (spendId: string) => void,
-  ) => Promise<{ role: string }>;
-} => {
-  const [inputs, setInputs] = useState<{
-    spend?: ISpend;
-    onSave?: (spend: ISpend) => void;
-    onDelete?: (spendId: string) => void;
-  }>();
-
-  const [present, dismiss] = useIonModal(SpendModal, {
-    spend: inputs?.spend,
-    onSave: inputs?.onSave,
-    onDelete: inputs?.onDelete,
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    onDismiss: (data: any, role: string) => dismiss(data, role),
-  });
-
-  return {
-    open: (spend: ISpend, onSave: (spend: ISpend) => void, onDelete: (spendId: string) => void) => {
-      setInputs({
-        spend,
-        onSave,
-        onDelete,
-      });
-      return new Promise((resolve) => {
-        present({
-          onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
-            if (ev.detail.role) {
-              resolve({ role: ev.detail.role });
-            }
-          },
-        });
-      });
-    },
-  };
-};

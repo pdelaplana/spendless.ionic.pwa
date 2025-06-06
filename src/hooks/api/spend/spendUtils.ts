@@ -1,4 +1,5 @@
 import { type ISpend, createSpend } from '@/domain/Spend';
+import { dataTagSymbol } from '@tanstack/react-query';
 import { type DocumentData, Timestamp } from 'firebase/firestore';
 
 export const ACCOUNTS_COLLECTION = 'accounts';
@@ -19,6 +20,7 @@ export const mapToFirestore = (spend: ISpend): DocumentData => ({
   satisfactionRating: spend.satisfactionRating,
   necessityRating: spend.necessityRating,
   personalReflections: spend.personalReflections,
+  tags: spend.tags || [], // Ensure tags are always an array
   createdAt: Timestamp.fromDate(spend.createdAt),
   updatedAt: Timestamp.fromDate(spend.updatedAt),
 });
@@ -36,6 +38,7 @@ export const mapFromFirestore = (id: string, data: DocumentData): ISpend => {
     emotionalState: data.emotionalState,
     satisfactionRating: data.satisfactionRating,
     necessityRating: data.necessityRating,
+    tags: data.tags || [],
     personalReflections: data.personalReflections || [],
   });
 

@@ -56,6 +56,8 @@ export interface SpendingAccountContextType {
   mutationError: unknown;
   mutationErrorMessage: string;
 
+  usedSpendingTags: string[];
+
   resetMutationState: () => void;
   resetFetchState: () => void;
 }

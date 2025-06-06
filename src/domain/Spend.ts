@@ -17,6 +17,7 @@ export interface ISpend {
     question: string;
     answer: string;
   }>;
+  readonly tags?: string[];
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -36,6 +37,7 @@ export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   satisfactionRating: data.satisfactionRating ?? 0,
   necessityRating: data.necessityRating ?? 0,
   personalReflections: data.personalReflections ?? [],
+  tags: data.tags ?? [],
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -56,5 +58,6 @@ export const updateSpend = (spend: ISpend, updates: Partial<ISpend>): ISpend => 
   }),
   ...(updates.necessityRating !== undefined && { necessityRating: updates.necessityRating }),
   ...(updates.personalReflections && { personalReflections: updates.personalReflections }),
+  ...(updates.tags && { tags: updates.tags }),
   updatedAt: new Date(),
 });

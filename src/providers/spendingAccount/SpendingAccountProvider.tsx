@@ -1,15 +1,13 @@
-import type { ReactNode } from 'react';
-import { SpendingAccountContext } from './context';
+import type { IPeriod } from '@/domain/Period';
 import {
-  useFetchAccountByUserId,
-  useUpdateAccount,
-  useDeleteAccount,
   useCreateSpend,
-  useUpdateSpend,
+  useDeleteAccount,
   useDeleteSpend,
+  useFetchAccountByUserId,
   useFetchSpendingByAccountId,
+  useUpdateAccount,
+  useUpdateSpend,
 } from '@/hooks';
-import { useEffect, useState } from 'react';
 import {
   useClosePeriod,
   useCopyRecurringSpend,
@@ -20,7 +18,9 @@ import {
   useFetchPeriods,
   useUpdatePeriod,
 } from '@/hooks/api';
-import type { IPeriod } from '@/domain/Period';
+import type { ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { SpendingAccountContext } from './context';
 
 export const SpendingAccountProvider: React.FC<{ userId: string; children: ReactNode }> = ({
   userId,
@@ -203,6 +203,12 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     }
   };
 
+  const getUsedSpendingTags = useMemo(() => {
+    const allSpending = spending?.pages?.flatMap((page) => page.spending) ?? [];
+    const allTags = allSpending.flatMap((spend) => spend.tags || []);
+    return Array.from(new Set(allTags)).sort((a, b) => a.localeCompare(b));
+  }, [spending]);
+
   useEffect(() => {
     if (selectedPeriod === undefined) {
       setSelectedPeriod(currentPeriod ?? undefined);
@@ -294,6 +300,8 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
           (updateSpendError as Error)?.message ||
           (deleteSpendError as Error)?.message ||
           'An error occurred while processing your request.',
+
+        usedSpendingTags: getUsedSpendingTags,
       }}
     >
       {children}

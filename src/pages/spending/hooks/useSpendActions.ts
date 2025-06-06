@@ -1,7 +1,7 @@
-import { useSpendingAccount } from '@/providers/spendingAccount';
-import { useSpendModal } from '../modals/SpendModal';
 import type { ISpend } from '@/domain/Spend';
 import { createSpend as createNewSpend } from '@/domain/Spend';
+import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useSpendModal } from '../modals/spendModal';
 
 export const useSpendActions = () => {
   const { open: openSpendModal } = useSpendModal();
@@ -13,6 +13,7 @@ export const useSpendActions = () => {
     deleteSpend,
     refetchSpending,
     resetMutationState,
+    usedSpendingTags,
   } = useSpendingAccount();
 
   const saveSpendHandler = async (spend: ISpend) => {
@@ -40,10 +41,12 @@ export const useSpendActions = () => {
   };
 
   const editSpendHandler = (spend: ISpend) => {
-    openSpendModal(spend, saveSpendHandler, deleteSpendHandler);
+    const suggestedTags = usedSpendingTags;
+    openSpendModal(spend, saveSpendHandler, deleteSpendHandler, suggestedTags);
   };
 
   const newSpendHandler = () => {
+    const suggestedTags = usedSpendingTags;
     openSpendModal(
       createNewSpend({
         accountId: account?.id || '',
@@ -55,6 +58,7 @@ export const useSpendActions = () => {
       }),
       saveSpendHandler,
       deleteSpendHandler,
+      suggestedTags,
     );
   };
 

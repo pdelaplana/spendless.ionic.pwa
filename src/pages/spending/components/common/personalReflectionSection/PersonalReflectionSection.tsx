@@ -1,5 +1,5 @@
 import TextAreaFormField from '@/components/forms/fields/TextAreaFormField';
-import type { SpendFormData } from '@/pages/spending/modals/SpendModal';
+import type { SpendFormData } from '@/pages/spending/modals/spendModal';
 import { StyledIonCard } from '@/styles/IonCard.styled';
 import {
   IonCardContent,
