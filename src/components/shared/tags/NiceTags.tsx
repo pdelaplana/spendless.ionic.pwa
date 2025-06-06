@@ -8,7 +8,6 @@ import {
   IonList,
   IonText,
 } from '@ionic/react';
-import { set } from 'date-fns';
 import { addOutline, closeCircleOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';

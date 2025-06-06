@@ -47,4 +47,5 @@ export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions> = {
     validate: (value) => !Number.isNaN(value) || 'Please enter a valid number',
   },
   personalReflections: {},
+  tags: {},
 };
