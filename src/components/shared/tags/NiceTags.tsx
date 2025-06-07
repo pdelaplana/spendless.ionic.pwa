@@ -79,6 +79,7 @@ const NiceTags: React.FC<NiceTagsProps> = ({
       onTagsChange?.(updatedTags);
       setInputValue('');
       setFilteredSuggestions([]);
+      inputRef.current?.setFocus();
     }
   };
 
@@ -123,7 +124,11 @@ const NiceTags: React.FC<NiceTagsProps> = ({
         {tags.map((tag) => (
           <IonChip key={tag} color='primary'>
             <IonLabel>{tag}</IonLabel>
-            <IonIcon icon={closeCircleOutline} onClick={() => removeTag(tag)} />
+            <IonIcon
+              icon={closeCircleOutline}
+              onClick={() => removeTag(tag)}
+              data-testid='remove-tag-icon'
+            />
           </IonChip>
         ))}
       </TagsContainer>
@@ -143,6 +148,7 @@ const NiceTags: React.FC<NiceTagsProps> = ({
           color='secondary'
           fill='solid'
           disabled={!inputValue.trim()}
+          data-testid='add-tag-button' // Add this line
         >
           <IonIcon icon={addOutline} slot='start' />
           Add
@@ -165,8 +171,6 @@ const NiceTags: React.FC<NiceTagsProps> = ({
                     button
                     onClick={() => {
                       addTag(suggestion);
-                      handleInputChange('');
-                      inputRef.current?.setFocus();
                     }}
                   >
                     <IonText>{suggestion}</IonText>

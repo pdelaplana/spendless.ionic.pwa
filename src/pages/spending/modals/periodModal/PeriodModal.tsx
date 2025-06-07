@@ -1,7 +1,7 @@
 import { InputFormField } from '@/components/forms';
 import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
-import { Gap, ActionButton } from '@/components/shared';
+import { ActionButton, Gap } from '@/components/shared';
 import type { CreatePeriodDTO, IPeriod } from '@/domain/Period';
 import { periodValidation } from '@/domain/validation/periodValidation';
 import { usePrompt } from '@/hooks';
@@ -9,6 +9,7 @@ import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useState } from 'react';
 import { type RegisterOptions, type SubmitHandler, useForm } from 'react-hook-form';
+import MindfulnessSection from '../../components/common/mindfulnessSection/MindfulnessSection';
 
 interface PeriodFormData {
   id?: string;
