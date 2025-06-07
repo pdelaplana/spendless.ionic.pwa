@@ -51,6 +51,14 @@ const AddButton = styled(IonButton)`
   margin-left: 0.5rem;
 `;
 
+const DropdownContainer = styled.div<{ top: number; left: number; width: number }>`
+  position: fixed;
+  top: ${(props) => props.top}px;
+  left: ${(props) => props.left}px;
+  width: ${(props) => props.width}px;
+  z-index: 99999;
+`;
+
 interface NiceTagsProps {
   initialTags?: string[];
   suggestions?: string[];
@@ -155,14 +163,10 @@ const NiceTags: React.FC<NiceTagsProps> = ({
         </AddButton>
         {filteredSuggestions.length > 0 &&
           ReactDOM.createPortal(
-            <div
-              style={{
-                position: 'fixed',
-                top: `${dropdownPosition.top}px`,
-                left: `${dropdownPosition.left}px`,
-                width: `${dropdownPosition.width}px`,
-                zIndex: 99999,
-              }}
+            <DropdownContainer
+              top={dropdownPosition.top}
+              left={dropdownPosition.left}
+              width={dropdownPosition.width}
             >
               <SuggestionsDropdown lines='none'>
                 {filteredSuggestions.map((suggestion) => (
@@ -177,7 +181,7 @@ const NiceTags: React.FC<NiceTagsProps> = ({
                   </IonItem>
                 ))}
               </SuggestionsDropdown>
-            </div>,
+            </DropdownContainer>,
             document.body,
           )}
       </InputContainer>
