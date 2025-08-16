@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { useAppNotifications } from '@/hooks';
+import { useEffect } from 'react';
 
 interface MutationNotificationHandlerProps {
   didSucceed?: boolean;

@@ -1,11 +1,11 @@
 import { BasePageLayout } from '@/components/layouts';
 import MainMenuContent from '@/components/menu/MainMenuContent';
-import { useSpendingAccount } from '@/providers/spendingAccount';
-import { useTranslation } from 'react-i18next';
-import PeriodSpendingView from './features/spendTracker/PeriodSpendingView';
-import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
 import { SentryErrorBoundary } from '@/components/shared';
 import useFormatters from '@/hooks/ui/useFormatters';
+import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useTranslation } from 'react-i18next';
+import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
+import PeriodSpendingView from './features/spendTracker/PeriodSpendingView';
 
 const SpendingPage: React.FC = () => {
   const { t } = useTranslation();

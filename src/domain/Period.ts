@@ -1,3 +1,6 @@
+import type { IWalletSetup } from './Wallet';
+import { validateWalletSetupArray } from './Wallet';
+
 export interface IPeriod {
   readonly id?: string;
   readonly name: string;
@@ -8,6 +11,7 @@ export interface IPeriod {
   readonly endAt: Date;
   readonly closedAt?: Date;
   readonly reflection: string;
+  readonly walletSetup?: IWalletSetup[];
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -22,6 +26,13 @@ export const createPeriod = (data: Partial<CreatePeriodDTO>): IPeriod => ({
   startAt: data.startAt ?? new Date(),
   endAt: data.endAt ?? new Date(),
   reflection: data.reflection ?? '',
+  walletSetup: data.walletSetup ?? [
+    {
+      name: 'Default Wallet',
+      spendingLimit: data.targetSpend ?? 0,
+      isDefault: true,
+    },
+  ],
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -35,6 +46,7 @@ export const updatePeriod = (period: IPeriod, updates: Partial<IPeriod>): IPerio
   ...(updates.startAt && { startAt: updates.startAt }),
   ...(updates.endAt && { endAt: updates.endAt }),
   ...(updates.reflection !== undefined && { reflection: updates.reflection }),
+  ...(updates.walletSetup && { walletSetup: updates.walletSetup }),
   ...(updates.closedAt !== undefined && { closedAt: updates.closedAt }),
   updatedAt: new Date(),
 });
@@ -62,5 +74,34 @@ export const validatePeriod = (period: IPeriod): string[] => {
   if (period.targetSpend < 0) errors.push('Target spend must be positive');
   if (period.startAt >= period.endAt) errors.push('Start date must be before end date');
 
+  // Validate wallet setup if provided
+  if (period.walletSetup && period.walletSetup.length > 0) {
+    const walletErrors = validateWalletSetupArray(period.walletSetup);
+    errors.push(...walletErrors);
+  }
+
   return errors;
+};
+
+export const createDefaultWalletSetup = (targetSpend: number): IWalletSetup[] => [
+  {
+    name: 'Default Wallet',
+    spendingLimit: targetSpend,
+    isDefault: true,
+  },
+];
+
+export const getTotalWalletLimits = (period: IPeriod): number => {
+  if (!period.walletSetup || period.walletSetup.length === 0) {
+    return period.targetSpend;
+  }
+  return period.walletSetup.reduce((total, wallet) => total + wallet.spendingLimit, 0);
+};
+
+export const getDefaultWallet = (period: IPeriod): IWalletSetup | undefined => {
+  return period.walletSetup?.find((wallet) => wallet.isDefault);
+};
+
+export const hasWalletSetup = (period: IPeriod): boolean => {
+  return !!(period.walletSetup && period.walletSetup.length > 0);
 };

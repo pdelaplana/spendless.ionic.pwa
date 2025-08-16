@@ -1,9 +1,9 @@
-import { doc, deleteDoc } from 'firebase/firestore';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { db } from '@/infrastructure/firebase';
-import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION } from './spendUtils';
 import { useLogging } from '@/hooks';
+import { db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION } from './spendUtils';
 
 export function useDeleteSpend() {
   const queryClient = useQueryClient();

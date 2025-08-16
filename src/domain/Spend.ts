@@ -9,6 +9,7 @@ export interface ISpend {
   readonly description: string;
   readonly notes?: string;
   readonly periodId: string;
+  readonly walletId: string;
   readonly recurring?: boolean;
   readonly emotionalState?: string;
   readonly satisfactionRating?: number;
@@ -33,6 +34,7 @@ export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   notes: data.notes ?? '',
   recurring: data.recurring ?? false,
   periodId: data.periodId ?? '',
+  walletId: data.walletId ?? '',
   emotionalState: data.emotionalState ?? 'Neutral',
   satisfactionRating: data.satisfactionRating ?? 0,
   necessityRating: data.necessityRating ?? 0,
@@ -52,6 +54,7 @@ export const updateSpend = (spend: ISpend, updates: Partial<ISpend>): ISpend => 
   ...(updates.description && { description: updates.description }),
   ...(updates.notes !== undefined && { notes: updates.notes }),
   ...(updates.recurring !== undefined && { recurring: updates.recurring }),
+  ...(updates.walletId && { walletId: updates.walletId }),
   ...(updates.emotionalState && { emotionalState: updates.emotionalState }),
   ...(updates.satisfactionRating !== undefined && {
     satisfactionRating: updates.satisfactionRating,

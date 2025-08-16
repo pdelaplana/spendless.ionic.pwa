@@ -1,7 +1,9 @@
 import { InputFormField } from '@/components/forms';
+import InformationContent from '@/components/layouts/InformationContent';
 import PublicPageLayout from '@/components/layouts/PublicPageLayout';
 import { ActionButton, Gap } from '@/components/shared';
 import { useAppNotifications } from '@/hooks/ui';
+import { useAuth } from '@/providers/auth';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonCard } from '@/styles/IonCard.styled';
 import {
@@ -15,11 +17,9 @@ import {
   IonText,
 } from '@ionic/react';
 import { t } from 'i18next';
-import { useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { useAuth } from '@/providers/auth';
 import { mailOutline, sadOutline } from 'ionicons/icons';
-import InformationContent from '@/components/layouts/InformationContent';
+import { useState } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 
 interface ForgotPasswordForm {
   email: string;

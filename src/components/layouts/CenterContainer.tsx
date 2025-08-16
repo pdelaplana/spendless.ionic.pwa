@@ -1,4 +1,4 @@
-import { IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonCol, IonGrid, IonRow } from '@ionic/react';
 import type { PropsWithChildren } from 'react';
 
 type CenterContainerProps = PropsWithChildren;

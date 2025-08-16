@@ -1,7 +1,7 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { db } from '@/infrastructure/firebase';
 import type { ISpend } from '@/domain/Spend';
+import { db } from '@/infrastructure/firebase';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import {
   ACCOUNTS_COLLECTION,
   SPENDING_SUBCOLLECTION,

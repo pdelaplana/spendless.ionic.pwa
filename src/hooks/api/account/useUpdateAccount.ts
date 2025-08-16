@@ -1,10 +1,10 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { db } from '@/infrastructure/firebase';
 import type { IAccount } from '@/domain/Account';
-import { ACCOUNTS_COLLECTION, mapFromFirestore, mapToFirestore } from './accountUtils';
 import { useLogging } from '@/hooks';
+import { db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/browser';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { ACCOUNTS_COLLECTION, mapFromFirestore, mapToFirestore } from './accountUtils';
 
 export function useUpdateAccount() {
   const queryClient = useQueryClient();

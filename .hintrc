@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "development"
-  ],
+  "extends": ["development"],
   "browserslist": [
     "defaults",
     "not ie 11",
@@ -13,9 +11,7 @@
     "compat-api/html": [
       "default",
       {
-        "ignore": [
-          "meta[name=theme-color]"
-        ]
+        "ignore": ["meta[name=theme-color]"]
       }
     ],
     "meta-viewport": "off"

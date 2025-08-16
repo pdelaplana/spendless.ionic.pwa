@@ -1,12 +1,12 @@
-import type { FC } from 'react';
 import { IonButton, IonIcon, IonText } from '@ionic/react';
 import {
-  createOutline,
   calendar,
-  ellipsisHorizontalOutline,
   calendarNumber,
   calendarNumberOutline,
+  createOutline,
+  ellipsisHorizontalOutline,
 } from 'ionicons/icons';
+import type { FC } from 'react';
 
 interface QuickActionButtonsProps {
   onNewSpend: () => void;

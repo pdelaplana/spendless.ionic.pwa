@@ -1,23 +1,23 @@
-import { useState, type ReactNode, type FC, useEffect, useCallback } from 'react';
+import { useLogging } from '@/hooks';
+import { Preferences } from '@capacitor/preferences';
 import * as Sentry from '@sentry/react';
-import { auth, db } from '../../infrastructure/firebase';
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
-  updateEmail as updateAuthEmail,
   type AuthError,
   type UserCredential,
-  sendPasswordResetEmail,
   confirmPasswordReset as authConfirmPasswordReset,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+  updateEmail as updateAuthEmail,
+  updateProfile,
 } from 'firebase/auth';
-import { Preferences } from '@capacitor/preferences';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import type { AuthUser, profileFields, UserRole } from './types';
+import { type FC, type ReactNode, useCallback, useEffect, useState } from 'react';
+import { auth, db } from '../../infrastructure/firebase';
 import { AuthContext } from './context';
-import { useLogging } from '@/hooks';
+import type { AuthUser, UserRole, profileFields } from './types';
 
 const dbCollection = 'userProfileExtensions';
 

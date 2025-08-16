@@ -1,6 +1,6 @@
+import { IonIcon, IonText } from '@ionic/react';
 import type { ReactNode } from 'react';
 import { CenterContent } from './CenterContent';
-import { IonIcon, IonText } from '@ionic/react';
 
 interface InformationContentProps {
   icon: string;

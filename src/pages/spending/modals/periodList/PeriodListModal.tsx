@@ -1,14 +1,14 @@
 import { CenterContainer } from '@/components/layouts';
+import EmptyContent from '@/components/layouts/EmptyContent';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import type { IPeriod } from '@/domain/Period';
+import useFormatters from '@/hooks/ui/useFormatters';
+import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
 import { IonButton, IonIcon, IonLabel, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
-import { useState } from 'react';
-import useFormatters from '@/hooks/ui/useFormatters';
-import { useTranslation } from 'react-i18next';
-import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
 import { trashBin } from 'ionicons/icons';
-import EmptyContent from '@/components/layouts/EmptyContent';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PeriodListModalProps {
   periods: (IPeriod & { actualSpend: number })[];

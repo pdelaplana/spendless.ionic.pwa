@@ -1,5 +1,5 @@
-import { Timestamp, type DocumentData } from 'firebase/firestore';
-import { createAccount, type IAccount } from '@/domain/Account';
+import { type IAccount, createAccount } from '@/domain/Account';
+import { type DocumentData, Timestamp } from 'firebase/firestore';
 
 export const ACCOUNTS_COLLECTION = 'accounts';
 

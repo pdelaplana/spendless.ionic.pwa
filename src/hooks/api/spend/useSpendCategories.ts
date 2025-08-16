@@ -1,6 +1,6 @@
-import { collection, getDocs, query } from 'firebase/firestore';
-import { useQuery } from '@tanstack/react-query';
 import { db } from '@/infrastructure/firebase';
+import { useQuery } from '@tanstack/react-query';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION } from './spendUtils';
 
 export function useSpendCategories() {

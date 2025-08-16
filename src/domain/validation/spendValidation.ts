@@ -28,6 +28,9 @@ export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions> = {
   periodId: {
     required: 'Period ID is required',
   },
+  walletId: {
+    required: 'Wallet ID is required',
+  },
   recurring: {
     required: 'Recurring is required',
   },

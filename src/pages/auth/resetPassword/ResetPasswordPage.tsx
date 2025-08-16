@@ -8,20 +8,20 @@ import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonCard } from '@/styles/IonCard.styled';
 import type { FirebaseError } from '@firebase/app';
 import {
+  IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonText,
-  IonCardContent,
-  IonList,
   IonItem,
   IonLabel,
-  IonRouterLink,
+  IonList,
   IonNote,
+  IonRouterLink,
+  IonText,
 } from '@ionic/react';
 import { t } from 'i18next';
-import { sadOutline, mailOutline } from 'ionicons/icons';
+import { mailOutline, sadOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 interface ResetPasswordForm {

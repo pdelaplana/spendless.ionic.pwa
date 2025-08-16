@@ -1,10 +1,10 @@
-import { IonAvatar, IonIcon } from '@ionic/react';
-import { pencil } from 'ionicons/icons';
-import styled from 'styled-components';
-import { storage } from '@infrastructure/firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { useEffect, useState } from 'react';
 import { useCamera } from '@hooks/device';
+import { storage } from '@infrastructure/firebase';
+import { IonAvatar, IonIcon } from '@ionic/react';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { pencil } from 'ionicons/icons';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const Container = styled.div`
   position: relative;

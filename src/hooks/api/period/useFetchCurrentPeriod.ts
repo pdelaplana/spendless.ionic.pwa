@@ -1,7 +1,7 @@
+import { db } from '@/infrastructure/firebase';
+import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
 import { ACCOUNTS_COLLECTION, PERIODS_SUBCOLLECTION, mapFromFirestore } from './periodUtils';
-import { useQuery } from '@tanstack/react-query';
-import { db } from '@/infrastructure/firebase';
 
 export function useFetchCurrentPeriod(accountId: string | undefined) {
   return useQuery({

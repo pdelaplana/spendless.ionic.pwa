@@ -1,28 +1,28 @@
+import HeaderLogo from '@/components/shared/base/display/HeaderLogo';
+import { usePrompt } from '@hooks/ui';
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   IonBackButton,
   IonButton,
-  IonIcon,
+  IonButtons,
   IonContent,
-  useIonViewWillEnter,
   IonFooter,
-  IonTitle,
-  IonText,
+  IonHeader,
+  IonIcon,
   IonMenu,
   IonMenuButton,
   IonMenuToggle,
+  IonPage,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
 import { exitOutline, personCircleOutline } from 'ionicons/icons';
 import type { PropsWithChildren } from 'react';
-import HeaderLogo from '@/components/shared/base/display/HeaderLogo';
-import { usePrompt } from '@hooks/ui';
 
-import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import '@i18n/config';
 import { ROUTES } from '@/routes/routes.constants';
 import { LetterIcon } from '../shared';

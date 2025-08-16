@@ -1,6 +1,6 @@
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
-import { useQuery } from '@tanstack/react-query';
 import { db } from '@/infrastructure/firebase';
+import { useQuery } from '@tanstack/react-query';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION, mapFromFirestore } from './spendUtils';
 
 export function useFetchSpendingByPeriod(

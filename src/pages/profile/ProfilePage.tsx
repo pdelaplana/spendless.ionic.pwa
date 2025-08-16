@@ -1,8 +1,8 @@
-import { IonLabel, IonList, IonIcon } from '@ionic/react';
-import { idCardOutline } from 'ionicons/icons';
-import { useAuth } from '@providers/auth/useAuth';
-import { BasePageLayout, CenterContainer, Content } from '@components/layouts';
 import { ProfilePhoto, StyledItem } from '@/components/shared';
+import { BasePageLayout, CenterContainer, Content } from '@components/layouts';
+import { IonIcon, IonLabel, IonList } from '@ionic/react';
+import { useAuth } from '@providers/auth/useAuth';
+import { idCardOutline } from 'ionicons/icons';
 
 const ProfilePage: React.FC = () => {
   const { user, updatePhotoUrl } = useAuth();

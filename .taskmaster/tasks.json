@@ -1,0 +1,330 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "✅ Sprint 1: Foundation - Domain Entities",
+      "description": "Implement Wallet and WalletSetup domain entities, update Spend and Period entities",
+      "status": "completed",
+      "priority": "high",
+      "sprint": "1",
+      "category": "foundation",
+      "subtasks": [
+        {
+          "id": "1.1",
+          "title": "✅ Create Wallet domain entity (IWallet interface)",
+          "status": "completed"
+        },
+        {
+          "id": "1.2", 
+          "title": "✅ Create WalletSetup interface for period creation",
+          "status": "completed"
+        },
+        {
+          "id": "1.3",
+          "title": "✅ Update Spend entity with walletId field",
+          "status": "completed"
+        },
+        {
+          "id": "1.4",
+          "title": "✅ Update Period entity with walletSetup field",
+          "status": "completed"
+        },
+        {
+          "id": "1.5",
+          "title": "✅ Create comprehensive wallet validation rules",
+          "status": "completed"
+        }
+      ],
+      "acceptance_criteria": [
+        "✅ IWallet interface with all required fields",
+        "✅ IWalletSetup interface for period setup",
+        "✅ Spend entity includes walletId field",
+        "✅ Period entity includes walletSetup array",
+        "✅ Validation functions for wallet business rules",
+        "✅ TypeScript compilation passes",
+        "✅ Linting rules pass"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "🔄 Sprint 2: API Layer - Hooks Implementation", 
+      "description": "Implement wallet management hooks and update existing spend hooks",
+      "status": "pending",
+      "priority": "high",
+      "sprint": "2",
+      "category": "api",
+      "subtasks": [
+        {
+          "id": "2.1",
+          "title": "Create useFetchWalletsByPeriod hook",
+          "status": "pending",
+          "description": "Fetch all wallets for a specific period from Firestore"
+        },
+        {
+          "id": "2.2",
+          "title": "Create useUpdateWallet hook",
+          "status": "pending", 
+          "description": "Update wallet name and spending limit during active period"
+        },
+        {
+          "id": "2.3",
+          "title": "Create useDeleteWallet hook", 
+          "status": "pending",
+          "description": "Delete empty wallets (business rule: only if no transactions)"
+        },
+        {
+          "id": "2.4",
+          "title": "Update useCreatePeriod hook for wallet setup",
+          "status": "pending",
+          "description": "Modify period creation to include wallet setup and auto-generate wallets"
+        },
+        {
+          "id": "2.5",
+          "title": "Update useUpdatePeriod hook for wallet modifications",
+          "status": "pending",
+          "description": "Allow wallet configuration changes during period setup"
+        },
+        {
+          "id": "2.6",
+          "title": "Update useFetchSpendingByWallet hook",
+          "status": "pending", 
+          "description": "Filter spending data by wallet ID"
+        },
+        {
+          "id": "2.7",
+          "title": "Create useFetchWalletBalance hook",
+          "status": "pending",
+          "description": "Calculate current wallet balance from spending transactions"
+        },
+        {
+          "id": "2.8",
+          "title": "Create useFetchWalletSummary hook",
+          "status": "pending",
+          "description": "Get wallet spending summary with balance and remaining budget"
+        },
+        {
+          "id": "2.9",
+          "title": "Update wallet utilities for Firestore mapping",
+          "status": "pending",
+          "description": "Create walletUtils.ts with mapToFirestore/mapFromFirestore functions"
+        }
+      ],
+      "acceptance_criteria": [
+        "All wallet management hooks implemented and tested",
+        "Period creation hooks support wallet setup",
+        "Spending hooks filter by wallet ID",
+        "Firestore integration works correctly",
+        "Error handling and loading states implemented",
+        "React Query caching and invalidation setup"
+      ]
+    },
+    {
+      "id": "3", 
+      "title": "🔄 Sprint 3: Core UI - Components Implementation",
+      "description": "Create wallet management components and update period creation UI",
+      "status": "pending",
+      "priority": "high", 
+      "sprint": "3",
+      "category": "ui",
+      "subtasks": [
+        {
+          "id": "3.1",
+          "title": "Update PeriodModal to include wallet setup",
+          "status": "pending",
+          "description": "Add wallet setup step to period creation flow"
+        },
+        {
+          "id": "3.2",
+          "title": "Create WalletSetupForm component",
+          "status": "pending",
+          "description": "Form for adding/editing wallets during period creation"
+        },
+        {
+          "id": "3.3", 
+          "title": "Create WalletListView component",
+          "status": "pending",
+          "description": "Display list of wallets with balance and remaining budget"
+        },
+        {
+          "id": "3.4",
+          "title": "Create WalletSwitcher component",
+          "status": "pending",
+          "description": "Dropdown/tabs for switching between wallets"
+        },
+        {
+          "id": "3.5",
+          "title": "Update SpendModal to include wallet selection",
+          "status": "pending",
+          "description": "Add wallet selection field to spend creation form"
+        },
+        {
+          "id": "3.6",
+          "title": "Create WalletEditModal component",
+          "status": "pending", 
+          "description": "Modal for editing wallet name and spending limit"
+        },
+        {
+          "id": "3.7",
+          "title": "Update spending list to filter by selected wallet",
+          "status": "pending",
+          "description": "Show only transactions for currently selected wallet"
+        },
+        {
+          "id": "3.8",
+          "title": "Add wallet context indicator in header",
+          "status": "pending",
+          "description": "Show current wallet name in app header"
+        }
+      ],
+      "acceptance_criteria": [
+        "Period creation includes wallet setup step",
+        "Users can add/remove wallets during setup",
+        "Wallet switching functionality works",
+        "Spend creation allows wallet selection", 
+        "Wallet list shows balance and budget info",
+        "UI follows Ionic design patterns",
+        "Components are responsive and accessible"
+      ]
+    },
+    {
+      "id": "4",
+      "title": "🔄 Sprint 4: Advanced Features - Analytics & Management",
+      "description": "Implement wallet analytics and advanced management features",
+      "status": "pending",
+      "priority": "medium",
+      "sprint": "4", 
+      "category": "features",
+      "subtasks": [
+        {
+          "id": "4.1",
+          "title": "Create WalletAnalytics component",
+          "status": "pending",
+          "description": "Charts showing wallet spending vs limits"
+        },
+        {
+          "id": "4.2",
+          "title": "Create WalletComparisonView component", 
+          "status": "pending",
+          "description": "Compare spending across multiple wallets"
+        },
+        {
+          "id": "4.3",
+          "title": "Create WalletPerformanceIndicators component",
+          "status": "pending",
+          "description": "Visual indicators for wallet budget performance"
+        },
+        {
+          "id": "4.4",
+          "title": "Implement wallet limit modification during active periods",
+          "status": "pending",
+          "description": "Allow users to adjust wallet limits mid-period"
+        },
+        {
+          "id": "4.5",
+          "title": "Create WalletManagementSettings page",
+          "status": "pending",
+          "description": "Dedicated page for wallet configuration"
+        },
+        {
+          "id": "4.6",
+          "title": "Add wallet usage percentage calculations",
+          "status": "pending", 
+          "description": "Show percentage of wallet budget used"
+        },
+        {
+          "id": "4.7",
+          "title": "Implement wallet budget warnings",
+          "status": "pending",
+          "description": "Notify users when approaching wallet limits"
+        }
+      ],
+      "acceptance_criteria": [
+        "Wallet analytics show meaningful insights",
+        "Users can modify wallet limits during periods",
+        "Performance indicators are visually clear",
+        "Warning system helps prevent overspending",
+        "Management interface is intuitive",
+        "Charts and visualizations render correctly"
+      ]
+    },
+    {
+      "id": "5",
+      "title": "🔄 Sprint 5: Migration & Polish - Data Migration",
+      "description": "Implement data migration for existing users and polish UX",
+      "status": "pending",
+      "priority": "high",
+      "sprint": "5",
+      "category": "migration",
+      "subtasks": [
+        {
+          "id": "5.1",
+          "title": "Create data migration script for existing periods",
+          "status": "pending",
+          "description": "Generate default wallet setup for periods without wallets"
+        },
+        {
+          "id": "5.2",
+          "title": "Migrate existing spending to default wallets",
+          "status": "pending", 
+          "description": "Assign walletId to all existing spending records"
+        },
+        {
+          "id": "5.3",
+          "title": "Update Firestore security rules for wallets",
+          "status": "pending",
+          "description": "Add security rules for wallet collection access"
+        },
+        {
+          "id": "5.4",
+          "title": "Create onboarding flow for wallet feature",
+          "status": "pending",
+          "description": "Guide users through wallet setup on first use"
+        },
+        {
+          "id": "5.5",
+          "title": "Polish UI/UX based on testing feedback", 
+          "status": "pending",
+          "description": "Refine components and interactions"
+        },
+        {
+          "id": "5.6",
+          "title": "Update documentation and help content",
+          "status": "pending",
+          "description": "Add wallet feature to user documentation"
+        },
+        {
+          "id": "5.7",
+          "title": "Performance optimization for wallet queries",
+          "status": "pending",
+          "description": "Optimize Firestore queries and caching"
+        },
+        {
+          "id": "5.8",
+          "title": "Comprehensive testing of wallet workflows",
+          "status": "pending",
+          "description": "Test all wallet user flows end-to-end"
+        }
+      ],
+      "acceptance_criteria": [
+        "Existing users' data migrated successfully",
+        "All spending records have valid walletId",
+        "Security rules protect wallet data",
+        "New users understand wallet concept",
+        "Performance is acceptable with large datasets", 
+        "All user workflows tested and working",
+        "Documentation is complete and accurate"
+      ]
+    }
+  ],
+  "metadata": {
+    "project": "Spendless PWA - Wallets Feature",
+    "prd_file": "wallets_feature.md",
+    "generated_date": "2025-01-16",
+    "total_tasks": 5,
+    "total_subtasks": 37,
+    "sprints": 5,
+    "current_sprint": 1,
+    "completed_tasks": 1,
+    "progress": "Sprint 1 (Foundation) completed successfully"
+  }
+}

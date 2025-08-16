@@ -1,4 +1,16 @@
+import ForgotPasswordPage from '@/pages/auth/forgotPassword/ForgotPasswordPage';
+import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
 import SigninPage from '@/pages/auth/signin/SigninPage';
+import SignupPage from '@/pages/auth/signup/SignupPage';
+import HomePage from '@/pages/home/HomePage';
+import ProfileInformationPage from '@/pages/profile/ProfileInformationPage';
+import ProfilePage from '@/pages/profile/ProfilePage';
+import SettingsPage from '@/pages/settings/SettingsPage';
+import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
+import SpendingPage from '@/pages/spending/SpendingPage';
+import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
+import { useAuth } from '@/providers/auth/useAuth';
+import { SpendingAccountProvider } from '@/providers/spendingAccount';
 import {
   IonIcon,
   IonLabel,
@@ -8,25 +20,13 @@ import {
   IonTabButton,
   IonTabs,
 } from '@ionic/react';
-import { Route, Redirect, Switch } from 'react-router';
-import { ROUTES } from './routes.constants';
-import HomePage from '@/pages/home/HomePage';
-import { useAuth } from '@/providers/auth/useAuth';
-import type React from 'react';
-import { useState, useEffect } from 'react';
 import { IonReactRouter } from '@ionic/react-router';
-import SignupPage from '@/pages/auth/signup/SignupPage';
+import { ellipsisHorizontalOutline, homeOutline, peopleOutline } from 'ionicons/icons';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { Redirect, Route, Switch } from 'react-router';
 import ProtectedRoute from './ProtectedRoute';
-import ProfilePage from '@/pages/profile/ProfilePage';
-import ProfileInformationPage from '@/pages/profile/ProfileInformationPage';
-import { homeOutline, peopleOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
-import SpendingPage from '@/pages/spending/SpendingPage';
-import { SpendingAccountProvider } from '@/providers/spendingAccount';
-import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
-import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
-import SettingsPage from '@/pages/settings/SettingsPage';
-import ForgotPasswordPage from '@/pages/auth/forgotPassword/ForgotPasswordPage';
-import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
+import { ROUTES } from './routes.constants';
 
 interface AuthState {
   isInitialized: boolean;

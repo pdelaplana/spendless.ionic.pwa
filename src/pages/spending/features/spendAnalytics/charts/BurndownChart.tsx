@@ -1,20 +1,20 @@
-import type { FC } from 'react';
+import type { ISpend } from '@/domain/Spend';
+import useFormatters from '@/hooks/ui/useFormatters';
+import styled from '@emotion/styled';
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LineElement,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Legend,
-  Filler,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import styled from '@emotion/styled';
-import useFormatters from '@/hooks/ui/useFormatters';
-import type { ISpend } from '@/domain/Spend';
+import type { FC } from 'react';
 import { useMemo } from 'react';
+import { Line } from 'react-chartjs-2';
 
 // Register Chart.js components
 ChartJS.register(

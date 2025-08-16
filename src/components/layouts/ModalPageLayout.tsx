@@ -1,13 +1,13 @@
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   IonButton,
-  IonIcon,
-  IonTitle,
+  IonButtons,
   IonContent,
   IonFooter,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/react';
 import { closeOutline } from 'ionicons/icons';
 import type React from 'react';

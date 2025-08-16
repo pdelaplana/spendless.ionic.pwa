@@ -1,7 +1,7 @@
-import type React from 'react';
-import { Route, Redirect, type RouteProps } from 'react-router-dom';
+import { type UserRole, useAuth } from '@/providers/auth';
 import { IonLoading } from '@ionic/react';
-import { useAuth, type UserRole } from '@/providers/auth';
+import type React from 'react';
+import { Redirect, Route, type RouteProps } from 'react-router-dom';
 import { ROUTES } from './routes.constants';
 
 interface IProtectedRouteProps extends RouteProps {

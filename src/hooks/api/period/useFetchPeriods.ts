@@ -1,16 +1,16 @@
+import { db } from '@/infrastructure/firebase';
+import { useQuery } from '@tanstack/react-query';
 import {
   collection,
-  query,
-  getDocs,
-  orderBy,
   getAggregateFromServer,
+  getDocs,
   limit,
+  orderBy,
+  query,
   sum,
   where,
 } from 'firebase/firestore';
 import { ACCOUNTS_COLLECTION, PERIODS_SUBCOLLECTION, mapFromFirestore } from './periodUtils';
-import { db } from '@/infrastructure/firebase';
-import { useQuery } from '@tanstack/react-query';
 
 export function useFetchPeriods(accountId: string | undefined) {
   return useQuery({

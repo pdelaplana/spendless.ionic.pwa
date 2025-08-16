@@ -1,17 +1,17 @@
 import type { IonInputCustomEvent } from '@ionic/core';
 import { IonInput, IonText } from '@ionic/react';
-import ValidationError from './../validation/ValidationError';
+import type { ReactElement } from 'react';
 import type {
   FieldError,
+  FieldValues,
+  Path,
+  PathValue,
+  RegisterOptions,
   UseFormGetValues,
   UseFormRegister,
   UseFormSetValue,
-  FieldValues,
-  Path,
-  RegisterOptions,
-  PathValue,
 } from 'react-hook-form';
-import type { ReactElement } from 'react';
+import ValidationError from './../validation/ValidationError';
 
 interface InputFormFieldProps<TFormValues extends FieldValues> {
   name: Path<TFormValues>;

@@ -1,13 +1,13 @@
 import { BasePageLayout, CenterContainer } from '@/components/layouts';
-import { useSpendingAccount } from '@/providers/spendingAccount';
-import { useMemo } from 'react';
 import { StyledItem } from '@/components/shared';
+import useFormatters from '@/hooks/ui/useFormatters';
+import { useSpendingAccount } from '@/providers/spendingAccount';
+import { StyledIonList } from '@/styles/IonList.styled';
 import { IonLabel } from '@ionic/react';
 import { t } from 'i18next';
 import { chevronForward } from 'ionicons/icons';
+import { useMemo } from 'react';
 import { SpendIcon } from './components/base/icons/SpendIcon';
-import useFormatters from '@/hooks/ui/useFormatters';
-import { StyledIonList } from '@/styles/IonList.styled';
 import { useSpendActions } from './hooks/useSpendActions';
 
 const ScheduledSpendingPage: React.FC = () => {

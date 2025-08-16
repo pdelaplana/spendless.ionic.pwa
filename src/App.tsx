@@ -1,9 +1,9 @@
-import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/home/HomePage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Redirect, Route } from 'react-router-dom';
+import Home from './pages/home/HomePage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -39,8 +39,8 @@ import AppRoutes from './routes/AppRoutes';
 
 import './app.css';
 import './positioning.css';
-import { NetworkStatusProvider } from './providers/networkStatus';
 import NetworkStatusNotifier from './components/networkStatusNotifier/NetworkStatusNotifier';
+import { NetworkStatusProvider } from './providers/networkStatus';
 
 setupIonicReact({ mode: 'md' });
 

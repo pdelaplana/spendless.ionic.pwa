@@ -1,6 +1,6 @@
-import type React from 'react';
-import { IonText } from '@ionic/react';
 import styled from '@emotion/styled';
+import { IonText } from '@ionic/react';
+import type React from 'react';
 
 interface LetterIconProps {
   letter: string;

@@ -1,5 +1,5 @@
-import type React from 'react';
 import { IonButton, IonSpinner, IonText } from '@ionic/react';
+import type React from 'react';
 
 interface ButtonProps extends React.ComponentProps<typeof IonButton> {
   isLoading: boolean;

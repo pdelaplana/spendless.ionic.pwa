@@ -1,4 +1,5 @@
-import { IonTextarea, IonText } from '@ionic/react';
+import { IonText, IonTextarea } from '@ionic/react';
+import type { ReactElement } from 'react';
 import type {
   FieldError,
   FieldValues,
@@ -9,7 +10,6 @@ import type {
   UseFormSetValue,
 } from 'react-hook-form';
 import ValidationError from '../validation/ValidationError';
-import type { ReactElement } from 'react';
 
 interface TextAreaFormFieldProps<TFormValues extends FieldValues> {
   name: Path<TFormValues>;

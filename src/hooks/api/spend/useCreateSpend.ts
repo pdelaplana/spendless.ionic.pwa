@@ -1,10 +1,10 @@
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { db } from '@/infrastructure/firebase';
-import { createSpend, type CreateSpendDTO } from '@/domain/Spend';
-import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION, mapToFirestore } from './spendUtils';
+import { type CreateSpendDTO, createSpend } from '@/domain/Spend';
 import { useLogging } from '@/hooks';
+import { db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/browser';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION, mapToFirestore } from './spendUtils';
 
 export function useCreateSpend() {
   const queryClient = useQueryClient();

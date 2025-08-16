@@ -1,10 +1,10 @@
-import type { FC } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, type TooltipItem } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
 import type { ISpend } from '@/domain/Spend';
 import useFormatters from '@/hooks/ui/useFormatters';
 import styled from '@emotion/styled';
+import { ArcElement, Chart as ChartJS, Legend, Tooltip, type TooltipItem } from 'chart.js';
+import type { FC } from 'react';
 import { useMemo } from 'react';
+import { Doughnut } from 'react-chartjs-2';
 import { useTranslation } from 'react-i18next';
 
 const ChartContainer = styled.div`

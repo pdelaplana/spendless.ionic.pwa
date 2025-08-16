@@ -1,16 +1,16 @@
 import { type CreateSpendDTO, createSpend } from '@/domain/Spend';
+import { useLogging } from '@/hooks/logging';
 import { db } from '@/infrastructure/firebase';
-import { collection, doc, setDoc, query, where, getDocs } from '@firebase/firestore';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { collection, doc, getDocs, query, setDoc, where } from '@firebase/firestore';
 import * as Sentry from '@sentry/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { addMonths } from 'date-fns';
 import {
   ACCOUNTS_COLLECTION,
   SPENDING_SUBCOLLECTION,
-  mapToFirestore,
   mapFromFirestore,
+  mapToFirestore,
 } from './spendUtils';
-import { addMonths } from 'date-fns';
-import { useLogging } from '@/hooks/logging';
 
 export function useCopyRecurringSpend() {
   const queryClient = useQueryClient();
@@ -62,6 +62,7 @@ export function useCopyRecurringSpend() {
               description: existingSpend.description,
               notes: '',
               periodId: toPeriodId, // Set the new period ID
+              walletId: existingSpend.walletId || '', // Copy existing walletId or default
               recurring: existingSpend.recurring,
             };
 

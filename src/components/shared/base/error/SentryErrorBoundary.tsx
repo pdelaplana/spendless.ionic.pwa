@@ -1,4 +1,3 @@
-import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 import {
   IonButton,
   IonCard,
@@ -8,6 +7,7 @@ import {
   IonIcon,
 } from '@ionic/react';
 import { refreshOutline, warningOutline } from 'ionicons/icons';
+import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface SentryErrorBoundaryProps {
   children: ReactNode;

@@ -1,9 +1,9 @@
 import { IonSelect, IonSelectOption, IonText } from '@ionic/react';
 import type {
-  UseFormRegister,
-  UseFormSetValue,
   FieldError,
   UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
 } from 'react-hook-form';
 
 type SelectOption = { label: string; value: string };

@@ -1,9 +1,6 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(mkdir:*)",
-      "Bash(task-master parse-prd:*)"
-    ],
+    "allow": ["Bash(mkdir:*)", "Bash(task-master parse-prd:*)"],
     "defaultMode": "acceptEdits"
   }
 }

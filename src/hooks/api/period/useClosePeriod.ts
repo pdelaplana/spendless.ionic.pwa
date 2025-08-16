@@ -1,6 +1,6 @@
 import { db } from '@/infrastructure/firebase';
 import { doc, getDoc, setDoc } from '@firebase/firestore';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   ACCOUNTS_COLLECTION,
   PERIODS_SUBCOLLECTION,

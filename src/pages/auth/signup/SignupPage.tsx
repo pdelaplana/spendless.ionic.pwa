@@ -1,4 +1,9 @@
-import type React from 'react';
+import InputFormField from '@/components/forms/fields/InputFormField';
+import { ActionButton, Gap } from '@/components/shared';
+import { useCreateAccount } from '@/hooks/api';
+import { useAppNotifications } from '@/hooks/ui';
+import { ROUTES } from '@/routes/routes.constants';
+import PublicPageLayout from '@components/layouts/PublicPageLayout';
 import styled from '@emotion/styled';
 import {
   IonCard,
@@ -14,13 +19,8 @@ import {
   useIonRouter,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import PublicPageLayout from '@components/layouts/PublicPageLayout';
-import InputFormField from '@/components/forms/fields/InputFormField';
-import { ROUTES } from '@/routes/routes.constants';
-import { useAppNotifications } from '@/hooks/ui';
-import { useCreateAccount } from '@/hooks/api';
-import { ActionButton, Gap } from '@/components/shared';
+import type React from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 const StyledIonCard = styled(IonCard)`

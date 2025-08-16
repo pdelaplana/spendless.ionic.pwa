@@ -6,10 +6,10 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react';
-import { CenterContainer } from './CenterContainer';
 import type { PropsWithChildren } from 'react';
-import HeaderLogo from '../shared/base/display/HeaderLogo';
 import { useTranslation } from 'react-i18next';
+import HeaderLogo from '../shared/base/display/HeaderLogo';
+import { CenterContainer } from './CenterContainer';
 import '@i18n/config';
 import styled from 'styled-components';
 

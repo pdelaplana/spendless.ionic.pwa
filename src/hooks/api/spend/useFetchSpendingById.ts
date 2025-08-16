@@ -1,6 +1,6 @@
-import { doc, getDoc } from 'firebase/firestore';
-import { useQuery } from '@tanstack/react-query';
 import { db } from '@/infrastructure/firebase';
+import { useQuery } from '@tanstack/react-query';
+import { doc, getDoc } from 'firebase/firestore';
 import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION, mapFromFirestore } from './spendUtils';
 
 export function useFetchSpendingById(accountId: string | undefined, spendId: string | undefined) {

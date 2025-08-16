@@ -1,6 +1,6 @@
-import { collection, getDocs, query, where, deleteDoc } from 'firebase/firestore';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { db } from '@/infrastructure/firebase';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { collection, deleteDoc, getDocs, query, where } from 'firebase/firestore';
 import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION } from './spendUtils';
 
 export function useDeleteSpendingByPeriod() {

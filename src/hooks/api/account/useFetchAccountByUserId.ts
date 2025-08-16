@@ -1,8 +1,8 @@
-import { collection, doc, getDoc, query, where } from 'firebase/firestore';
-import { useQuery } from '@tanstack/react-query';
 import { db } from '@/infrastructure/firebase';
-import { ACCOUNTS_COLLECTION, mapFromFirestore } from './accountUtils';
 import * as Sentry from '@sentry/react';
+import { useQuery } from '@tanstack/react-query';
+import { collection, doc, getDoc, query, where } from 'firebase/firestore';
+import { ACCOUNTS_COLLECTION, mapFromFirestore } from './accountUtils';
 
 export function useFetchAccountByUserId(userId: string | undefined) {
   return useQuery({

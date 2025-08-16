@@ -1,26 +1,26 @@
-import type React from 'react';
-import { useEffect } from 'react';
-import styled from 'styled-components';
+import InputFormField from '@/components/forms/fields/InputFormField';
+import { ActionButton, Gap } from '@/components/shared';
+import { ROUTES } from '@/routes/routes.constants';
+import PublicPageLayout from '@components/layouts/PublicPageLayout';
 import {
-  IonItem,
-  IonLabel,
-  IonText,
-  IonList,
-  IonRouterLink,
-  useIonRouter,
-  IonNote,
-  IonCardContent,
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonRouterLink,
+  IonText,
+  useIonRouter,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
+import type React from 'react';
+import { useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
-import PublicPageLayout from '@components/layouts/PublicPageLayout';
-import InputFormField from '@/components/forms/fields/InputFormField';
-import { ROUTES } from '@/routes/routes.constants';
-import { ActionButton, Gap } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 
 const StyledIonCard = styled(IonCard)`
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);

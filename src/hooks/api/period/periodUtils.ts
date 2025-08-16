@@ -1,5 +1,5 @@
+import { type IPeriod, createPeriod } from '@/domain/Period';
 import { type DocumentData, Timestamp } from 'firebase/firestore';
-import { createPeriod, type IPeriod } from '@/domain/Period';
 
 export const ACCOUNTS_COLLECTION = 'accounts';
 export const PERIODS_SUBCOLLECTION = 'periods';
