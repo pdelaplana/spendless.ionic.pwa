@@ -15,6 +15,7 @@ export const mapToFirestore = (spend: ISpend): DocumentData => ({
   description: spend.description,
   notes: spend.notes,
   periodId: spend.periodId,
+  walletId: spend.walletId,
   recurring: spend.recurring,
   emotionalState: spend.emotionalState,
   satisfactionRating: spend.satisfactionRating,
@@ -34,6 +35,7 @@ export const mapFromFirestore = (id: string, data: DocumentData): ISpend => {
     description: data.description,
     notes: data.notes,
     periodId: data.periodId,
+    walletId: data.walletId || '', // Handle legacy data without walletId
     recurring: data.recurring,
     emotionalState: data.emotionalState,
     satisfactionRating: data.satisfactionRating,

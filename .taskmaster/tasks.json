@@ -15,7 +15,7 @@
           "status": "completed"
         },
         {
-          "id": "1.2", 
+          "id": "1.2",
           "title": "✅ Create WalletSetup interface for period creation",
           "status": "completed"
         },
@@ -47,7 +47,7 @@
     },
     {
       "id": "2",
-      "title": "🔄 Sprint 2: API Layer - Hooks Implementation", 
+      "title": "🔄 Sprint 2: API Layer - Hooks Implementation",
       "description": "Implement wallet management hooks and update existing spend hooks",
       "status": "pending",
       "priority": "high",
@@ -63,12 +63,12 @@
         {
           "id": "2.2",
           "title": "Create useUpdateWallet hook",
-          "status": "pending", 
+          "status": "pending",
           "description": "Update wallet name and spending limit during active period"
         },
         {
           "id": "2.3",
-          "title": "Create useDeleteWallet hook", 
+          "title": "Create useDeleteWallet hook",
           "status": "pending",
           "description": "Delete empty wallets (business rule: only if no transactions)"
         },
@@ -87,7 +87,7 @@
         {
           "id": "2.6",
           "title": "Update useFetchSpendingByWallet hook",
-          "status": "pending", 
+          "status": "pending",
           "description": "Filter spending data by wallet ID"
         },
         {
@@ -119,11 +119,11 @@
       ]
     },
     {
-      "id": "3", 
+      "id": "3",
       "title": "🔄 Sprint 3: Core UI - Components Implementation",
       "description": "Create wallet management components and update period creation UI",
       "status": "pending",
-      "priority": "high", 
+      "priority": "high",
       "sprint": "3",
       "category": "ui",
       "subtasks": [
@@ -140,7 +140,7 @@
           "description": "Form for adding/editing wallets during period creation"
         },
         {
-          "id": "3.3", 
+          "id": "3.3",
           "title": "Create WalletListView component",
           "status": "pending",
           "description": "Display list of wallets with balance and remaining budget"
@@ -160,7 +160,7 @@
         {
           "id": "3.6",
           "title": "Create WalletEditModal component",
-          "status": "pending", 
+          "status": "pending",
           "description": "Modal for editing wallet name and spending limit"
         },
         {
@@ -180,7 +180,7 @@
         "Period creation includes wallet setup step",
         "Users can add/remove wallets during setup",
         "Wallet switching functionality works",
-        "Spend creation allows wallet selection", 
+        "Spend creation allows wallet selection",
         "Wallet list shows balance and budget info",
         "UI follows Ionic design patterns",
         "Components are responsive and accessible"
@@ -192,7 +192,7 @@
       "description": "Implement wallet analytics and advanced management features",
       "status": "pending",
       "priority": "medium",
-      "sprint": "4", 
+      "sprint": "4",
       "category": "features",
       "subtasks": [
         {
@@ -203,7 +203,7 @@
         },
         {
           "id": "4.2",
-          "title": "Create WalletComparisonView component", 
+          "title": "Create WalletComparisonView component",
           "status": "pending",
           "description": "Compare spending across multiple wallets"
         },
@@ -228,7 +228,7 @@
         {
           "id": "4.6",
           "title": "Add wallet usage percentage calculations",
-          "status": "pending", 
+          "status": "pending",
           "description": "Show percentage of wallet budget used"
         },
         {
@@ -265,7 +265,7 @@
         {
           "id": "5.2",
           "title": "Migrate existing spending to default wallets",
-          "status": "pending", 
+          "status": "pending",
           "description": "Assign walletId to all existing spending records"
         },
         {
@@ -282,7 +282,7 @@
         },
         {
           "id": "5.5",
-          "title": "Polish UI/UX based on testing feedback", 
+          "title": "Polish UI/UX based on testing feedback",
           "status": "pending",
           "description": "Refine components and interactions"
         },
@@ -310,7 +310,7 @@
         "All spending records have valid walletId",
         "Security rules protect wallet data",
         "New users understand wallet concept",
-        "Performance is acceptable with large datasets", 
+        "Performance is acceptable with large datasets",
         "All user workflows tested and working",
         "Documentation is complete and accurate"
       ]

@@ -13,6 +13,7 @@ export const mapToFirestore = (period: IPeriod): DocumentData => ({
   endAt: Timestamp.fromDate(period.endAt),
   closedAt: period.closedAt ? Timestamp.fromDate(period.closedAt) : null,
   reflection: period.reflection,
+  walletSetup: period.walletSetup || [],
   createdAt: Timestamp.fromDate(period.createdAt),
   updatedAt: Timestamp.fromDate(period.updatedAt),
 });
@@ -26,6 +27,7 @@ export const mapFromFirestore = (id: string, data: DocumentData): IPeriod => {
     startAt: data.startAt.toDate(),
     endAt: data.endAt.toDate(),
     reflection: data.reflection,
+    walletSetup: data.walletSetup || [],
   });
 
   return {

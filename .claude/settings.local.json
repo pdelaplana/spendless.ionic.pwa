@@ -1,6 +1,12 @@
 {
   "permissions": {
-    "allow": ["Bash(mkdir:*)", "Bash(task-master parse-prd:*)"],
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(task-master parse-prd:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run check:*)"
+    ],
     "defaultMode": "acceptEdits"
   }
 }
