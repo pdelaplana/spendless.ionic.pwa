@@ -1,8 +1,8 @@
 import { usePrompt } from '@/hooks';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { addWeeks, set } from 'date-fns';
-import { usePeriodListModal } from '../modals/PeriodListModal';
-import { usePeriodModal } from '../modals/periodModal/PeriodModal';
+import { usePeriodListModal } from '../modals/periodList/PeriodListModal';
+import { usePeriodModal } from '../modals/periodModal';
 
 export const usePeriodActions = () => {
   const {

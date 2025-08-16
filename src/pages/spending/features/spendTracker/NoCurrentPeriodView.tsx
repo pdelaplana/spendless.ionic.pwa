@@ -3,7 +3,7 @@ import { MutationNotificationHandler } from '@/components/shared';
 import type { IPeriod } from '@/domain/Period';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { IonButton } from '@ionic/react';
-import { usePeriodModal } from '../../modals/periodModal/PeriodModal';
+import { usePeriodModal } from '../../modals/periodModal';
 
 const NoCurrentPeriodView: React.FC = () => {
   const { account, createPeriod, didMutationSucceed, didMutationFail, resetMutationState } =

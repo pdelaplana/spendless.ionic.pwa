@@ -1,26 +1,26 @@
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  Timestamp,
-  getDocs,
-  startAfter,
-  limit,
-  type QueryDocumentSnapshot,
-  type DocumentData,
-} from 'firebase/firestore';
+import type { ISpend } from '@/domain/Spend';
+import { useLogging } from '@/hooks';
+import { db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/browser';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { db } from '@/infrastructure/firebase';
-import type { ISpend } from '@/domain/Spend';
+import {
+  type DocumentData,
+  type QueryDocumentSnapshot,
+  Timestamp,
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  startAfter,
+  where,
+} from 'firebase/firestore';
 import {
   ACCOUNTS_COLLECTION,
-  SPENDING_SUBCOLLECTION,
   PAGE_SIZE,
+  SPENDING_SUBCOLLECTION,
   mapFromFirestore,
 } from './spendUtils';
-import { useLogging } from '@/hooks';
 
 export function useFetchSpendingByAccountId(
   accountId: string | undefined,

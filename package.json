@@ -14,7 +14,8 @@
     "format": "biome format --write .",
     "check": "biome check --apply .",
     "fetch-indexes": "powershell -File scripts/fetchFirestoreIndexes.ps1",
-    "generate-pwa-assets": "pwa-assets-generator ./public/favicon.png ./public/images/icons --background \"#ffffff\" --icon-only"
+    "generate-pwa-assets": "pwa-assets-generator ./public/favicon.png ./public/images/icons --background \"#ffffff\" --icon-only",
+    "test-context7": "npx -y @upstash/context7-mcp@latest"
   },
   "dependencies": {
     "@capacitor/app": "7.0.1",
