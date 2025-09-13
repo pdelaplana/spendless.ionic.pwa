@@ -1,24 +1,19 @@
 import { CenterContainer, CenterContent } from '@/components/layouts';
-import { Gap, MutationNotificationHandler, StyledItem } from '@/components/shared';
+import { Gap, MutationNotificationHandler, StyledItem, TagsDisplay } from '@/components/shared';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
-import { StyledIonList, StyledItemDivider } from '@/styles/IonList.styled';
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonFab,
-  IonFabButton,
-  IonIcon,
-  IonItemGroup,
-  IonLabel,
-} from '@ionic/react';
-import { addCircleSharp, chevronForward, close, documentsOutline } from 'ionicons/icons';
+import { StyledItemDivider } from '@/styles/IonList.styled';
+import { designSystem } from '@/theme/designSystem';
+import { GradientBackground, TransactionsContainer, GroupedTransactionsContainer } from '@/theme/components';
+import { IonButton, IonCard, IonCardContent, IonIcon, IonItemGroup, IonLabel } from '@ionic/react';
+import { chevronForward, close } from 'ionicons/icons';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import { SpendIcon } from '../../components/base';
 import { QuickActionButtons } from '../../components/common/quickActionsButtons';
+import { ScheduledSpendingItem } from '../../components/common/scheduledSpendingItem';
 import { usePeriodActions } from '../../hooks/usePeriodActions';
 import { useSpendActionSheet } from '../../hooks/useSpendActionSheet';
 import { useSpendActions } from '../../hooks/useSpendActions';
@@ -63,7 +58,7 @@ const PeriodSpendingView: React.FC = () => {
   }, [currentSpending, selectedPeriod]);
 
   return (
-    <>
+    <GradientBackground>
       <MutationNotificationHandler
         didSucceed={didMutationSucceed}
         didFail={didMutationFail}
@@ -109,92 +104,75 @@ const PeriodSpendingView: React.FC = () => {
               onNewSpend={newSpendHandler}
               onEditPeriod={editCurrentPeriodHandler}
               onMore={openActionSheet}
+              sticky={true}
             />
 
-            <StyledIonList
-              lines='none'
-              className='ion-margin-bottom'
-              style={{ backgroundColor: 'var(--color-light)' }}
-            >
-              {futureSpending.length > 0 && (
-                <StyledItem
-                  detail
-                  detailIcon={chevronForward}
-                  button
-                  routerLink={ROUTES.SPENDING_SCHEDULED}
-                  routerDirection='forward'
-                >
-                  <IonIcon icon={documentsOutline} slot='start' />
-                  <IonLabel>
-                    <h2>{t('spending.futureSpending')}</h2>
-                    <p>See your scheduled spending for this period</p>
-                  </IonLabel>
-                </StyledItem>
-              )}
-            </StyledIonList>
-            <StyledIonList
-              color='light'
-              style={{ backgroundColor: 'var(--color-light)' }}
-              lines='none'
-            >
-              {groupedSpending.map(([date, spends]) => (
-                <IonItemGroup key={date}>
-                  <StyledItemDivider sticky>
-                    <StyledDateLabel>{date}</StyledDateLabel>
-                  </StyledItemDivider>
-                  {spends.map((spend, index) => (
-                    <StyledItem
-                      key={spend.id}
-                      onClick={() => editSpendHandler(spend)}
-                      detail
-                      detailIcon={chevronForward}
-                      button
-                      lines={index === spends.length ? 'none' : 'full'}
-                    >
-                      <SpendIcon category={spend.category} />
-                      <IonLabel>
-                        <h2>{spend.description}</h2>
-                        <p>{t(`spending.categories.${spend.category}`)}</p>
-                      </IonLabel>
-                      <IonLabel slot='end'>
-                        {formatCurrency(spend.amount, account?.currency)}
-                      </IonLabel>
-                    </StyledItem>
-                  ))}
-                  <StyledItem lines='none' color='light'>
-                    <StyledTotalLabel slot='end'>
-                      {formatCurrency(
-                        spends.reduce((sum, spend) => sum + spend.amount, 0),
-                        account?.currency,
-                      )}
-                    </StyledTotalLabel>
-                  </StyledItem>
-                </IonItemGroup>
-              ))}
-            </StyledIonList>
-            {hasNextPageSpending && (
-              <IonButton onClick={fetchNextPageSpending} color='primary' fill='clear' expand='full'>
-                {t('spending.loadMore')}
-              </IonButton>
+            {futureSpending.length > 0 && (
+              <ScheduledSpendingItem futureSpendingCount={futureSpending.length} />
             )}
+
+            <TransactionsContainer>
+              <div>
+                <GroupedTransactionsContainer
+                  lines='none'
+                  style={{ backgroundColor: 'transparent' }}
+                >
+                  {groupedSpending.map(([date, spends]) => (
+                    <IonItemGroup key={date}>
+                      <StyledItemDivider sticky>
+                        <StyledDateLabel>{date}</StyledDateLabel>
+                      </StyledItemDivider>
+                      {spends.map((spend, index) => (
+                        <StyledItem
+                          key={spend.id}
+                          onClick={() => editSpendHandler(spend)}
+                          detail
+                          detailIcon={chevronForward}
+                          button
+                          lines={index === spends.length ? 'none' : 'full'}
+                        >
+                          <SpendIcon category={spend.category} />
+                          <IonLabel>
+                            <h2>{spend.description}</h2>
+                            <p>{t(`spending.categories.${spend.category}`)}</p>
+                            <TagsDisplay tags={spend.tags} />
+                          </IonLabel>
+                          <IonLabel slot='end'>
+                            {formatCurrency(spend.amount, account?.currency)}
+                          </IonLabel>
+                        </StyledItem>
+                      ))}
+                      <StyledItem lines='none' color='light'>
+                        <StyledTotalLabel slot='end'>
+                          {formatCurrency(
+                            spends.reduce((sum, spend) => sum + spend.amount, 0),
+                            account?.currency,
+                          )}
+                        </StyledTotalLabel>
+                      </StyledItem>
+                    </IonItemGroup>
+                  ))}
+                </GroupedTransactionsContainer>
+
+                {hasNextPageSpending && (
+                  <div style={{ padding: `${designSystem.spacing.md}` }}>
+                    <IonButton
+                      onClick={fetchNextPageSpending}
+                      color='primary'
+                      fill='clear'
+                      expand='full'
+                    >
+                      {t('spending.loadMore')}
+                    </IonButton>
+                  </div>
+                )}
+              </div>
+            </TransactionsContainer>
           </>
         )}
         <Gap size={'2.3rem'} />
       </CenterContainer>
-      {!selectedPeriod?.closedAt && (
-        <IonFab slot='fixed' vertical='bottom' horizontal='end'>
-          <IonFabButton
-            id='open-action-sheet'
-            color='primary'
-            onClick={() => {
-              newSpendHandler();
-            }}
-          >
-            <IonIcon icon={addCircleSharp} />
-          </IonFabButton>
-        </IonFab>
-      )}
-    </>
+    </GradientBackground>
   );
 };
 export default PeriodSpendingView;

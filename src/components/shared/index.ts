@@ -10,3 +10,6 @@ export { default as SentryErrorBoundary } from './base/error';
 export { MutationNotificationHandler } from './base/notifications';
 export { default as LetterIcon } from './base/display/LetterIcon';
 export { PwaInstallPrompt } from './pwa';
+export { default as TagsDisplay } from './tags/TagsDisplay';
+
+// Note: Modern UI Components have been moved to @/components/dashboard and @/components/ui

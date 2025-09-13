@@ -12,13 +12,4 @@ export interface SpendFormData {
   recurring?: boolean;
 
   tags?: string[];
-
-  emotionalState?: string;
-  satisfactionRating?: number;
-  necessityRating?: number;
-
-  personalReflections?: Array<{
-    question: string;
-    answer: string;
-  }>;
 }

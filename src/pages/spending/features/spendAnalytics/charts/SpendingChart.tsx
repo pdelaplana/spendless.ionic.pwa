@@ -1,5 +1,6 @@
 import type { ISpend } from '@/domain/Spend';
 import useFormatters from '@/hooks/ui/useFormatters';
+import { designSystem } from '@/theme/designSystem';
 import styled from '@emotion/styled';
 import { ArcElement, Chart as ChartJS, Legend, Tooltip, type TooltipItem } from 'chart.js';
 import type { FC } from 'react';
@@ -49,12 +50,12 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending, currency }) => {
         {
           data: Object.values(categories),
           backgroundColor: [
-            'rgba(255, 99, 132, 0.8)',
-            'rgba(54, 162, 235, 0.8)',
-            'rgba(255, 206, 86, 0.8)',
-            'rgba(75, 192, 192, 0.8)',
+            designSystem.colors.primary[500],
+            designSystem.colors.primary[400],
+            designSystem.colors.primary[300],
+            designSystem.colors.primary[600],
           ],
-          borderWidth: 1,
+          borderWidth: 0,
         },
       ],
     };

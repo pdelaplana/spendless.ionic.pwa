@@ -5,7 +5,21 @@
       "Bash(task-master parse-prd:*)",
       "Bash(npx tsc:*)",
       "Bash(npm run lint)",
-      "Bash(npm run check:*)"
+      "Bash(npm run check:*)",
+      "Bash(git clean:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_close",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell:*)",
+      "mcp__playwright__browser_snapshot",
+      "Bash(ionic serve:*)",
+      "mcp__playwright__browser_console_messages"
     ],
     "defaultMode": "acceptEdits"
   }

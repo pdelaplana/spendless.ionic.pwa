@@ -6,22 +6,60 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import type { ISpend } from '@/domain/Spend';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { designSystem } from '@/theme/designSystem';
 import { BurndownChart, SpeedometerChart, SpendingChart } from './charts';
 
 const ChartsContainer = styled.div`
-  width: 100%;
-  padding: 10px 0;
-
-  .swiper {
+  margin: ${designSystem.spacing.lg} ${designSystem.spacing.md};
+  display: flex;
+  justify-content: center;
+  
+  > div {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: ${designSystem.borderRadius.xl};
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: ${designSystem.spacing.md} ${designSystem.spacing.lg};
+    transition: all 0.2s ease-in-out;
     width: 100%;
-    height: 400px;
+    max-width: 100%;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+    }
   }
-  .swiper-pagination {
-    bottom: -1px;
-    color: #000;
+
+  > div .swiper {
+    width: 100%;
+    height: 350px;
+    margin: 0;
   }
-  .swiper-pagination-bullet {
-    background: var(--ion-color-primary);
+  
+  > div .swiper-wrapper {
+    align-items: center;
+  }
+  
+  > div .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  > div .swiper-pagination {
+    bottom: 8px;
+    color: ${designSystem.colors.text.primary};
+  }
+  
+  > div .swiper-pagination-bullet {
+    background: ${designSystem.colors.primary[400]};
+    opacity: 0.4;
+  }
+  
+  > div .swiper-pagination-bullet-active {
+    background: ${designSystem.colors.primary[500]};
+    opacity: 1;
   }
 `;
 
@@ -48,33 +86,35 @@ export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
 
   return (
     <ChartsContainer id='spend-analytics-charts'>
-      <Swiper modules={[Pagination]} pagination={{ clickable: true }} spaceBetween={20}>
-        <SwiperSlide>
-          <SpeedometerChart
-            value={remainingBudget}
-            min={0}
-            max={targetSpend}
-            label='Remaining'
-            currency={account?.currency}
-            endDate={endDate}
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <SpendingChart
-            spending={spending.filter((s) => s.date <= new Date())}
-            currency={account?.currency}
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BurndownChart
-            spending={spending}
-            targetSpend={targetSpend}
-            startDate={startDate}
-            endDate={endDate}
-            currency={account?.currency}
-          />
-        </SwiperSlide>
-      </Swiper>
+      <div>
+        <Swiper modules={[Pagination]} pagination={{ clickable: true }} spaceBetween={20}>
+          <SwiperSlide>
+            <SpeedometerChart
+              value={remainingBudget}
+              min={0}
+              max={targetSpend}
+              label='Remaining'
+              currency={account?.currency}
+              endDate={endDate}
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <SpendingChart
+              spending={spending.filter((s) => s.date <= new Date())}
+              currency={account?.currency}
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <BurndownChart
+              spending={spending}
+              targetSpend={targetSpend}
+              startDate={startDate}
+              endDate={endDate}
+              currency={account?.currency}
+            />
+          </SwiperSlide>
+        </Swiper>
+      </div>
     </ChartsContainer>
   );
 };

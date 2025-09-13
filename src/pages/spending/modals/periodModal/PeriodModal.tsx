@@ -5,7 +5,9 @@ import { ActionButton, Gap } from '@/components/shared';
 import type { CreatePeriodDTO, IPeriod } from '@/domain/Period';
 import { periodValidation } from '@/domain/validation/periodValidation';
 import { usePrompt } from '@/hooks';
-import { IonItem, IonLabel, IonList, useIonModal } from '@ionic/react';
+import { TransparentIonList } from '@/styles/IonList.styled';
+import { designSystem } from '@/theme/designSystem';
+import { IonItem, IonLabel, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useState } from 'react';
 import { type RegisterOptions, type SubmitHandler, useForm } from 'react-hook-form';
@@ -78,11 +80,11 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
 
   const footer = (
     <CenterContainer>
-      <Gap size={'.65rem'} />
+      <Gap size={designSystem.spacing.md} />
       <ActionButton
         expand='full'
         fill='solid'
-        className='ion-margin-bottom ion-margin-start ion-margin-end'
+        className='ion-margin-bottom ion-margin-start ion-margin-end ion-margin-top'
         onClick={handleSubmit(onSubmit)}
         isLoading={false}
         isDisabled={!isDirty}
@@ -106,10 +108,10 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
   }, [period, reset]);
 
   return (
-    <ModalPageLayout onDismiss={checkIfCanDismiss} footer={footer}>
+    <ModalPageLayout onDismiss={checkIfCanDismiss}>
       <CenterContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <IonList lines='none'>
+          <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
             <IonItem>
               <IonLabel>
                 <InputFormField
@@ -120,7 +122,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.goals}
                   fill='outline'
-                  validationRules={periodValidation.goals as RegisterOptions<PeriodFormData>}
+                  validationRules={periodValidation.goals}
                 />
               </IonLabel>
             </IonItem>
@@ -134,7 +136,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.targetSpend}
                   fill='outline'
-                  validationRules={periodValidation.targetSpend as RegisterOptions<PeriodFormData>}
+                  validationRules={periodValidation.targetSpend}
                 />
               </IonLabel>
             </IonItem>
@@ -148,9 +150,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.targetSavings}
                   fill='outline'
-                  validationRules={
-                    periodValidation.targetSavings as RegisterOptions<PeriodFormData>
-                  }
+                  validationRules={periodValidation.targetSavings}
                 />
               </IonLabel>
             </IonItem>
@@ -164,7 +164,7 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.startAt}
                   fill='outline'
-                  validationRules={periodValidation.startAt as RegisterOptions<PeriodFormData>}
+                  validationRules={periodValidation.startAt}
                 />
               </IonLabel>
             </IonItem>
@@ -178,12 +178,24 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
                   register={register}
                   error={errors.endAt}
                   fill='outline'
-                  validationRules={periodValidation.endAt as RegisterOptions<PeriodFormData>}
+                  validationRules={periodValidation.endAt}
                 />
               </IonLabel>
             </IonItem>
-          </IonList>
+          </TransparentIonList>
         </form>
+
+        <Gap size={'1rem'} />
+        <Gap size={designSystem.spacing.md} />
+        <ActionButton
+          expand='block'
+          fill='solid'
+          className='ion-margin-bottom ion-margin-start ion-margin-end'
+          onClick={handleSubmit(onSubmit)}
+          isLoading={false}
+          isDisabled={!isDirty}
+          label={'Save'}
+        />
       </CenterContainer>
     </ModalPageLayout>
   );

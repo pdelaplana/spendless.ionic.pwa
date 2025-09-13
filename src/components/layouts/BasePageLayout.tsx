@@ -18,7 +18,7 @@ import {
   useIonViewWillEnter,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
-import { exitOutline, personCircleOutline } from 'ionicons/icons';
+import { exitOutline, menuOutline, personCircleOutline } from 'ionicons/icons';
 import type { PropsWithChildren } from 'react';
 
 import { useTranslation } from 'react-i18next';
@@ -44,9 +44,16 @@ interface BasePageProps extends PropsWithChildren {
 }
 
 const StyledHeader = styled(IonHeader)`
-  border-bottom-style: inset;
-  border-bottom-color: var(--ion-color-light-shade);
-  border-bottom-width: thin;
+  border-bottom: 1px solid var(--color-gray-200);
+  background: var(--ion-color-light);
+  
+  ion-toolbar {
+    --background: var(--ion-color-light);
+    --color: var(--ion-color-dark);
+    --border-width: 0;
+    padding: var(--spacing-sm) 0;
+    min-height: 60px;
+  }
 `;
 
 const CenterTitle = styled.div<{
@@ -57,6 +64,47 @@ const CenterTitle = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  ion-text {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--ion-color-dark);
+  }
+`;
+
+const StyledContent = styled(IonContent)`
+  --background: var(--ion-color-light);
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+`;
+
+const StyledMenuButton = styled(IonMenuButton)`
+  --color: var(--ion-color-primary);
+  margin: 0;
+  
+  &::part(native) {
+    padding: var(--spacing-sm);
+  }
+`;
+
+const StyledBackButton = styled(IonBackButton)`
+  --color: var(--ion-color-primary);
+  margin: 0;
+  
+  &::part(native) {
+    padding: var(--spacing-sm);
+  }
+`;
+
+const StyledProfileButton = styled(IonButton)`
+  --color: var(--ion-color-primary);
+  margin: 0;
+  
+  ion-icon {
+    font-size: 28px;
+  }
 `;
 
 export const BasePageLayout: React.FC<BasePageProps> = ({
@@ -103,26 +151,17 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
 
       <IonPage id='main-content'>
         {showHeader && (
-          <StyledHeader id='main-header' className='primary ion-no-border' mode='ios'>
-            <IonToolbar color={'light'}>
+          <StyledHeader id='main-header' className='ion-no-border' mode='ios'>
+            <IonToolbar>
               <IonButtons slot='start'>
                 {!showBackButton && showMenu && menu && (
-                  <IonMenuButton color='primary'>
-                    <LetterIcon
-                      letter={'S'}
-                      backgroundColor='var(--ion-color-primary)'
-                      size='default'
-                    />
-                  </IonMenuButton>
+                  <StyledMenuButton>
+                    <IonIcon icon={menuOutline} />
+                  </StyledMenuButton>
                 )}
 
                 {showBackButton && (
-                  <IonBackButton
-                    defaultHref={defaultBackButtonHref}
-                    color='primary'
-                    style={{ '--color': 'var(--ion-color-primary)' }}
-                    text={''}
-                  />
+                  <StyledBackButton defaultHref={defaultBackButtonHref} text={''} />
                 )}
               </IonButtons>
               <IonTitle>
@@ -137,38 +176,45 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
 
               <IonButtons slot='end'>
                 {showProfileIcon && (
-                  <IonButton routerLink={ROUTES.PROFILE} routerDirection='forward'>
-                    <IonIcon
-                      slot='icon-only'
-                      icon={personCircleOutline}
-                      size='medium'
-                      color='primary'
-                    />
-                  </IonButton>
+                  <StyledProfileButton
+                    routerLink={ROUTES.PROFILE}
+                    routerDirection='forward'
+                    fill='clear'
+                    size='large'
+                  >
+                    <IonIcon slot='icon-only' icon={personCircleOutline} />
+                  </StyledProfileButton>
                 )}
                 {showSignoutButton && (
-                  <IonButton onClick={handleSignout}>
-                    <IonIcon slot='icon-only' icon={exitOutline} color='primary' size='medium' />
-                  </IonButton>
+                  <StyledProfileButton onClick={handleSignout} fill='clear' size='large'>
+                    <IonIcon slot='icon-only' icon={exitOutline} />
+                  </StyledProfileButton>
                 )}
               </IonButtons>
             </IonToolbar>
           </StyledHeader>
         )}
 
-        <IonContent color={'light'}>
+        <StyledContent>
           {showSecondaryHeader && (
             <IonHeader mode='ios' className='ion-no-border' collapse='condense'>
               <IonToolbar color='light' className='ion-no-border'>
-                <div className='ion-margin'>
-                  <h1>{title}</h1>
+                <div
+                  style={{
+                    margin: 'var(--spacing-lg)',
+                    fontSize: 'var(--font-size-2xl)',
+                    fontWeight: 'var(--font-weight-bold)',
+                    color: 'var(--ion-color-dark)',
+                  }}
+                >
+                  {title}
                 </div>
               </IonToolbar>
             </IonHeader>
           )}
 
           {children}
-        </IonContent>
+        </StyledContent>
         {footer && <IonFooter color='light'>{footer}</IonFooter>}
       </IonPage>
     </>

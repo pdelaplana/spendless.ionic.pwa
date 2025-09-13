@@ -70,7 +70,7 @@ const NiceTags: React.FC<NiceTagsProps> = ({
   suggestions = [],
   onTagsChange,
 }) => {
-  const [tags, setTags] = useState<string[]>([]);
+  // Use initialTags directly instead of maintaining local state that syncs with it
   const [inputValue, setInputValue] = useState<string>('');
   const [suggestionsArray, setSuggestionsArray] = useState<string[]>([]);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -80,10 +80,12 @@ const NiceTags: React.FC<NiceTagsProps> = ({
   const inputRef = useRef<HTMLIonInputElement>(null);
   const inputContainerRef = useRef<HTMLDivElement>(null);
 
+  // Use initialTags directly as our source of truth
+  const tags = initialTags || [];
+
   const addTag = (tag: string) => {
     if (tag.trim() && !tags.includes(tag.trim())) {
       const updatedTags = [...tags, tag.trim()];
-      setTags(updatedTags);
       onTagsChange?.(updatedTags);
       setInputValue('');
       setFilteredSuggestions([]);
@@ -93,7 +95,6 @@ const NiceTags: React.FC<NiceTagsProps> = ({
 
   const removeTag = (tagToRemove: string) => {
     const updatedTags = tags.filter((tag) => tag !== tagToRemove);
-    setTags(updatedTags);
     onTagsChange?.(updatedTags);
   };
 
@@ -110,9 +111,8 @@ const NiceTags: React.FC<NiceTagsProps> = ({
   };
 
   useEffect(() => {
-    setTags(initialTags);
-    setSuggestionsArray(suggestions);
-  }, [initialTags, suggestions]);
+    setSuggestionsArray(suggestions || []);
+  }, [suggestions]);
 
   // Update position when input changes or on component mount
   useEffect(() => {

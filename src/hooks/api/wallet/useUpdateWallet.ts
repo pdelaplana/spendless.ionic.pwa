@@ -59,7 +59,11 @@ export function useUpdateWallet() {
               // Update other default wallets to false first
               for (const otherWallet of otherDefaultWallets) {
                 if (otherWallet.id) {
-                  const otherWalletPath = getWalletDocumentPath(accountId, periodId, otherWallet.id);
+                  const otherWalletPath = getWalletDocumentPath(
+                    accountId,
+                    periodId,
+                    otherWallet.id,
+                  );
                   const otherWalletRef = doc(db, otherWalletPath);
                   await updateDoc(otherWalletRef, { isDefault: false, updatedAt: new Date() });
                 }

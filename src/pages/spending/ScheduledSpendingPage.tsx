@@ -1,8 +1,8 @@
 import { BasePageLayout, CenterContainer } from '@/components/layouts';
-import { StyledItem } from '@/components/shared';
+import { SentryErrorBoundary, StyledItem } from '@/components/shared';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
-import { StyledIonList } from '@/styles/IonList.styled';
+import { GradientBackground, TransactionsContainer, GroupedTransactionsContainer } from '@/theme/components';
 import { IonLabel } from '@ionic/react';
 import { t } from 'i18next';
 import { chevronForward } from 'ionicons/icons';
@@ -31,33 +31,43 @@ const ScheduledSpendingPage: React.FC = () => {
       showProfileIcon={false}
       showMenu={false}
     >
-      <CenterContainer>
-        {futureSpending.length > 0 && (
-          <StyledIonList className='ion-margin-top'>
-            {futureSpending
-              .sort((a, b) => a.date.getTime() - b.date.getTime())
-              .map((spend, index) => (
-                <StyledItem
-                  key={spend.id}
-                  onClick={() => editSpendHandler(spend)}
-                  detail
-                  detailIcon={chevronForward}
-                  button
-                  lines={index === futureSpending.length - 1 ? 'none' : 'full'}
-                >
-                  <SpendIcon category={spend.category} />
-                  <IonLabel>
-                    <p>{formatDate(spend.date, true)}</p>
-                    <h2>{spend.description}</h2>
-
-                    <p>{t(`spend.categories.${spend.category}`)}</p>
-                  </IonLabel>
-                  <IonLabel slot='end'>{formatCurrency(spend.amount)}</IonLabel>
-                </StyledItem>
-              ))}
-          </StyledIonList>
-        )}
-      </CenterContainer>
+      <GradientBackground>
+        <SentryErrorBoundary>
+          <CenterContainer>
+            {futureSpending.length > 0 && (
+              <TransactionsContainer>
+                <div>
+                  <GroupedTransactionsContainer
+                    lines='none'
+                    style={{ backgroundColor: 'transparent' }}
+                  >
+                    {futureSpending
+                      .sort((a, b) => a.date.getTime() - b.date.getTime())
+                      .map((spend, index) => (
+                        <StyledItem
+                          key={spend.id}
+                          onClick={() => editSpendHandler(spend)}
+                          detail
+                          detailIcon={chevronForward}
+                          button
+                          lines={index === futureSpending.length - 1 ? 'none' : 'full'}
+                        >
+                          <SpendIcon category={spend.category} />
+                          <IonLabel>
+                            <p>{formatDate(spend.date, true)}</p>
+                            <h2>{spend.description}</h2>
+                            <p>{t(`spending.categories.${spend.category}`)}</p>
+                          </IonLabel>
+                          <IonLabel slot='end'>{formatCurrency(spend.amount)}</IonLabel>
+                        </StyledItem>
+                      ))}
+                  </GroupedTransactionsContainer>
+                </div>
+              </TransactionsContainer>
+            )}
+          </CenterContainer>
+        </SentryErrorBoundary>
+      </GradientBackground>
     </BasePageLayout>
   );
 };

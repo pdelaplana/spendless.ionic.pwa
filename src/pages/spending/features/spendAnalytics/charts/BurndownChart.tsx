@@ -1,5 +1,6 @@
 import type { ISpend } from '@/domain/Spend';
 import useFormatters from '@/hooks/ui/useFormatters';
+import { designSystem } from '@/theme/designSystem';
 import styled from '@emotion/styled';
 import {
   CategoryScale,
@@ -34,7 +35,7 @@ const ChartContainer = styled.div`
   max-width: 400px;
   height: 450px; // Increased from default height
   margin: 0 auto;
-  padding: 10px;
+  padding: 60px 10px 10px 10px;
 `;
 
 interface BurndownChartProps {
@@ -166,8 +167,8 @@ export const BurndownChart: FC<BurndownChartProps> = ({
       {
         label: 'Actual Remaining',
         data: actualData,
-        borderColor: 'rgb(75, 192, 192)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: designSystem.colors.primary[500],
+        backgroundColor: `${designSystem.colors.primary[500]}20`,
         tension: 0.1,
         pointRadius: 1,
         pointHoverRadius: 6,
@@ -216,10 +217,13 @@ export const BurndownChart: FC<BurndownChartProps> = ({
         display: true,
         text: 'Spending Burndown',
         font: {
-          size: 16,
+          size: 18,
+          weight: 'bold',
         },
+        color: designSystem.colors.text.primary,
         padding: {
-          bottom: 10,
+          top: 10,
+          bottom: 20,
         },
       },
       tooltip: {
@@ -256,7 +260,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
           stepSize: 100, // Adjusted step size for better readability
         },
         grid: {
-          color: 'rgba(200, 200, 200, 0.2)',
+          color: designSystem.colors.gray[300],
         },
         min: 0,
         max: targetSpend + 1000, // Added a buffer to the max value for better visualization

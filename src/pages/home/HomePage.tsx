@@ -8,7 +8,7 @@ const HomePage: React.FC = () => {
       title='Home'
       showHeader={true}
       showBackButton={false}
-      showLogo={false}
+      showLogo={true}
       showMenu={true}
       menu={<MainMenuContent />}
     >

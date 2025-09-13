@@ -1,6 +1,13 @@
 import type { SpendCategory } from '@/domain/Spend';
 import type { SpendFormData } from '@/pages/spending/modals/spendModal';
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
+import {
+  basketOutline,
+  colorPaletteOutline,
+  sparklesOutline,
+  walletOutline,
+  barChartOutline,
+} from 'ionicons/icons';
 import { useCallback, useMemo } from 'react';
 import { type Control, type FieldValues, type UseFormSetValue, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +55,21 @@ interface CategorySectionProps<TFormValues extends FieldValues> {
   control: Control<TFormValues>;
 }
 
+const getCategoryIcon = (category: SpendCategory): string => {
+  switch (category) {
+    case 'need':
+      return walletOutline;
+    case 'want':
+      return basketOutline;
+    case 'culture':
+      return colorPaletteOutline;
+    case 'unexpected':
+      return sparklesOutline;
+    default:
+      return walletOutline;
+  }
+};
+
 const categorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setValue, control }) => {
   const { t } = useTranslation();
   const category = useWatch({
@@ -62,17 +84,18 @@ const categorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setVal
   );
   const categoryItems = useMemo(() => {
     return [
-      { label: t('spending.categories.need'), value: 'need', icon: '🏠' },
-      { label: t('spending.categories.want'), value: 'want', icon: '💝' },
-      { label: t('spending.categories.culture'), value: 'culture', icon: '📚' },
-      { label: t('spending.categories.unexpected'), value: 'unexpected', icon: '⚡' },
+      { label: t('spending.categories.need'), value: 'need' as SpendCategory },
+      { label: t('spending.categories.want'), value: 'want' as SpendCategory },
+      { label: t('spending.categories.culture'), value: 'culture' as SpendCategory },
+      { label: t('spending.categories.unexpected'), value: 'unexpected' as SpendCategory },
     ].map((item) => (
       <CategoryItem
         key={item.label}
         selected={item.value === category}
-        onClick={() => categorySelectHandler(item.value as SpendCategory)}
+        onClick={() => categorySelectHandler(item.value)}
       >
-        <span>{item.icon}</span> {item.label}
+        <IonIcon icon={getCategoryIcon(item.value)} style={{ fontSize: '1.125rem' }} />
+        {item.label}
       </CategoryItem>
     ));
   }, [t, category, categorySelectHandler]);
@@ -80,16 +103,12 @@ const categorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setVal
   return (
     <IonCard color={'primary'}>
       <IonCardHeader>
-        <IonCardTitle>
-          <span>📊 Mindful Moment</span>
+        <IonCardTitle style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <IonIcon icon={barChartOutline} style={{ fontSize: '1.25rem' }} />
+          Mindful Moment
         </IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
-        <p>
-          Remember, every spend is an opportunity to align with your values and goals. Make it
-          count!
-        </p>
-        <p>Select the category that best fits your spending:</p>
         <CategoryGrid>{categoryItems}</CategoryGrid>
       </IonCardContent>
     </IonCard>

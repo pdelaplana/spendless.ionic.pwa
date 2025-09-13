@@ -1,4 +1,5 @@
 import useFormatters from '@/hooks/ui/useFormatters';
+import { designSystem } from '@/theme/designSystem';
 import styled from '@emotion/styled';
 import { IonText } from '@ionic/react';
 import { ArcElement, Chart as ChartJS, Tooltip } from 'chart.js';
@@ -8,41 +9,57 @@ import { Doughnut } from 'react-chartjs-2';
 const ChartContainer = styled.div`
   position: relative;
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 320px;
 `;
 
 const ValueContainer = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
+  width: 100%;
 `;
 
 const Value = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--ion-color-dark);
+  font-size: ${designSystem.typography.fontSize.xl};
+  font-weight: ${designSystem.typography.fontWeight.semibold};
+  color: ${designSystem.colors.text.primary};
+  margin-bottom: 4px;
 `;
 
 const Label = styled.div`
-  font-size: 1rem;
-  color: var(--ion-color-dark);
+  font-size: ${designSystem.typography.fontSize.sm};
+  color: ${designSystem.colors.text.secondary};
+  font-weight: ${designSystem.typography.fontWeight.medium};
 `;
 
 const DaysToGo = styled.div`
   position: absolute;
-  top: 30px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: bold;
-
-  color: var(--ion-color-dark);
+  color: ${designSystem.colors.text.primary};
   text-align: center;
   width: 100%;
-  pointer-events: none; /* Prevent interaction */
+  pointer-events: none;
+`;
+
+const ChartWrapper = styled.div`
+  width: 100%;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -20px;
 `;
 
 ChartJS.register(ArcElement, Tooltip);
@@ -72,9 +89,11 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
     datasets: [
       {
         data: [percentage, 100 - percentage],
-        //backgroundColor: ['var(--ion-color-success)', 'var(--ion-color-light)'],
-        backgroundColor: ['rgba(75, 192, 192, 0.8)', 'rgba(220, 220, 220, 0.5)'],
-        borderWidth: 1,
+        backgroundColor: [
+          value >= 0 ? designSystem.colors.primary[500] : designSystem.colors.danger,
+          designSystem.colors.gray[200],
+        ],
+        borderWidth: 0,
         circumference: 180,
         rotation: 270,
       },
@@ -83,7 +102,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
 
   const options = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
@@ -92,6 +111,9 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
         enabled: false,
       },
     },
+    layout: {
+      padding: 0,
+    },
   };
 
   return (
@@ -99,7 +121,9 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
       <DaysToGo>
         <IonText>{formatDaysUntil(endDate)} Days To Go</IonText>
       </DaysToGo>
-      <Doughnut data={data} options={options} />
+      <ChartWrapper>
+        <Doughnut data={data} options={options} />
+      </ChartWrapper>
       <ValueContainer>
         <Value>{formatCurrency(value, currency)}</Value>
         {label && <Label>{label}</Label>}

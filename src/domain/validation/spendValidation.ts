@@ -1,7 +1,8 @@
+import type { SpendFormData } from '@/pages/spending/modals/spendModal';
 import type { RegisterOptions } from 'react-hook-form';
 import type { CreateSpendDTO } from '../Spend';
 
-export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions> = {
+export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions<SpendFormData>> = {
   date: {
     required: 'Date is required',
   },
@@ -17,7 +18,7 @@ export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions> = {
     required: 'Amount is required',
     min: { value: 0.01, message: 'Amount must be greater than 0' },
     // biome-ignore lint/suspicious/noGlobalIsNan: <explanation>
-    validate: (value) => !isNaN(value) || 'Please enter a valid number',
+    validate: (value) => !isNaN(Number(value)) || 'Please enter a valid number',
   },
   notes: {
     maxLength: { value: 500, message: 'Notes must be less than 500 characters' },
@@ -36,18 +37,18 @@ export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions> = {
   },
   emotionalState: {
     validate: (value) =>
-      ['happy', 'neutral', 'sad', 'angry', 'stressed', 'tired'].includes(value) ||
+      ['happy', 'neutral', 'sad', 'angry', 'stressed', 'tired'].includes(value?.toString() || '') ||
       'Invalid emotional state',
   },
   satisfactionRating: {
     min: { value: 0, message: 'Satisfaction rating must be at least 0' },
     max: { value: 5, message: 'Satisfaction rating must be at most 5' },
-    validate: (value) => !Number.isNaN(value) || 'Please enter a valid number',
+    validate: (value) => !Number.isNaN(Number(value)) || 'Please enter a valid number',
   },
   necessityRating: {
     min: { value: 0, message: 'Necessity rating must be at least 0' },
     max: { value: 5, message: 'Necessity rating must be at most 5' },
-    validate: (value) => !Number.isNaN(value) || 'Please enter a valid number',
+    validate: (value) => !Number.isNaN(Number(value)) || 'Please enter a valid number',
   },
   personalReflections: {},
   tags: {},

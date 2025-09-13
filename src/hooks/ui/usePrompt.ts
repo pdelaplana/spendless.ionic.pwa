@@ -26,7 +26,7 @@ export const usePrompt = () => {
           },
         },
         {
-          text: 'OK',
+          text: 'Continue',
           role: 'confirm',
           handler: async () => {
             onConfirm();

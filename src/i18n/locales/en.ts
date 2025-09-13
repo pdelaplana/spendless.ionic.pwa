@@ -40,10 +40,10 @@ export default {
     },
     spending: {
       categories: {
-        need: 'Needs',
-        want: 'Wants',
-        culture: 'Culture',
-        unexpected: 'Unexpected',
+        need: 'Essentials',
+        want: 'Desires',
+        culture: 'Growth',
+        unexpected: 'Surprises',
       },
       deleteSpend: 'Delete Spending',
       deleteSpendMessage: 'Are you sure you want to delete this spending?',

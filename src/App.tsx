@@ -34,6 +34,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './theme/components.css';
 import { AuthProvider } from './providers/auth/AuthProvider';
 import AppRoutes from './routes/AppRoutes';
 

@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spendless Brand Identity System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+            line-height: 1.6;
+            color: #18181b;
+            background: #fafafa;
+        }
+        
+        .brand-guide {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        /* Header */
+        .brand-header {
+            background: linear-gradient(135deg, #8B5FBF 0%, #7c3aed 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .brand-header h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+        }
+        
+        .brand-header .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* Navigation */
+        .nav-menu {
+            background: #f4f4f5;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #e4e4e7;
+        }
+        
+        .nav-list {
+            display: flex;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        
+        .nav-item {
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            border-bottom-color: #8B5FBF;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            color: #52525b;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .nav-item:hover .nav-link {
+            color: #8B5FBF;
+        }
+        
+        /* Sections */
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #18181b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #71717a;
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Logo Variations Grid */
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .logo-card {
+            background: white;
+            border: 1px solid #e4e4e7;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .logo-display {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+        
+        .logo-primary {
+            display: flex;
+            align-items: center;
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            color: #27272a;
+        }
+        
+        .logo-accent {
+            background: #8B5FBF;
+            color: white;
+            padding: 0.1em 0.12em;
+            border-radius: 6px;
+            margin: 0 1px;
+        }
+        
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: #8B5FBF;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 900;
+        }
+        
+        .logo-horizontal {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-horizontal .logo-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 2rem;
+        }
+        
+        .logo-horizontal .text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #27272a;
+            letter-spacing: -1px;
+        }
+        
+        .logo-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #18181b;
+        }
+        
+        .logo-card p {
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+        
+        /* Color Palette */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .color-family {
+            background: white;
+            border: 1px solid #e4e4e7;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .color-family h3 {
+            padding: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: #f8f9ff;
+            border-bottom: 1px solid #e4e4e7;
+        }
+        
+        .color-swatches {
+            padding: 0;
+        }
+        
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f4f4f5;
+        }
+        
+        .color-swatch:last-child {
+            border-bottom: none;
+        }
+        
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 1rem;
+            border: 1px solid #e4e4e7;
+        }
+        
+        .color-info {
+            flex: 1;
+        }
+        
+        .color-name {
+            font-weight: 600;
+            color: #18181b;
+            margin-bottom: 0.25rem;
+        }
+        
+        .color-values {
+            font-size: 0.85rem;
+            color: #71717a;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        
+        /* Typography */
+        .type-specimen {
+            background: white;
+            border: 1px solid #e4e4e7;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .type-sample {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #f4f4f5;
+        }
+        
+        .type-sample:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .type-display {
+            margin-bottom: 1rem;
+        }
+        
+        .type-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: #71717a;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        
+        .headline-1 {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.1;
+            color: #18181b;
+            letter-spacing: -1px;
+        }
+        
+        .headline-2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #18181b;
+        }
+        
+        .body-large {
+            font-size: 1.125rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #18181b;
+        }
+        
+        .body-regular {
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #52525b;
+        }
+        
+        .caption {
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Usage Guidelines */
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .usage-card {
+            background: white;
+            border: 1px solid #e4e4e7;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .usage-do {
+            border-left: 4px solid #10b981;
+        }
+        
+        .usage-dont {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .usage-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .usage-do h4 {
+            color: #10b981;
+        }
+        
+        .usage-dont h4 {
+            color: #ef4444;
+        }
+        
+        .usage-card ul {
+            list-style: none;
+            color: #52525b;
+        }
+        
+        .usage-card li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .usage-do li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .usage-dont li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Applications Section */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .app-card {
+            background: white;
+            border: 1px solid #e4e4e7;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .app-preview {
+            background: #f8f9ff;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #e4e4e7;
+        }
+        
+        .app-content {
+            padding: 1.5rem;
+        }
+        
+        .mockup-browser {
+            background: #e4e4e7;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .browser-bar {
+            background: white;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #71717a;
+        }
+        
+        .browser-content {
+            background: white;
+            border-radius: 4px;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .mockup-business-card {
+            background: white;
+            border: 1px solid #e4e4e7;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .business-card-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .business-card-logo .logo-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 1rem;
+        }
+        
+        .business-card-logo .text {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #27272a;
+        }
+        
+        /* Download Section */
+        .download-section {
+            background: linear-gradient(135deg, #8B5FBF 0%, #7c3aed 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .download-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .download-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .download-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .download-btn {
+            background: white;
+            color: #8B5FBF;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .download-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .download-btn.secondary:hover {
+            background: white;
+            color: #8B5FBF;
+        }
+    </style>
+</head>
+<body>
+    <div class="brand-guide">
+        <!-- Header -->
+        <header class="brand-header">
+            <h1>Spendless</h1>
+            <p class="subtitle">Complete Brand Identity System</p>
+        </header>
+        
+        <!-- Navigation -->
+        <nav class="nav-menu">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#logos" class="nav-link">Logo Variations</a></li>
+                <li class="nav-item"><a href="#colors" class="nav-link">Color Palette</a></li>
+                <li class="nav-item"><a href="#typography" class="nav-link">Typography</a></li>
+                <li class="nav-item"><a href="#usage" class="nav-link">Usage Guidelines</a></li>
+                <li class="nav-item"><a href="#applications" class="nav-link">Applications</a></li>
+                <li class="nav-item"><a href="#download" class="nav-link">Download Assets</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Logo Variations Section -->
+        <section id="logos" class="section">
+            <h2 class="section-title">Logo Variations</h2>
+            <p class="section-subtitle">A comprehensive logo system designed for maximum flexibility across all digital and print applications.</p>
+            
+            <div class="logo-grid">
+                <div class="logo-card">
+                    <div class="logo-display">
+                        <div class="logo-primary">
+                            <span>S</span><span class="logo-accent">p</span><span>endless</span>
+                        </div>
+                    </div>
+                    <h3>Primary Logo</h3>
+                    <p>Main wordmark with purple "p" accent. Use this as your primary brand identifier across all major touchpoints.</p>
+                </div>
+                
+                <div class="logo-card">
+                    <div class="logo-display">
+                        <div class="logo-icon">S</div>
+                    </div>
+                    <h3>Icon Mark</h3>
+                    <p>Standalone brand mark perfect for favicons, app icons, social media profiles, and compact spaces.</p>
+                </div>
+                
+                <div class="logo-card">
+                    <div class="logo-display">
+                        <div class="logo-horizontal">
+                            <div class="logo-icon">S</div>
+                            <span class="text">Spendless</span>
+                        </div>
+                    </div>
+                    <h3>Horizontal Combo</h3>
+                    <p>Icon + wordmark combination ideal for website headers, business cards, and marketing materials.</p>
+                </div>
+                
+                <div class="logo-card">
+                    <div class="logo-display" style="background: #27272a;">
+                        <div class="logo-primary" style="color: white;">
+                            <span>S</span><span class="logo-accent">p</span><span>endless</span>
+                        </div>
+                    </div>
+                    <h3>Reverse Logo</h3>
+                    <p>White version for dark backgrounds, maintaining the purple accent for brand consistency.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Color Palette Section -->
+        <section id="colors" class="section">
+            <h2 class="section-title">Color Palette</h2>
+            <p class="section-subtitle">Carefully selected colors that convey trust, financial wellness, and modern sophistication.</p>
+            
+            <div class="color-grid">
+                <div class="color-family">
+                    <h3>Primary Purple</h3>
+                    <div class="color-swatches">
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #8B5FBF;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Brand Purple</div>
+                                <div class="color-values">#8B5FBF | RGB(139, 95, 191)</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #7c3aed;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Purple Dark</div>
+                                <div class="color-values">#7c3aed | RGB(124, 58, 237)</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #c084fc;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Purple Light</div>
+                                <div class="color-values">#c084fc | RGB(192, 132, 252)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="color-family">
+                    <h3>Neutrals</h3>
+                    <div class="color-swatches">
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #18181b;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Text Primary</div>
+                                <div class="color-values">#18181b | RGB(24, 24, 27)</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #71717a;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Text Secondary</div>
+                                <div class="color-values">#71717a | RGB(113, 113, 122)</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #fafafa;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Background</div>
+                                <div class="color-values">#fafafa | RGB(250, 250, 250)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="color-family">
+                    <h3>Semantic Colors</h3>
+                    <div class="color-swatches">
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #10b981;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Success</div>
+                                <div class="color-values">#10b981 | RGB(16, 185, 129)</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #f59e0b;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Warning</div>
+                                <div class="color-values">#f59e0b | RGB(245, 158, 11)</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-preview" style="background: #ef4444;"></div>
+                            <div class="color-info">
+                                <div class="color-name">Error</div>
+                                <div class="color-values">#ef4444 | RGB(239, 68, 68)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Typography Section -->
+        <section id="typography" class="section">
+            <h2 class="section-title">Typography</h2>
+            <p class="section-subtitle">Clean, modern typography that ensures excellent readability across all devices and applications.</p>
+            
+            <div class="type-specimen">
+                <div class="type-sample">
+                    <div class="type-display">
+                        <div class="headline-1">Take control of your spending</div>
+                    </div>
+                    <div class="type-info">
+                        <span>Font Weight: 900</span>
+                        <span>Size: 48px</span>
+                        <span>Line Height: 1.1</span>
+                        <span>Use: Headlines, Hero text</span>
+                    </div>
+                </div>
+                
+                <div class="type-sample">
+                    <div class="type-display">
+                        <div class="headline-2">Set thresholds, track progress, achieve goals</div>
+                    </div>
+                    <div class="type-info">
+                        <span>Font Weight: 700</span>
+                        <span>Size: 36px</span>
+                        <span>Line Height: 1.2</span>
+                        <span>Use: Section headers, Subheadings</span>
+                    </div>
+                </div>
+                
+                <div class="type-sample">
+                    <div class="type-display">
+                        <div class="body-large">Spendless helps you build better financial habits by setting smart spending thresholds and tracking your progress toward financial wellness.</div>
+                    </div>
+                    <div class="type-info">
+                        <span>Font Weight: 400</span>
+                        <span>Size: 18px</span>
+                        <span>Line Height: 1.6</span>
+                        <span>Use: Lead paragraphs, Important text</span>
+                    </div>
+                </div>
+                
+                <div class="type-sample">
+                    <div class="type-display">
+                        <div class="body-regular">Regular body text for general content, descriptions, and explanations throughout the application and marketing materials.</div>
+                    </div>
+                    <div class="type-info">
+                        <span>Font Weight: 400</span>
+                        <span>Size: 16px</span>
+                        <span>Line Height: 1.5</span>
+                        <span>Use: Body text, Descriptions</span>
+                    </div>
+                </div>
+                
+                <div class="type-sample">
+                    <div class="type-display">
+                        <div class="caption">Financial Wellness</div>
+                    </div>
+                    <div class="type-info">
+                        <span>Font Weight: 500</span>
+                        <span>Size: 14px</span>
+                        <span>Line Height: 1.4</span>
+                        <span>Use: Labels, Captions, Small text</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Usage Guidelines Section -->
+        <section id="usage" class="section">
+            <h2 class="section-title">Usage Guidelines</h2>
+            <p class="section-subtitle">Essential rules to maintain brand consistency and ensure your logo always looks its best.</p>
+            
+            <div class="usage-grid">
+                <div class="usage-card usage-do">
+                    <h4>✓ Do</h4>
+                    <ul>
+                        <li>Use the primary logo on white or light backgrounds</li>
+                        <li>Maintain minimum clear space around the logo</li>
+                        <li>Use the icon mark for social media profiles</li>
+                        <li>Keep the purple accent consistent across all applications</li>
+                        <li>Use the horizontal combo for website headers</li>
+                        <li>Scale proportionally when resizing</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-card usage-dont">
+                    <h4>✗ Don't</h4>
+                    <ul>
+                        <li>Change the purple accent to any other color</li>
+                        <li>Stretch or distort the logo proportions</li>
+                        <li>Use the logo smaller than 16px height</li>
+                        <li>Place the logo on busy or low-contrast backgrounds</li>
+                        <li>Separate the letters or rearrange them</li>
+                        <li>Add effects, shadows, or outlines to the logo</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Applications Section -->
+        <section id="applications" class="section">
+            <h2 class="section-title">Brand Applications</h2>
+            <p class="section-subtitle">See how your brand identity works across different platforms and materials.</p>
+            
+            <div class="app-grid">
+                <div class="app-card">
+                    <div class="app-preview">
+                        <div class="mockup-browser">
+                            <div class="browser-bar">
+                                <div class="logo-icon" style="width: 16px; height: 16px; font-size: 10px; border-radius: 2px;">S</div>
+                                <span>Spendless - Financial Wellness App</span>
+                            </div>
+                            <div class="browser-content">
+                                <div class="logo-primary" style="font-size: 2rem; margin-bottom: 1rem;">
+                                    <span>S</span><span class="logo-accent">p</span><span>endless</span>
+                                </div>
+                                <p style="color: #71717a; margin: 0;">Take control of your spending</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h3>Website Header</h3>
+                        <p>Primary logo in website header with favicon showing brand consistency across browser experience.</p>
+                    </div>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-preview">
+                        <div class="mockup-business-card">
+                            <div class="business-card-logo">
+                                <div class="logo-icon">S</div>
+                                <span class="text">Spendless</span>
+                            </div>
+                            <div style="color: #71717a; font-size: 0.9rem; line-height: 1.4;">
+                                <div style="font-weight: 600; color: #18181b; margin-bottom: 0.5rem;">John Smith</div>
+                                <div>Founder & CEO</div>
+                                <div>hello@spendless.app</div>
+                                <div>spendless.app</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h3>Business Card</h3>
+                        <p>Horizontal logo combination works perfectly for business cards and professional materials.</p>
+                    </div>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-preview" style="background: #1a1a1a;">
+                        <div style="display: flex; align-items: center; justify-content: center; padding: 2rem;">
+                            <div class="logo-icon" style="width: 120px; height: 120px; font-size: 4rem; border-radius: 20px;">S</div>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h3>App Icon</h3>
+                        <p>Clean, recognizable app icon that works across iOS, Android, and web app manifests.</p>
+                    </div>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-preview">
+                        <div style="background: #8B5FBF; color: white; padding: 2rem; border-radius: 8px; text-align: center;">
+                            <div class="logo-primary" style="color: white; font-size: 2.5rem; margin-bottom: 1rem;">
+                                <span>S</span><span style="background: white; color: #8B5FBF;" class="logo-accent">p</span><span>endless</span>
+                            </div>
+                            <p style="margin: 0; opacity: 0.9;">Take control of your financial future</p>
+                            <div style="background: white; color: #8B5FBF; padding: 0.75rem 2rem; border-radius: 6px; margin-top: 1.5rem; font-weight: 600; display: inline-block;">Get Started Free</div>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h3>Marketing Banner</h3>
+                        <p>Reverse logo variation for promotional materials and social media campaigns.</p>
+                    </div>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-preview">
+                        <div style="background: white; border: 1px solid #e4e4e7; border-radius: 8px; padding: 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div class="logo-icon" style="width: 40px; height: 40px; font-size: 1.5rem;">S</div>
+                                <div>
+                                    <div style="font-weight: 600; color: #18181b;">Spendless</div>
+                                    <div style="font-size: 0.85rem; color: #71717a;">Financial Wellness App</div>
+                                </div>
+                            </div>
+                            <div style="color: #52525b; font-size: 0.9rem; line-height: 1.4;">
+                                You've spent $245 this week against your $300 threshold. You're on track! 📊
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h3>Email Template</h3>
+                        <p>Compact logo treatment perfect for email headers and notifications.</p>
+                    </div>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-preview">
+                        <div style="background: #f8f9ff; border: 1px solid #e4e4e7; border-radius: 8px; padding: 1.5rem; text-align: left;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                <div class="logo-horizontal" style="gap: 0.5rem;">
+                                    <div class="logo-icon" style="width: 30px; height: 30px; font-size: 1rem;">S</div>
+                                    <span style="font-size: 1.2rem; font-weight: 900; color: #27272a;">Spendless</span>
+                                </div>
+                                <div style="font-size: 0.8rem; color: #71717a;">Invoice #001</div>
+                            </div>
+                            <div style="color: #52525b; font-size: 0.9rem;">
+                                <div style="margin-bottom: 0.5rem;"><strong>Bill To:</strong> John Doe</div>
+                                <div style="margin-bottom: 0.5rem;"><strong>Plan:</strong> Spendless Pro</div>
+                                <div><strong>Amount:</strong> $9.99/month</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h3>Invoice Design</h3>
+                        <p>Professional document layout using horizontal logo combination for business communications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Brand Voice & Messaging -->
+        <section class="section">
+            <h2 class="section-title">Brand Voice & Messaging</h2>
+            <p class="section-subtitle">How Spendless communicates with users - the personality behind the brand.</p>
+            
+            <div class="usage-grid">
+                <div class="usage-card" style="border-left: 4px solid #8B5FBF;">
+                    <h4 style="color: #8B5FBF;">🎯 Brand Personality</h4>
+                    <ul style="list-style: disc; padding-left: 1.5rem;">
+                        <li><strong>Encouraging:</strong> Supportive, not judgmental about spending habits</li>
+                        <li><strong>Clear:</strong> Simple, jargon-free financial guidance</li>
+                        <li><strong>Empowering:</strong> Puts users in control of their financial journey</li>
+                        <li><strong>Trustworthy:</strong> Reliable, secure, transparent about data</li>
+                        <li><strong>Optimistic:</strong> Focused on progress and positive outcomes</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-card" style="border-left: 4px solid #10b981;">
+                    <h4 style="color: #10b981;">💬 Tone Examples</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 6px;">
+                            <strong>✓ Do:</strong> "You're $25 under budget this week! Keep up the great progress."
+                        </li>
+                        <li style="margin-bottom: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 6px;">
+                            <strong>✓ Do:</strong> "Let's set a spending threshold that works for your lifestyle."
+                        </li>
+                        <li style="padding: 1rem; background: #f0fdf4; border-radius: 6px;">
+                            <strong>✓ Do:</strong> "Small steps lead to big financial wins."
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="usage-card" style="border-left: 4px solid #ef4444;">
+                    <h4 style="color: #ef4444;">❌ Avoid These Tones</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 1rem; padding: 1rem; background: #fef2f2; border-radius: 6px;">
+                            <strong>✗ Don't:</strong> "You've overspent again. This is concerning."
+                        </li>
+                        <li style="margin-bottom: 1rem; padding: 1rem; background: #fef2f2; border-radius: 6px;">
+                            <strong>✗ Don't:</strong> "Optimize your financial portfolio using our advanced algorithms."
+                        </li>
+                        <li style="padding: 1rem; background: #fef2f2; border-radius: 6px;">
+                            <strong>✗ Don't:</strong> "Failure to control spending will result in financial ruin."
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Technical Specifications -->
+        <section class="section">
+            <h2 class="section-title">Technical Specifications</h2>
+            <p class="section-subtitle">File formats, sizes, and technical requirements for implementing your brand across all platforms.</p>
+            
+            <div class="usage-grid">
+                <div class="usage-card">
+                    <h4 style="color: #8B5FBF;">🖼️ Logo File Formats</h4>
+                    <ul style="list-style: none; color: #52525b;">
+                        <li><strong>SVG:</strong> Vector format for web and scalable applications</li>
+                        <li><strong>PNG:</strong> High-resolution with transparent background</li>
+                        <li><strong>JPG:</strong> For print applications with white background</li>
+                        <li><strong>ICO:</strong> Multi-size favicon format for browsers</li>
+                        <li><strong>PDF:</strong> Vector format for print and professional use</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-card">
+                    <h4 style="color: #8B5FBF;">📱 App Icon Sizes</h4>
+                    <ul style="list-style: none; color: #52525b;">
+                        <li><strong>iOS:</strong> 180x180px (iPhone), 167x167px (iPad)</li>
+                        <li><strong>Android:</strong> 192x192px, 512x512px</li>
+                        <li><strong>Web App:</strong> 192x192px, 512x512px</li>
+                        <li><strong>Favicon:</strong> 16x16px, 32x32px, 48x48px</li>
+                        <li><strong>Windows:</strong> 150x150px (tiles)</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-card">
+                    <h4 style="color: #8B5FBF;">🎨 Color Specifications</h4>
+                    <ul style="list-style: none; color: #52525b;">
+                        <li><strong>Web (HEX):</strong> #8B5FBF, #7c3aed, #c084fc</li>
+                        <li><strong>Print (CMYK):</strong> C:45 M:69 Y:0 K:6</li>
+                        <li><strong>RGB:</strong> R:139 G:95 B:191</li>
+                        <li><strong>HSL:</strong> H:267° S:44% L:56%</li>
+                        <li><strong>Pantone:</strong> 2665 C (closest match)</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-card">
+                    <h4 style="color: #8B5FBF;">📐 Minimum Sizes</h4>
+                    <ul style="list-style: none; color: #52525b;">
+                        <li><strong>Primary Logo:</strong> 100px width minimum</li>
+                        <li><strong>Icon Mark:</strong> 16px width minimum</li>
+                        <li><strong>Print Logo:</strong> 0.5 inch width minimum</li>
+                        <li><strong>Clear Space:</strong> Half the logo height on all sides</li>
+                        <li><strong>Business Card:</strong> 0.75 inch minimum width</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Download Section -->
+        <section id="download" class="download-section">
+            <h2>Download Brand Assets</h2>
+            <p>Get all the files you need to implement your Spendless brand identity consistently across all platforms.</p>
+            
+            <div class="download-buttons">
+                <a href="#" class="download-btn">Complete Logo Package</a>
+                <a href="#" class="download-btn">Favicon Set</a>
+                <a href="#" class="download-btn">Color Swatches</a>
+                <a href="#" class="download-btn secondary">Brand Guidelines PDF</a>
+            </div>
+            
+            <div style="margin-top: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h3 style="margin-bottom: 1rem;">Package Includes:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; text-align: left;">
+                    <div>
+                        <strong>Logo Files:</strong><br>
+                        • SVG, PNG, JPG formats<br>
+                        • Light and dark versions<br>
+                        • Horizontal and stacked layouts
+                    </div>
+                    <div>
+                        <strong>App Icons:</strong><br>
+                        • iOS and Android sizes<br>
+                        • Favicon multi-format<br>
+                        • Web app manifest icons
+                    </div>
+                    <div>
+                        <strong>Design Assets:</strong><br>
+                        • Color palette (all formats)<br>
+                        • Typography guidelines<br>
+                        • Usage examples
+                    </div>
+                    <div>
+                        <strong>Templates:</strong><br>
+                        • Business card layouts<br>
+                        • Email signature<br>
+                        • Social media templates
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Smooth scroll for navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Active navigation highlighting
+        const sections = document.querySelectorAll('.section');
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.querySelector('.nav-link').getAttribute('href') === `#${current}`) {
+                    item.classList.add('active');
+                }
+            });
+        });
+        
+        // Download button interactions
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // This would typically trigger actual file downloads
+                const fileName = this.textContent.trim();
+                alert(`Downloading ${fileName}... (This would trigger actual file download in production)`);
+            });
+        });
+        
+        // Add active state CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            .nav-item.active {
+                border-bottom-color: #8B5FBF;
+            }
+            .nav-item.active .nav-link {
+                color: #8B5FBF;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+                    

@@ -171,6 +171,43 @@ Development requires these environment variables:
 - `VITE_FIREBASE_APP_ID`
 - `VITE_SENTRY_DSN` (optional, for error tracking)
 
+## Ionic Server Management
+
+### Starting the Development Server
+1. **Check for existing processes first:**
+   ```bash
+   netstat -ano | findstr ":8100 "
+   netstat -ano | findstr ":8101 "
+   ```
+
+2. **If processes exist:** Use existing server instances instead of starting new ones
+
+3. **If no processes exist:** Start new server with:
+   ```bash
+   ionic serve --no-open
+   ```
+
+### Shutting Down the Server
+1. **Kill bash shells if they exist:**
+   - Use `KillBash` tool for any running ionic serve bash processes
+
+2. **Kill underlying processes on ports 8100 and 8101:**
+   ```bash
+   powershell "Stop-Process -Id [PID] -Force"
+   ```
+   (Replace [PID] with actual process IDs from netstat output)
+
+3. **Verify ports are free:**
+   ```bash
+   netstat -ano | findstr ":810"
+   ```
+
+### Important Notes
+- Ionic typically runs on ports 8100 or 8101
+- Always check for existing processes before starting new ones
+- Use PowerShell Stop-Process for reliable process termination on Windows
+- Bash shell termination doesn't always kill the underlying Node.js processes
+
 ## CI/CD Pipeline
 
 GitHub Actions workflows:

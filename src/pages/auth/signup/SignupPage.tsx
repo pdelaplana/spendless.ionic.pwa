@@ -1,9 +1,10 @@
+import { SpendlessLogo } from '@/components/brand';
 import InputFormField from '@/components/forms/fields/InputFormField';
 import { ActionButton, Gap } from '@/components/shared';
 import { useCreateAccount } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui';
 import { ROUTES } from '@/routes/routes.constants';
-import PublicPageLayout from '@components/layouts/PublicPageLayout';
+import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import styled from '@emotion/styled';
 import {
   IonCard,
@@ -26,6 +27,14 @@ import { useTranslation } from 'react-i18next';
 const StyledIonCard = styled(IonCard)`
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+`;
+
+const LogoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0 2rem 0;
+  text-align: center;
 `;
 
 interface ISignupForm {
@@ -75,8 +84,12 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <PublicPageLayout title='Sign up'>
+    <AuthPageLayout title='Sign up'>
       <Gap size='.65rem' />
+      <LogoContainer>
+        <SpendlessLogo variant='primary' size='large' />
+      </LogoContainer>
+      <Gap size='1rem' />
       <StyledIonCard>
         <IonCardHeader>
           <IonCardTitle className='ion-margin'>
@@ -175,7 +188,7 @@ const SignupPage: React.FC = () => {
           </IonList>
         </IonCardContent>
       </StyledIonCard>
-    </PublicPageLayout>
+    </AuthPageLayout>
   );
 };
 

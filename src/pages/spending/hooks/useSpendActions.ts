@@ -42,7 +42,7 @@ export const useSpendActions = () => {
 
   const editSpendHandler = (spend: ISpend) => {
     const suggestedTags = usedSpendingTags;
-    openSpendModal(spend, saveSpendHandler, deleteSpendHandler, suggestedTags);
+    openSpendModal(spend, saveSpendHandler, deleteSpendHandler, suggestedTags, account?.currency);
   };
 
   const newSpendHandler = () => {
@@ -59,6 +59,7 @@ export const useSpendActions = () => {
       saveSpendHandler,
       deleteSpendHandler,
       suggestedTags,
+      account?.currency,
     );
   };
 

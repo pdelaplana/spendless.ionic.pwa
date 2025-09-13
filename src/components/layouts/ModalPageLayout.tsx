@@ -12,12 +12,14 @@ import {
 import { closeOutline } from 'ionicons/icons';
 import type React from 'react';
 import type { PropsWithChildren } from 'react';
+import { CenterContainer } from './CenterContainer';
 
 interface ModalProps extends PropsWithChildren {
   title?: string;
   footer?: React.ReactNode;
   showHeader?: boolean;
   onDismiss: () => void;
+  actionButton?: React.ReactNode;
 }
 
 const ModalPageLayout: React.FC<ModalProps> = ({
@@ -26,24 +28,26 @@ const ModalPageLayout: React.FC<ModalProps> = ({
   footer,
   children,
   onDismiss,
+  actionButton,
 }) => {
   return (
     <IonPage>
       {showHeader && (
         <IonHeader className='ion-no-border'>
           <IonToolbar>
-            <IonButtons slot='end'>
+            <IonButtons slot='start'>
               <IonButton onClick={() => onDismiss()} slot='icon-only' shape='round'>
                 <IonIcon icon={closeOutline} />
               </IonButton>
             </IonButtons>
             <IonTitle>{title}</IonTitle>
+            {actionButton && <IonButtons slot='end'>{actionButton}</IonButtons>}
           </IonToolbar>
         </IonHeader>
       )}
 
       <IonContent>{children}</IonContent>
-      {footer && <IonFooter>{footer}</IonFooter>}
+      {footer && <IonFooter className='ion-no-border'>{footer}</IonFooter>}
     </IonPage>
   );
 };

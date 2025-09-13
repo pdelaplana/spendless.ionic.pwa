@@ -1,16 +1,21 @@
+import { InputFormField } from '@/components/forms';
 import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { ActionButton, ActionSheetButton, Gap } from '@/components/shared';
 import type { ActionOption } from '@/components/shared/base/buttons/ActionSheetButton';
+import DestructiveButton from '@/components/shared/base/buttons/DestructiveButton';
+import { ProminentAmountInput } from '@/components/ui';
+import { Currency } from '@/domain/Currencies';
 import { type ISpend, createSpend } from '@/domain/Spend';
+import { spendValidation } from '@/domain/validation';
 import { usePrompt } from '@/hooks';
-import { useEffect, useState } from 'react';
+import { TransparentIonList } from '@/styles/IonList.styled';
+import { designSystem } from '@/theme/designSystem';
+import { IonItem, IonLabel } from '@ionic/react';
+import { useCallback, useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import CategorySection from '../../components/common/categorySection/CategorySection';
-import EmotionalAwarenessSection from '../../components/common/emotionalAwarenessSection/EmotionalAwarenessSection';
-import PersonalReflectionSection from '../../components/common/personalReflectionSection/PersonalReflectionSection';
-import RatingSection from '../../components/common/ratingSection/RatingSection';
 import SpendFormSection from '../../components/common/spendFormSection/SpendFormSection';
 import type { SpendFormData } from './types';
 
@@ -19,6 +24,7 @@ interface SpendModalProps {
   onSave: (spend: Partial<ISpend>) => void;
   onDelete: (spendId: string) => void;
   suggestedTags?: string[];
+  currency?: string;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
 }
@@ -28,10 +34,12 @@ const SpendModal: React.FC<SpendModalProps> = ({
   onSave,
   onDelete,
   suggestedTags,
+  currency: currencyCode,
   onDismiss,
 }) => {
   const { t } = useTranslation();
   const { showConfirmPrompt } = usePrompt();
+  const currency = Currency.fromCode(currencyCode ?? 'USD') ?? Currency.USD;
 
   const {
     register,
@@ -51,6 +59,13 @@ const SpendModal: React.FC<SpendModalProps> = ({
     mode: 'onChange',
   });
 
+  const handleAmountChange = useCallback(
+    (value: number) => {
+      setValue('amount', value.toFixed(2), { shouldDirty: true });
+    },
+    [setValue],
+  );
+
   const onSubmit: SubmitHandler<SpendFormData> = async (formData) => {
     const spend = createSpend({
       accountId: formData.accountId,
@@ -61,15 +76,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
       description: formData.description,
       notes: formData.notes,
       recurring: formData.recurring,
-      emotionalState: formData.emotionalState,
-      satisfactionRating: formData.satisfactionRating,
-      necessityRating: formData.necessityRating,
       tags: formData.tags || [],
-      personalReflections:
-        formData.personalReflections?.map((reflection) => ({
-          question: reflection.question,
-          answer: reflection.answer,
-        })) ?? [],
     });
 
     if (formData.id) {
@@ -126,7 +133,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
 
   const footer = (
     <CenterContainer>
-      <Gap size={'.65rem'} />
+      <Gap size={designSystem.spacing.md} />
       {spend?.id && (
         <ActionSheetButton
           buttonLabel={'Options...'}
@@ -152,7 +159,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
         <ActionButton
           expand='full'
           fill='solid'
-          className='ion-margin-bottom ion-margin-start ion-margin-end'
+          className='ion-margin-bottom ion-margin-start ion-margin-end ion-margin-top'
           onClick={handleSubmit(onSubmit)}
           isLoading={false}
           isDisabled={false}
@@ -164,33 +171,67 @@ const SpendModal: React.FC<SpendModalProps> = ({
 
   useEffect(() => {
     if (spend) {
+      const amountValue = spend.amount.toFixed(2);
+
       reset({
         id: spend.id,
         accountId: spend.accountId,
         periodId: spend.periodId,
         date: spend.date?.toISOString().split('T')[0] ?? '',
         category: spend.category,
-        amount: spend.amount.toFixed(2),
+        amount: amountValue,
         description: spend.description,
         notes: spend.notes,
         recurring: spend.recurring,
-        emotionalState: spend.emotionalState,
-        satisfactionRating: spend.satisfactionRating,
-        necessityRating: spend.necessityRating,
         tags: spend.tags ?? [],
-        personalReflections:
-          spend.personalReflections?.map((reflection) => ({
-            question: reflection.question,
-            answer: reflection.answer,
-          })) ?? [],
       });
     }
   }, [spend, reset]);
 
   return (
-    <ModalPageLayout onDismiss={checkIfCanDismiss} footer={footer}>
+    <ModalPageLayout onDismiss={checkIfCanDismiss}>
       <CenterContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <ProminentAmountInput
+            label='Transaction Amount'
+            value={Number.parseFloat(getValues('amount') || '0')}
+            onChange={handleAmountChange}
+            currency={currency}
+            autoFocus={true}
+            error={errors.amount?.message}
+          />
+
+          <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
+            <IonItem>
+              <IonLabel>
+                <InputFormField
+                  label='What did you spend on?'
+                  name='description'
+                  placeholder='Describe your purchase'
+                  register={register}
+                  error={errors.description}
+                  fill='outline'
+                  validationRules={spendValidation.description}
+                />
+              </IonLabel>
+            </IonItem>
+
+            <IonItem>
+              <IonLabel>
+                <InputFormField
+                  label='Date'
+                  name='date'
+                  type='date'
+                  placeholder='Enter date'
+                  register={register}
+                  error={errors.date}
+                  fill='outline'
+                  validationRules={spendValidation.date}
+                />
+              </IonLabel>
+            </IonItem>
+          </TransparentIonList>
+
           <CategorySection setValue={setValue} control={control} />
           <SpendFormSection
             register={register}
@@ -200,15 +241,40 @@ const SpendModal: React.FC<SpendModalProps> = ({
             errors={errors}
             suggestedTags={suggestedTags}
           />
-          <Gap size={'1rem'} />
-          <EmotionalAwarenessSection setValue={setValue} control={control} />
-          <Gap size={'1rem'} />
-          <RatingSection setValue={setValue} control={control} />
-          <Gap size={'1rem'} />
-          <PersonalReflectionSection setValue={setValue} control={control} register={register} />
         </form>
 
         <Gap size={'1rem'} />
+        <Gap size={designSystem.spacing.md} />
+        <ActionButton
+          expand='block'
+          fill='solid'
+          className='ion-margin-bottom ion-margin-start ion-margin-end'
+          onClick={handleSubmit(onSubmit)}
+          isLoading={false}
+          isDisabled={false}
+          label={'Save'}
+        />
+        {spend?.id && (
+          <DestructiveButton
+            expand='full'
+            className='ion-margin-bottom ion-margin-start ion-margin-end'
+            onClick={() =>
+              showConfirmPrompt({
+                title: t('spend.deleteSpend'),
+                message: t('spend.deleteSpendMessage'),
+                onConfirm: async () => {
+                  onDelete(spend?.id ?? '');
+                  onDismiss();
+                },
+                onCancel: () => {
+                  // Handle cancel action
+                },
+              })
+            }
+            label={'Delete'}
+            prompt={''}
+          />
+        )}
       </CenterContainer>
     </ModalPageLayout>
   );

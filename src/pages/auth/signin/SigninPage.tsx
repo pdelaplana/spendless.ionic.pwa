@@ -1,7 +1,8 @@
+import { SpendlessLogo } from '@/components/brand';
 import InputFormField from '@/components/forms/fields/InputFormField';
 import { ActionButton, Gap } from '@/components/shared';
 import { ROUTES } from '@/routes/routes.constants';
-import PublicPageLayout from '@components/layouts/PublicPageLayout';
+import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import {
   IonCard,
   IonCardContent,
@@ -25,6 +26,14 @@ import styled from 'styled-components';
 const StyledIonCard = styled(IonCard)`
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+`;
+
+const LogoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0 2rem 0;
+  text-align: center;
 `;
 
 interface ISigninForm {
@@ -65,8 +74,12 @@ const SigninPage: React.FC = () => {
   }, [isAuthenticated, isSigningIn, push]);
 
   return (
-    <PublicPageLayout title='Sign in'>
+    <AuthPageLayout title='Sign in'>
       <Gap size='.65rem' />
+      <LogoContainer>
+        <SpendlessLogo variant='primary' size='large' />
+      </LogoContainer>
+      <Gap size='1rem' />
       <StyledIonCard>
         <IonCardHeader>
           <IonCardTitle className='ion-margin'>
@@ -156,7 +169,7 @@ const SigninPage: React.FC = () => {
           </IonList>
         </IonCardContent>
       </StyledIonCard>
-    </PublicPageLayout>
+    </AuthPageLayout>
   );
 };
 

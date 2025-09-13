@@ -1,3 +1,4 @@
+import { SpendlessLogo } from '@/components/brand';
 import { InputFormField } from '@/components/forms';
 import InformationContent from '@/components/layouts/InformationContent';
 import PublicPageLayout from '@/components/layouts/PublicPageLayout';
@@ -23,6 +24,15 @@ import { mailOutline, sadOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+
+const LogoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0 2rem 0;
+  text-align: center;
+`;
 
 interface ResetPasswordForm {
   oobCode: string;
@@ -90,6 +100,9 @@ const ResetPasswordPage: React.FC = () => {
 
   return (
     <PublicPageLayout title='Reset Password'>
+      <LogoContainer>
+        <SpendlessLogo variant='primary' size='large' />
+      </LogoContainer>
       {pageState.state === 'error' && (
         <InformationContent icon={sadOutline} title='Invalid Reset Code'>
           <p>{pageState.error || t('An error occurred while sending the reset email.')}</p>
