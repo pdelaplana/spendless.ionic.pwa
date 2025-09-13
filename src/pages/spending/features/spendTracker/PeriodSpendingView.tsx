@@ -4,8 +4,12 @@ import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledItemDivider } from '@/styles/IonList.styled';
+import {
+  GradientBackground,
+  GroupedTransactionsContainer,
+  TransactionsContainer,
+} from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
-import { GradientBackground, TransactionsContainer, GroupedTransactionsContainer } from '@/theme/components';
 import { IonButton, IonCard, IonCardContent, IonIcon, IonItemGroup, IonLabel } from '@ionic/react';
 import { chevronForward, close } from 'ionicons/icons';
 import { useMemo } from 'react';

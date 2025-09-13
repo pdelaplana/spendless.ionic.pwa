@@ -48,7 +48,7 @@ export function useCreateWallet() {
 
           // If this wallet is being set as default, handle existing default wallets
           if (data.isDefault) {
-            const walletsCache = queryClient.getQueryData<typeof walletWithId[]>([
+            const walletsCache = queryClient.getQueryData<(typeof walletWithId)[]>([
               'wallets',
               accountId,
               periodId,
@@ -57,7 +57,7 @@ export function useCreateWallet() {
             if (walletsCache) {
               // Check if there's already a default wallet
               const existingDefault = walletsCache.find((w) => w.isDefault);
-              if (existingDefault && existingDefault.id) {
+              if (existingDefault?.id) {
                 // Update existing default wallet to false
                 const { useUpdateWallet } = await import('./useUpdateWallet');
                 // Note: In a real implementation, we'd need to handle this differently

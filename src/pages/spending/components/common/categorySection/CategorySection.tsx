@@ -2,11 +2,11 @@ import type { SpendCategory } from '@/domain/Spend';
 import type { SpendFormData } from '@/pages/spending/modals/spendModal';
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
 import {
+  barChartOutline,
   basketOutline,
   colorPaletteOutline,
   sparklesOutline,
   walletOutline,
-  barChartOutline,
 } from 'ionicons/icons';
 import { useCallback, useMemo } from 'react';
 import { type Control, type FieldValues, type UseFormSetValue, useWatch } from 'react-hook-form';

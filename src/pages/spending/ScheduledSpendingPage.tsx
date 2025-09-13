@@ -2,7 +2,11 @@ import { BasePageLayout, CenterContainer } from '@/components/layouts';
 import { SentryErrorBoundary, StyledItem } from '@/components/shared';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
-import { GradientBackground, TransactionsContainer, GroupedTransactionsContainer } from '@/theme/components';
+import {
+  GradientBackground,
+  GroupedTransactionsContainer,
+  TransactionsContainer,
+} from '@/theme/components';
 import { IonLabel } from '@ionic/react';
 import { t } from 'i18next';
 import { chevronForward } from 'ionicons/icons';
