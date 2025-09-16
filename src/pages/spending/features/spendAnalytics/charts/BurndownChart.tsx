@@ -77,18 +77,30 @@ export const BurndownChart: FC<BurndownChartProps> = ({
       current.setDate(current.getDate() + 1);
     }
 
-    // Calculate cumulative spending for each day
+    // Separate past (actual) and future (scheduled) spending
+    const pastSpending = sortedSpending.filter((spend) => spend.date <= today);
+    const futureSpending = sortedSpending.filter((spend) => spend.date > today);
+
+    // Calculate cumulative actual spending for each day
     let runningTotal = 0;
     const dailyTotals: Map<string, number> = new Map();
 
     // Initialize with zero spending on start date
     dailyTotals.set(formatDate(startDate), 0);
 
-    // Add all actual spending
-    for (const spend of sortedSpending) {
+    // Add all actual (past) spending to running totals
+    for (const spend of pastSpending) {
       const dateKey = formatDate(spend.date);
       runningTotal += spend.amount;
       dailyTotals.set(dateKey, runningTotal);
+    }
+
+    // Create a map of scheduled spending by date for future projections
+    const scheduledSpendingByDate = new Map<string, number>();
+    for (const spend of futureSpending) {
+      const dateKey = formatDate(spend.date);
+      const currentTotal = scheduledSpendingByDate.get(dateKey) || 0;
+      scheduledSpendingByDate.set(dateKey, currentTotal + spend.amount);
     }
 
     // Generate formatted date labels
@@ -101,24 +113,34 @@ export const BurndownChart: FC<BurndownChartProps> = ({
       return targetSpend - idealSpentByThisDay;
     });
 
-    // Initialize the actual data array - start with full targetSpend
-    const actualData = allDates.map((date, index) => {
-      if (index === 0) {
-        // On day 1, we start with the full targetSpend
-        return targetSpend;
+    // Build the actual remaining data combining past actual and future scheduled spending
+    const actualData: number[] = [];
+    let cumulativeSpent = 0;
+
+    for (let i = 0; i < allDates.length; i++) {
+      const date = allDates[i];
+      const dateKey = formatDate(date);
+
+      if (i === 0) {
+        // Start with full budget
+        actualData.push(targetSpend);
+        continue;
       }
 
-      // If we have spending data for this date, use it, otherwise use the last known total
-      let lastKnownTotal = 0;
-      // Find the last recorded total up to this date
-      for (let i = 0; i <= allDates.indexOf(date); i++) {
-        const checkDate = formatDate(allDates[i]);
-        if (dailyTotals.has(checkDate)) {
-          lastKnownTotal = dailyTotals.get(checkDate) || 0;
-        }
+      // Add actual spending for this date (if any)
+      if (dailyTotals.has(dateKey)) {
+        cumulativeSpent = dailyTotals.get(dateKey) || 0;
       }
-      return targetSpend - lastKnownTotal;
-    });
+
+      // Add scheduled spending for future dates
+      if (date > today) {
+        const scheduledAmount = scheduledSpendingByDate.get(dateKey) || 0;
+        cumulativeSpent += scheduledAmount;
+      }
+
+      // Remaining budget = target - cumulative spent
+      actualData.push(targetSpend - cumulativeSpent);
+    }
 
     // Calculate daily burn rate based on current spending
     const daysElapsed = Math.max(

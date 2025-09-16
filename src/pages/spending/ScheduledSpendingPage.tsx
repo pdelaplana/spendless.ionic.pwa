@@ -2,6 +2,7 @@ import { BasePageLayout, CenterContainer } from '@/components/layouts';
 import { SentryErrorBoundary, StyledItem } from '@/components/shared';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useWallet } from '@/providers/wallet';
 import {
   GradientBackground,
   GroupedTransactionsContainer,
@@ -16,14 +17,20 @@ import { useSpendActions } from './hooks/useSpendActions';
 
 const ScheduledSpendingPage: React.FC = () => {
   const { spending } = useSpendingAccount();
+  const { selectedWallet } = useWallet();
 
   const { formatDate, formatCurrency } = useFormatters();
 
   const { editSpendHandler } = useSpendActions();
 
+  const filteredSpending = useMemo(() => {
+    if (!selectedWallet) return spending;
+    return spending.filter((spend) => spend.walletId === selectedWallet.id);
+  }, [spending, selectedWallet]);
+
   const futureSpending = useMemo(() => {
-    return spending.filter((spend) => spend.date > new Date());
-  }, [spending]);
+    return filteredSpending.filter((spend) => spend.date > new Date());
+  }, [filteredSpending]);
 
   return (
     <BasePageLayout

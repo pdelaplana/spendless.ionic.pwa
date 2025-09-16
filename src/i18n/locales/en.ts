@@ -53,6 +53,13 @@ export default {
       viewingClosedPeriodMessage:
         'You are viewing a previous spending period. Close to return current period.',
       loadMore: 'Load More',
+      noPeriodSelected: 'No period selected',
+      tapToCreatePeriod: 'Tap to create a new period',
+      activePeriod: 'Active',
+      closedPeriod: 'Closed',
+      switchPeriod: 'Switch period',
+      currentPeriod: 'Current period',
+      to: 'to',
       modal: {
         details: {
           title: 'Spending Details',

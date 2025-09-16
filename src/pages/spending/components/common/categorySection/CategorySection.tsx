@@ -70,7 +70,7 @@ const getCategoryIcon = (category: SpendCategory): string => {
   }
 };
 
-const categorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setValue, control }) => {
+const CategorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setValue, control }) => {
   const { t } = useTranslation();
   const category = useWatch({
     name: 'category',
@@ -115,4 +115,4 @@ const categorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setVal
   );
 };
 
-export default categorySection;
+export default CategorySection;

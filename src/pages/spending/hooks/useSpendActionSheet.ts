@@ -9,9 +9,11 @@ import {
   listOutline,
   todayOutline,
   trashBinOutline,
+  walletOutline,
 } from 'ionicons/icons';
 import { usePeriodActions } from './usePeriodActions';
 import { useSpendActions } from './useSpendActions';
+import { useWalletActions } from './useWalletActions';
 
 export const useSpendActionSheet = () => {
   const [present] = useIonActionSheet();
@@ -22,6 +24,7 @@ export const useSpendActionSheet = () => {
     openSpendingPeriodsPage,
   } = usePeriodActions();
   const { newSpendHandler } = useSpendActions();
+  const { walletSetupHandler } = useWalletActions();
   const { selectedPeriod, setSelectedPeriod } = useSpendingAccount();
 
   const openActionSheet = () => {
@@ -50,6 +53,14 @@ export const useSpendActionSheet = () => {
         },
         icon: calendarOutline,
         handler: openSpendingPeriodsPage,
+      },
+      {
+        text: 'Manage Wallets',
+        data: {
+          action: 'manageWallets',
+        },
+        icon: walletOutline,
+        handler: walletSetupHandler,
       },
     ];
     if (selectedPeriod?.closedAt) {

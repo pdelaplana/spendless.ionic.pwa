@@ -81,6 +81,12 @@ export function useCreateWallet() {
       );
     },
     onSuccess: (createdWallet, { accountId, periodId }) => {
+      console.log('Wallet created successfully, invalidating queries for:', {
+        accountId,
+        periodId,
+      });
+      console.log('Created wallet:', createdWallet);
+
       // Invalidate wallet cache to include new wallet
       queryClient.invalidateQueries({ queryKey: ['wallets', accountId, periodId] });
 

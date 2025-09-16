@@ -5,4 +5,5 @@ export * from './useUpdateWalletBalance';
 export * from './useDeleteWallet';
 export * from './useFetchWalletBalance';
 export * from './useFetchSpendingByWallet';
+export * from './useMigrateSpendingToWallets';
 export * from './walletUtils';

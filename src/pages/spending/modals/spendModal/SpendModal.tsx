@@ -70,12 +70,17 @@ const SpendModal: React.FC<SpendModalProps> = ({
     const spend = createSpend({
       accountId: formData.accountId,
       periodId: formData?.periodId ?? '',
+      walletId: formData.walletId, // Include walletId from form data
       date: new Date(formData.date),
       category: formData.category,
       amount: Number(formData.amount),
       description: formData.description,
       notes: formData.notes,
       recurring: formData.recurring,
+      emotionalState: formData.emotionalState,
+      satisfactionRating: formData.satisfactionRating,
+      necessityRating: formData.necessityRating,
+      personalReflections: formData.personalReflections,
       tags: formData.tags || [],
     });
 
@@ -177,12 +182,17 @@ const SpendModal: React.FC<SpendModalProps> = ({
         id: spend.id,
         accountId: spend.accountId,
         periodId: spend.periodId,
+        walletId: spend.walletId, // Preserve existing walletId
         date: spend.date?.toISOString().split('T')[0] ?? '',
         category: spend.category,
         amount: amountValue,
         description: spend.description,
         notes: spend.notes,
         recurring: spend.recurring,
+        emotionalState: spend.emotionalState,
+        satisfactionRating: spend.satisfactionRating,
+        necessityRating: spend.necessityRating,
+        personalReflections: spend.personalReflections,
         tags: spend.tags ?? [],
       });
     }

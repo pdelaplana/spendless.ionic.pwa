@@ -1,7 +1,9 @@
 import { CenterContainer, CenterContent } from '@/components/layouts';
 import { Gap, MutationNotificationHandler, StyledItem, TagsDisplay } from '@/components/shared';
+import type { IWallet } from '@/domain/Wallet';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useWallet } from '@/providers/wallet';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledItemDivider } from '@/styles/IonList.styled';
 import {
@@ -16,12 +18,15 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { SpendIcon } from '../../components/base';
+import { PeriodSwitcherCard } from '../../components/common/periodSwitcher';
 import { QuickActionButtons } from '../../components/common/quickActionsButtons';
 import { ScheduledSpendingItem } from '../../components/common/scheduledSpendingItem';
 import { usePeriodActions } from '../../hooks/usePeriodActions';
 import { useSpendActionSheet } from '../../hooks/useSpendActionSheet';
 import { useSpendActions } from '../../hooks/useSpendActions';
 import { useSpendTracking } from '../../hooks/useSpendTracking';
+import { useWalletActions } from '../../hooks/useWalletActions';
+import { WalletSwitcherActionSheet } from '../../modals/walletList';
 import { StyledDateLabel, StyledTotalLabel } from '../../styles/SpendingPage.styled';
 import { SpendAnalyticsCharts } from '../spendAnalytics';
 
@@ -48,18 +53,34 @@ const PeriodSpendingView: React.FC = () => {
     resetMutationState,
   } = useSpendingAccount();
 
-  const { currentSpending, futureSpending, groupedSpending } = useSpendTracking(spending);
+  // Wallet context
+  const { selectedWallet } = useWallet();
+
+  // Filter spending by selected wallet
+  const filteredSpending = useMemo(() => {
+    if (!selectedWallet) return spending;
+    return spending.filter((spend) => spend.walletId === selectedWallet.id);
+  }, [spending, selectedWallet]);
+
+  const { currentSpending, futureSpending, groupedSpending } = useSpendTracking(filteredSpending);
+
+  // Action hooks
   const { editCurrentPeriodHandler } = usePeriodActions();
   const { newSpendHandler, editSpendHandler } = useSpendActions();
+  const { walletListHandler, walletActionSheetHandler, actionSheet } = useWalletActions();
   const { openActionSheet } = useSpendActionSheet();
 
-  const { remainingBudget } = useMemo(() => {
+  const { remainingBudget, targetSpend, futureSpendingTotal } = useMemo(() => {
     const total = currentSpending.reduce((sum, spend) => sum + spend.amount, 0);
+    const futureTotal = futureSpending.reduce((sum, spend) => sum + spend.amount, 0);
+    const target = selectedWallet?.spendingLimit || selectedPeriod?.targetSpend || 0;
     return {
       totalSpending: total,
-      remainingBudget: (selectedPeriod?.targetSpend || 0) - total,
+      remainingBudget: target - total,
+      targetSpend: target,
+      futureSpendingTotal: futureTotal,
     };
-  }, [currentSpending, selectedPeriod]);
+  }, [currentSpending, futureSpending, selectedPeriod, selectedWallet]);
 
   return (
     <GradientBackground>
@@ -70,6 +91,7 @@ const PeriodSpendingView: React.FC = () => {
       />
 
       <CenterContainer>
+        <PeriodSwitcherCard />
         {selectedPeriod?.closedAt && (
           <IonCard>
             <IonCardContent>
@@ -97,9 +119,9 @@ const PeriodSpendingView: React.FC = () => {
         ) : (
           <>
             <SpendAnalyticsCharts
-              spending={spending}
+              spending={filteredSpending}
               remainingBudget={remainingBudget}
-              targetSpend={selectedPeriod?.targetSpend}
+              targetSpend={targetSpend}
               periodStartDate={selectedPeriod?.startAt}
               periodEndDate={selectedPeriod?.endAt}
             />
@@ -108,11 +130,17 @@ const PeriodSpendingView: React.FC = () => {
               onNewSpend={newSpendHandler}
               onEditPeriod={editCurrentPeriodHandler}
               onMore={openActionSheet}
+              onWalletSwitch={walletListHandler}
+              onWalletActionSheet={walletActionSheetHandler}
+              currentWallet={selectedWallet}
               sticky={true}
             />
 
             {futureSpending.length > 0 && (
-              <ScheduledSpendingItem futureSpendingCount={futureSpending.length} />
+              <ScheduledSpendingItem
+                futureSpendingCount={futureSpending.length}
+                futureSpendingTotal={futureSpendingTotal}
+              />
             )}
 
             <TransactionsContainer>
@@ -176,6 +204,15 @@ const PeriodSpendingView: React.FC = () => {
         )}
         <Gap size={'2.3rem'} />
       </CenterContainer>
+
+      {/* Wallet Switcher Action Sheet */}
+      <WalletSwitcherActionSheet
+        isOpen={actionSheet.isOpen}
+        wallets={actionSheet.wallets}
+        currentWallet={actionSheet.currentWallet}
+        onWalletSelected={actionSheet.onWalletSelected}
+        onDismiss={actionSheet.close}
+      />
     </GradientBackground>
   );
 };

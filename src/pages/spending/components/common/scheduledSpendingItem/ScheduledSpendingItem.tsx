@@ -1,4 +1,6 @@
 import { StyledItem } from '@/components/shared';
+import useFormatters from '@/hooks/ui/useFormatters';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
@@ -44,14 +46,18 @@ const IconContainer = styled.div`
 
 interface ScheduledSpendingItemProps {
   futureSpendingCount: number;
+  futureSpendingTotal: number;
   className?: string;
 }
 
 export const ScheduledSpendingItem: React.FC<ScheduledSpendingItemProps> = ({
   futureSpendingCount,
+  futureSpendingTotal,
   className,
 }) => {
   const { t } = useTranslation();
+  const { formatCurrency } = useFormatters();
+  const { account } = useSpendingAccount();
 
   if (futureSpendingCount === 0) {
     return null;
@@ -73,6 +79,9 @@ export const ScheduledSpendingItem: React.FC<ScheduledSpendingItemProps> = ({
           <IonLabel>
             <h2>{t('spending.futureSpending')}</h2>
             <p>See your scheduled spending for this period</p>
+            <p style={{ marginTop: '8px', fontWeight: 'bold', color: '#fb923c' }}>
+              {formatCurrency(futureSpendingTotal, account?.currency)}
+            </p>
           </IonLabel>
         </StyledItem>
       </StyledIonList>

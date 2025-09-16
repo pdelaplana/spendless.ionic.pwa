@@ -11,6 +11,7 @@ import SpendingPage from '@/pages/spending/SpendingPage';
 import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
 import { useAuth } from '@/providers/auth/useAuth';
 import { SpendingAccountProvider } from '@/providers/spendingAccount';
+import { WalletProvider } from '@/providers/wallet';
 import {
   IonIcon,
   IonLabel,
@@ -50,17 +51,19 @@ const ProfileRoutes: React.FC = () => {
 const SpendingRoutes = ({ userId }: { userId: string }) => {
   return (
     <SpendingAccountProvider userId={userId}>
-      <Switch>
-        <ProtectedRoute path={ROUTES.SPENDING_SCHEDULED} exact={true}>
-          <ScheduledSpendingPage />
-        </ProtectedRoute>
-        <ProtectedRoute path={ROUTES.SPENDING_PERIODS} exact={true}>
-          <SpendingPeriodsPage />
-        </ProtectedRoute>
-        <ProtectedRoute path={ROUTES.SPENDING} exact={true}>
-          <SpendingPage />
-        </ProtectedRoute>
-      </Switch>
+      <WalletProvider>
+        <Switch>
+          <Route path={ROUTES.SPENDING_SCHEDULED} exact={true}>
+            <ScheduledSpendingPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_PERIODS} exact={true}>
+            <SpendingPeriodsPage />
+          </Route>
+          <Route path={ROUTES.SPENDING} exact={true}>
+            <SpendingPage />
+          </Route>
+        </Switch>
+      </WalletProvider>
     </SpendingAccountProvider>
   );
 };

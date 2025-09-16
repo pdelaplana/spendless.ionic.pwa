@@ -14,7 +14,6 @@ export interface WalletContextType {
 
 export interface WalletState {
   selectedWallet: IWallet | null;
-  wallets: IWallet[];
   isLoading: boolean;
   error: string | null;
 }

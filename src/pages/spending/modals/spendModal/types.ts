@@ -4,12 +4,19 @@ export interface SpendFormData {
   id?: string;
   accountId: string;
   periodId?: string;
+  walletId?: string;
   date: string;
   category: SpendCategory;
   amount: string;
   description: string;
   notes?: string;
   recurring?: boolean;
-
+  emotionalState?: string;
+  satisfactionRating?: number;
+  necessityRating?: number;
+  personalReflections?: Array<{
+    question: string;
+    answer: string;
+  }>;
   tags?: string[];
 }

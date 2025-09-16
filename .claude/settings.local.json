@@ -19,7 +19,10 @@
       "Bash(powershell:*)",
       "mcp__playwright__browser_snapshot",
       "Bash(ionic serve:*)",
-      "mcp__playwright__browser_console_messages"
+      "mcp__playwright__browser_console_messages",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "mcp__playwright__browser_press_key"
     ],
     "defaultMode": "acceptEdits"
   }

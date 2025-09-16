@@ -1,3 +1,14 @@
 {
-  "recommendations": ["Webnative.webnative"]
+  "recommendations": [
+    "biomejs.biome",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "ms-vscode.vscode-json",
+    "ms-playwright.playwright",
+    "vitest.explorer",
+    "Webnative.webnative"
+  ],
+  "unwantedRecommendations": ["esbenp.prettier-vscode", "ms-vscode.vscode-eslint"]
 }

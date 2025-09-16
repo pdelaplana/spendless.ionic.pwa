@@ -1,6 +1,6 @@
 import type { IWallet } from '@/domain/Wallet';
 import { useLogging } from '@/hooks';
-import { useFetchWalletsByPeriod } from '@/hooks/api/wallet';
+import { useFetchWalletsByPeriod, useMigrateSpendingToWallets } from '@/hooks/api/wallet';
 import { Preferences } from '@capacitor/preferences';
 import * as Sentry from '@sentry/react';
 import { type FC, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
@@ -11,20 +11,29 @@ import type { WalletState } from './types';
 const WALLET_STORAGE_KEY = 'selectedWallet';
 
 interface WalletProviderProps {
+  walletId?: string;
   children: ReactNode;
 }
 
 const initialState: WalletState = {
   selectedWallet: null,
-  wallets: [],
   isLoading: false,
   error: null,
 };
 
 export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
+  console.log('🔄 WalletProvider render started');
+
   const [state, setState] = useState<WalletState>(initialState);
   const { logError } = useLogging();
   const { account, selectedPeriod } = useSpendingAccount();
+
+  console.log('🔍 WalletProvider dependencies:', {
+    accountId: account?.id,
+    periodId: selectedPeriod?.id,
+    accountExists: !!account,
+    periodExists: !!selectedPeriod,
+  });
 
   // Fetch wallets for the current period
   const {
@@ -34,29 +43,74 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
     refetch: refetchWallets,
   } = useFetchWalletsByPeriod(account?.id || '', selectedPeriod?.id || '');
 
+  // Add debugging
+  console.log('WalletProvider - Fetched wallets:', fetchedWallets);
+  console.log('WalletProvider - Is loading:', isFetchingWallets);
+  console.log('WalletProvider - Account ID:', account?.id);
+  console.log('WalletProvider - Period ID:', selectedPeriod?.id);
+
+  // Migration hook to handle existing spending without wallet assignments
+  const migrationMutation = useMigrateSpendingToWallets();
+
   // Helper function to update state partially
   const updateState = useCallback((newState: Partial<WalletState>) => {
     setState((prev) => ({ ...prev, ...newState }));
   }, []);
 
-  // Update wallets when fetched data changes
+  // Update loading and error state when fetched data changes
   useEffect(() => {
-    updateState({
-      wallets: fetchedWallets,
+    setState((prev) => ({
+      ...prev,
       isLoading: isFetchingWallets,
       error: fetchError ? 'Failed to load wallets' : null,
-    });
-  }, [fetchedWallets, isFetchingWallets, fetchError, updateState]);
+    }));
+  }, [isFetchingWallets, fetchError]);
+
+  /*
+  // Run migration when period is loaded and not already running
+  useEffect(() => {
+    const runMigration = async () => {
+      if (!account?.id || !selectedPeriod?.id || migrationMutation.isPending) {
+        return;
+      }
+
+      // Only run migration if we have spending data loaded
+      try {
+        await migrationMutation.mutateAsync({
+          accountId: account.id,
+          periodId: selectedPeriod.id,
+          targetSpend: selectedPeriod.targetSpend || 1000,
+        });
+      } catch (error) {
+        // Migration failures are non-critical, just log them
+        logError(error);
+        console.warn('Wallet migration failed, but this is non-critical:', error);
+      }
+    };
+
+    // Run migration after wallets are fetched and we have account/period
+    if (!isFetchingWallets && account?.id && selectedPeriod?.id) {
+      runMigration();
+    }
+  }, [
+    account?.id,
+    selectedPeriod?.id,
+    selectedPeriod?.targetSpend,
+    isFetchingWallets,
+    migrationMutation,
+    logError,
+  ]);
+  */
 
   // Get default wallet from the list
   const getDefaultWallet = useCallback((): IWallet | null => {
-    return state.wallets.find((wallet) => wallet.isDefault) || null;
-  }, [state.wallets]);
+    return fetchedWallets.find((wallet) => wallet.isDefault) || null;
+  }, [fetchedWallets]);
 
   // Load selected wallet from storage when component mounts or period changes
   useEffect(() => {
     const loadSelectedWallet = async () => {
-      if (!selectedPeriod?.id || state.wallets.length === 0) {
+      if (!selectedPeriod?.id || fetchedWallets.length === 0) {
         return;
       }
 
@@ -67,18 +121,18 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
 
         if (value) {
           const storedWalletId = value;
-          const storedWallet = state.wallets.find((w) => w.id === storedWalletId);
+          const storedWallet = fetchedWallets.find((w) => w.id === storedWalletId);
 
           if (storedWallet) {
-            updateState({ selectedWallet: storedWallet });
+            setState((prev) => ({ ...prev, selectedWallet: storedWallet }));
             return;
           }
         }
 
         // If no stored wallet or stored wallet not found, select default wallet
-        const defaultWallet = getDefaultWallet();
+        const defaultWallet = fetchedWallets.find((wallet) => wallet.isDefault) || null;
         if (defaultWallet) {
-          updateState({ selectedWallet: defaultWallet });
+          setState((prev) => ({ ...prev, selectedWallet: defaultWallet }));
           // Store the default selection
           if (defaultWallet.id) {
             await Preferences.set({
@@ -90,15 +144,15 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
       } catch (error) {
         logError(error);
         // Fallback to default wallet if storage fails
-        const defaultWallet = getDefaultWallet();
+        const defaultWallet = fetchedWallets.find((wallet) => wallet.isDefault) || null;
         if (defaultWallet) {
-          updateState({ selectedWallet: defaultWallet });
+          setState((prev) => ({ ...prev, selectedWallet: defaultWallet }));
         }
       }
     };
 
     loadSelectedWallet();
-  }, [account?.id, selectedPeriod?.id, state.wallets, getDefaultWallet, updateState, logError]);
+  }, [account?.id, selectedPeriod?.id, fetchedWallets, logError]);
 
   // Select a wallet and persist to storage
   const selectWallet = useCallback(
@@ -113,7 +167,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
 
         // Persist selection to storage
         const storageKey = `${WALLET_STORAGE_KEY}_${account.id}_${selectedPeriod.id}`;
-        if (wallet && wallet.id) {
+        if (wallet?.id) {
           await Preferences.set({
             key: storageKey,
             value: wallet.id,
@@ -158,18 +212,22 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
 
   // Clear selection when period changes
   useEffect(() => {
-    if (selectedPeriod?.id !== state.selectedWallet?.periodId) {
-      clearSelection();
+    if (
+      selectedPeriod?.id &&
+      state.selectedWallet?.periodId &&
+      selectedPeriod.id !== state.selectedWallet.periodId
+    ) {
+      setState((prev) => ({ ...prev, selectedWallet: null, error: null }));
     }
-  }, [selectedPeriod?.id, state.selectedWallet?.periodId, clearSelection]);
+  }, [selectedPeriod?.id, state.selectedWallet?.periodId]);
 
   // Computed values
-  const hasWallets = useMemo(() => state.wallets.length > 0, [state.wallets.length]);
+  const hasWallets = useMemo(() => fetchedWallets.length > 0, [fetchedWallets.length]);
 
   const contextValue = useMemo(
     () => ({
       selectedWallet: state.selectedWallet,
-      wallets: state.wallets,
+      wallets: fetchedWallets,
       isLoading: state.isLoading,
       error: state.error,
       selectWallet,
@@ -180,7 +238,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
     }),
     [
       state.selectedWallet,
-      state.wallets,
+      fetchedWallets,
       state.isLoading,
       state.error,
       selectWallet,

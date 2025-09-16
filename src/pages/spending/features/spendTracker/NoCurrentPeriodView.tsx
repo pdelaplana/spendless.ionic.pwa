@@ -2,21 +2,10 @@ import { CenterContainer, CenterContent } from '@/components/layouts';
 import { MutationNotificationHandler } from '@/components/shared';
 import type { IPeriod } from '@/domain/Period';
 import { useSpendingAccount } from '@/providers/spendingAccount';
-import { designSystem } from '@/theme/designSystem';
+import { GradientBackground } from '@/theme/components';
 import { IonButton } from '@ionic/react';
-import styled from 'styled-components';
+import { PeriodSwitcherCard } from '../../components/common/periodSwitcher';
 import { usePeriodModal } from '../../modals/periodModal';
-
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    ${designSystem.colors.surface} 0%,
-    ${designSystem.colors.gray[50]} 50%,
-    ${designSystem.colors.primary[50]} 100%
-  );
-  width: 100%;
-`;
 
 const NoCurrentPeriodView: React.FC = () => {
   const { account, createPeriod, didMutationSucceed, didMutationFail, resetMutationState } =
@@ -50,6 +39,7 @@ const NoCurrentPeriodView: React.FC = () => {
         onNotified={resetMutationState}
       />
       <CenterContainer>
+        <PeriodSwitcherCard />
         <CenterContent>
           <h1>No Current Period</h1>
           <p>Please create a new period to view your spending.</p>

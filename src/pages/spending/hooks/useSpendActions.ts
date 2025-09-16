@@ -1,10 +1,12 @@
 import type { ISpend } from '@/domain/Spend';
 import { createSpend as createNewSpend } from '@/domain/Spend';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useWallet } from '@/providers/wallet';
 import { useSpendModal } from '../modals/spendModal';
 
 export const useSpendActions = () => {
   const { open: openSpendModal } = useSpendModal();
+  const { selectedWallet } = useWallet();
   const {
     account,
     selectedPeriod,
@@ -18,9 +20,19 @@ export const useSpendActions = () => {
 
   const saveSpendHandler = async (spend: ISpend) => {
     if (spend.id) {
-      await updateSpend({ accountId: account?.id || '', spendId: spend.id, data: spend });
+      // For existing spends, preserve walletId if it exists, otherwise use current wallet
+      const spendWithWallet = {
+        ...spend,
+        walletId: spend.walletId || selectedWallet?.id || '',
+      };
+      await updateSpend({ accountId: account?.id || '', spendId: spend.id, data: spendWithWallet });
     } else {
-      await createSpend(spend);
+      // Add walletId from current wallet context for new spending
+      const spendWithWallet = {
+        ...spend,
+        walletId: selectedWallet?.id || '', // Use current selected wallet
+      };
+      await createSpend(spendWithWallet);
     }
     resetMutationState();
     refetchSpending();
