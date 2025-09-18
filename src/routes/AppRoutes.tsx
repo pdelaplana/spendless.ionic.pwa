@@ -9,6 +9,7 @@ import SettingsPage from '@/pages/settings/SettingsPage';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendingPage from '@/pages/spending/SpendingPage';
 import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
+import WalletSpendingPage from '@/pages/spending/WalletSpendingPage';
 import { useAuth } from '@/providers/auth/useAuth';
 import { SpendingAccountProvider } from '@/providers/spendingAccount';
 import { WalletProvider } from '@/providers/wallet';
@@ -53,6 +54,9 @@ const SpendingRoutes = ({ userId }: { userId: string }) => {
     <SpendingAccountProvider userId={userId}>
       <WalletProvider>
         <Switch>
+          <Route path={ROUTES.SPENDING_WALLET} exact={true}>
+            <WalletSpendingPage />
+          </Route>
           <Route path={ROUTES.SPENDING_SCHEDULED} exact={true}>
             <ScheduledSpendingPage />
           </Route>

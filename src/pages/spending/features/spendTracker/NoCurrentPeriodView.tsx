@@ -4,7 +4,7 @@ import type { IPeriod } from '@/domain/Period';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { GradientBackground } from '@/theme/components';
 import { IonButton } from '@ionic/react';
-import { PeriodSwitcherCard } from '../../components/common/periodSwitcher';
+import { PeriodSwitcher } from '../../components/common/periodSwitcher';
 import { usePeriodModal } from '../../modals/periodModal';
 
 const NoCurrentPeriodView: React.FC = () => {
@@ -39,7 +39,7 @@ const NoCurrentPeriodView: React.FC = () => {
         onNotified={resetMutationState}
       />
       <CenterContainer>
-        <PeriodSwitcherCard />
+        <PeriodSwitcher />
         <CenterContent>
           <h1>No Current Period</h1>
           <p>Please create a new period to view your spending.</p>

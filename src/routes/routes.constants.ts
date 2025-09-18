@@ -7,6 +7,7 @@ export const ROUTES = {
   RESETPASSWORD: '/reset-password',
   DASHBOARD: '/dashboard',
   SPENDING: '/spending',
+  SPENDING_WALLET: '/spending/wallet',
   SPENDING_SCHEDULED: '/spending/scheduled',
   SPENDING_PERIODS: '/spending/periods',
   PROFILE: '/profile',

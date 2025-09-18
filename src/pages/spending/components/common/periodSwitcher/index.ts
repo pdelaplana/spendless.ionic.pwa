@@ -1,1 +1,1 @@
-export { PeriodSwitcherCard } from './PeriodSwitcherCard';
+export { PeriodSwitcher } from './PeriodSwitcher';

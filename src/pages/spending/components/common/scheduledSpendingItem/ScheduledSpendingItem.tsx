@@ -3,26 +3,16 @@ import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonList } from '@/styles/IonList.styled';
+import { GlassCard } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import { IonIcon, IonLabel } from '@ionic/react';
 import { chevronForward, timeOutline } from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-const ScheduledSpendingCard = styled.div`
+const ScheduledSpendingCard = styled(GlassCard)`
   margin: 0 ${designSystem.spacing.md} ${designSystem.spacing.lg} ${designSystem.spacing.md};
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: ${designSystem.borderRadius.xl};
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
-  }
 `;
 
 const IconContainer = styled.div`

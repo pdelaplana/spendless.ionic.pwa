@@ -541,6 +541,222 @@ Create a new [Entity] domain model that:
 - Code coverage requirements (>85%)
 - Architecture compliance validation
 
+## Currency and Date Formatting Standards
+
+### Currency Formatting
+
+**Primary Formatter Hook**
+```typescript
+// Use the centralized useFormatters hook for consistency
+import useFormatters from '@/hooks/ui/useFormatters';
+
+const { formatCurrency } = useFormatters();
+
+// Usage
+formatCurrency(123.45, 'USD', 'en-US'); // Returns: "$123.45"
+formatCurrency(123.45, 'AUD', 'en-AU'); // Returns: "A$123.45"
+formatCurrency(123.45, 'PHP', 'en-PH'); // Returns: "₱123.45"
+```
+
+**Currency Domain Entity**
+```typescript
+// Use Currency domain class for type safety
+import { Currency } from '@/domain/Currencies';
+
+// Pre-defined currencies
+Currency.USD   // { code: 'USD', symbol: '$' }
+Currency.AUD   // { code: 'AUD', symbol: 'A$' }
+Currency.PHP   // { code: 'PHP', symbol: '₱' }
+
+// Factory methods
+Currency.fromCode('USD');           // Returns Currency.USD or undefined
+Currency.getAllCurrencies();       // Returns all available currencies
+
+// Formatting with Currency class
+const currency = Currency.USD;
+currency.format(123.45);           // Returns: "$123.45"
+```
+
+**Implementation Standards**
+```typescript
+// ✅ PREFERRED: Use centralized useFormatters hook with account currency
+import useFormatters from '@/hooks/ui/useFormatters';
+import { useSpendingAccount } from '@/providers/spendingAccount/SpendingAccountProvider';
+
+const { formatCurrency } = useFormatters();
+const { account } = useSpendingAccount();
+const displayAmount = formatCurrency(amount, account?.currency);
+
+// ✅ ACCEPTABLE: Use Intl.NumberFormat for specialized cases
+const formatCurrency = (amount: number, currency = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+  }).format(amount);
+};
+
+// ❌ AVOID: Hardcoded currency formatting
+const displayAmount = `$${amount.toFixed(2)}`; // Doesn't support multiple currencies
+```
+
+**ProminentAmountInput Component**
+```typescript
+// For amount input fields, use the specialized component with account currency
+import { ProminentAmountInput } from '@/components/ui/ProminentAmountInput';
+import { Currency } from '@/domain/Currencies';
+import { useSpendingAccount } from '@/providers/spendingAccount/SpendingAccountProvider';
+
+const { account } = useSpendingAccount();
+const currency = Currency.fromCode(account?.currency) ?? Currency.USD;
+
+<ProminentAmountInput
+  label="Amount"
+  value={amount}
+  onChange={setAmount}
+  currency={currency}
+  placeholder="$0.00"
+/>
+```
+
+### Date Formatting
+
+**Primary Formatter Hook**
+```typescript
+// Use the centralized useFormatters hook for consistency
+import useFormatters from '@/hooks/ui/useFormatters';
+
+const { formatDate, formatDaysUntil } = useFormatters();
+
+// Basic date formatting
+formatDate(new Date());                    // Returns: "Wed Jan 15"
+formatDate(new Date(), true);              // Returns: "Today", "Yesterday", or formatted date
+
+// Days until calculation
+formatDaysUntil(futureDate);               // Returns: "5" (days from now)
+```
+
+**Date Format Constants**
+```typescript
+// Use predefined format constants from useFormatters
+import { DateFormatString } from '@/hooks/ui/useFormatters';
+
+DateFormatString.MMM_DD_YYYY;             // 'MMM dd, yyyy' → "Jan 15, 2024"
+DateFormatString.MM_DD_YYYY;              // 'MM/dd/yyyy' → "01/15/2024"
+DateFormatString.YYYY_MM_DD;              // 'yyyy-MM-dd' → "2024-01-15"
+DateFormatString.EEE_MM_DD_YYYY;          // 'EEE MMM dd' → "Wed Jan 15"
+```
+
+**Date Domain Entity (Available but not commonly used)**
+```typescript
+// DateFormat class exists for specialized formatting needs
+import { DateFormat } from '@/domain/DateFormats';
+
+DateFormat.DD_MM_YYYY_SLASH;              // "dd/MM/yyyy"
+DateFormat.MM_DD_YYYY_DASH;               // "MM-dd-yyyy"
+DateFormat.YYYY_MM_DD_DOT;                // "yyyy.MM.dd"
+```
+
+**Date-fns Integration**
+```typescript
+// The project uses date-fns for date manipulation
+import { differenceInCalendarDays, format, addWeeks } from 'date-fns';
+
+// ✅ PREFERRED: Use date-fns functions for date operations
+const daysDiff = differenceInCalendarDays(endDate, startDate);
+const futureDate = addWeeks(new Date(), 4);
+const formattedDate = format(date, 'MMM dd, yyyy');
+
+// ❌ AVOID: Manual date manipulation
+const daysDiff = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+```
+
+**Implementation Standards**
+```typescript
+// ✅ PREFERRED: Use centralized useFormatters hook
+const { formatDate, formatCurrency } = useFormatters();
+
+// ✅ ACCEPTABLE: Direct date-fns usage for complex operations
+import { format, addDays, isAfter } from 'date-fns';
+const deadline = format(addDays(new Date(), 30), 'yyyy-MM-dd');
+
+// ❌ AVOID: Native Date methods for formatting
+const formatted = date.toLocaleDateString(); // Inconsistent formatting
+const dateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+```
+
+**Relative Date Formatting**
+```typescript
+// Use the built-in relative formatting from useFormatters
+const { formatDate } = useFormatters();
+
+// Automatic relative formatting
+formatDate(new Date(), true);              // "Today"
+formatDate(yesterday, true);               // "Yesterday"
+formatDate(olderDate, true);               // "Wed Jan 10" (falls back to formatted)
+
+// Custom relative logic (if needed)
+const isToday = date.toDateString() === new Date().toDateString();
+const displayDate = isToday ? 'Today' : formatDate(date);
+```
+
+### Internationalization Considerations
+
+**Language and Locale Support**
+```typescript
+// Currency formatting supports language parameter
+const { formatCurrency } = useFormatters();
+formatCurrency(123.45, 'USD', 'en-US');   // "$123.45"
+formatCurrency(123.45, 'USD', 'pt-BR');   // "US$ 123,45" (if Portuguese support added)
+
+// Number formatting also supports locales
+const { formatNumber } = useFormatters();
+formatNumber(1234.56, 2, 'en-US');        // "1,234.56"
+formatNumber(1234.56, 2, 'de-DE');        // "1.234,56" (if German support added)
+```
+
+**Future Internationalization**
+```typescript
+// When adding new locales, ensure currency and date formatting
+// Uses the i18next locale for consistency
+import { useTranslation } from 'react-i18next';
+
+const { i18n } = useTranslation();
+const locale = i18n.language || 'en-US';
+
+const { formatCurrency, formatDate } = useFormatters();
+formatCurrency(amount, currency, locale);
+```
+
+### Best Practices Summary
+
+**Currency Formatting**
+1. Always use `useFormatters().formatCurrency()` for display
+2. Use `Currency` domain class for type safety and available currencies
+3. Use `ProminentAmountInput` for currency input fields
+4. **Fetch currency from `account?.currency` via `useSpendingAccount()` hook, default to 'USD'**
+5. Never hardcode currency symbols or decimal formatting
+
+**Date Formatting**
+1. Use `useFormatters().formatDate()` for consistent formatting
+2. Use `date-fns` functions for date manipulation and calculations
+3. Enable relative formatting (`useRelative: true`) for recent dates
+4. Use ISO date strings (`yyyy-MM-dd`) for form inputs
+5. Leverage predefined `DateFormatString` constants for consistency
+
+**Testing Considerations**
+```typescript
+// Mock formatters in tests for consistent behavior
+vi.mock('@/hooks/ui/useFormatters', () => ({
+  default: () => ({
+    formatCurrency: (amount: number, currency?: string) => `$${amount.toFixed(2)}`,
+    formatDate: (date: Date, relative?: boolean) =>
+      relative && isToday(date) ? 'Today' : '01/15/2024',
+    formatDaysUntil: (date: Date) => '5',
+    formatNumber: (value: number, decimals?: number) => value.toFixed(decimals || 0),
+  }),
+}));
+```
+
 ### Code Review Checklist
 Use the provided pull request template to ensure:
 - Style guide compliance
@@ -548,3 +764,6 @@ Use the provided pull request template to ensure:
 - Test coverage adequate
 - Documentation complete
 - Performance considerations addressed
+- **Currency formatting uses useFormatters hook consistently**
+- **Date formatting leverages date-fns and useFormatters**
+- **No hardcoded currency symbols or date formats**

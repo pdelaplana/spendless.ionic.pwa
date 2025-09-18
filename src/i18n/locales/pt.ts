@@ -20,6 +20,21 @@ export default {
       switchPeriod: 'Trocar período',
       currentPeriod: 'Período atual',
       to: 'até',
+      periodClosed: 'Período fechado',
+      lastDay: 'Último dia',
+      dayRemaining: '{{count}} dia restante',
+      daysRemaining: '{{count}} dias restantes',
+      newSpend: 'Novo Gasto',
+    },
+    wallet: {
+      noWalletSelected: 'Nenhuma carteira selecionada',
+      selectWalletToViewSpending:
+        'Por favor, selecione uma carteira para ver os detalhes de gastos.',
+      noSpendingInWallet: 'Nenhum gasto nesta carteira',
+      noSpendingInWalletDescription:
+        'Comece a rastrear gastos em {{walletName}} adicionando sua primeira entrada de gasto.',
+      backToSpending: 'Voltar aos Gastos',
+      editWallet: 'Editar Carteira',
     },
     meta: {
       title: '{{title}} - {{appName}}',

@@ -1,5 +1,6 @@
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { CleanCard, GlassCard } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import { IonIcon } from '@ionic/react';
 import { chevronDown, time } from 'ionicons/icons';
@@ -7,25 +8,9 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { usePeriodActions } from '../../../hooks/usePeriodActions';
 
-const PeriodSwitcherContainer = styled.div`
-  margin: ${designSystem.spacing.lg} ${designSystem.spacing.md} ${designSystem.spacing.lg} ${designSystem.spacing.md};
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: ${designSystem.borderRadius.xl};
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+const PeriodSwitcherContainer = styled(GlassCard).attrs({ as: 'button' })`
   padding: ${designSystem.spacing.lg};
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  &:focus {
-    outline: none;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
-  }
+  width: 93.25%;
 `;
 
 const PeriodContent = styled.div`
@@ -72,26 +57,9 @@ const SwitcherIcon = styled.div`
   font-size: 20px;
 `;
 
-const NoPeriodContainer = styled.div`
-  margin: ${designSystem.spacing.lg} ${designSystem.spacing.md} ${designSystem.spacing.lg} ${designSystem.spacing.md};
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: ${designSystem.borderRadius.xl};
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+const NoPeriodContainer = styled(GlassCard).attrs({ as: 'button' })`
   padding: ${designSystem.spacing.lg};
-  cursor: pointer;
   text-align: center;
-  transition: all 0.2s ease-in-out;
-
-  &:focus {
-    outline: none;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
-  }
 `;
 
 const NoPeriodContent = styled.div`
@@ -111,7 +79,7 @@ const NoPeriodSubtitle = styled.p`
   margin: 0;
 `;
 
-export const PeriodSwitcherCard: React.FC = () => {
+export const PeriodSwitcher: React.FC = () => {
   const { t } = useTranslation();
   const { formatDate } = useFormatters();
   const { selectedPeriod, periods } = useSpendingAccount();
@@ -128,8 +96,6 @@ export const PeriodSwitcherCard: React.FC = () => {
     return (
       <NoPeriodContainer
         onClick={startNewPeriodHandler}
-        role='button'
-        tabIndex={0}
         aria-label={t('spending.tapToCreatePeriod')}
         onKeyDown={(e) => handleKeyDown(e, startNewPeriodHandler)}
       >
@@ -152,6 +118,17 @@ export const PeriodSwitcherCard: React.FC = () => {
   const isClosed = !!selectedPeriod.closedAt;
   const hasMultiplePeriods = periods.length > 1;
 
+  const calculateDaysRemaining = () => {
+    if (isClosed) return 0;
+    const now = new Date();
+    const endDate = new Date(selectedPeriod.endAt);
+    const diffTime = endDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(0, diffDays);
+  };
+
+  const daysRemaining = calculateDaysRemaining();
+
   const ariaLabel = hasMultiplePeriods
     ? `${t('spending.switchPeriod')}: ${selectedPeriod.name}, ${formatDate(selectedPeriod.startAt)} ${t('spending.to')} ${formatDate(selectedPeriod.endAt)}`
     : `${t('spending.currentPeriod')}: ${selectedPeriod.name}, ${formatDate(selectedPeriod.startAt)} ${t('spending.to')} ${formatDate(selectedPeriod.endAt)}`;
@@ -159,8 +136,6 @@ export const PeriodSwitcherCard: React.FC = () => {
   return (
     <PeriodSwitcherContainer
       onClick={handleSwitchPeriod}
-      role='button'
-      tabIndex={0}
       aria-label={ariaLabel}
       onKeyDown={(e) => handleKeyDown(e, handleSwitchPeriod)}
     >
@@ -168,9 +143,17 @@ export const PeriodSwitcherCard: React.FC = () => {
         <PeriodInfo>
           <PeriodTitle>
             <IonIcon icon={time} />
-            {formatDate(selectedPeriod.startAt)} - {formatDate(selectedPeriod.endAt)}
+            {selectedPeriod.name}
           </PeriodTitle>
-          <PeriodStatus isClosed={isClosed}>{selectedPeriod.name}</PeriodStatus>
+          <PeriodStatus isClosed={isClosed}>
+            {isClosed
+              ? t('spending.periodClosed')
+              : daysRemaining === 0
+                ? t('spending.lastDay')
+                : daysRemaining === 1
+                  ? t('spending.dayRemaining', { count: 1 })
+                  : t('spending.daysRemaining', { count: daysRemaining })}
+          </PeriodStatus>
         </PeriodInfo>
 
         {hasMultiplePeriods && (

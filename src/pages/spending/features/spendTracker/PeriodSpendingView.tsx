@@ -18,7 +18,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { SpendIcon } from '../../components/base';
-import { PeriodSwitcherCard } from '../../components/common/periodSwitcher';
+import { PeriodSwitcher } from '../../components/common/periodSwitcher';
 import { QuickActionButtons } from '../../components/common/quickActionsButtons';
 import { ScheduledSpendingItem } from '../../components/common/scheduledSpendingItem';
 import { usePeriodActions } from '../../hooks/usePeriodActions';
@@ -91,7 +91,7 @@ const PeriodSpendingView: React.FC = () => {
       />
 
       <CenterContainer>
-        <PeriodSwitcherCard />
+        <PeriodSwitcher />
         {selectedPeriod?.closedAt && (
           <IonCard>
             <IonCardContent>

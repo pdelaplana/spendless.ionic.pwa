@@ -1,6 +1,5 @@
+import { IconContainer } from '@/components/shared';
 import type { SpendCategory } from '@/domain/Spend';
-import { designSystem } from '@/theme/designSystem';
-import { IonIcon } from '@ionic/react';
 import {
   basketOutline,
   cardOutline,
@@ -8,25 +7,6 @@ import {
   sparklesOutline,
   walletOutline,
 } from 'ionicons/icons';
-import styled from 'styled-components';
-
-const IconContainer = styled.div<{ bgColor: string; iconColor: string }>`
-  width: 44px;
-  height: 44px;
-  border-radius: ${designSystem.borderRadius.lg};
-  background: ${(props) => props.bgColor};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: ${designSystem.spacing.sm};
-  margin-top: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  
-  ion-icon {
-    font-size: 20px;
-    color: ${(props) => props.iconColor};
-  }
-`;
 
 interface SpendIconProps {
   category: SpendCategory;
@@ -70,9 +50,5 @@ export const SpendIcon: React.FC<SpendIconProps> = ({ category }) => {
 
   const { icon, bgColor, iconColor } = getIconConfig(category);
 
-  return (
-    <IconContainer bgColor={bgColor} iconColor={iconColor}>
-      <IonIcon icon={icon} />
-    </IconContainer>
-  );
+  return <IconContainer icon={icon} bgColor={bgColor} iconColor={iconColor} />;
 };

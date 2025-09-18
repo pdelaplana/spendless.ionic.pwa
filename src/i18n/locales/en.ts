@@ -53,6 +53,7 @@ export default {
       viewingClosedPeriodMessage:
         'You are viewing a previous spending period. Close to return current period.',
       loadMore: 'Load More',
+      newSpend: 'New Spend',
       noPeriodSelected: 'No period selected',
       tapToCreatePeriod: 'Tap to create a new period',
       activePeriod: 'Active',
@@ -60,6 +61,10 @@ export default {
       switchPeriod: 'Switch period',
       currentPeriod: 'Current period',
       to: 'to',
+      periodClosed: 'Period closed',
+      lastDay: 'Last day',
+      dayRemaining: '{{count}} day remaining',
+      daysRemaining: '{{count}} days remaining',
       modal: {
         details: {
           title: 'Spending Details',
@@ -73,6 +78,15 @@ export default {
       title: 'Spending Periods',
       description: '{{startDate}} to {{endDate}}',
       noPeriods: 'No spending periods found.',
+    },
+    wallet: {
+      noWalletSelected: 'No wallet selected',
+      selectWalletToViewSpending: 'Please select a wallet to view spending details.',
+      noSpendingInWallet: 'No spending in this wallet',
+      noSpendingInWalletDescription:
+        'Start tracking expenses in {{walletName}} by adding your first spending entry.',
+      backToSpending: 'Back to Spending',
+      editWallet: 'Edit Wallet',
     },
     meta: {
       title: '{{title}} - {{appName}}',

@@ -11,5 +11,7 @@ export { MutationNotificationHandler } from './base/notifications';
 export { default as LetterIcon } from './base/display/LetterIcon';
 export { PwaInstallPrompt } from './pwa';
 export { default as TagsDisplay } from './tags/TagsDisplay';
+export { IconContainer } from './IconContainer';
+export { SpendList } from '../../pages/spending/components/common/spendList';
 
 // Note: Modern UI Components have been moved to @/components/dashboard and @/components/ui
