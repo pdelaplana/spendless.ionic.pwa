@@ -26,6 +26,18 @@ export default {
       daysRemaining: '{{count}} dias restantes',
       newSpend: 'Novo Gasto',
     },
+    periods: {
+      title: 'Períodos de Gastos',
+      description: '{{startDate}} até {{endDate}}',
+      noPeriods: 'Nenhum período de gastos encontrado.',
+      currentPeriod: 'Período Atual',
+      pastPeriods: 'Períodos Passados',
+      noCurrentPeriod: 'Nenhum período ativo',
+      noPastPeriods: 'Nenhum período passado encontrado.',
+      empty: {
+        description: 'Comece a rastrear seus gastos criando seu primeiro período.',
+      },
+    },
     wallet: {
       noWalletSelected: 'Nenhuma carteira selecionada',
       selectWalletToViewSpending:

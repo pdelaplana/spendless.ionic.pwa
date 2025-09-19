@@ -104,17 +104,17 @@ const PeriodTitle = styled.h2`
 
 const PeriodStatus = styled.div<{ isClosed: boolean }>`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: ${designSystem.spacing.xs};
   font-size: ${designSystem.typography.fontSize.lg};
   font-weight: ${designSystem.typography.fontWeight.semibold};
   color: ${designSystem.colors.text.secondary};
   margin-top: ${designSystem.spacing.xs};
+  margin-bottom: ${designSystem.spacing.md};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
 `;
 
 const SwitcherIcon = styled.div<{ hasMultiplePeriods: boolean }>`
@@ -342,11 +342,6 @@ export const PeriodSwitcher: React.FC = () => {
               <ProgressFill progress={progress} />
             </PeriodProgress>
           )}
-          <ActionHint>
-            {hasMultiplePeriods
-              ? t('spending.tapToSwitchPeriods', { defaultValue: 'Tap to switch periods' })
-              : t('spending.tapToCreateNewPeriod', { defaultValue: 'Tap to create new period' })}
-          </ActionHint>
         </PeriodInfo>
 
         <PeriodMeta>

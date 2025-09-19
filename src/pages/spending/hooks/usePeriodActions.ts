@@ -62,10 +62,13 @@ export const usePeriodActions = () => {
   };
 
   const openSpendingPeriodsPage = () => {
-    const pastPeriods = periods.filter((period) => period.closedAt);
-    openPeriodListModal(pastPeriods, (period) => {
-      setSelectedPeriod(period);
-    });
+    openPeriodListModal(
+      periods,
+      (period) => {
+        setSelectedPeriod(period);
+      },
+      deleteClosedPeriodHandler,
+    );
   };
 
   const deleteClosedPeriodHandler = (periodId: string) => {

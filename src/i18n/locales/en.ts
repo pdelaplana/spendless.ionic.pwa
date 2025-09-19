@@ -78,6 +78,13 @@ export default {
       title: 'Spending Periods',
       description: '{{startDate}} to {{endDate}}',
       noPeriods: 'No spending periods found.',
+      currentPeriod: 'Current Period',
+      pastPeriods: 'Past Periods',
+      noCurrentPeriod: 'No active period',
+      noPastPeriods: 'No past periods found.',
+      empty: {
+        description: 'Start tracking your spending by creating your first period.',
+      },
     },
     wallet: {
       noWalletSelected: 'No wallet selected',
