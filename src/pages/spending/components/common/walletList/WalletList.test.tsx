@@ -149,7 +149,7 @@ describe('WalletList', () => {
     const ionItems = document.querySelectorAll('ion-item');
     expect(ionItems.length).toBe(2);
 
-    ionItems.forEach((item) => {
+    ionItems?.forEach((item) => {
       expect(item).toHaveAttribute('aria-label');
       expect(item).toHaveClass('item-has-start-slot');
     });

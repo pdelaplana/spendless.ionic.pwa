@@ -10,11 +10,45 @@ export const WalletListContainer = styled(GlassCard)`
 
 `;
 
+export const WalletListHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${designSystem.spacing.lg} ${designSystem.spacing.md} ${designSystem.spacing.md} ${designSystem.spacing.md};
+`;
+
 export const WalletListHeader = styled.h2`
   font-size: ${designSystem.typography.fontSize.lg};
   font-weight: ${designSystem.typography.fontWeight.semibold};
   color: ${designSystem.colors.text.primary};
-  padding: 0px ${designSystem.spacing.md};
+  margin: 0;
+`;
+
+export const WalletListSettingsButton = styled.button`
+  background: none;
+  border: none;
+  padding: ${designSystem.spacing.xs};
+  border-radius: ${designSystem.borderRadius.sm};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  color: ${designSystem.colors.text.secondary};
+
+  &:hover {
+    background: ${designSystem.colors.gray[100]};
+    color: ${designSystem.colors.text.primary};
+  }
+
+  &:focus {
+    outline: 2px solid ${designSystem.colors.primary[300]};
+    outline-offset: 2px;
+  }
+
+  ion-icon {
+    font-size: 1.2rem;
+  }
 `;
 
 export const WalletListContent = styled.div`

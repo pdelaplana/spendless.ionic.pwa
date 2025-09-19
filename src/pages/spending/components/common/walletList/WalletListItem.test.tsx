@@ -73,7 +73,10 @@ describe('WalletListItem', () => {
     );
 
     const ionItem = document.querySelector('ion-item');
-    fireEvent.click(ionItem!);
+    expect(ionItem).toBeInTheDocument();
+    if (ionItem) {
+      fireEvent.click(ionItem);
+    }
 
     expect(mockOnClick).toHaveBeenCalledWith('wallet-1');
   });
@@ -150,7 +153,10 @@ describe('WalletListItem', () => {
     );
 
     const ionItem = document.querySelector('ion-item');
-    fireEvent.click(ionItem!);
+    expect(ionItem).toBeInTheDocument();
+    if (ionItem) {
+      fireEvent.click(ionItem);
+    }
 
     // Should not call onClick if no id
     expect(mockOnClick).not.toHaveBeenCalled();

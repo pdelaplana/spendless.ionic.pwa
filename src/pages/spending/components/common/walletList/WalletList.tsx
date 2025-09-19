@@ -9,12 +9,24 @@ import {
   WalletListContainer,
   WalletListContent,
   WalletListHeader,
+  WalletListHeaderContainer,
+  WalletListSettingsButton,
 } from '@/pages/spending/components/common/walletList/WalletList.styled';
 import WalletListItem from '@/pages/spending/components/common/walletList/WalletListItem';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useWallet } from '@/providers/wallet';
 import { StyledIonList } from '@/styles/IonList.styled';
-import { IonSpinner } from '@ionic/react';
+import { IonIcon, IonSpinner } from '@ionic/react';
+import {
+  chevronDown,
+  ellipse,
+  ellipseSharp,
+  ellipsisHorizontal,
+  options,
+  settings,
+} from 'ionicons/icons';
 import type React from 'react';
+import { useWalletSetupModal } from '../../../modals/walletSetup';
 
 interface WalletListProps {
   onWalletClick?: (walletId: string) => void;
@@ -23,10 +35,18 @@ interface WalletListProps {
 
 const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => {
   const { wallets, isLoading, error, refreshWallets } = useWallet();
+  const { account, selectedPeriod } = useSpendingAccount();
   const { formatCurrency } = useFormatters();
+  const { open: openWalletSetupModal } = useWalletSetupModal();
 
   const handleRetry = async () => {
     await refreshWallets();
+  };
+
+  const handleSettingsClick = () => {
+    if (account?.id && selectedPeriod?.id) {
+      openWalletSetupModal(wallets, account.id, selectedPeriod.id);
+    }
   };
 
   if (isLoading) {
@@ -65,7 +85,16 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
 
   return (
     <WalletListContainer className={className}>
-      <WalletListHeader>Wallets</WalletListHeader>
+      <WalletListHeaderContainer>
+        <WalletListHeader>Wallets</WalletListHeader>
+        <WalletListSettingsButton
+          onClick={handleSettingsClick}
+          aria-label='Manage wallets'
+          type='button'
+        >
+          <IonIcon icon={options} color='primary' />
+        </WalletListSettingsButton>
+      </WalletListHeaderContainer>
       <WalletListContent>
         <StyledIonList lines='full' style={{ backgroundColor: 'transparent' }}>
           {wallets.map((wallet) => (
