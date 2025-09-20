@@ -3,6 +3,12 @@ import styled from 'styled-components';
 
 export const StyledIonList = styled(IonList)`
   background-color: var(--color-light);
+
+  /* Remove bottom border from last item */
+  ion-item:last-child {
+    --border-width: 0;
+    --inner-border-width: 0;
+  }
 `;
 export const StyledItemDivider = styled(IonItemDivider)`
 

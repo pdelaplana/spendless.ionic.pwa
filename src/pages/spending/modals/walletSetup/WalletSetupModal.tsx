@@ -1,3 +1,15 @@
+/**
+ * @deprecated This component is deprecated and will be removed in a future version.
+ * Use WalletModal from '@/pages/spending/modals/walletModal' instead.
+ *
+ * This component combines both wallet list and form functionality which goes against
+ * the established modal patterns in the codebase. The new WalletModal follows the
+ * same patterns as SpendModal and PeriodModal.
+ *
+ * Migration: Replace usages with the new WalletModal component and handle
+ * wallet operations in the parent component using the wallet API hooks.
+ */
+
 import { InputFormField } from '@/components/forms';
 import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
@@ -490,6 +502,10 @@ const WalletSetupModal: React.FC<WalletSetupModalProps> = ({
   );
 };
 
+/**
+ * @deprecated This hook is deprecated and will be removed in a future version.
+ * Use useWalletModal from '@/pages/spending/modals/walletModal' instead.
+ */
 export const useWalletSetupModal = (): {
   open: (
     wallets: IWallet[],
