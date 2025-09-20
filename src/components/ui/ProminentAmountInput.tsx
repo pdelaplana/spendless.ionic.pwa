@@ -1,4 +1,6 @@
+import type { IAccount } from '@/domain/Account';
 import { Currency } from '@/domain/Currencies';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 import { designSystem } from '@/theme/designSystem';
 import { IonInput, IonText } from '@ionic/react';
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -49,7 +51,7 @@ interface ProminentAmountInputProps {
   placeholder?: string;
   value?: number; // Clean numeric value in dollars (e.g., 129.50)
   onChange?: (value: number) => void; // Clean callback with numeric value
-  currency?: Currency; // Currency for formatting
+  currency?: Currency; // Currency for formatting (overrides account currency if provided)
   autoFocus?: boolean;
   error?: string;
 }
@@ -61,17 +63,30 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
       placeholder,
       value = 0,
       onChange,
-      currency = Currency.USD,
+      currency,
       autoFocus = false,
       error,
     },
     ref,
   ) => {
+    // Get account context to use preferred currency (safely handle if provider not available)
+    let account: IAccount | undefined;
+    try {
+      const context = useSpendingAccount();
+      account = context.account;
+    } catch {
+      // Component is being used outside of SpendingAccountProvider
+      account = undefined;
+    }
+
+    // Use provided currency or fall back to account currency, then USD
+    const activeCurrency =
+      currency ?? Currency.fromCode(account?.currency ?? 'USD') ?? Currency.USD;
     const internalRef = useRef<HTMLIonInputElement>(null);
     const inputRef = ref || internalRef;
 
     // Internal state for managing display
-    const [displayAmount, setDisplayAmount] = useState(`${currency.symbol}0.00`);
+    const [displayAmount, setDisplayAmount] = useState(`${activeCurrency.symbol}0.00`);
     const [inputValue, setInputValue] = useState('');
     const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -81,9 +96,9 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
         const number = Number.parseInt(numericValue) || 0;
         const dollars = Math.floor(number / 100);
         const cents = number % 100;
-        return `${currency.symbol}${dollars.toLocaleString()}.${cents.toString().padStart(2, '0')}`;
+        return `${activeCurrency.symbol}${dollars.toLocaleString()}.${cents.toString().padStart(2, '0')}`;
       },
-      [currency.symbol],
+      [activeCurrency.symbol],
     );
 
     const parseCurrency = useCallback((formattedValue: string): number => {
@@ -101,7 +116,7 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
 
         debounceTimer.current = setTimeout(() => {
           if (numericValue === '') {
-            setDisplayAmount(`${currency.symbol}0.00`);
+            setDisplayAmount(`${activeCurrency.symbol}0.00`);
             setInputValue('');
             onChange?.(0);
             return;
@@ -111,9 +126,9 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
           setDisplayAmount(formatted);
           setInputValue(''); // Clear so displayAmount shows
           onChange?.(parseCurrency(formatted));
-        }, 250);
+        }, 1250);
       },
-      [currency.symbol, formatCurrency, parseCurrency, onChange],
+      [activeCurrency.symbol, formatCurrency, parseCurrency, onChange],
     );
 
     // Handle input changes
@@ -127,16 +142,16 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
         // Show immediate feedback with currency symbol during typing
         if (numericOnly === '') {
           setInputValue('');
-          setDisplayAmount(`${currency.symbol}0.00`);
+          setDisplayAmount(`${activeCurrency.symbol}0.00`);
         } else {
-          setInputValue(`${currency.symbol}${numericOnly}`);
+          setInputValue(`${activeCurrency.symbol}${numericOnly}`);
           setDisplayAmount(''); // Clear so inputValue shows
         }
 
         // Trigger debounced formatting
         debouncedFormatting(numericOnly);
       },
-      [currency.symbol, debouncedFormatting],
+      [activeCurrency.symbol, debouncedFormatting],
     );
 
     // Handle key presses (restrict to numeric only)
@@ -169,10 +184,10 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
         setDisplayAmount(formatted);
         setInputValue('');
       } else {
-        setDisplayAmount(`${currency.symbol}0.00`);
+        setDisplayAmount(`${activeCurrency.symbol}0.00`);
         setInputValue('');
       }
-    }, [value, currency.symbol, formatCurrency]);
+    }, [value, activeCurrency.symbol, formatCurrency]);
 
     // Auto focus logic
     useEffect(() => {
@@ -202,7 +217,7 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
           type='text'
           inputmode='numeric'
           pattern='[0-9]*'
-          placeholder={placeholder || `${currency.symbol}0.00`}
+          placeholder={placeholder || `${activeCurrency.symbol}0.00`}
           value={inputValue || displayAmount}
           onIonInput={handleAmountChange}
           onKeyDown={handleKeyPress}

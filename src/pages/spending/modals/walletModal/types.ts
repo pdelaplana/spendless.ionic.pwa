@@ -12,6 +12,7 @@ export interface WalletModalProps {
   accountId: string;
   periodId: string;
   existingWallets?: IWallet[]; // For validation purposes
+  currency?: string;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
 }

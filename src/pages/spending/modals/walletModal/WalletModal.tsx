@@ -20,12 +20,13 @@ const WalletModal: React.FC<WalletModalProps> = ({
   accountId,
   periodId,
   existingWallets = [],
+  currency: currencyCode,
   onDismiss,
 }) => {
   const { t } = useTranslation();
   const [presentToast] = useIonToast();
   const { showConfirmPrompt } = usePrompt();
-  const currency = Currency.USD; // TODO: Get from user preferences
+  const currency = Currency.fromCode(currencyCode ?? 'USD') ?? Currency.USD;
 
   const isEditing = Boolean(wallet);
 

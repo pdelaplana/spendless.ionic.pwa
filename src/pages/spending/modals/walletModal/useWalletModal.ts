@@ -11,6 +11,7 @@ export const useWalletModal = (): {
     accountId: string,
     periodId: string,
     existingWallets?: IWallet[],
+    currency?: string,
   ) => Promise<{ role: string }>;
 } => {
   const [inputs, setInputs] = useState<{
@@ -19,6 +20,7 @@ export const useWalletModal = (): {
     accountId?: string;
     periodId?: string;
     existingWallets?: IWallet[];
+    currency?: string;
   }>();
 
   const [present, dismiss] = useIonModal(WalletModal, {
@@ -27,6 +29,7 @@ export const useWalletModal = (): {
     accountId: inputs?.accountId || '',
     periodId: inputs?.periodId || '',
     existingWallets: inputs?.existingWallets || [],
+    currency: inputs?.currency,
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     onDismiss: (data: any, role: string) => dismiss(data, role),
   });
@@ -38,6 +41,7 @@ export const useWalletModal = (): {
       accountId: string,
       periodId: string,
       existingWallets?: IWallet[],
+      currency?: string,
     ) => {
       setInputs({
         wallet,
@@ -45,6 +49,7 @@ export const useWalletModal = (): {
         accountId,
         periodId,
         existingWallets,
+        currency,
       });
       return new Promise((resolve) => {
         present({
