@@ -33,7 +33,7 @@ describe('NiceTags Component', () => {
     expect(screen.getByText('TypeScript')).toBeInTheDocument();
   });
 
-  test('adds a new tag when typing and clicking the Add button', () => {
+  test('adds a new tag when typing and clicking the Add button', async () => {
     const mockOnTagsChange = vi.fn((tags: string[]) => {
       console.log('onTagsChange called with:', tags);
     });
@@ -43,70 +43,76 @@ describe('NiceTags Component', () => {
     // Find input and add button
     const input = screen.getByPlaceholderText('Add a tag');
 
-    // Type in the input
-    userEvent.type(input, 'JavaScript');
+    // Use fireEvent to trigger the Ionic input event directly
+    fireEvent(input, new CustomEvent('ionInput', {
+      detail: { value: 'JavaScript' }
+    }));
     console.log('Typed "JavaScript" in input');
 
     const addButton = screen.getByTestId('add-tag-button');
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     console.log('Clicked Add button');
 
     // Verify the tag was added and onTagsChange was called
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText('JavaScript')).toBeInTheDocument();
       expect(mockOnTagsChange).toHaveBeenCalled();
       expect(mockOnTagsChange).toHaveBeenCalledWith(['JavaScript']);
     });
   });
 
-  test('removes a tag when clicking the remove icon', () => {
+  test('removes a tag when clicking the remove icon', async () => {
     const initialTags = ['React', 'TypeScript'];
     render(<NiceTags initialTags={initialTags} suggestions={[]} onTagsChange={mockOnTagsChange} />);
 
     // Find the remove icon for React tag and click it
     const removeIcons = screen.getAllByTestId('remove-tag-icon');
-    userEvent.click(removeIcons[0]); // First remove icon
+    await userEvent.click(removeIcons[0]); // First remove icon
 
     // Verify onTagsChange was called with the updated tags
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.queryByText('React')).not.toBeInTheDocument();
       expect(mockOnTagsChange).toHaveBeenCalled();
       expect(mockOnTagsChange).toHaveBeenCalledWith(['TypeScript']);
     });
   });
 
-  test('shows suggestions when typing', () => {
+  test('shows suggestions when typing', async () => {
     const suggestions = ['JavaScript', 'Java', 'Python'];
     render(<NiceTags initialTags={[]} suggestions={suggestions} onTagsChange={mockOnTagsChange} />);
 
     // Type 'Ja' in the input to filter suggestions
     const input = screen.getByPlaceholderText('Add a tag');
-    userEvent.type(input, 'Ja');
+    fireEvent(input, new CustomEvent('ionInput', {
+      detail: { value: 'Ja' }
+    }));
 
     // Check if suggestions are displayed
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText('JavaScript')).toBeInTheDocument();
       expect(screen.getByText('Java')).toBeInTheDocument();
       expect(screen.queryByText('Python')).not.toBeInTheDocument();
     });
   });
 
-  test('adds a tag when clicking on a suggestion', () => {
+  test('adds a tag when clicking on a suggestion', async () => {
     const suggestions = ['JavaScript', 'Java', 'Python'];
     render(<NiceTags initialTags={[]} suggestions={suggestions} onTagsChange={mockOnTagsChange} />);
 
     // Type 'Ja' to show suggestions
     const input = screen.getByPlaceholderText('Add a tag');
-    userEvent.type(input, 'Ja');
+    fireEvent(input, new CustomEvent('ionInput', {
+      detail: { value: 'Ja' }
+    }));
 
     // Click on the JavaScript suggestion
-    waitFor(() => {
+    await waitFor(async () => {
       const suggestion = screen.getByText('JavaScript');
-      userEvent.click(suggestion);
+      await userEvent.click(suggestion);
     });
 
     // Verify the tag was added and onTagsChange was called
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText('JavaScript')).toBeInTheDocument();
       expect(mockOnTagsChange).toHaveBeenCalledWith(['JavaScript']);
 
@@ -115,19 +121,21 @@ describe('NiceTags Component', () => {
     });
   });
 
-  test('prevents duplicate tags from being added', () => {
+  test('prevents duplicate tags from being added', async () => {
     const initialTags = ['React'];
     render(<NiceTags initialTags={initialTags} onTagsChange={mockOnTagsChange} suggestions={[]} />);
 
     // Try to add "React" again
     const input = screen.getByPlaceholderText('Add a tag');
-    userEvent.type(input, 'React');
+    fireEvent(input, new CustomEvent('ionInput', {
+      detail: { value: 'React' }
+    }));
 
     const addButton = screen.getByTestId('add-tag-button');
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
 
     // Only one "React" tag should exist
-    waitFor(() => {
+    await waitFor(() => {
       const reactTags = screen.getAllByText('React');
       expect(reactTags).toHaveLength(1);
 
@@ -136,14 +144,14 @@ describe('NiceTags Component', () => {
     });
   });
 
-  test('handles empty input correctly', () => {
+  test('handles empty input correctly', async () => {
     render(<NiceTags onTagsChange={mockOnTagsChange} initialTags={[]} suggestions={[]} />);
 
     // Try to add an empty tag
     const addButton = screen.getByTestId('add-tag-button');
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
 
-    waitFor(() => {
+    await waitFor(() => {
       // No tags should be added
       expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
       expect(mockOnTagsChange).not.toHaveBeenCalled();
@@ -153,7 +161,7 @@ describe('NiceTags Component', () => {
     });
   });
 
-  test('focuses input after adding a tag from suggestions', () => {
+  test('focuses input after adding a tag from suggestions', async () => {
     const suggestions = ['JavaScript'];
     render(<NiceTags initialTags={[]} suggestions={suggestions} onTagsChange={mockOnTagsChange} />);
 
@@ -170,18 +178,15 @@ describe('NiceTags Component', () => {
     fireEvent.change(input, { target: { value: 'Java' } });
 
     // Click on suggestion
-    waitFor(
-      () => {
+    await waitFor(
+      async () => {
         const suggestion = screen.getByText('JavaScript');
         fireEvent.click(suggestion);
       },
       { timeout: 1000 },
     );
 
-    waitFor(() => {
-      // Use fireEvent.click which is more reliable in test environments
-      fireEvent.click(screen.getByText('JavaScript'));
-
+    await waitFor(() => {
       // Check if focus was set
       expect(mockSetFocus).toHaveBeenCalled();
     });

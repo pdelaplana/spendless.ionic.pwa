@@ -146,9 +146,12 @@ const NiceTags: React.FC<NiceTagsProps> = ({
           ref={inputRef}
           placeholder='Add a tag'
           value={inputValue}
-          onKeyUp={(e: React.KeyboardEvent<HTMLIonInputElement>) =>
-            handleInputChange((e.target as HTMLInputElement).value)
-          }
+          onIonInput={(e) => handleInputChange(e.detail.value!)}
+          onKeyUp={(e: React.KeyboardEvent<HTMLIonInputElement>) => {
+            if (e.key === 'Enter') {
+              addTag(inputValue);
+            }
+          }}
           fill='outline'
         />
         <AddButton
