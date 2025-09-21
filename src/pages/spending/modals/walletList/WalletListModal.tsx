@@ -123,7 +123,7 @@ const WalletListModal: React.FC<WalletListModalProps> = ({
                     key={wallet.id}
                     wallet={wallet}
                     isSelected={wallet.id === selectedWalletId}
-                    onSelect={(w) => handleWalletSelect(w.id || '')}
+                    onSelect={(w: IWallet) => handleWalletSelect(w.id || '')}
                   />
                 ))}
               </IonList>

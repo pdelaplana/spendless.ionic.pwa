@@ -241,8 +241,8 @@ export const createTypographyCSS = (scale: keyof typeof designSystem.typography.
     font-size: ${typography.size};
     font-weight: ${typography.weight};
     line-height: ${typography.lineHeight};
-    ${typography.letterSpacing ? `letter-spacing: ${typography.letterSpacing};` : ''}
-    ${typography.textTransform ? `text-transform: ${typography.textTransform};` : ''}
+    ${'letterSpacing' in typography ? `letter-spacing: ${typography.letterSpacing};` : ''}
+    ${'textTransform' in typography ? `text-transform: ${typography.textTransform};` : ''}
   `;
 };
 

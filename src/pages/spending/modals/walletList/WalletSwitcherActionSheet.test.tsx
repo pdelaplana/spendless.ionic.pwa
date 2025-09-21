@@ -5,7 +5,7 @@ import WalletSwitcherActionSheet from './WalletSwitcherActionSheet';
 
 // Mock Ionic React components to render their children
 vi.mock('@ionic/react', async () => {
-  const actual = await vi.importActual('@ionic/react');
+  const actual = await vi.importActual<typeof import('@ionic/react')>('@ionic/react');
   return {
     ...actual,
     useIonToast: vi.fn(() => [vi.fn()]),

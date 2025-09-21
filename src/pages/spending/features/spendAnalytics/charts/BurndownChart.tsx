@@ -240,7 +240,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
         text: 'Spending Burndown',
         font: {
           size: 18,
-          weight: 'bold',
+          weight: 700,
         },
         color: designSystem.colors.text.primary,
         padding: {

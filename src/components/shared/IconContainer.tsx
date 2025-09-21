@@ -37,7 +37,7 @@ interface IconContainerProps {
   size?: number;
   marginRight?: string;
   marginTop?: string;
-  ariaHidden?: boolean | string;
+  ariaHidden?: boolean;
 }
 
 export const IconContainer: React.FC<IconContainerProps> = ({
@@ -47,7 +47,7 @@ export const IconContainer: React.FC<IconContainerProps> = ({
   size,
   marginRight,
   marginTop,
-  ariaHidden = 'true',
+  ariaHidden = true,
 }) => {
   return (
     <StyledIconContainer

@@ -156,8 +156,6 @@ const WalletModal: React.FC<WalletModalProps> = ({
         message: `Cannot delete "${wallet.name}" because it has ${walletSpending.length} existing transaction${walletSpending.length === 1 ? '' : 's'}. Please move or delete the transactions first.`,
         onConfirm: () => {},
         onCancel: () => {},
-        confirmText: 'OK',
-        showCancel: false,
       });
       return;
     }

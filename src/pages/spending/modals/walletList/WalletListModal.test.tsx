@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import WalletListModal from './WalletListModal';
 
 vi.mock('@ionic/react', async () => {
-  const actual = await vi.importActual('@ionic/react');
+  const actual = await vi.importActual<typeof import('@ionic/react')>('@ionic/react');
   return {
     ...actual,
     useIonToast: vi.fn(() => [vi.fn()]),
