@@ -25,6 +25,7 @@ export default {
       dayRemaining: '{{count}} dia restante',
       daysRemaining: '{{count}} dias restantes',
       newSpend: 'Novo Gasto',
+      addFirstSpend: 'Adicione Seu Primeiro Gasto',
     },
     periods: {
       title: 'Períodos de Gastos',

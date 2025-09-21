@@ -7,7 +7,7 @@ import WalletView from './features/spendTracker/WalletView';
 
 const WalletSpendingPage: React.FC = () => {
   const { selectedWallet } = useWallet();
-  const pageTitle = selectedWallet ? `${selectedWallet.name} Spending` : 'Wallet Spending';
+  const pageTitle = selectedWallet ? `${selectedWallet.name}` : 'Wallet';
 
   return (
     <BasePageLayout

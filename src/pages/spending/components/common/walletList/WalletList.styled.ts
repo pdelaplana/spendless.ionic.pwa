@@ -35,6 +35,8 @@ export const WalletListSettingsButton = styled.button`
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
   color: ${designSystem.colors.text.secondary};
+  min-height: 32px;
+  min-width: 32px;
 
   &:hover {
     background: ${designSystem.colors.gray[100]};
@@ -47,12 +49,12 @@ export const WalletListSettingsButton = styled.button`
   }
 
   ion-icon {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    line-height: 1;
   }
 `;
 
 export const WalletListContent = styled.div`
-  max-height: 400px;
   overflow-y: auto;
 `;
 

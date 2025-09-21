@@ -54,6 +54,7 @@ export default {
         'You are viewing a previous spending period. Close to return current period.',
       loadMore: 'Load More',
       newSpend: 'New Spend',
+      addFirstSpend: 'Add Your First Spending',
       noPeriodSelected: 'No period selected',
       tapToCreatePeriod: 'Tap to create a new period',
       activePeriod: 'Active',

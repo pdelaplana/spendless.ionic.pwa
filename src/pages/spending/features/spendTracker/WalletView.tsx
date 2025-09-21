@@ -1,5 +1,6 @@
 import { CenterContainer, CenterContent } from '@/components/layouts';
 import { Gap, MutationNotificationHandler, SpendList } from '@/components/shared';
+import { useDeleteWallet, useUpdateWallet } from '@/hooks/api/wallet';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useWallet } from '@/providers/wallet';
 import { ROUTES } from '@/routes/routes.constants';
@@ -10,12 +11,13 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ScheduledSpendingItem } from '../../components/common/scheduledSpendingItem';
+import WalletEmptyState from '../../components/common/walletEmptyState/WalletEmptyState';
 import WalletQuickActionButtons from '../../components/common/walletQuickActionButtons/WalletQuickActionButtons';
 import { useSpendActions } from '../../hooks/useSpendActions';
 import { useSpendTracking } from '../../hooks/useSpendTracking';
 import { useWalletActions } from '../../hooks/useWalletActions';
 import { WalletSwitcherActionSheet } from '../../modals/walletList';
-import { useWalletSetupModal } from '../../modals/walletSetup';
+import { useWalletModal } from '../../modals/walletModal';
 import { SpendAnalyticsCharts } from '../spendAnalytics';
 
 const WalletView: React.FC = () => {
@@ -47,7 +49,9 @@ const WalletView: React.FC = () => {
   // Action hooks
   const { newSpendHandler, editSpendHandler } = useSpendActions();
   const { walletListHandler, walletActionSheetHandler, actionSheet } = useWalletActions();
-  const { open: openWalletSetupModal } = useWalletSetupModal();
+  const { open: openWalletModal } = useWalletModal();
+  const updateWalletMutation = useUpdateWallet();
+  const deleteWalletMutation = useDeleteWallet();
 
   const { remainingBudget, targetSpend, futureSpendingTotal } = useMemo(() => {
     const total = currentSpending.reduce((sum, spend) => sum + spend.amount, 0);
@@ -61,9 +65,35 @@ const WalletView: React.FC = () => {
     };
   }, [currentSpending, futureSpending, selectedPeriod, selectedWallet]);
 
-  const handleEditWallet = () => {
+  const handleDeleteWallet = (walletId: string) => {
+    if (account?.id && selectedPeriod?.id) {
+      deleteWalletMutation.mutate({
+        accountId: account.id,
+        periodId: selectedPeriod.id,
+        walletId: walletId,
+      });
+    }
+  };
+
+  const handleEditWallet = async () => {
     if (selectedWallet && account?.id && selectedPeriod?.id) {
-      openWalletSetupModal(wallets, account.id, selectedPeriod.id, selectedWallet);
+      await openWalletModal(
+        selectedWallet,
+        (walletData) => {
+          updateWalletMutation.mutate({
+            accountId: account.id!,
+            periodId: selectedPeriod.id!,
+            walletId: selectedWallet.id!,
+            updates: walletData,
+          });
+        },
+        account.id,
+        selectedPeriod.id,
+        wallets,
+        account.currency,
+        handleDeleteWallet,
+        filteredSpending,
+      );
     }
   };
 
@@ -114,10 +144,11 @@ const WalletView: React.FC = () => {
         )}
 
         {filteredSpending.length === 0 ? (
-          <CenterContent>
-            <h1>{t('wallet.noSpendingInWallet')}</h1>
-            <p>{t('wallet.noSpendingInWalletDescription', { walletName: selectedWallet.name })}</p>
-          </CenterContent>
+          <WalletEmptyState
+            wallet={selectedWallet}
+            onNewSpend={newSpendHandler}
+            onEditWallet={handleEditWallet}
+          />
         ) : (
           <>
             <SpendAnalyticsCharts

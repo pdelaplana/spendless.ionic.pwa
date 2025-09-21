@@ -108,6 +108,7 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
     }, []);
 
     // Debounced formatting logic
+
     const debouncedFormatting = useCallback(
       (numericValue: string) => {
         if (debounceTimer.current) {
@@ -149,9 +150,9 @@ const ProminentAmountInput = forwardRef<HTMLIonInputElement, ProminentAmountInpu
         }
 
         // Trigger debounced formatting
-        debouncedFormatting(numericOnly);
+        //debouncedFormatting(numericOnly);
       },
-      [activeCurrency.symbol, debouncedFormatting],
+      [activeCurrency.symbol],
     );
 
     // Handle key presses (restrict to numeric only)

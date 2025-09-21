@@ -1,3 +1,5 @@
+import type { IWallet } from '@/domain/Wallet';
+import { useCreateWallet, useDeleteWallet, useUpdateWallet } from '@/hooks/api/wallet';
 import useFormatters from '@/hooks/ui/useFormatters';
 import {
   EmptyContainer,
@@ -17,16 +19,10 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useWallet } from '@/providers/wallet';
 import { StyledIonList } from '@/styles/IonList.styled';
 import { IonIcon, IonSpinner } from '@ionic/react';
-import {
-  chevronDown,
-  ellipse,
-  ellipseSharp,
-  ellipsisHorizontal,
-  options,
-  settings,
-} from 'ionicons/icons';
+import { useIonToast } from '@ionic/react';
+import { add } from 'ionicons/icons';
 import type React from 'react';
-import { useWalletSetupModal } from '../../../modals/walletSetup';
+import { useWalletModal } from '../../../modals/walletModal';
 
 interface WalletListProps {
   onWalletClick?: (walletId: string) => void;
@@ -37,15 +33,92 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
   const { wallets, isLoading, error, refreshWallets } = useWallet();
   const { account, selectedPeriod } = useSpendingAccount();
   const { formatCurrency } = useFormatters();
-  const { open: openWalletSetupModal } = useWalletSetupModal();
+  const { open: openWalletModal } = useWalletModal();
+  const [presentToast] = useIonToast();
+
+  // API hooks for wallet operations
+  const createWallet = useCreateWallet();
+  const updateWallet = useUpdateWallet();
+  const deleteWallet = useDeleteWallet();
 
   const handleRetry = async () => {
     await refreshWallets();
   };
 
-  const handleSettingsClick = () => {
+  const handleCreateWallet = async (walletData: {
+    name: string;
+    spendingLimit: number;
+    isDefault: boolean;
+  }) => {
+    if (!account?.id || !selectedPeriod?.id) return;
+
+    try {
+      await createWallet.mutateAsync({
+        accountId: account.id,
+        periodId: selectedPeriod.id,
+        data: {
+          accountId: account.id,
+          periodId: selectedPeriod.id,
+          ...walletData,
+        },
+      });
+      presentToast({
+        message: 'Wallet created successfully',
+        duration: 2000,
+        color: 'success',
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Failed to create wallet:', error);
+      presentToast({
+        message: 'Failed to create wallet',
+        duration: 3000,
+        color: 'danger',
+        position: 'top',
+      });
+    }
+  };
+
+  const handleUpdateWallet = async (
+    wallet: IWallet,
+    walletData: { name: string; spendingLimit: number; isDefault: boolean },
+  ) => {
+    if (!account?.id || !selectedPeriod?.id) return;
+
+    try {
+      await updateWallet.mutateAsync({
+        accountId: account.id,
+        periodId: selectedPeriod.id,
+        walletId: wallet.id || '',
+        updates: walletData,
+      });
+      presentToast({
+        message: 'Wallet updated successfully',
+        duration: 2000,
+        color: 'success',
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Failed to update wallet:', error);
+      presentToast({
+        message: 'Failed to update wallet',
+        duration: 3000,
+        color: 'danger',
+        position: 'top',
+      });
+    }
+  };
+
+  const handleAddWalletClick = () => {
     if (account?.id && selectedPeriod?.id) {
-      openWalletSetupModal(wallets, account.id, selectedPeriod.id);
+      openWalletModal(
+        null, // null for create mode
+        handleCreateWallet,
+        account.id,
+        selectedPeriod.id,
+        wallets,
+        account.currency, // Pass account currency
+      );
     }
   };
 
@@ -76,9 +149,21 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
   if (wallets.length === 0) {
     return (
       <WalletListContainer className={className}>
-        <EmptyContainer>
-          <EmptyMessage>No wallets found for this period</EmptyMessage>
-        </EmptyContainer>
+        <WalletListHeaderContainer>
+          <WalletListHeader>Wallets</WalletListHeader>
+          <WalletListSettingsButton
+            onClick={handleAddWalletClick}
+            aria-label='Add new wallet'
+            type='button'
+          >
+            <IonIcon icon={add} color='primary' />
+          </WalletListSettingsButton>
+        </WalletListHeaderContainer>
+        <WalletListContent>
+          <EmptyContainer>
+            <EmptyMessage>No wallets found for this period</EmptyMessage>
+          </EmptyContainer>
+        </WalletListContent>
       </WalletListContainer>
     );
   }
@@ -88,11 +173,11 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
       <WalletListHeaderContainer>
         <WalletListHeader>Wallets</WalletListHeader>
         <WalletListSettingsButton
-          onClick={handleSettingsClick}
-          aria-label='Manage wallets'
+          onClick={handleAddWalletClick}
+          aria-label='Add new wallet'
           type='button'
         >
-          <IonIcon icon={options} color='primary' />
+          <IonIcon icon={add} color='primary' />
         </WalletListSettingsButton>
       </WalletListHeaderContainer>
       <WalletListContent>

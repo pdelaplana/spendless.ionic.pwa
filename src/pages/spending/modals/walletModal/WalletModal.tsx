@@ -2,25 +2,37 @@ import { InputFormField } from '@/components/forms';
 import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { ActionButton, Gap } from '@/components/shared';
-import { ProminentAmountInput } from '@/components/ui';
+import CurrencyAmountInput from '@/components/ui/CurrencyAmountInput';
 import { Currency } from '@/domain/Currencies';
 import { validateSingleWalletSetup } from '@/domain/validation/walletValidation';
 import { usePrompt } from '@/hooks';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
-import { IonCheckbox, IonItem, IonLabel, IonNote, useIonToast } from '@ionic/react';
+import { IonButton, IonCheckbox, IonItem, IonLabel, IonListHeader, IonNote, useIonToast } from '@ionic/react';
 import { useCallback, useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import type { WalletFormData, WalletModalProps } from './types';
+
+const SectionLabel = styled.div`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: ${designSystem.colors.textPrimary};
+  text-align: left;
+  margin-bottom: ${designSystem.spacing.md};
+  margin-left: ${designSystem.spacing.lg};
+`;
 
 const WalletModal: React.FC<WalletModalProps> = ({
   wallet,
   onSave,
+  onDelete,
   accountId,
   periodId,
   existingWallets = [],
   currency: currencyCode,
+  walletSpending = [],
   onDismiss,
 }) => {
   const { t } = useTranslation();
@@ -123,6 +135,37 @@ const WalletModal: React.FC<WalletModalProps> = ({
     }
   };
 
+  // Handle wallet deletion - check for transactions first
+  const handleDeleteClick = () => {
+    if (!wallet?.id || !onDelete) return;
+
+    // Check if wallet has any transactions
+    const hasTransactions = walletSpending.length > 0;
+
+    if (hasTransactions) {
+      showConfirmPrompt({
+        title: 'Cannot Delete Wallet',
+        message: `Cannot delete "${wallet.name}" because it has ${walletSpending.length} existing transaction${walletSpending.length === 1 ? '' : 's'}. Please move or delete the transactions first.`,
+        onConfirm: () => {},
+        onCancel: () => {},
+        confirmText: 'OK',
+        showCancel: false,
+      });
+      return;
+    }
+
+    // Proceed with deletion confirmation
+    showConfirmPrompt({
+      title: 'Delete Wallet',
+      message: `Are you sure you want to delete "${wallet.name}"? This action cannot be undone.`,
+      onConfirm: () => {
+        onDelete(wallet.id!);
+        onDismiss();
+      },
+      onCancel: () => {},
+    });
+  };
+
   // Handle modal dismiss
   const handleDismiss = () => {
     if (isDirty) {
@@ -143,7 +186,7 @@ const WalletModal: React.FC<WalletModalProps> = ({
     <ModalPageLayout onDismiss={handleDismiss}>
       <CenterContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ProminentAmountInput
+          <CurrencyAmountInput
             label='Spending Limit'
             value={Number.parseFloat(getValues('spendingLimit') || '0')}
             onChange={handleAmountChange}
@@ -151,6 +194,8 @@ const WalletModal: React.FC<WalletModalProps> = ({
             autoFocus={true}
             error={errors.spendingLimit?.message}
           />
+
+          <SectionLabel>Details</SectionLabel>
 
           <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
             <IonItem>
@@ -203,6 +248,20 @@ const WalletModal: React.FC<WalletModalProps> = ({
             isDisabled={false}
             label={isEditing ? 'Update Wallet' : 'Create Wallet'}
           />
+
+          {/* Delete Button - Only show when editing */}
+          {isEditing && onDelete && wallet?.id && (
+            <IonButton
+              expand='block'
+              color='danger'
+              fill='clear'
+              size='small'
+              className='ion-margin-bottom ion-margin-start ion-margin-end'
+              onClick={handleDeleteClick}
+            >
+              Delete Wallet
+            </IonButton>
+          )}
         </form>
       </CenterContainer>
     </ModalPageLayout>

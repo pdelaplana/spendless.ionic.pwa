@@ -4,7 +4,7 @@ import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { ActionButton, ActionSheetButton, Gap } from '@/components/shared';
 import type { ActionOption } from '@/components/shared/base/buttons/ActionSheetButton';
 import DestructiveButton from '@/components/shared/base/buttons/DestructiveButton';
-import { ProminentAmountInput } from '@/components/ui';
+import CurrencyAmountInput from '@/components/ui/CurrencyAmountInput';
 import { Currency } from '@/domain/Currencies';
 import { type ISpend, createSpend } from '@/domain/Spend';
 import { spendValidation } from '@/domain/validation';
@@ -15,6 +15,7 @@ import { IonItem, IonLabel } from '@ionic/react';
 import { useCallback, useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { SectionLabel } from '../../../../theme/components';
 import CategorySection from '../../components/common/categorySection/CategorySection';
 import SpendFormSection from '../../components/common/spendFormSection/SpendFormSection';
 import type { SpendFormData } from './types';
@@ -202,8 +203,8 @@ const SpendModal: React.FC<SpendModalProps> = ({
     <ModalPageLayout onDismiss={checkIfCanDismiss}>
       <CenterContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ProminentAmountInput
-            label='Transaction Amount'
+          <CurrencyAmountInput
+            label='Spend Amount'
             value={Number.parseFloat(getValues('amount') || '0')}
             onChange={handleAmountChange}
             currency={currency}
@@ -211,6 +212,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
             error={errors.amount?.message}
           />
 
+          <SectionLabel>Details</SectionLabel>
           <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
             <IonItem>
               <IonLabel>

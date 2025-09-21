@@ -112,3 +112,12 @@ export const CleanCard = styled.div<{
 export const GroupedTransactionsContainer = styled(StyledIonList)`
   margin-top: ${designSystem.spacing.xl};
 `;
+
+export const SectionLabel = styled.div`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: ${designSystem.colors.textPrimary};
+  text-align: left;
+  margin-bottom: ${designSystem.spacing.md};
+  margin-left: ${designSystem.spacing.lg};
+`;
