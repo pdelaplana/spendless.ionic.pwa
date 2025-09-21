@@ -41,6 +41,7 @@ interface BasePageProps extends PropsWithChildren {
   menu?: React.ReactNode;
   showMenu?: boolean;
   showSecondaryHeader?: boolean;
+  menuSide?: 'start' | 'end';
 }
 
 const StyledHeader = styled(IonHeader)`
@@ -121,6 +122,7 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
   menu,
   showMenu = false,
   showSecondaryHeader = false,
+  menuSide = 'start',
 }) => {
   const { t } = useTranslation();
   const { signout } = useAuth();
@@ -144,7 +146,7 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
   return (
     <>
       {showMenu && menu && (
-        <IonMenu contentId='main-content' type='overlay'>
+        <IonMenu contentId='main-content' type='overlay' side={menuSide}>
           {menu}
         </IonMenu>
       )}

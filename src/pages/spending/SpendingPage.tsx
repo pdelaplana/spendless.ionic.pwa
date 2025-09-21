@@ -18,12 +18,13 @@ const SpendingPage: React.FC = () => {
   return (
     <BasePageLayout
       title='Spending'
-      showHeader={true}
+      showHeader={false}
       showBackButton={false}
       showLogo={false}
       showProfileIcon={false}
       showMenu={true}
       menu={<MainMenuContent />}
+      menuSide='end'
     >
       <Suspense fallback={<div>Loading...</div>}>
         <SentryErrorBoundary>
