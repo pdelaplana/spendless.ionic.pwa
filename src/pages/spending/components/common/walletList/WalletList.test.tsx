@@ -6,11 +6,45 @@ import WalletList from './WalletList';
 
 // Mock the hooks
 vi.mock('@/providers/wallet');
+vi.mock('@/providers/spendingAccount', () => ({
+  useSpendingAccount: () => ({
+    account: {
+      id: 'account-1',
+      currency: 'USD',
+    },
+    selectedPeriod: {
+      id: 'period-1',
+    },
+  }),
+}));
 vi.mock('@/hooks/ui/useFormatters', () => ({
   default: () => ({
     formatCurrency: (amount: number) => `$${amount.toFixed(2)}`,
   }),
 }));
+vi.mock('../../../modals/walletModal', () => ({
+  useWalletModal: () => ({
+    open: vi.fn(),
+  }),
+}));
+vi.mock('@/hooks/api/wallet', () => ({
+  useCreateWallet: () => ({
+    mutateAsync: vi.fn(),
+  }),
+  useUpdateWallet: () => ({
+    mutateAsync: vi.fn(),
+  }),
+  useDeleteWallet: () => ({
+    mutateAsync: vi.fn(),
+  }),
+}));
+vi.mock('@ionic/react', async () => {
+  const actual = await vi.importActual('@ionic/react');
+  return {
+    ...actual,
+    useIonToast: () => [vi.fn()],
+  };
+});
 
 const mockUseWallet = useWallet as Mock;
 
@@ -201,10 +235,16 @@ describe('WalletList', () => {
 
     render(<WalletList />);
 
-    // Check separate format for spent and remaining
-    expect(screen.getByText('Spent $150.00')).toBeInTheDocument(); // Groceries spent
-    expect(screen.getByText('Remaining $350.00')).toBeInTheDocument(); // Groceries remaining: 500 - 150
-    expect(screen.getByText('Spent $75.00')).toBeInTheDocument(); // Entertainment spent
-    expect(screen.getByText('Remaining $125.00')).toBeInTheDocument(); // Entertainment remaining: 200 - 75
+    // Check separate format for spent and remaining using getAllByText for repeated text
+    const spentLabels = screen.getAllByText('Spent');
+    expect(spentLabels).toHaveLength(2); // Two wallets
+    const remainingLabels = screen.getAllByText('Remaining');
+    expect(remainingLabels).toHaveLength(2); // Two wallets
+
+    // Check specific amounts
+    expect(screen.getByText('$150.00')).toBeInTheDocument(); // Groceries spent
+    expect(screen.getByText('$350.00')).toBeInTheDocument(); // Groceries remaining: 500 - 150
+    expect(screen.getByText('$75.00')).toBeInTheDocument(); // Entertainment spent
+    expect(screen.getByText('$125.00')).toBeInTheDocument(); // Entertainment remaining: 200 - 75
   });
 });

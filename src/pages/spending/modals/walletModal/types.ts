@@ -1,5 +1,5 @@
-import type { IWallet } from '@/domain/Wallet';
 import type { ISpend } from '@/domain/Spend';
+import type { IWallet } from '@/domain/Wallet';
 
 export interface WalletFormData {
   name: string;

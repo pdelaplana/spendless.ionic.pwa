@@ -9,12 +9,13 @@ export class Currency {
 
   // Pre-defined currency instances
   static readonly USD = new Currency('USD', '$');
+  static readonly EUR = new Currency('EUR', '€');
   static readonly AUD = new Currency('AUD', 'A$');
   static readonly PHP = new Currency('PHP', '₱');
 
   // Retrieval methods
   static getAllCurrencies(): readonly Currency[] {
-    return [Currency.USD, Currency.AUD, Currency.PHP];
+    return [Currency.USD, Currency.EUR, Currency.AUD, Currency.PHP];
   }
 
   static fromCode(code: string): Currency | undefined {

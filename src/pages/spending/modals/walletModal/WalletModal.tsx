@@ -8,7 +8,15 @@ import { validateSingleWalletSetup } from '@/domain/validation/walletValidation'
 import { usePrompt } from '@/hooks';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
-import { IonButton, IonCheckbox, IonItem, IonLabel, IonListHeader, IonNote, useIonToast } from '@ionic/react';
+import {
+  IonButton,
+  IonCheckbox,
+  IonItem,
+  IonLabel,
+  IonListHeader,
+  IonNote,
+  useIonToast,
+} from '@ionic/react';
 import { useCallback, useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

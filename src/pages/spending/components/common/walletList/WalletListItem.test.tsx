@@ -22,8 +22,10 @@ describe('WalletListItem', () => {
     render(<WalletListItem wallet={mockWallet} formatCurrency={mockFormatCurrency} />);
 
     expect(screen.getByText('Groceries & Food')).toBeInTheDocument();
-    expect(screen.getByText('Spent $150.00')).toBeInTheDocument();
-    expect(screen.getByText('Remaining $350.00')).toBeInTheDocument();
+    expect(screen.getByText('Spent')).toBeInTheDocument();
+    expect(screen.getByText('$150.00')).toBeInTheDocument();
+    expect(screen.getByText('Remaining')).toBeInTheDocument();
+    expect(screen.getByText('$350.00')).toBeInTheDocument();
   });
 
   it('renders as clickable when onClick is provided', () => {
@@ -109,8 +111,10 @@ describe('WalletListItem', () => {
 
     render(<WalletListItem wallet={fullSpentWallet} formatCurrency={mockFormatCurrency} />);
 
-    expect(screen.getByText('Spent $500.00')).toBeInTheDocument();
-    expect(screen.getByText('Remaining $0.00')).toBeInTheDocument();
+    expect(screen.getByText('Spent')).toBeInTheDocument();
+    expect(screen.getByText('$500.00')).toBeInTheDocument();
+    expect(screen.getByText('Remaining')).toBeInTheDocument();
+    expect(screen.getByText('$0.00')).toBeInTheDocument();
   });
 
   it('handles wallet with overspent balance', () => {
@@ -121,8 +125,10 @@ describe('WalletListItem', () => {
 
     render(<WalletListItem wallet={overspentWallet} formatCurrency={mockFormatCurrency} />);
 
-    expect(screen.getByText('Spent $600.00')).toBeInTheDocument();
-    expect(screen.getByText('Remaining $0.00')).toBeInTheDocument();
+    expect(screen.getByText('Spent')).toBeInTheDocument();
+    expect(screen.getByText('$600.00')).toBeInTheDocument();
+    expect(screen.getByText('Remaining')).toBeInTheDocument();
+    expect(screen.getByText('$0.00')).toBeInTheDocument();
   });
 
   it('handles very long wallet names', () => {
@@ -176,7 +182,9 @@ describe('WalletListItem', () => {
 
     render(<WalletListItem wallet={mockWallet} formatCurrency={customFormatter} />);
 
-    expect(screen.getByText('Spent €150.00')).toBeInTheDocument();
-    expect(screen.getByText('Remaining €350.00')).toBeInTheDocument();
+    expect(screen.getByText('Spent')).toBeInTheDocument();
+    expect(screen.getByText('€150.00')).toBeInTheDocument();
+    expect(screen.getByText('Remaining')).toBeInTheDocument();
+    expect(screen.getByText('€350.00')).toBeInTheDocument();
   });
 });

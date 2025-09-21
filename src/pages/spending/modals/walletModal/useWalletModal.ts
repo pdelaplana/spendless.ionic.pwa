@@ -1,5 +1,5 @@
-import type { IWallet } from '@/domain/Wallet';
 import type { ISpend } from '@/domain/Spend';
+import type { IWallet } from '@/domain/Wallet';
 import { useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useState } from 'react';

@@ -17,6 +17,7 @@ describe('CurrencyAmountInput', () => {
     value: 0,
     onChange: vi.fn(),
     currency: Currency.USD,
+    autoFocus: false,
   };
 
   beforeEach(() => {
@@ -237,10 +238,7 @@ describe('CurrencyAmountInput', () => {
       const user = userEvent.setup();
 
       // Create a custom currency with longer symbol
-      const customCurrency = {
-        ...Currency.USD,
-        symbol: 'US$',
-      };
+      const customCurrency = new (Currency as any)('USD', 'US$');
 
       render(
         <CurrencyAmountInput
