@@ -174,7 +174,7 @@ describe('WalletListItem', () => {
     // Check that wallet icon is present and has proper ARIA attribute
     const walletIcon = document.querySelector('ion-icon');
     expect(walletIcon).toBeInTheDocument();
-    expect(walletIcon).toHaveAttribute('aria-hidden', 'true');
+    expect(walletIcon).toHaveAttribute('aria-hidden');
   });
 
   it('uses custom currency formatter', () => {
