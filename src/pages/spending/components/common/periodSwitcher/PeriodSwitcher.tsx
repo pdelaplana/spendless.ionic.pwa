@@ -187,6 +187,7 @@ const ActionHint = styled.span`
   margin-top: ${designSystem.spacing.xs};
 `;
 
+
 const NoPeriodContainer = styled(GlassCard).attrs({ as: 'button' })`
   padding: ${designSystem.spacing.lg};
   text-align: center;

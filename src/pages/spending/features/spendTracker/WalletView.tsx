@@ -183,7 +183,6 @@ const WalletView: React.FC = () => {
           </>
         )}
 
-        <Gap size={'2.3rem'} />
       </CenterContainer>
 
       {/* Wallet Switcher Action Sheet */}

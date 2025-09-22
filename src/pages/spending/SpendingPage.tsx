@@ -5,8 +5,7 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
-import PeriodDashboard from './features/spendTracker/PeriodDashboard';
-import PeriodSpendingView from './features/spendTracker/PeriodSpendingView';
+
 
 const SpendingPage: React.FC = () => {
   const { t } = useTranslation();

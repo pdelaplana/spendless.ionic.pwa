@@ -66,6 +66,11 @@ export default {
       lastDay: 'Last day',
       dayRemaining: '{{count}} day remaining',
       daysRemaining: '{{count}} days remaining',
+      actions: {
+        title: 'Period Actions',
+        startNewPeriod: 'Start New Period',
+        editPeriod: 'Edit Current Period',
+      },
       modal: {
         details: {
           title: 'Spending Details',
