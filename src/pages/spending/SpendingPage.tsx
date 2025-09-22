@@ -6,7 +6,6 @@ import { Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
 
-
 const SpendingPage: React.FC = () => {
   const { t } = useTranslation();
 

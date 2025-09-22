@@ -1,8 +1,9 @@
 import { usePrompt } from '@/hooks';
 import { useSpendingAccount } from '@/providers/spendingAccount';
-import { addWeeks, set } from 'date-fns';
+import { addWeeks } from 'date-fns';
 import { usePeriodListModal } from '../modals/periodList/PeriodListModal';
-import { usePeriodModal } from '../modals/periodModal';
+import { usePeriodEditModal } from '../modals/periodModal/usePeriodEditModal';
+import { usePeriodModalV2 } from '../modals/periodModal/usePeriodModalV2';
 
 export const usePeriodActions = () => {
   const {
@@ -19,38 +20,36 @@ export const usePeriodActions = () => {
 
   const { showConfirmPrompt } = usePrompt();
 
-  const { open: openPeriodModal } = usePeriodModal();
+  const { open: openPeriodModal } = usePeriodModalV2();
+  const { open: openPeriodEditModal } = usePeriodEditModal();
   const { open: openPeriodListModal } = usePeriodListModal();
 
   const editCurrentPeriodHandler = () => {
     if (selectedPeriod) {
-      openPeriodModal(
-        {
-          ...selectedPeriod,
-        },
-        async (data) => {
-          await updatePeriod({
-            periodId: selectedPeriod.id || '',
-            data,
-          });
-          resetMutationState();
-          refetchSpending();
-        },
-      );
+      openPeriodEditModal(selectedPeriod, async (data) => {
+        console.log('usePeriodActions: Updating period with data:', data);
+        console.log('usePeriodActions: Selected period ID:', selectedPeriod.id);
+        const updatedPeriod = await updatePeriod({
+          periodId: selectedPeriod.id || '',
+          data,
+        });
+        console.log('usePeriodActions: Update completed, updated period:', updatedPeriod);
+
+        // Update the selected period state with the fresh data
+        if (updatedPeriod) {
+          setSelectedPeriod(updatedPeriod);
+        }
+
+        resetMutationState();
+        console.log('usePeriodActions: Refetching spending data');
+        refetchSpending();
+      });
     }
   };
 
   const startNewPeriodHandler = () => {
     openPeriodModal(
-      {
-        name: '',
-        goals: '',
-        targetSpend: selectedPeriod?.targetSpend || 0,
-        targetSavings: selectedPeriod?.targetSavings || 0,
-        startAt: new Date(),
-        endAt: addWeeks(new Date(), 4),
-        reflection: '',
-      },
+      undefined, // No existing period for new period creation
       async (data) => {
         await startPeriod({
           ...data,

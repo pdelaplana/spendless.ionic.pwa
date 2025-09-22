@@ -31,8 +31,17 @@ export function useUpdatePeriod() {
       await setDoc(docRef, mapToFirestore(updatedPeriod));
       return updatedPeriod;
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] });
+    onSuccess: async (updatedPeriod, variables) => {
+      console.log('useUpdatePeriod: Mutation successful, updated period:', updatedPeriod);
+      console.log('useUpdatePeriod: Refetching queries for accountId:', variables.accountId);
+
+      // Use refetchQueries to immediately fetch fresh data instead of just invalidating
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] }),
+        queryClient.refetchQueries({ queryKey: ['useFetchPeriods', variables.accountId] })
+      ]);
+
+      console.log('useUpdatePeriod: Query refetch completed');
     },
     onError: (error) => {
       console.error('Error updating period:', error);

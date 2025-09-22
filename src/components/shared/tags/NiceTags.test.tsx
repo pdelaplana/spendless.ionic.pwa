@@ -44,9 +44,12 @@ describe('NiceTags Component', () => {
     const input = screen.getByPlaceholderText('Add a tag');
 
     // Use fireEvent to trigger the Ionic input event directly
-    fireEvent(input, new CustomEvent('ionInput', {
-      detail: { value: 'JavaScript' }
-    }));
+    fireEvent(
+      input,
+      new CustomEvent('ionInput', {
+        detail: { value: 'JavaScript' },
+      }),
+    );
     console.log('Typed "JavaScript" in input');
 
     const addButton = screen.getByTestId('add-tag-button');
@@ -83,9 +86,12 @@ describe('NiceTags Component', () => {
 
     // Type 'Ja' in the input to filter suggestions
     const input = screen.getByPlaceholderText('Add a tag');
-    fireEvent(input, new CustomEvent('ionInput', {
-      detail: { value: 'Ja' }
-    }));
+    fireEvent(
+      input,
+      new CustomEvent('ionInput', {
+        detail: { value: 'Ja' },
+      }),
+    );
 
     // Check if suggestions are displayed
     await waitFor(() => {
@@ -101,9 +107,12 @@ describe('NiceTags Component', () => {
 
     // Type 'Ja' to show suggestions
     const input = screen.getByPlaceholderText('Add a tag');
-    fireEvent(input, new CustomEvent('ionInput', {
-      detail: { value: 'Ja' }
-    }));
+    fireEvent(
+      input,
+      new CustomEvent('ionInput', {
+        detail: { value: 'Ja' },
+      }),
+    );
 
     // Click on the JavaScript suggestion
     await waitFor(async () => {
@@ -127,9 +136,12 @@ describe('NiceTags Component', () => {
 
     // Try to add "React" again
     const input = screen.getByPlaceholderText('Add a tag');
-    fireEvent(input, new CustomEvent('ionInput', {
-      detail: { value: 'React' }
-    }));
+    fireEvent(
+      input,
+      new CustomEvent('ionInput', {
+        detail: { value: 'React' },
+      }),
+    );
 
     const addButton = screen.getByTestId('add-tag-button');
     await userEvent.click(addButton);

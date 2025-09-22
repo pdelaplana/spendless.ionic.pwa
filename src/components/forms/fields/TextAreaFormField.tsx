@@ -20,6 +20,8 @@ interface TextAreaFormFieldProps<TFormValues extends FieldValues> {
   validationRules?: RegisterOptions<TFormValues>;
   error?: FieldError;
   fill?: 'outline' | 'solid';
+  counter?: boolean;
+  maxlength?: number;
 }
 
 const TextAreaFormField = <TFormValues extends FieldValues>({
@@ -31,6 +33,8 @@ const TextAreaFormField = <TFormValues extends FieldValues>({
   validationRules,
   error,
   fill,
+  counter,
+  maxlength,
 }: TextAreaFormFieldProps<TFormValues>): ReactElement => {
   return (
     <div>
@@ -41,6 +45,8 @@ const TextAreaFormField = <TFormValues extends FieldValues>({
         autoGrow={true}
         rows={5}
         {...(fill ? { fill } : {})}
+        {...(counter !== undefined ? { counter } : {})}
+        {...(maxlength !== undefined ? { maxlength } : {})}
         {...(register ? register(name, validationRules) : {})}
         {...(setValue
           ? {

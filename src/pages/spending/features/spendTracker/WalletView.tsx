@@ -182,7 +182,6 @@ const WalletView: React.FC = () => {
             />
           </>
         )}
-
       </CenterContainer>
 
       {/* Wallet Switcher Action Sheet */}

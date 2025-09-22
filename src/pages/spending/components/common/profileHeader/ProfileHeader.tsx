@@ -77,7 +77,8 @@ export const ProfileHeader: React.FC = () => {
     <ProfileHeaderContainer>
       <GreetingContainer>
         <GreetingText>
-          <GreetingPrefix>{greeting},</GreetingPrefix><br />
+          <GreetingPrefix>{greeting},</GreetingPrefix>
+          <br />
           {firstName}
         </GreetingText>
       </GreetingContainer>

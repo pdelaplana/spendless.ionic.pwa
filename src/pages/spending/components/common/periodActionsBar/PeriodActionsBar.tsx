@@ -105,7 +105,6 @@ export const PeriodActionsBar: React.FC = () => {
 
   return (
     <ActionsContainer>
-
       <ActionsGrid>
         <ActionButton onClick={startNewPeriodHandler}>
           <CircularIconContainer>
