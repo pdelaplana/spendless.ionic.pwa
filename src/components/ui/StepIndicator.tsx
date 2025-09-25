@@ -6,14 +6,25 @@ const StepContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${designSystem.spacing.md} 0;
+  padding: ${designSystem.spacing.md} ${designSystem.spacing.sm};
   margin-bottom: ${designSystem.spacing.lg};
+  overflow-x: auto;
+
+  @media (max-width: 480px) {
+    padding: ${designSystem.spacing.sm} ${designSystem.spacing.xs};
+    margin-bottom: ${designSystem.spacing.md};
+  }
 `;
 
 const StepWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${designSystem.spacing.sm};
+  gap: ${designSystem.spacing.xs};
+  min-width: min-content;
+
+  @media (max-width: 480px) {
+    gap: ${designSystem.spacing.xs};
+  }
 `;
 
 const StepCircle = styled.div<{ $isActive: boolean; $isCompleted: boolean }>`
@@ -26,6 +37,13 @@ const StepCircle = styled.div<{ $isActive: boolean; $isCompleted: boolean }>`
   font-size: ${designSystem.typography.fontSize.sm};
   font-weight: ${designSystem.typography.fontWeight.medium};
   transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 28px;
+    height: 28px;
+    font-size: ${designSystem.typography.fontSize.xs};
+  }
 
   ${({ $isCompleted }) =>
     $isCompleted &&
@@ -58,6 +76,11 @@ const StepConnector = styled.div<{ $isCompleted: boolean }>`
   width: 40px;
   height: 2px;
   transition: background-color 0.2s ease;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 20px;
+  }
 
   ${({ $isCompleted }) =>
     $isCompleted
@@ -72,13 +95,23 @@ const StepLabel = styled.div<{ $isActive: boolean }>`
     $isActive ? designSystem.colors.text.primary : designSystem.colors.text.secondary};
   margin-top: ${designSystem.spacing.xs};
   text-align: center;
-  min-width: 80px;
+  min-width: 60px;
+  max-width: 80px;
+  word-wrap: break-word;
+
+  @media (max-width: 480px) {
+    font-size: ${designSystem.typography.fontSize.xs};
+    min-width: 40px;
+    max-width: 50px;
+    line-height: 1.2;
+  }
 `;
 
 const StepGroup = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 interface StepIndicatorProps {

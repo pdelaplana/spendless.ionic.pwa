@@ -12,7 +12,7 @@ export function useCreateAccount() {
 
   return useMutation({
     mutationFn: async ({ userId, data }: { userId: string; data: CreateAccountDTO }) => {
-      return Sentry.startSpan({ name: 'useCreateAccount', attributes: data }, async (span) => {
+      return Sentry.startSpan({ name: 'useCreateAccount' }, async (span) => {
         const docRef = doc(collection(db, ACCOUNTS_COLLECTION), userId);
         const account = createAccount(data);
 
@@ -21,7 +21,7 @@ export function useCreateAccount() {
       });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', data.id] });
+      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', (data as any).id] });
     },
     onError: (error) => {
       logError(error);

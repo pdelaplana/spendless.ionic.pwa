@@ -4,6 +4,8 @@ export interface IAccount {
   readonly description?: string;
   readonly currency: string;
   readonly dateFormat?: string;
+  readonly onboardingCompleted?: boolean;
+  readonly onboardingCompletedAt?: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -15,6 +17,8 @@ export const createAccount = (data: Partial<CreateAccountDTO>): IAccount => ({
   description: data.description ?? '',
   currency: data.currency ?? 'USD',
   dateFormat: data.dateFormat ?? 'dd/MM/yyyy',
+  onboardingCompleted: data.onboardingCompleted ?? false,
+  onboardingCompletedAt: data.onboardingCompletedAt,
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -26,5 +30,11 @@ export const updateAccount = (account: IAccount, updates: Partial<IAccount>): IA
   ...(updates.name && { name: updates.name }),
   ...(updates.description !== undefined && { description: updates.description }),
   ...(updates.currency && { currency: updates.currency }),
+  ...(updates.onboardingCompleted !== undefined && {
+    onboardingCompleted: updates.onboardingCompleted,
+  }),
+  ...(updates.onboardingCompletedAt !== undefined && {
+    onboardingCompletedAt: updates.onboardingCompletedAt,
+  }),
   updatedAt: new Date(),
 });

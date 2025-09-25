@@ -5,6 +5,8 @@ export const ROUTES = {
   SIGNUP: '/signup',
   FORGOTPASSWORD: '/forgot-password',
   RESETPASSWORD: '/reset-password',
+  ONBOARDING: '/onboarding',
+  ONBOARDING_V2: '/onboarding-v2',
   DASHBOARD: '/dashboard',
   SPENDING: '/spending',
   SPENDING_WALLET: '/spending/wallet',

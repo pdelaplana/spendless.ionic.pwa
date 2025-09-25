@@ -71,7 +71,7 @@ export const ProfileHeader: React.FC = () => {
   const { user } = useAuth();
 
   const greeting = getTimeBasedGreeting();
-  const firstName = user?.displayName?.split(' ')[0] || 'there';
+  const firstName = user?.displayName?.split(' ')[0] || 'Mate';
 
   return (
     <ProfileHeaderContainer>

@@ -70,9 +70,11 @@ const SignupPage: React.FC = () => {
             data: {
               name: userCredential.user.displayName || userCredential.user.email || '',
               currency: '',
+              onboardingCompleted: false,
+              onboardingCompletedAt: undefined,
             },
           });
-          push(ROUTES.ROOT);
+          push(ROUTES.SPENDING);
         } catch (error) {
           console.error('Error creating account:', error);
           showErrorNotification('Failed to create account. Please try again.');

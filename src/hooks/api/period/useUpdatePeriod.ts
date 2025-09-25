@@ -38,7 +38,7 @@ export function useUpdatePeriod() {
       // Use refetchQueries to immediately fetch fresh data instead of just invalidating
       await Promise.all([
         queryClient.refetchQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] }),
-        queryClient.refetchQueries({ queryKey: ['useFetchPeriods', variables.accountId] })
+        queryClient.refetchQueries({ queryKey: ['useFetchPeriods', variables.accountId] }),
       ]);
 
       console.log('useUpdatePeriod: Query refetch completed');

@@ -7,6 +7,8 @@ export const ACCOUNTS_COLLECTION = 'accounts';
 export const mapToFirestore = (account: IAccount): DocumentData => ({
   currency: account.currency,
   dateFormat: account.dateFormat ?? 'dd/MM/yyyy',
+  onboardingCompleted: account.onboardingCompleted ?? false,
+  onBoardingCompletedAt: account.onboardingCompletedAt ? Timestamp.fromDate(account.onboardingCompletedAt) : null,
   createdAt: Timestamp.fromDate(account.createdAt),
   updatedAt: Timestamp.fromDate(account.updatedAt),
 });
@@ -21,6 +23,8 @@ export const mapFromFirestore = (id: string, data: DocumentData): IAccount => {
     id,
     currency: data.currency,
     dateFormat: data.dateFormat,
+    onboardingCompleted: data.onboardingCompleted,
+    onboardingCompletedAt: data.onboardingCompletedAt ? data.onboardingCompletedAt.toDate() : null,
     createdAt: data.createdAt.toDate(),
     updatedAt: data.updatedAt.toDate(),
   };

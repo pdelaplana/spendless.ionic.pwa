@@ -1,8 +1,11 @@
+import { AuthLoadingScreen } from '@/components/auth';
 import ForgotPasswordPage from '@/pages/auth/forgotPassword/ForgotPasswordPage';
 import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
 import SigninPage from '@/pages/auth/signin/SigninPage';
 import SignupPage from '@/pages/auth/signup/SignupPage';
 import HomePage from '@/pages/home/HomePage';
+import OnboardingFlow from '@/pages/onboarding/OnboardingFlow';
+import OnboardingFlowV2 from '@/pages/onboarding/OnboardingFlowV2';
 import ProfileInformationPage from '@/pages/profile/ProfileInformationPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import SettingsPage from '@/pages/settings/SettingsPage';
@@ -13,15 +16,7 @@ import WalletSpendingPage from '@/pages/spending/WalletSpendingPage';
 import { useAuth } from '@/providers/auth/useAuth';
 import { SpendingAccountProvider } from '@/providers/spendingAccount';
 import { WalletProvider } from '@/providers/wallet';
-import {
-  IonIcon,
-  IonLabel,
-  IonLoading,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-} from '@ionic/react';
+import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipsisHorizontalOutline, homeOutline, peopleOutline } from 'ionicons/icons';
 import type React from 'react';
@@ -29,12 +24,6 @@ import { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import ProtectedRoute from './ProtectedRoute';
 import { ROUTES } from './routes.constants';
-
-interface AuthState {
-  isInitialized: boolean;
-  isLoading: boolean;
-  error: Error | null;
-}
 
 const ProfileRoutes: React.FC = () => {
   return (
@@ -117,50 +106,23 @@ const MainTabRoutes: React.FC = () => {
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, authStateLoading, user } = useAuth();
-  const [authState, setAuthState] = useState<AuthState>({
-    isInitialized: false,
-    isLoading: true,
-    error: null,
-  });
+  const [hasShownInitialLoading, setHasShownInitialLoading] = useState(false);
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        if (isAuthenticated) {
-          console.debug('Fetched role:', user?.role);
+    if (!hasShownInitialLoading) {
+      // Show initial loading for 1 second, then allow normal flow
+      const timer = setTimeout(() => {
+        setHasShownInitialLoading(true);
+      }, 1000);
 
-          setAuthState({
-            isInitialized: true,
-            isLoading: false,
-            error: null,
-          });
-        } else {
-          setAuthState((prev) => ({
-            ...prev,
-            isInitialized: true,
-            isLoading: false,
-          }));
-        }
-      } catch (error) {
-        console.error('Failed to get user role:', error);
-        setAuthState((prev) => ({
-          ...prev,
-          error: error as Error,
-          isLoading: false,
-        }));
-      }
-    };
-
-    if (!authStateLoading) {
-      initializeAuth();
+      return () => clearTimeout(timer);
     }
-  }, [isAuthenticated, authStateLoading, user]);
+  }, [hasShownInitialLoading]);
 
-  /*
-  if (authStateLoading || (!authState.isInitialized && authState.isLoading)) {
-    return <IonLoading isOpen={true} message='Loading...' />;
+  // Show loading screen only on very first app load
+  if (!hasShownInitialLoading) {
+    return <AuthLoadingScreen />;
   }
-  */
   return (
     <IonReactRouter>
       <IonRouterOutlet id='main'>
@@ -207,6 +169,19 @@ const AppRoutes: React.FC = () => {
             }}
             exact={true}
           />
+
+          {/* Onboarding routes - require authentication */}
+          <ProtectedRoute path={ROUTES.ONBOARDING} exact={true}>
+            <SpendingAccountProvider userId={user?.uid ?? ''}>
+              <OnboardingFlow />
+            </SpendingAccountProvider>
+          </ProtectedRoute>
+
+          <ProtectedRoute path={ROUTES.ONBOARDING_V2} exact={true}>
+            <SpendingAccountProvider userId={user?.uid ?? ''}>
+              <OnboardingFlowV2 />
+            </SpendingAccountProvider>
+          </ProtectedRoute>
 
           {/* Protected routes */}
           <ProtectedRoute path={ROUTES.PROFILE}>

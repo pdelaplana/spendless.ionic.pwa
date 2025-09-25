@@ -5,11 +5,15 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
+import { useIonRouter } from '@ionic/react';
+import GettingStarted from './features/spendTracker/GettingStarted';
 
 const SpendingPage: React.FC = () => {
   const { t } = useTranslation();
 
-  const { selectedPeriod, account } = useSpendingAccount();
+  const { push } = useIonRouter();
+  const { selectedPeriod, account, periods } = useSpendingAccount();
+  const isFirstTime = !periods || periods.length === 0;
 
   const PeriodDashboard = lazy(() => import('./features/spendTracker/PeriodDashboard'));
 
@@ -26,8 +30,9 @@ const SpendingPage: React.FC = () => {
     >
       <Suspense fallback={<div>Loading...</div>}>
         <SentryErrorBoundary>
-          {selectedPeriod && account && <PeriodDashboard />}
-          {!selectedPeriod && <NoCurrentPeriodView />}
+          {!account?.onboardingCompleted && <GettingStarted />}
+          {account?.onboardingCompleted && selectedPeriod && <PeriodDashboard />}
+          {account?.onboardingCompleted && !selectedPeriod && <NoCurrentPeriodView isFirstTime={isFirstTime} />}
         </SentryErrorBoundary>
       </Suspense>
     </BasePageLayout>
