@@ -1,1 +1,1 @@
-export { default as AuthLoadingScreen } from './AuthLoadingScreen';
+export { AuthLoadingScreen } from '../shared/loading';

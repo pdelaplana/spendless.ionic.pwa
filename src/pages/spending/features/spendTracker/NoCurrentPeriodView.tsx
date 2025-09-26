@@ -121,12 +121,11 @@ const ActionSection = styled.div`
 `;
 
 const ActionDescription = styled.p`
-  font-size: ${designSystem.typography.fontSize.md};
+  font-size: ${designSystem.typography.fontSize.base};
   color: ${designSystem.colors.text.secondary};
   margin: 0 0 ${designSystem.spacing.lg} 0;
   line-height: 1.5;
 `;
-
 
 const FullHeightCenterContent = styled(CenterContent)`
   min-height: 100vh;
@@ -246,7 +245,9 @@ const NoCurrentPeriodView: React.FC<NoCurrentPeriodViewProps> = ({ isFirstTime =
                   onClick={handleStartNewPeriod}
                   isLoading={isStarting}
                   expand='block'
-                  size='large' isDisabled={false}                />
+                  size='large'
+                  isDisabled={false}
+                />
               </ActionSection>
             </OnboardingContent>
           </OnboardingCard>

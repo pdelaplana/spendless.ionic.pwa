@@ -1,3 +1,4 @@
+import type { IAccount } from '@/domain/Account';
 import type { User, UserCredential } from 'firebase/auth';
 
 export type profileFields = 'role';
@@ -31,6 +32,7 @@ export interface AuthContextType {
   authStateLoading: boolean;
   isAuthenticated: boolean;
   user: AuthUser | null;
+  account: IAccount | null;
   isSigningIn: boolean;
   sendResetPasswordEmail: (email: string) => Promise<void>;
   confirmPasswordReset: (code: string, newPassword: string) => Promise<void>;

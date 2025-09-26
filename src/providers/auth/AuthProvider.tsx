@@ -1,4 +1,6 @@
+import type { IAccount } from '@/domain/Account';
 import { useLogging } from '@/hooks';
+import { ACCOUNTS_COLLECTION, mapFromFirestore } from '@/hooks/api/account/accountUtils';
 import { Preferences } from '@capacitor/preferences';
 import * as Sentry from '@sentry/react';
 import {
@@ -13,7 +15,7 @@ import {
   updateEmail as updateAuthEmail,
   updateProfile,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { type FC, type ReactNode, useCallback, useEffect, useState } from 'react';
 import { auth, db } from '../../infrastructure/firebase';
 import { AuthContext } from './context';
@@ -23,6 +25,7 @@ const dbCollection = 'userProfileExtensions';
 
 interface AuthState {
   user: AuthUser | null;
+  account: IAccount | null;
   error: string | null;
   isLoading: boolean;
   isSigningIn: boolean;
@@ -31,6 +34,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
+  account: null,
   error: null,
   isSigningIn: false,
   isLoading: true,
@@ -39,12 +43,29 @@ const initialState: AuthState = {
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>(initialState);
-  const { user, error, isLoading: authStateLoading } = state;
+  const { user, account, error, isLoading: authStateLoading } = state;
   const { logError } = useLogging();
 
   // Helper function to update state partially
   const updateState = useCallback((newState: Partial<AuthState>) => {
     setState((prev) => ({ ...prev, ...newState }));
+  }, []);
+
+  // Helper function to load account data
+  const loadAccountData = useCallback(async (uid: string): Promise<IAccount | null> => {
+    try {
+      const accountRef = doc(collection(db, ACCOUNTS_COLLECTION), uid);
+      const accountSnapshot = await getDoc(accountRef);
+
+      if (accountSnapshot.exists()) {
+        return mapFromFirestore(accountSnapshot.id, accountSnapshot.data());
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error loading account data:', error);
+      return null;
+    }
   }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: This will stop the infinite loop
@@ -88,9 +109,15 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const initializeAuth = async () => {
       try {
         const { value } = await Preferences.get({ key: 'authUser' });
+        const { value: accountValue } = await Preferences.get({ key: 'authAccount' });
+
         if (value && isMounted) {
           const parsedUser = JSON.parse(value);
-          updateState({ user: parsedUser });
+          const parsedAccount = accountValue ? JSON.parse(accountValue) : null;
+          updateState({
+            user: parsedUser,
+            account: parsedAccount,
+          });
         }
 
         unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -99,13 +126,19 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
           if (!currentUser) {
             updateState({
               user: null,
+              account: null,
               isLoading: false,
             });
             return;
           }
 
           try {
-            const profileData = await getAllProfileData(currentUser.uid);
+            // Load both profile and account data in parallel
+            const [profileData, accountData] = await Promise.all([
+              getAllProfileData(currentUser.uid),
+              loadAccountData(currentUser.uid),
+            ]);
+
             if (isMounted) {
               const updatedUser = {
                 ...currentUser,
@@ -114,13 +147,14 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
               updateState({
                 user: updatedUser,
+                account: accountData,
                 isLoading: false,
               });
             }
           } catch (error) {
             if (isMounted) {
               updateState({
-                error: 'Failed to load user profile',
+                error: 'Failed to load user profile and account',
                 isLoading: false,
               });
             }
@@ -142,18 +176,29 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         unsubscribe();
       }
     };
-  }, [getAllProfileData, updateState]);
+  }, [getAllProfileData, loadAccountData, updateState]);
 
   useEffect(() => {
-    const storeUser = async () => {
-      if (user)
+    const storeUserAndAccount = async () => {
+      if (user) {
         await Preferences.set({
           key: 'authUser',
           value: JSON.stringify(user),
         });
-      else await Preferences.remove({ key: 'authUser' });
+      } else {
+        await Preferences.remove({ key: 'authUser' });
+      }
+
+      if (account) {
+        await Preferences.set({
+          key: 'authAccount',
+          value: JSON.stringify(account),
+        });
+      } else {
+        await Preferences.remove({ key: 'authAccount' });
+      }
     };
-    storeUser();
+    storeUserAndAccount();
 
     // Set Sentry user context
     if (user) {
@@ -163,7 +208,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         username: user.displayName ?? undefined,
       });
     }
-  }, [user]);
+  }, [user, account]);
 
   const signup = async (
     email: string,
@@ -349,6 +394,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         authStateLoading,
         isAuthenticated: !!user,
         user,
+        account,
         isSigningIn: state.isSigningIn,
         sendResetPasswordEmail,
         confirmPasswordReset,

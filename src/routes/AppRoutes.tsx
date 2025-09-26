@@ -20,7 +20,6 @@ import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } 
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipsisHorizontalOutline, homeOutline, peopleOutline } from 'ionicons/icons';
 import type React from 'react';
-import { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import ProtectedRoute from './ProtectedRoute';
 import { ROUTES } from './routes.constants';
@@ -106,21 +105,9 @@ const MainTabRoutes: React.FC = () => {
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, authStateLoading, user } = useAuth();
-  const [hasShownInitialLoading, setHasShownInitialLoading] = useState(false);
 
-  useEffect(() => {
-    if (!hasShownInitialLoading) {
-      // Show initial loading for 1 second, then allow normal flow
-      const timer = setTimeout(() => {
-        setHasShownInitialLoading(true);
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [hasShownInitialLoading]);
-
-  // Show loading screen only on very first app load
-  if (!hasShownInitialLoading) {
+  // Show loading screen while auth is being determined
+  if (authStateLoading) {
     return <AuthLoadingScreen />;
   }
   return (

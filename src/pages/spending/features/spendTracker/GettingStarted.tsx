@@ -1,12 +1,12 @@
 import { SpendlessLogo } from '@/components/brand';
+import { InputFormField, TextAreaFormField } from '@/components/forms';
 import { CenterContainer, CenterContent } from '@/components/layouts';
 import { ActionButton, Gap } from '@/components/shared';
-import { InputFormField, TextAreaFormField } from '@/components/forms';
 import { useCreatePeriod, useCreateWallet, useUpdateAccount } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui';
 import { useSpendingAccount } from '@/providers/spendingAccount';
-import { designSystem } from '@/theme/designSystem';
 import { GradientBackground } from '@/theme/components';
+import { designSystem } from '@/theme/designSystem';
 import { IonCard, IonCardContent, IonItem, IonLabel, IonList } from '@ionic/react';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -186,7 +186,7 @@ const GettingStarted: React.FC = () => {
         },
       });
 
-      showNotification("Welcome to Spendless! Your journey begins now. 🎉");
+      showNotification('Welcome to Spendless! Your journey begins now. 🎉');
     } catch (error) {
       console.error('Failed to complete onboarding:', error);
       showErrorNotification('Setup failed. Please try again.');

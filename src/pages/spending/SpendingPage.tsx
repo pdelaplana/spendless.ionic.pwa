@@ -1,21 +1,24 @@
 import { BasePageLayout } from '@/components/layouts';
 import MainMenuContent from '@/components/menu/MainMenuContent';
-import { SentryErrorBoundary } from '@/components/shared';
+import { SentryErrorBoundary, SuspenseLoadingScreen } from '@/components/shared';
+import { useAuth } from '@/providers/auth';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useIonRouter } from '@ionic/react';
 import { Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
-import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
-import { useIonRouter } from '@ionic/react';
 import GettingStarted from './features/spendTracker/GettingStarted';
+import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
 
 const SpendingPage: React.FC = () => {
   const { t } = useTranslation();
 
   const { push } = useIonRouter();
-  const { selectedPeriod, account, periods } = useSpendingAccount();
+  const { account: authAccount } = useAuth(); // Get account from AuthProvider for onboarding check
+  const { selectedPeriod, periods } = useSpendingAccount();
   const isFirstTime = !periods || periods.length === 0;
 
   const PeriodDashboard = lazy(() => import('./features/spendTracker/PeriodDashboard'));
+  const GettingStarted = lazy(() => import('./features/spendTracker/GettingStarted'));
 
   return (
     <BasePageLayout
@@ -28,11 +31,10 @@ const SpendingPage: React.FC = () => {
       menu={<MainMenuContent />}
       menuSide='end'
     >
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<SuspenseLoadingScreen message='Loading your spending data...' />}>
         <SentryErrorBoundary>
-          {!account?.onboardingCompleted && <GettingStarted />}
-          {account?.onboardingCompleted && selectedPeriod && <PeriodDashboard />}
-          {account?.onboardingCompleted && !selectedPeriod && <NoCurrentPeriodView isFirstTime={isFirstTime} />}
+          {!authAccount?.onboardingCompleted && <GettingStarted />}
+          {authAccount?.onboardingCompleted && selectedPeriod && <PeriodDashboard />}
         </SentryErrorBoundary>
       </Suspense>
     </BasePageLayout>

@@ -24,13 +24,13 @@ const ProtectedRoute: React.FC<IProtectedRouteProps> = ({
     path: rest.path,
   });
 
-  /*
+  // Show loading while auth state is being determined
   if (authStateLoading) {
     return <IonLoading isOpen={authStateLoading} />;
   }
-  */
+
   // Check if the user is authenticated and has the required roles
-  if (!isAuthenticated && !authStateLoading) {
+  if (!isAuthenticated) {
     console.debug('Not authenticated, redirecting to:', fallbackPath);
     return <Redirect to={fallbackPath} />;
   }

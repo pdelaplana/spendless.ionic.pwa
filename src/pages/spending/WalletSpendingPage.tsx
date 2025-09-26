@@ -1,13 +1,14 @@
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { BasePageLayout } from '../../components/layouts';
 import MainMenuContent from '../../components/menu/MainMenuContent';
-import { SentryErrorBoundary } from '../../components/shared';
+import { SentryErrorBoundary, SuspenseLoadingScreen } from '../../components/shared';
 import { useWallet } from '../../providers/wallet';
-import WalletView from './features/spendTracker/WalletView';
 
 const WalletSpendingPage: React.FC = () => {
   const { selectedWallet } = useWallet();
   const pageTitle = selectedWallet ? `${selectedWallet.name}` : 'Wallet';
+
+  const WalletView = lazy(() => import('./features/spendTracker/WalletView'));
 
   return (
     <BasePageLayout
@@ -19,7 +20,7 @@ const WalletSpendingPage: React.FC = () => {
       showMenu={true}
       menu={<MainMenuContent />}
     >
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<SuspenseLoadingScreen message='Loading your spending data...' />}>
         <SentryErrorBoundary>
           <WalletView />
         </SentryErrorBoundary>

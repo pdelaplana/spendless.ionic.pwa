@@ -8,7 +8,9 @@ export const mapToFirestore = (account: IAccount): DocumentData => ({
   currency: account.currency,
   dateFormat: account.dateFormat ?? 'dd/MM/yyyy',
   onboardingCompleted: account.onboardingCompleted ?? false,
-  onBoardingCompletedAt: account.onboardingCompletedAt ? Timestamp.fromDate(account.onboardingCompletedAt) : null,
+  onBoardingCompletedAt: account.onboardingCompletedAt
+    ? Timestamp.fromDate(account.onboardingCompletedAt)
+    : null,
   createdAt: Timestamp.fromDate(account.createdAt),
   updatedAt: Timestamp.fromDate(account.updatedAt),
 });

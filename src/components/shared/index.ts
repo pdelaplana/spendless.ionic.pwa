@@ -13,5 +13,6 @@ export { PwaInstallPrompt } from './pwa';
 export { default as TagsDisplay } from './tags/TagsDisplay';
 export { IconContainer } from './IconContainer';
 export { SpendList } from '../../pages/spending/components/common/spendList';
+export { SuspenseLoadingScreen, LoadingScreen, AuthLoadingScreen } from './loading';
 
 // Note: Modern UI Components have been moved to @/components/dashboard and @/components/ui
