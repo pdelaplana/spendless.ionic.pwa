@@ -19,7 +19,7 @@ import {
   useUpdatePeriod,
 } from '@/hooks/api';
 import type { ReactNode } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SpendingAccountContext } from './context';
 
 export const SpendingAccountProvider: React.FC<{ userId: string; children: ReactNode }> = ({
@@ -143,71 +143,87 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     dateRange.endAt,
   );
 
-  const resetMutationState = () => {
+  const resetMutationState = useCallback(() => {
     resetUpdateAccount();
     resetDeleteAccount();
     resetCreateSpend();
     resetUpdateSpend();
     resetDeleteSpend();
-  };
+  }, [
+    resetUpdateAccount,
+    resetDeleteAccount,
+    resetCreateSpend,
+    resetUpdateSpend,
+    resetDeleteSpend,
+  ]);
 
-  const resetFetchState = () => {};
+  const resetFetchState = useCallback(() => {}, []);
 
   const { mutateAsync: copyRecurringSpend } = useCopyRecurringSpend();
 
-  const startPeriod = async (data: Partial<IPeriod>) => {
-    try {
-      if (currentPeriod) {
-        await closePeriod({
+  const startPeriod = useCallback(
+    async (data: Partial<IPeriod>) => {
+      try {
+        if (currentPeriod) {
+          await closePeriod({
+            accountId: spendingAccount?.id || '',
+            periodId: currentPeriod?.id || '',
+          });
+        }
+
+        const newPeriod = await createPeriod({
           accountId: spendingAccount?.id || '',
-          periodId: currentPeriod?.id || '',
+          data: {
+            name: '',
+            goals: data.goals || '',
+            targetSpend: data.targetSpend || 0,
+            targetSavings: data.targetSavings || 0,
+            startAt: data.startAt || new Date(),
+            endAt: data.endAt || new Date(),
+            reflection: '',
+          },
+        });
+
+        await copyRecurringSpend({
+          fromPeriodId: currentPeriod?.id || '',
+          toPeriodId: newPeriod.id,
+          accountId: spendingAccount?.id || '',
+        });
+
+        return newPeriod;
+      } catch (error) {
+        console.error('Error starting new period:', error);
+        throw error;
+      }
+    },
+    [currentPeriod, closePeriod, spendingAccount?.id, createPeriod, copyRecurringSpend],
+  );
+
+  const deleteClosedPeriod = useCallback(
+    async (periodId: string) => {
+      if (periodId !== currentPeriod?.id) {
+        await deleteSpendingForPeriod({
+          accountId: spendingAccount?.id || '',
+          periodId,
+        });
+        await deletePeriod({
+          accountId: spendingAccount?.id || '',
+          periodId,
         });
       }
+    },
+    [currentPeriod?.id, deleteSpendingForPeriod, spendingAccount?.id, deletePeriod],
+  );
 
-      const newPeriod = await createPeriod({
-        accountId: spendingAccount?.id || '',
-        data: {
-          name: '',
-          goals: data.goals || '',
-          targetSpend: data.targetSpend || 0,
-          targetSavings: data.targetSavings || 0,
-          startAt: data.startAt || new Date(),
-          endAt: data.endAt || new Date(),
-          reflection: '',
-        },
-      });
-
-      await copyRecurringSpend({
-        fromPeriodId: currentPeriod?.id || '',
-        toPeriodId: newPeriod.id,
-        accountId: spendingAccount?.id || '',
-      });
-
-      return newPeriod;
-    } catch (error) {
-      console.error('Error starting new period:', error);
-      throw error;
-    }
-  };
-
-  const deleteClosedPeriod = async (periodId: string) => {
-    if (periodId !== currentPeriod?.id) {
-      await deleteSpendingForPeriod({
-        accountId: spendingAccount?.id || '',
-        periodId,
-      });
-      await deletePeriod({
-        accountId: spendingAccount?.id || '',
-        periodId,
-      });
-    }
-  };
+  // Memoize flattened spending array
+  const flattenedSpending = useMemo(() => {
+    return spending?.pages?.flatMap((page) => page.spending) ?? [];
+  }, [spending?.pages]);
 
   const getUsedSpendingTags = useMemo(() => {
-    const allSpending = spending?.pages?.flatMap((page) => page.spending) ?? [];
-    const allTags = allSpending.flatMap((spend) => spend.tags || []);
+    const allTags = flattenedSpending.flatMap((spend) => spend.tags || []);
     return Array.from(new Set(allTags)).sort((a, b) => a.localeCompare(b));
-  }, [spending]);
+  }, [flattenedSpending]);
 
   useEffect(() => {
     if (selectedPeriod === undefined) {
@@ -227,83 +243,175 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     }
   }, [updateAccountError]);
 
+  // Memoize setDateRange callback
+  const setDateRangeMemo = useCallback((startAt?: Date, endAt?: Date) => {
+    setDateRange({ startAt, endAt });
+  }, []);
+
+  // Memoize complex async functions
+  const createPeriodMemo = useCallback(
+    async ({ data }: { data: Partial<IPeriod> }) => {
+      return createPeriod({ accountId: spendingAccount?.id ?? '', data });
+    },
+    [createPeriod, spendingAccount?.id],
+  );
+
+  const updatePeriodMemo = useCallback(
+    async ({ periodId, data }: { periodId: string; data: Partial<IPeriod> }) => {
+      return updatePeriod({ accountId: spendingAccount?.id ?? '', periodId, data });
+    },
+    [updatePeriod, spendingAccount?.id],
+  );
+
+  const closePeriodMemo = useCallback(
+    async ({ periodId }: { periodId: string }) => {
+      return closePeriod({ accountId: spendingAccount?.id ?? '', periodId });
+    },
+    [closePeriod, spendingAccount?.id],
+  );
+
+  const deleteClosedPeriodMemo = useCallback(
+    async ({ periodId }: { periodId: string }) => {
+      return deleteClosedPeriod(periodId);
+    },
+    [deleteClosedPeriod],
+  );
+
+  const startPeriodMemo = useCallback(
+    async (data: Partial<IPeriod>) => {
+      return startPeriod(data);
+    },
+    [startPeriod],
+  );
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({
+      account: spendingAccount ?? undefined,
+      periods: periods ?? [],
+
+      spending: flattenedSpending,
+      startAt: dateRange.startAt,
+      endAt: dateRange.endAt,
+      setDateRange: setDateRangeMemo,
+
+      selectedPeriod: selectedPeriod,
+      setSelectedPeriod: setSelectedPeriod,
+
+      hasNextPageSpending,
+      fetchNextPageSpending,
+
+      updateAccount,
+      deleteAccount,
+
+      createPeriod: createPeriodMemo,
+      updatePeriod: updatePeriodMemo,
+
+      closePeriod: closePeriodMemo,
+      deleteClosedPeriod: deleteClosedPeriodMemo,
+
+      startPeriod: startPeriodMemo,
+
+      createSpend,
+      updateSpend,
+      deleteSpend,
+
+      refetchSpending,
+
+      resetFetchState,
+      resetMutationState,
+
+      isFetching: isFetchingAccount || isFetchingSpending,
+      isError: isFetchingAccountError || isFetchingSpendingError,
+      fetchError: fetchAccountError || fetchSpendingError,
+      isMutationPending:
+        isUpdatingAccount ||
+        isDeletingAccount ||
+        isCreatingSpend ||
+        isUpdatingSpend ||
+        isDeletingSpend,
+      didMutationSucceed:
+        isUpdatingAccountSuccess ||
+        isDeletingAccountSuccess ||
+        isCreatingSpendSuccess ||
+        isUpdatingSpendSuccess ||
+        isDeletingSpendSuccess,
+      didMutationFail:
+        isUpdatingAccountFailed ||
+        isDeletingAccountFailed ||
+        isCreatingSpendFailed ||
+        isUpdatingSpendFailed ||
+        isDeletingSpendFailed,
+      mutationError:
+        updateAccountError ||
+        deleteAccountError ||
+        createSpendError ||
+        updateSpendError ||
+        deleteSpendError,
+      mutationErrorMessage:
+        (deleteAccountError as Error)?.message ||
+        (createSpendError as Error)?.message ||
+        (updateSpendError as Error)?.message ||
+        (deleteSpendError as Error)?.message ||
+        'An error occurred while processing your request.',
+
+      usedSpendingTags: getUsedSpendingTags,
+    }),
+    [
+      spendingAccount,
+      periods,
+      flattenedSpending,
+      dateRange.startAt,
+      dateRange.endAt,
+      setDateRangeMemo,
+      selectedPeriod,
+      hasNextPageSpending,
+      fetchNextPageSpending,
+      updateAccount,
+      deleteAccount,
+      createPeriodMemo,
+      updatePeriodMemo,
+      closePeriodMemo,
+      deleteClosedPeriodMemo,
+      startPeriodMemo,
+      createSpend,
+      updateSpend,
+      deleteSpend,
+      refetchSpending,
+      resetFetchState,
+      resetMutationState,
+      isFetchingAccount,
+      isFetchingSpending,
+      isFetchingAccountError,
+      isFetchingSpendingError,
+      fetchAccountError,
+      fetchSpendingError,
+      isUpdatingAccount,
+      isDeletingAccount,
+      isCreatingSpend,
+      isUpdatingSpend,
+      isDeletingSpend,
+      isUpdatingAccountSuccess,
+      isDeletingAccountSuccess,
+      isCreatingSpendSuccess,
+      isUpdatingSpendSuccess,
+      isDeletingSpendSuccess,
+      isUpdatingAccountFailed,
+      isDeletingAccountFailed,
+      isCreatingSpendFailed,
+      isUpdatingSpendFailed,
+      isDeletingSpendFailed,
+      updateAccountError,
+      deleteAccountError,
+      createSpendError,
+      updateSpendError,
+      deleteSpendError,
+      getUsedSpendingTags,
+    ],
+  );
+
   return (
-    <SpendingAccountContext.Provider
-      value={{
-        account: spendingAccount ?? undefined,
-        periods: periods ?? [],
-
-        spending: spending?.pages?.flatMap((page) => page.spending) ?? [],
-        startAt: dateRange.startAt,
-        endAt: dateRange.endAt,
-        setDateRange: (startAt?: Date, endAt?: Date) => setDateRange({ startAt, endAt }),
-
-        selectedPeriod: selectedPeriod,
-        setSelectedPeriod: setSelectedPeriod,
-
-        hasNextPageSpending,
-        fetchNextPageSpending,
-
-        updateAccount,
-        deleteAccount,
-
-        createPeriod: async ({ data }) =>
-          createPeriod({ accountId: spendingAccount?.id ?? '', data }),
-        updatePeriod: async ({ periodId, data }) =>
-          updatePeriod({ accountId: spendingAccount?.id ?? '', periodId, data }),
-
-        closePeriod: async ({ periodId }) =>
-          closePeriod({ accountId: spendingAccount?.id ?? '', periodId }),
-        deleteClosedPeriod: async ({ periodId }) => deleteClosedPeriod(periodId),
-
-        startPeriod: async (data) => startPeriod(data),
-
-        createSpend,
-        updateSpend,
-        deleteSpend,
-
-        refetchSpending,
-
-        resetFetchState,
-        resetMutationState,
-
-        isFetching: isFetchingAccount || isFetchingSpending,
-        isError: isFetchingAccountError || isFetchingSpendingError,
-        fetchError: fetchAccountError || fetchSpendingError,
-        isMutationPending:
-          isUpdatingAccount ||
-          isDeletingAccount ||
-          isCreatingSpend ||
-          isUpdatingSpend ||
-          isDeletingSpend,
-        didMutationSucceed:
-          isUpdatingAccountSuccess ||
-          isDeletingAccountSuccess ||
-          isCreatingSpendSuccess ||
-          isUpdatingSpendSuccess ||
-          isDeletingSpendSuccess,
-        didMutationFail:
-          isUpdatingAccountFailed ||
-          isDeletingAccountFailed ||
-          isCreatingSpendFailed ||
-          isUpdatingSpendFailed ||
-          isDeletingSpendFailed,
-        mutationError:
-          updateAccountError ||
-          deleteAccountError ||
-          createSpendError ||
-          updateSpendError ||
-          deleteSpendError,
-        mutationErrorMessage:
-          (deleteAccountError as Error)?.message ||
-          (createSpendError as Error)?.message ||
-          (updateSpendError as Error)?.message ||
-          (deleteSpendError as Error)?.message ||
-          'An error occurred while processing your request.',
-
-        usedSpendingTags: getUsedSpendingTags,
-      }}
-    >
+    <SpendingAccountContext.Provider value={contextValue}>
       {children}
     </SpendingAccountContext.Provider>
   );

@@ -22,18 +22,9 @@ const initialState: WalletState = {
 };
 
 export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
-  console.log('🔄 WalletProvider render started');
-
   const [state, setState] = useState<WalletState>(initialState);
   const { logError } = useLogging();
   const { account, selectedPeriod } = useSpendingAccount();
-
-  console.log('🔍 WalletProvider dependencies:', {
-    accountId: account?.id,
-    periodId: selectedPeriod?.id,
-    accountExists: !!account,
-    periodExists: !!selectedPeriod,
-  });
 
   // Fetch wallets for the current period
   const {
@@ -42,12 +33,6 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
     error: fetchError,
     refetch: refetchWallets,
   } = useFetchWalletsByPeriod(account?.id || '', selectedPeriod?.id || '');
-
-  // Add debugging
-  console.log('WalletProvider - Fetched wallets:', fetchedWallets);
-  console.log('WalletProvider - Is loading:', isFetchingWallets);
-  console.log('WalletProvider - Account ID:', account?.id);
-  console.log('WalletProvider - Period ID:', selectedPeriod?.id);
 
   // Migration hook to handle existing spending without wallet assignments
   const migrationMutation = useMigrateSpendingToWallets();

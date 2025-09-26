@@ -42,6 +42,7 @@ interface BasePageProps extends PropsWithChildren {
   showMenu?: boolean;
   showSecondaryHeader?: boolean;
   menuSide?: 'start' | 'end';
+  endButtons?: React.ReactNode;
 }
 
 const StyledHeader = styled(IonHeader)`
@@ -123,6 +124,7 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
   showMenu = false,
   showSecondaryHeader = false,
   menuSide = 'start',
+  endButtons,
 }) => {
   const { t } = useTranslation();
   const { signout } = useAuth();
@@ -177,6 +179,7 @@ export const BasePageLayout: React.FC<BasePageProps> = ({
               </IonTitle>
 
               <IonButtons slot='end'>
+                {endButtons}
                 {showProfileIcon && (
                   <StyledProfileButton
                     routerLink={ROUTES.PROFILE}

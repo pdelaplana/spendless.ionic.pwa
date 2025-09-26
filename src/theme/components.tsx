@@ -110,7 +110,8 @@ export const CleanCard = styled.div<{
  * Styled list container for grouped transactions with consistent spacing
  */
 export const GroupedTransactionsContainer = styled(StyledIonList)`
-  margin-top: ${designSystem.spacing.xl};
+  margin-top: 0;
+  padding-top:0;
 `;
 
 export const SectionLabel = styled.div`

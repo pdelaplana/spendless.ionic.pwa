@@ -32,8 +32,9 @@ export const useSpendTracking = (spending: ISpend[]) => {
   const { formatDate } = useFormatters();
 
   const { currentSpending, futureSpending } = useMemo(() => {
-    const currentSpending = spending.filter((spend) => spend.date <= new Date());
-    const futureSpending = spending.filter((spend) => spend.date > new Date());
+    const now = new Date(); // Create date once per calculation
+    const currentSpending = spending.filter((spend) => spend.date <= now);
+    const futureSpending = spending.filter((spend) => spend.date > now);
     return { currentSpending, futureSpending };
   }, [spending]);
 

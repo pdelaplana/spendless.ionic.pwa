@@ -5,8 +5,8 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { StyledItemDivider } from '@/styles/IonList.styled';
 import { GroupedTransactionsContainer } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
-import { IonButton, IonItemGroup, IonLabel, IonSpinner } from '@ionic/react';
-import { chevronForward } from 'ionicons/icons';
+import { IonButton, IonIcon, IonItemGroup, IonLabel, IonSpinner } from '@ionic/react';
+import { add, chevronForward } from 'ionicons/icons';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyledDateLabel, StyledTotalLabel } from '../../../styles/SpendingPage.styled';
@@ -21,6 +21,8 @@ import {
   SpendListContainer,
   SpendListContent,
   SpendListHeader,
+  SpendListHeaderButton,
+  SpendListHeaderTitle,
 } from './SpendList.styled';
 
 interface SpendListProps {
@@ -32,6 +34,7 @@ interface SpendListProps {
   onLoadMore?: () => void;
   onSpendClick?: (spend: ISpend) => void;
   onRetry?: () => void;
+  onAddSpend?: () => void;
   className?: string;
 }
 
@@ -44,6 +47,7 @@ const SpendList: React.FC<SpendListProps> = ({
   onLoadMore,
   onSpendClick,
   onRetry,
+  onAddSpend,
   className,
 }) => {
   const { t } = useTranslation();
@@ -104,55 +108,63 @@ const SpendList: React.FC<SpendListProps> = ({
 
   return (
     <SpendListContainer className={className}>
-      <SpendListHeader>Spending</SpendListHeader>
+      <SpendListHeader>
+        <SpendListHeaderTitle>Spending</SpendListHeaderTitle>
+        {onAddSpend && (
+          <SpendListHeaderButton
+            fill='clear'
+            size='small'
+            onClick={onAddSpend}
+            aria-label='Add new spending'
+          >
+            <IonIcon slot='icon-only' icon={add} />
+          </SpendListHeaderButton>
+        )}
+      </SpendListHeader>
       <SpendListContent>
-        <div>
-          <GroupedTransactionsContainer lines='none' style={{ backgroundColor: 'transparent' }}>
-            {groupedSpending.map(([date, spends]) => (
-              <IonItemGroup key={date}>
-                <StyledItemDivider sticky>
-                  <StyledDateLabel>{date}</StyledDateLabel>
-                </StyledItemDivider>
-                {spends.map((spend, index) => (
-                  <StyledItem
-                    key={spend.id}
-                    onClick={() => handleSpendClick(spend)}
-                    detail
-                    detailIcon={chevronForward}
-                    button
-                    lines={index === spends.length - 1 ? 'none' : 'full'}
-                  >
-                    <SpendIcon category={spend.category} />
-                    <IonLabel>
-                      <h2>{spend.description}</h2>
-                      <p>{t(`spending.categories.${spend.category}`)}</p>
-                      <TagsDisplay tags={spend.tags} />
-                    </IonLabel>
-                    <IonLabel slot='end'>
-                      {formatCurrency(spend.amount, account?.currency)}
-                    </IonLabel>
-                  </StyledItem>
-                ))}
-                <StyledItem lines='none' color='light'>
-                  <StyledTotalLabel slot='end'>
-                    {formatCurrency(
-                      spends.reduce((sum, spend) => sum + spend.amount, 0),
-                      account?.currency,
-                    )}
-                  </StyledTotalLabel>
+        <GroupedTransactionsContainer lines='none' style={{ backgroundColor: 'transparent' }}>
+          {groupedSpending.map(([date, spends]) => (
+            <IonItemGroup key={date}>
+              <StyledItemDivider sticky>
+                <StyledDateLabel>{date}</StyledDateLabel>
+              </StyledItemDivider>
+              {spends.map((spend, index) => (
+                <StyledItem
+                  key={spend.id}
+                  onClick={() => handleSpendClick(spend)}
+                  detail
+                  detailIcon={chevronForward}
+                  button
+                  lines={index === spends.length - 1 ? 'none' : 'full'}
+                >
+                  <SpendIcon category={spend.category} />
+                  <IonLabel>
+                    <h2>{spend.description}</h2>
+                    <p>{t(`spending.categories.${spend.category}`)}</p>
+                    <TagsDisplay tags={spend.tags} />
+                  </IonLabel>
+                  <IonLabel slot='end'>{formatCurrency(spend.amount, account?.currency)}</IonLabel>
                 </StyledItem>
-              </IonItemGroup>
-            ))}
-          </GroupedTransactionsContainer>
+              ))}
+              <StyledItem lines='none' color='light'>
+                <StyledTotalLabel slot='end'>
+                  {formatCurrency(
+                    spends.reduce((sum, spend) => sum + spend.amount, 0),
+                    account?.currency,
+                  )}
+                </StyledTotalLabel>
+              </StyledItem>
+            </IonItemGroup>
+          ))}
+        </GroupedTransactionsContainer>
 
-          {hasNextPage && (
-            <div style={{ padding: `${designSystem.spacing.md}` }}>
-              <IonButton onClick={handleLoadMore} color='primary' fill='clear' expand='full'>
-                {t('spending.loadMore')}
-              </IonButton>
-            </div>
-          )}
-        </div>
+        {hasNextPage && (
+          <div style={{ padding: `${designSystem.spacing.md}` }}>
+            <IonButton onClick={handleLoadMore} color='primary' fill='clear' expand='full'>
+              {t('spending.loadMore')}
+            </IonButton>
+          </div>
+        )}
       </SpendListContent>
     </SpendListContainer>
   );

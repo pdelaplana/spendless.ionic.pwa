@@ -1,24 +1,117 @@
-import { Suspense, lazy } from 'react';
+import { IonButton, IonIcon } from '@ionic/react';
+import { createOutline, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
+import { Suspense, lazy, useCallback, useMemo } from 'react';
+import styled from 'styled-components';
 import { BasePageLayout } from '../../components/layouts';
 import MainMenuContent from '../../components/menu/MainMenuContent';
 import { SentryErrorBoundary, SuspenseLoadingScreen } from '../../components/shared';
+import { useDeleteWallet, useUpdateWallet } from '../../hooks/api/wallet';
+import { useSpendingAccount } from '../../providers/spendingAccount';
 import { useWallet } from '../../providers/wallet';
+import { useWalletModal } from './modals/walletModal';
+
+const WalletView = lazy(() => import('./features/spendTracker/WalletView'));
+
+const StyledEditButton = styled(IonButton)`
+  --color: var(--ion-color-primary);
+  margin: 0;
+
+  &::part(native) {
+    padding: var(--spacing-sm);
+  }
+
+  ion-icon {
+    font-size: 20px;
+  }
+`;
 
 const WalletSpendingPage: React.FC = () => {
-  const { selectedWallet } = useWallet();
-  const pageTitle = selectedWallet ? `${selectedWallet.name}` : 'Wallet';
+  const { selectedWallet, wallets } = useWallet();
+  const { account, selectedPeriod, spending } = useSpendingAccount();
+  const updateWalletMutation = useUpdateWallet();
+  const deleteWalletMutation = useDeleteWallet();
+  const { open: openWalletModal } = useWalletModal();
 
-  const WalletView = lazy(() => import('./features/spendTracker/WalletView'));
+  const pageTitle = useMemo(
+    () => (selectedWallet ? `${selectedWallet.name}` : 'Wallet'),
+    [selectedWallet],
+  );
+
+  // Filter spending by selected wallet
+  const filteredSpending = useMemo(
+    () => spending.filter((spend) => spend.walletId === selectedWallet?.id),
+    [spending, selectedWallet?.id],
+  );
+
+  const handleDeleteWallet = useCallback(
+    (walletId: string) => {
+      if (account?.id && selectedPeriod?.id) {
+        deleteWalletMutation.mutate({
+          accountId: account.id,
+          periodId: selectedPeriod.id,
+          walletId: walletId,
+        });
+      }
+    },
+    [account?.id, selectedPeriod?.id, deleteWalletMutation],
+  );
+
+  const handleEditWallet = useCallback(async () => {
+    if (selectedWallet && account?.id && selectedPeriod?.id) {
+      await openWalletModal(
+        selectedWallet,
+        (walletData) => {
+          updateWalletMutation.mutate({
+            accountId: account.id!,
+            periodId: selectedPeriod.id!,
+            walletId: selectedWallet.id!,
+            updates: walletData,
+          });
+        },
+        account.id,
+        selectedPeriod.id,
+        wallets,
+        account.currency,
+        handleDeleteWallet,
+        filteredSpending,
+      );
+    }
+  }, [
+    selectedWallet,
+    account?.id,
+    selectedPeriod?.id,
+    openWalletModal,
+    updateWalletMutation,
+    wallets,
+    account?.currency,
+    handleDeleteWallet,
+    filteredSpending,
+  ]);
+
+  const endButtons = useMemo(() => {
+    return selectedWallet ? (
+      <StyledEditButton
+        fill='clear'
+        size='large'
+        onClick={handleEditWallet}
+        aria-label='Edit wallet'
+      >
+        <IonIcon slot='icon-only' icon={ellipsisHorizontal} />
+      </StyledEditButton>
+    ) : undefined;
+  }, [selectedWallet, handleEditWallet]);
 
   return (
     <BasePageLayout
       title={pageTitle}
       showHeader={true}
       showBackButton={true}
+      defaultBackButtonHref='/spending'
       showLogo={false}
       showProfileIcon={false}
       showMenu={true}
       menu={<MainMenuContent />}
+      endButtons={endButtons}
     >
       <Suspense fallback={<SuspenseLoadingScreen message='Loading your spending data...' />}>
         <SentryErrorBoundary>

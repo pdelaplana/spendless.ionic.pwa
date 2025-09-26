@@ -7,7 +7,7 @@ import { ROUTES } from '@/routes/routes.constants';
 import { GradientBackground } from '@/theme/components';
 import { IonButton, IonCard, IonCardContent, IonIcon } from '@ionic/react';
 import { close } from 'ionicons/icons';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ScheduledSpendingItem } from '../../components/common/scheduledSpendingItem';
@@ -40,9 +40,9 @@ const WalletView: React.FC = () => {
 
   // Filter spending by selected wallet
   const filteredSpending = useMemo(() => {
-    if (!selectedWallet) return [];
+    if (!selectedWallet?.id) return [];
     return spending.filter((spend) => spend.walletId === selectedWallet.id);
-  }, [spending, selectedWallet]);
+  }, [spending, selectedWallet?.id]);
 
   const { currentSpending, futureSpending, groupedSpending } = useSpendTracking(filteredSpending);
 
@@ -53,7 +53,8 @@ const WalletView: React.FC = () => {
   const updateWalletMutation = useUpdateWallet();
   const deleteWalletMutation = useDeleteWallet();
 
-  const { remainingBudget, targetSpend, futureSpendingTotal } = useMemo(() => {
+  // Memoize budget calculations with stable dependencies
+  const budgetCalculations = useMemo(() => {
     const total = currentSpending.reduce((sum, spend) => sum + spend.amount, 0);
     const futureTotal = futureSpending.reduce((sum, spend) => sum + spend.amount, 0);
     const target = selectedWallet?.spendingLimit || selectedPeriod?.targetSpend || 0;
@@ -63,19 +64,24 @@ const WalletView: React.FC = () => {
       targetSpend: target,
       futureSpendingTotal: futureTotal,
     };
-  }, [currentSpending, futureSpending, selectedPeriod, selectedWallet]);
+  }, [currentSpending, futureSpending, selectedWallet?.spendingLimit, selectedPeriod?.targetSpend]);
 
-  const handleDeleteWallet = (walletId: string) => {
-    if (account?.id && selectedPeriod?.id) {
-      deleteWalletMutation.mutate({
-        accountId: account.id,
-        periodId: selectedPeriod.id,
-        walletId: walletId,
-      });
-    }
-  };
+  const { remainingBudget, targetSpend, futureSpendingTotal } = budgetCalculations;
 
-  const handleEditWallet = async () => {
+  const handleDeleteWallet = useCallback(
+    (walletId: string) => {
+      if (account?.id && selectedPeriod?.id) {
+        deleteWalletMutation.mutate({
+          accountId: account.id,
+          periodId: selectedPeriod.id,
+          walletId: walletId,
+        });
+      }
+    },
+    [account?.id, selectedPeriod?.id, deleteWalletMutation],
+  );
+
+  const handleEditWallet = useCallback(async () => {
     if (selectedWallet && account?.id && selectedPeriod?.id) {
       await openWalletModal(
         selectedWallet,
@@ -95,7 +101,17 @@ const WalletView: React.FC = () => {
         filteredSpending,
       );
     }
-  };
+  }, [
+    selectedWallet,
+    account?.id,
+    selectedPeriod?.id,
+    openWalletModal,
+    updateWalletMutation,
+    wallets,
+    account?.currency,
+    handleDeleteWallet,
+    filteredSpending,
+  ]);
 
   // Show message if no wallet is selected
   if (!selectedWallet) {
@@ -159,13 +175,6 @@ const WalletView: React.FC = () => {
               periodEndDate={selectedPeriod?.endAt}
             />
 
-            <WalletQuickActionButtons
-              onNewSpend={newSpendHandler}
-              onEditWallet={handleEditWallet}
-              currentWallet={selectedWallet}
-              sticky={true}
-            />
-
             {futureSpending.length > 0 && (
               <ScheduledSpendingItem
                 futureSpendingCount={futureSpending.length}
@@ -179,6 +188,7 @@ const WalletView: React.FC = () => {
               hasNextPage={hasNextPageSpending}
               onLoadMore={fetchNextPageSpending}
               onSpendClick={editSpendHandler}
+              onAddSpend={newSpendHandler}
             />
           </>
         )}

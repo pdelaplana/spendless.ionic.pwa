@@ -1,20 +1,54 @@
 import { GlassCard } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
+import { IonButton } from '@ionic/react';
 import styled from 'styled-components';
 
 export const SpendListContainer = styled(GlassCard)`
 
 `;
 
-export const SpendListHeader = styled.h2`
+export const SpendListHeader = styled.div`
   font-size: ${designSystem.typography.fontSize.lg};
   font-weight: ${designSystem.typography.fontWeight.semibold};
   color: ${designSystem.colors.text.primary};
-  padding: 0px ${designSystem.spacing.md};
+  padding: ${designSystem.spacing.md} ${designSystem.spacing.md} ${designSystem.spacing.sm} ${designSystem.spacing.md};
+  margin: 0;
+  position: sticky;
+  top: 0;
+  background: var(--ion-color-light);
+  z-index: 10;
+  border-bottom: none;
+  line-height: 1.2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const SpendListHeaderTitle = styled.h2`
+  margin: 0;
+  font-size: ${designSystem.typography.fontSize.lg};
+  font-weight: ${designSystem.typography.fontWeight.semibold};
+  color: ${designSystem.colors.text.primary};
+  line-height: 1.2;
+`;
+
+export const SpendListHeaderButton = styled(IonButton)`
+  --color: var(--ion-color-primary);
+  margin: 0;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+
+  ion-icon {
+    font-size: 20px;
+  }
 `;
 
 export const SpendListContent = styled.div`
   width: 100%;
+  margin: 0;
+  padding: 0;
 `;
 
 export const LoadingContainer = styled.div`

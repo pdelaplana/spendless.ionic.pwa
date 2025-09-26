@@ -11,8 +11,17 @@ export const StyledIonList = styled(IonList)`
   }
 `;
 export const StyledItemDivider = styled(IonItemDivider)`
-
   color: var(--ion-color-primary);
+  margin-top: 0;
+  margin-bottom: 0;
+
+  &.item-divider-sticky {
+    position: sticky;
+    top: 40px; /* Position right below the SpendListHeader */
+    z-index: 9; /* Just below the main header */
+    background: var(--ion-color-light);
+    border-bottom: 1px solid var(--color-gray-100);
+  }
 `;
 
 export const TransparentIonList = styled(IonList)`
