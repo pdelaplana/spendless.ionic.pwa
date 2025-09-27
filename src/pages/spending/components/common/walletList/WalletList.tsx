@@ -36,6 +36,9 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
   const { open: openWalletModal } = useWalletModal();
   const [presentToast] = useIonToast();
 
+  // Create a currency-aware format function
+  const formatAccountCurrency = (amount: number) => formatCurrency(amount, account?.currency);
+
   // API hooks for wallet operations
   const createWallet = useCreateWallet();
   const updateWallet = useUpdateWallet();
@@ -187,7 +190,7 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
               key={wallet.id}
               wallet={wallet}
               onClick={onWalletClick}
-              formatCurrency={formatCurrency}
+              formatCurrency={formatAccountCurrency}
             />
           ))}
         </StyledIonList>

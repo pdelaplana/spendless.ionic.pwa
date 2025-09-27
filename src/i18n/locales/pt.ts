@@ -24,6 +24,7 @@ export default {
       lastDay: 'Último dia',
       dayRemaining: '{{count}} dia restante',
       daysRemaining: '{{count}} dias restantes',
+      spendPerDay: 'Disponível por dia',
       actions: {
         title: 'Ações do Período',
         startNewPeriod: 'Iniciar Novo Período',

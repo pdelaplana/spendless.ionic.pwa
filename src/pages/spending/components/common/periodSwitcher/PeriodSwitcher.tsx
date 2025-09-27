@@ -1,5 +1,8 @@
+import { getTotalWalletLimits } from '@/domain/Period';
+import { calculateWalletAvailable } from '@/domain/Wallet';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useWallet } from '@/providers/wallet';
 import { CleanCard, GlassCard } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import { IonIcon } from '@ionic/react';
@@ -68,15 +71,14 @@ const PeriodSwitcherContainer = styled(GlassCard)<{
 const PeriodContent = styled.div`
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: ${designSystem.spacing.md};
+  justify-content: flex-start;
+  width: 100%;
 `;
 
 const PeriodInfo = styled.div`
-  flex: 1;
+  width: 100%;
   min-width: 0;
   text-align: left;
-
 `;
 
 const PeriodLabel = styled.h4`
@@ -118,11 +120,15 @@ const PeriodStatus = styled.div<{ isClosed: boolean }>`
 `;
 
 const SwitcherIcon = styled.div<{ hasMultiplePeriods: boolean }>`
+  position: absolute;
+  top: ${designSystem.spacing.lg};
+  right: ${designSystem.spacing.lg};
   display: flex;
   align-items: center;
   color: ${designSystem.colors.primary[500]};
   font-size: 20px;
   transition: transform 0.2s ease;
+  z-index: 1;
 
   ${({ hasMultiplePeriods }) =>
     hasMultiplePeriods &&
@@ -173,18 +179,35 @@ const ProgressFill = styled.div<{ progress: number }>`
   border-radius: 2px;
 `;
 
-const PeriodMeta = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: ${designSystem.spacing.xs};
-`;
-
 const ActionHint = styled.span`
   font-size: ${designSystem.typography.fontSize.xs};
   color: ${designSystem.colors.text.secondary};
   opacity: 0.7;
   margin-top: ${designSystem.spacing.xs};
+`;
+
+const SpendPerDayContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${designSystem.spacing.xs};
+  margin-top: ${designSystem.spacing.sm};
+  padding: ${designSystem.spacing.xs} ${designSystem.spacing.sm};
+  background: rgba(139, 95, 191, 0.1);
+  border-radius: ${designSystem.borderRadius.md};
+  border: 1px solid rgba(139, 95, 191, 0.2);
+`;
+
+const SpendPerDayLabel = styled.span`
+  font-size: ${designSystem.typography.fontSize.sm};
+  font-weight: ${designSystem.typography.fontWeight.medium};
+  color: ${designSystem.colors.text.secondary};
+`;
+
+const SpendPerDayAmount = styled.span`
+  font-size: ${designSystem.typography.fontSize.lg};
+  font-weight: ${designSystem.typography.fontWeight.bold};
+  color: ${designSystem.colors.primary[600]};
 `;
 
 const NoPeriodContainer = styled(GlassCard).attrs({ as: 'button' })`
@@ -211,9 +234,42 @@ const NoPeriodSubtitle = styled.p`
 
 export const PeriodSwitcher: React.FC = () => {
   const { t } = useTranslation();
-  const { formatDate } = useFormatters();
-  const { selectedPeriod, periods } = useSpendingAccount();
+  const { formatDate, formatCurrency } = useFormatters();
+  const { selectedPeriod, periods, spending, account } = useSpendingAccount();
+  const { wallets } = useWallet();
   const { openSpendingPeriodsPage, startNewPeriodHandler } = usePeriodActions();
+
+  const calculateSpendPerDay = () => {
+    if (!selectedPeriod || isClosed) return 0;
+
+    const remainingDays = calculateDaysRemaining();
+    if (remainingDays <= 0) return 0;
+
+    // Get total spending limit from all wallets
+    const totalSpendingLimit = wallets.reduce((total, wallet) => total + wallet.spendingLimit, 0);
+
+    // Get total spent amount from all wallets
+    const totalSpentAmount = wallets.reduce((total, wallet) => total + wallet.currentBalance, 0);
+
+    // Calculate scheduled/recurring spending for remaining days
+    const now = new Date();
+    const endDate = new Date(selectedPeriod.endAt);
+    const scheduledAmount = spending
+      .filter(
+        (spend) =>
+          spend.periodId === selectedPeriod.id &&
+          spend.recurring === true &&
+          new Date(spend.date) > now &&
+          new Date(spend.date) <= endDate,
+      )
+      .reduce((total, spend) => total + spend.amount, 0);
+
+    // Calculate spend per day = (SpendingLimit - (SpentAmount + ScheduledAmount)) / RemainingDays
+    const totalSpentAndScheduled = totalSpentAmount + scheduledAmount;
+    const remainingBudget = totalSpendingLimit - totalSpentAndScheduled;
+
+    return Math.max(0, remainingBudget / remainingDays);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent, handler: () => void) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -306,6 +362,7 @@ export const PeriodSwitcher: React.FC = () => {
   const daysRemaining = calculateDaysRemaining();
   const progress = calculateProgress();
   const periodState = getPeriodState();
+  const spendPerDay = calculateSpendPerDay();
 
   const ariaLabel = hasMultiplePeriods
     ? `${t('spending.switchPeriod')}: ${selectedPeriod.name}, ${formatDate(selectedPeriod.startAt)} ${t('spending.to')} ${formatDate(selectedPeriod.endAt)}`
@@ -342,16 +399,22 @@ export const PeriodSwitcher: React.FC = () => {
               <ProgressFill progress={progress} />
             </PeriodProgress>
           )}
-        </PeriodInfo>
-
-        <PeriodMeta>
-          {hasMultiplePeriods && (
-            <SwitcherIcon hasMultiplePeriods={hasMultiplePeriods}>
-              <IonIcon icon={chevronDown} />
-            </SwitcherIcon>
+          {!isClosed && daysRemaining > 0 && (
+            <SpendPerDayContainer>
+              <SpendPerDayLabel>{t('spending.spendPerDay')}</SpendPerDayLabel>
+              <SpendPerDayAmount>
+                {formatCurrency(spendPerDay, account?.currency)}
+              </SpendPerDayAmount>
+            </SpendPerDayContainer>
           )}
-        </PeriodMeta>
+        </PeriodInfo>
       </PeriodContent>
+
+      {hasMultiplePeriods && (
+        <SwitcherIcon hasMultiplePeriods={hasMultiplePeriods}>
+          <IonIcon icon={chevronDown} />
+        </SwitcherIcon>
+      )}
     </PeriodSwitcherContainer>
   );
 };
