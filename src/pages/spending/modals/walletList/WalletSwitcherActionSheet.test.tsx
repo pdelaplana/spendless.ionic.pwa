@@ -61,7 +61,7 @@ vi.mock('@ionic/react', async () => {
       </span>
     ),
     IonProgressBar: ({ value, color, ...props }: any) => (
-      <div data-testid='ion-progress-bar' data-value={value} data-color={color} {...props}></div>
+      <div data-testid='ion-progress-bar' data-value={value} data-color={color} {...props} />
     ),
   };
 });

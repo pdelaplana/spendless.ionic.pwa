@@ -207,9 +207,6 @@ export const SpendlessLogo: React.FC<SpendlessLogoProps> = ({
             </HorizontalText>
           </HorizontalContainer>
         );
-
-      case 'primary':
-      case 'reverse':
       default:
         return (
           <PrimaryLogo size={fontSize} isReverse={isReverse}>

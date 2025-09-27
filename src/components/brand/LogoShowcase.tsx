@@ -217,7 +217,7 @@ export const LogoShowcase: React.FC = () => {
             <CardDescription>
               Standalone brand mark perfect for favicons, app icons, and compact spaces.
             </CardDescription>
-            <CodeExample>{`<SpendlessIcon size={80} />`}</CodeExample>
+            <CodeExample>{'<SpendlessIcon size={80} />'}</CodeExample>
           </LogoCard>
 
           <LogoCard>

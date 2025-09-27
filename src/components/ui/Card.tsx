@@ -193,7 +193,7 @@ const ActionIcon = styled.div<{ variant: 'primary' | 'secondary' }>`
   
   ${(props) =>
     props.variant === 'primary'
-      ? `background: rgba(255, 255, 255, 0.2);`
+      ? 'background: rgba(255, 255, 255, 0.2);'
       : `background: ${designSystem.colors.primary[50]}; color: ${designSystem.colors.primary[500]};`}
 `;
 

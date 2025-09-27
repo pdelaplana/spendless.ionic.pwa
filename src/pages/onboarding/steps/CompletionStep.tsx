@@ -211,13 +211,7 @@ const CompletionStep: React.FC<CompletionStepProps> = ({ onComplete, ...stepProp
   return (
     <OnboardingStep {...stepProps} title='' hideNavigation>
       <CelebrationContainer>
-        {showConfetti && (
-          <>
-            {[...Array(10)].map((_, i) => (
-              <Confetti key={i} />
-            ))}
-          </>
-        )}
+        {showConfetti && [...Array(10)].map((_, i) => <Confetti key={i} />)}
 
         <CompletionBadge>🎉</CompletionBadge>
 
