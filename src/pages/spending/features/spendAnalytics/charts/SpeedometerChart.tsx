@@ -121,7 +121,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
       tooltip: {
         enabled: true,
         callbacks: {
-          label: (context: any) => {
+          label: (context: { label?: string; dataIndex: number }) => {
             const label = context.label || '';
             const dataIndex = context.dataIndex;
             let amount = 0;
