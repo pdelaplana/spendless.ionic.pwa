@@ -1,4 +1,4 @@
-import type { IPeriod } from '@/domain/Period';
+import type { CreatePeriodDTO, IPeriod } from '@/domain/Period';
 import {
   useCreateSpend,
   useDeleteAccount,
@@ -251,7 +251,18 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
   // Memoize complex async functions
   const createPeriodMemo = useCallback(
     async ({ data }: { data: Partial<IPeriod> }) => {
-      return createPeriod({ accountId: spendingAccount?.id ?? '', data });
+      // Ensure required fields are present for CreatePeriodDTO
+      const createPeriodData: CreatePeriodDTO = {
+        name: data.name ?? '',
+        goals: data.goals ?? '',
+        targetSpend: data.targetSpend ?? 0,
+        targetSavings: data.targetSavings ?? 0,
+        startAt: data.startAt ?? new Date(),
+        endAt: data.endAt ?? new Date(),
+        reflection: data.reflection ?? '',
+        walletSetup: data.walletSetup,
+      };
+      return createPeriod({ accountId: spendingAccount?.id ?? '', data: createPeriodData });
     },
     [createPeriod, spendingAccount?.id],
   );
