@@ -65,35 +65,46 @@ const ChartWrapper = styled.div`
 ChartJS.register(ArcElement, Tooltip);
 
 interface SpeedometerChartProps {
-  value: number;
+  remainingBudget: number; // remaining budget
   min?: number;
   max?: number;
   label?: string;
   currency?: string;
   endDate?: Date;
+  currentSpend?: number;
+  futureSpend?: number;
 }
 
 export const SpeedometerChart: FC<SpeedometerChartProps> = ({
-  value,
+  remainingBudget,
   min = 0,
   max = 100,
   label = '',
   currency = 'USD',
   endDate,
+  currentSpend = 0,
+  futureSpend = 0,
 }) => {
   const { formatCurrency, formatDaysUntil } = useFormatters();
-  const normalizedValue = Math.min(Math.max(value, min), max);
-  const percentage = ((normalizedValue - min) / (max - min)) * 100;
+
+  // Calculate percentages for three segments
+  const total = max || 100;
+  const currentSpendPercentage = (currentSpend / total) * 100;
+  const futureSpendPercentage = (futureSpend / total) * 100;
+  const remainingPercentage = (remainingBudget / total) * 100;
 
   const data = {
+    labels: ['Remaining', 'Scheduled', 'Spent'],
     datasets: [
       {
-        data: [percentage, 100 - percentage],
+        data: [ remainingPercentage, futureSpendPercentage,  currentSpendPercentage,],
         backgroundColor: [
-          value >= 0 ? designSystem.colors.primary[500] : designSystem.colors.danger,
-          designSystem.colors.gray[200],
+          designSystem.colors.primary[500], // Remaining (primary color)
+          designSystem.colors.primary[300], // Future spend (secondary/lighter primary)
+          designSystem.colors.gray[400], // Current spend (gray)
         ],
-        borderWidth: 0,
+        borderWidth: 2,
+        borderColor: '#fff',
         circumference: 180,
         rotation: 270,
       },
@@ -108,7 +119,34 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
         display: false,
       },
       tooltip: {
-        enabled: false,
+        enabled: true,
+        callbacks: {
+          label: (context: any) => {
+            const label = context.label || '';
+            const dataIndex = context.dataIndex;
+            let amount = 0;
+
+            // Map the data index to the actual amounts
+            switch (dataIndex) {
+              case 0: // Remaining Budget
+                amount = remainingBudget;
+                break;
+              case 1: // Future Spending
+                amount = futureSpend;
+                break;
+              case 2: // Current Spending
+                amount = currentSpend;
+                break;
+            }
+
+            return `${formatCurrency(amount, currency)}`;
+          },
+        },
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: designSystem.colors.primary[500],
+        borderWidth: 1,
       },
     },
     layout: {
@@ -125,7 +163,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
         <Doughnut data={data} options={options} />
       </ChartWrapper>
       <ValueContainer>
-        <Value>{formatCurrency(value, currency)}</Value>
+        <Value>{formatCurrency(remainingBudget, currency)}</Value>
         {label && <Label>{label}</Label>}
       </ValueContainer>
     </ChartContainer>

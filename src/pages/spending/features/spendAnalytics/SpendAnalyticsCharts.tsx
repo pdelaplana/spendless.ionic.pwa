@@ -13,7 +13,7 @@ const ChartsContainer = styled.div`
   margin: ${designSystem.spacing.lg} ${designSystem.spacing.md};
   display: flex;
   justify-content: center;
-  
+
   > div {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
@@ -24,7 +24,7 @@ const ChartsContainer = styled.div`
     transition: all 0.2s ease-in-out;
     width: 100%;
     max-width: 100%;
-    
+
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
@@ -36,27 +36,27 @@ const ChartsContainer = styled.div`
     height: 350px;
     margin: 0;
   }
-  
+
   > div .swiper-wrapper {
     align-items: center;
   }
-  
+
   > div .swiper-slide {
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  
+
   > div .swiper-pagination {
     bottom: 8px;
     color: ${designSystem.colors.text.primary};
   }
-  
+
   > div .swiper-pagination-bullet {
     background: ${designSystem.colors.primary[400]};
     opacity: 0.4;
   }
-  
+
   > div .swiper-pagination-bullet-active {
     background: ${designSystem.colors.primary[500]};
     opacity: 1;
@@ -84,18 +84,30 @@ export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
   const startDate = periodStartDate || new Date();
   const endDate = periodEndDate || new Date();
 
+  // Calculate current and future spending
+  const now = new Date();
+  const currentSpending = spending
+    .filter((s) => s.date <= now)
+    .reduce((total, spend) => total + spend.amount, 0);
+
+  const futureSpending = spending
+    .filter((s) => s.date > now)
+    .reduce((total, spend) => total + spend.amount, 0);
+
   return (
     <ChartsContainer id='spend-analytics-charts'>
       <div>
         <Swiper modules={[Pagination]} pagination={{ clickable: true }} spaceBetween={20}>
           <SwiperSlide>
             <SpeedometerChart
-              value={remainingBudget}
+              remainingBudget={remainingBudget}
               min={0}
               max={targetSpend}
-              label='Remaining'
+              label='Remaining Budget'
               currency={account?.currency}
               endDate={endDate}
+              currentSpend={currentSpending}
+              futureSpend={futureSpending}
             />
           </SwiperSlide>
           <SwiperSlide>

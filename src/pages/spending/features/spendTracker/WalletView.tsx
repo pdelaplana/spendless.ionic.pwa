@@ -60,7 +60,7 @@ const WalletView: React.FC = () => {
     const target = selectedWallet?.spendingLimit || selectedPeriod?.targetSpend || 0;
     return {
       totalSpending: total,
-      remainingBudget: target - total,
+      remainingBudget: target - (total + futureTotal),
       targetSpend: target,
       futureSpendingTotal: futureTotal,
     };
