@@ -96,13 +96,13 @@ const StepLabel = styled.div<{ $isActive: boolean }>`
   margin-top: ${designSystem.spacing.xs};
   text-align: center;
   min-width: 60px;
-  max-width: 80px;
-  word-wrap: break-word;
+  max-width: 120px;
+  white-space: nowrap;
 
   @media (max-width: 480px) {
     font-size: ${designSystem.typography.fontSize.xs};
-    min-width: 40px;
-    max-width: 50px;
+    min-width: 50px;
+    max-width: 80px;
     line-height: 1.2;
   }
 `;

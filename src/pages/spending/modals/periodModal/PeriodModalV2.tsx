@@ -2,16 +2,19 @@ import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import { StepIndicator } from '@/components/ui';
 import type { IPeriod } from '@/domain/Period';
+import type { ISpend } from '@/domain/Spend';
+import type { IWallet } from '@/domain/Wallet';
 import { usePrompt } from '@/hooks';
 import { designSystem } from '@/theme/designSystem';
 import { IonTitle } from '@ionic/react';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import NavigationButtons from './components/NavigationButtons';
 import { type PeriodFormData, useMultiStepForm } from './hooks/useMultiStepForm';
 import StepBasics from './steps/StepBasics';
+import StepRecurringExpenses from './steps/StepRecurringExpenses';
 import StepReview from './steps/StepReview';
 import StepWallets from './steps/StepWallets';
 
@@ -33,14 +36,17 @@ const StepContent = styled.div`
 
 interface PeriodModalV2Props {
   period?: IPeriod;
+  currentWallets?: IWallet[];
+  currentRecurringExpenses?: ISpend[];
   onSave: (period: Partial<IPeriod>) => void;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
 }
 
-const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss }) => {
+const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, currentWallets, currentRecurringExpenses, onSave, onDismiss }) => {
   const { showConfirmPrompt } = usePrompt();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const hasInitializedRecurringExpenses = useRef(false);
 
   // Initialize form with existing period data if editing
   const initialData = period
@@ -55,7 +61,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
             spendingLimit: wallet.spendingLimit.toString(),
             isDefault: wallet.isDefault,
           })) || [],
-        currentStep: 1 as const,
+        currentStep: 0 as const, // Start with basics for editing
       }
     : undefined;
 
@@ -72,6 +78,8 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
     addWallet,
     removeWallet,
     setDefaultWallet,
+    setRecurringExpenses,
+    removeRecurringExpense,
     toPeriodData,
     reset,
   } = useMultiStepForm(initialData);
@@ -94,8 +102,36 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
   const watchedStartAt = watch('startAt');
   const watchedEndAt = watch('endAt');
 
+  // Initialize recurring expenses from props only once
+  useEffect(() => {
+    if (currentRecurringExpenses && currentRecurringExpenses.length > 0 && !hasInitializedRecurringExpenses.current) {
+      hasInitializedRecurringExpenses.current = true;
+
+      const periodDurationDays = Math.ceil(
+        (new Date(formData.endAt).getTime() - new Date(formData.startAt).getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      const recurringExpensesData = currentRecurringExpenses.map((expense) => {
+        const newDate = new Date(expense.date);
+        newDate.setDate(newDate.getDate() + periodDurationDays);
+
+        return {
+          id: expense.id!,
+          description: expense.description,
+          amount: expense.amount,
+          originalDate: expense.date,
+          newDate,
+          category: expense.category || '',
+          walletId: expense.walletId || '',
+        };
+      });
+
+      setRecurringExpenses(recurringExpensesData);
+    }
+  }, []); // Empty dependency array since we only want this to run once on mount
+
   // Custom validation function that uses React Hook Form state
-  const isStep1ValidRHF = () => {
+  const isStep0ValidRHF = () => {
     const goals = watchedGoals || '';
     const startAt = watchedStartAt || '';
     const endAt = watchedEndAt || '';
@@ -103,16 +139,18 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
     return goals.trim().length >= 3 && startAt && endAt && new Date(endAt) > new Date(startAt);
   };
 
-  const stepLabels = ['Basics', 'Wallets', 'Review'];
+  const stepLabels = ['Period', 'Wallets', 'Expenses', 'Review'];
 
   const getModalTitle = () => {
     if (period) return 'Edit Period';
 
     switch (currentStep) {
+      case 0:
+        return 'Start a New Period';
       case 1:
-        return 'Create New Period';
-      case 2:
         return 'Setup Your Wallets';
+      case 2:
+        return 'Recurring Expenses';
       case 3:
         return 'Review & Create';
       default:
@@ -129,7 +167,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
     prevStep();
   };
 
-  const handleEditStep = (step: 1 | 2) => {
+  const handleEditStep = (step: 0 | 1 | 2) => {
     goToStep(step);
   };
 
@@ -170,7 +208,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
   };
 
   const handleDismiss = () => {
-    if (isDirty || currentStep > 1) {
+    if (isDirty || currentStep > 0) {
       showConfirmPrompt({
         title: 'Unsaved Changes',
         message: 'You have unsaved changes. Are you sure you want to close?',
@@ -187,7 +225,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
 
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case 1:
+      case 0:
         return (
           <StepBasics
             formData={formData}
@@ -198,14 +236,23 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
             onUpdate={updateBasics}
           />
         );
-      case 2:
+      case 1:
         return (
           <StepWallets
             formData={formData}
             totalBudget={totalBudget}
+            currentWallets={currentWallets}
             onAddWallet={addWallet}
             onRemoveWallet={removeWallet}
             onSetDefaultWallet={setDefaultWallet}
+          />
+        );
+      case 2:
+        return (
+          <StepRecurringExpenses
+            formData={formData}
+            currentRecurringExpenses={currentRecurringExpenses || []}
+            onRemoveRecurringExpense={removeRecurringExpense}
           />
         );
       case 3:
@@ -224,14 +271,14 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, onSave, onDismiss
           <ModalTitle>{getModalTitle()}</ModalTitle>
         </ModalHeader>
 
-        <StepIndicator currentStep={currentStep} totalSteps={3} stepLabels={stepLabels} />
+        <StepIndicator currentStep={currentStep + 1} totalSteps={4} stepLabels={stepLabels} />
 
         <StepContent>{renderCurrentStep()}</StepContent>
 
         <NavigationButtons
           currentStep={currentStep}
           canGoBack={canGoBack()}
-          canGoNext={currentStep === 1 ? Boolean(isStep1ValidRHF()) : Boolean(canGoNext())}
+          canGoNext={currentStep === 0 ? Boolean(isStep0ValidRHF()) : Boolean(canGoNext())}
           isLoading={isSubmitting}
           onBack={handleBack}
           onNext={handleNext}

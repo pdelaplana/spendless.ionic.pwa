@@ -2,7 +2,7 @@ import { Currency } from '@/domain/Currencies';
 import { SectionLabel } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import { IonButton, IonIcon, IonNote } from '@ionic/react';
-import { pencilOutline } from 'ionicons/icons';
+import { calendarOutline, pencilOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -122,10 +122,52 @@ const PeriodDuration = styled.div`
   color: ${designSystem.colors.text.secondary};
 `;
 
+const ExpenseItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${designSystem.spacing.sm} 0;
+  border-bottom: 1px solid ${designSystem.colors.gray[100]};
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const ExpenseInfo = styled.div`
+  flex: 1;
+`;
+
+const ExpenseDescription = styled.div`
+  font-weight: ${designSystem.typography.fontWeight.medium};
+  color: ${designSystem.colors.text.primary};
+  margin-bottom: ${designSystem.spacing.xs};
+`;
+
+const ExpenseDate = styled.div`
+  font-size: ${designSystem.typography.fontSize.sm};
+  color: ${designSystem.colors.text.secondary};
+  display: flex;
+  align-items: center;
+  gap: ${designSystem.spacing.xs};
+`;
+
+const ExpenseAmount = styled.div`
+  color: ${designSystem.colors.primary[600]};
+  font-weight: ${designSystem.typography.fontWeight.semibold};
+`;
+
+const EmptyExpenses = styled.div`
+  text-align: center;
+  padding: ${designSystem.spacing.lg};
+  color: ${designSystem.colors.text.secondary};
+  font-style: italic;
+`;
+
 interface StepReviewProps {
   formData: PeriodFormData;
   totalBudget: number;
-  onEditStep: (step: 1 | 2) => void;
+  onEditStep: (step: 0 | 1 | 2) => void;
 }
 
 const StepReview: React.FC<StepReviewProps> = ({ formData, totalBudget, onEditStep }) => {
@@ -157,7 +199,7 @@ const StepReview: React.FC<StepReviewProps> = ({ formData, totalBudget, onEditSt
         <SummaryCard>
           <SummaryHeader>
             <SummaryTitle>Period Overview</SummaryTitle>
-            <EditButton fill='clear' size='small' onClick={() => onEditStep(1)}>
+            <EditButton fill='clear' size='small' onClick={() => onEditStep(0)}>
               <IonIcon icon={pencilOutline} slot='start' />
               Edit
             </EditButton>
@@ -176,7 +218,7 @@ const StepReview: React.FC<StepReviewProps> = ({ formData, totalBudget, onEditSt
         <SummaryCard>
           <SummaryHeader>
             <SummaryTitle>Wallets ({formData.wallets.length})</SummaryTitle>
-            <EditButton fill='clear' size='small' onClick={() => onEditStep(2)}>
+            <EditButton fill='clear' size='small' onClick={() => onEditStep(1)}>
               <IonIcon icon={pencilOutline} slot='start' />
               Edit
             </EditButton>
@@ -197,6 +239,45 @@ const StepReview: React.FC<StepReviewProps> = ({ formData, totalBudget, onEditSt
               </WalletItem>
             ))}
           </WalletsList>
+        </SummaryCard>
+      </ReviewSection>
+
+      {/* Recurring Expenses Summary */}
+      <ReviewSection>
+        <SummaryCard>
+          <SummaryHeader>
+            <SummaryTitle>Recurring Expenses ({formData.recurringExpenses.length})</SummaryTitle>
+            <EditButton fill='clear' size='small' onClick={() => onEditStep(2)}>
+              <IonIcon icon={pencilOutline} slot='start' />
+              Edit
+            </EditButton>
+          </SummaryHeader>
+
+          {formData.recurringExpenses.length > 0 ? (
+            <>
+              {formData.recurringExpenses.map((expense) => (
+                <ExpenseItem key={expense.id}>
+                  <ExpenseInfo>
+                    <ExpenseDescription>{expense.description}</ExpenseDescription>
+                    <ExpenseDate>
+                      <IonIcon icon={calendarOutline} />
+                      {formatDate(expense.originalDate.toISOString().split('T')[0])} → {formatDate(expense.newDate.toISOString().split('T')[0])}
+                    </ExpenseDate>
+                  </ExpenseInfo>
+                  <ExpenseAmount>
+                    {currency.format(expense.amount)}
+                  </ExpenseAmount>
+                </ExpenseItem>
+              ))}
+              <IonNote style={{ marginTop: designSystem.spacing.md, display: 'block' }}>
+                These expenses will be automatically added to your new period with updated dates.
+              </IonNote>
+            </>
+          ) : (
+            <EmptyExpenses>
+              No recurring expenses will be copied to this period.
+            </EmptyExpenses>
+          )}
         </SummaryCard>
       </ReviewSection>
 

@@ -2,13 +2,14 @@ import { InputFormField } from '@/components/forms';
 import { ActionButton } from '@/components/shared';
 import CurrencyAmountInput from '@/components/ui/CurrencyAmountInput';
 import { Currency } from '@/domain/Currencies';
+import type { IWallet } from '@/domain/Wallet';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { SectionLabel } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import { IonButton, IonIcon, IonItem, IonLabel, IonNote, useIonToast } from '@ionic/react';
-import { addOutline, trashOutline, walletOutline } from 'ionicons/icons';
+import { addOutline, copyOutline, trashOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -128,6 +129,7 @@ interface WalletFormData {
 interface StepWalletsProps {
   formData: PeriodFormData;
   totalBudget: number;
+  currentWallets?: IWallet[];
   onAddWallet: (wallet: { name: string; spendingLimit: string }) => void;
   onRemoveWallet: (walletId: string) => void;
   onSetDefaultWallet: (walletId: string) => void;
@@ -136,6 +138,7 @@ interface StepWalletsProps {
 const StepWallets: React.FC<StepWalletsProps> = ({
   formData,
   totalBudget,
+  currentWallets,
   onAddWallet,
   onRemoveWallet,
   onSetDefaultWallet,
@@ -143,6 +146,8 @@ const StepWallets: React.FC<StepWalletsProps> = ({
   const { t } = useTranslation();
   const [presentToast] = useIonToast();
   const [showAddForm, setShowAddForm] = useState(false);
+  const [hasLoadedCurrentWallets, setHasLoadedCurrentWallets] = useState(false);
+  const hasLoadedRef = useRef(false); // Use ref to persist across effect executions in Strict Mode
   const currency = Currency.USD; // TODO: Get from user preferences
 
   const {
@@ -158,6 +163,31 @@ const StepWallets: React.FC<StepWalletsProps> = ({
       spendingLimit: '0',
     },
   });
+
+  // Load wallets from current wallets if available and no wallets have been added yet
+  useEffect(() => {
+    if (
+      currentWallets &&
+      currentWallets.length > 0 &&
+      formData.wallets.length === 0 &&
+      !hasLoadedCurrentWallets &&
+      !hasLoadedRef.current // Check ref to prevent double execution in Strict Mode
+    ) {
+      // Set the ref FIRST to prevent double execution in React Strict Mode
+      hasLoadedRef.current = true;
+      setHasLoadedCurrentWallets(true);
+
+      // Add wallets from current wallets
+      currentWallets.forEach((wallet) => {
+        onAddWallet({
+          name: wallet.name,
+          spendingLimit: wallet.spendingLimit.toString(),
+        });
+      });
+    }
+    // Remove formData.wallets.length from dependencies to prevent infinite loops
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWallets, hasLoadedCurrentWallets]);
 
   const handleAmountChange = (value: number) => {
     setValue('spendingLimit', value.toFixed(2));
@@ -217,17 +247,72 @@ const StepWallets: React.FC<StepWalletsProps> = ({
     onRemoveWallet(walletId);
   };
 
+  const addWalletsFromCurrent = () => {
+    if (currentWallets) {
+      let addedCount = 0;
+      currentWallets.forEach((wallet) => {
+        // Check if wallet doesn't already exist
+        const existingWallet = formData.wallets.find(
+          (w) => w.name.toLowerCase().trim() === wallet.name.toLowerCase().trim(),
+        );
+        if (!existingWallet) {
+          onAddWallet({
+            name: wallet.name,
+            spendingLimit: wallet.spendingLimit.toString(),
+          });
+          addedCount++;
+        }
+      });
+
+      if (addedCount > 0) {
+        presentToast({
+          message: `Added ${addedCount} wallet${addedCount > 1 ? 's' : ''} from current period`,
+          duration: 3000,
+          color: 'success',
+          position: 'top',
+        });
+      } else {
+        presentToast({
+          message: 'All wallets from current period already exist',
+          duration: 3000,
+          color: 'warning',
+          position: 'top',
+        });
+      }
+    }
+  };
+
   return (
     <>
       {/* Prominent Wallet Section */}
       <ProminentWalletSection>
-        <WalletSectionLabel>Setup Your Wallets</WalletSectionLabel>
+        {/* Tip box when wallets have been added from current period */}
+        {hasLoadedCurrentWallets && currentWallets && currentWallets.length > 0 && formData.wallets.length > 0 && (
+          <div
+            style={{
+              background: designSystem.colors.primary[50],
+              border: `1px solid ${designSystem.colors.primary[200]}`,
+              borderRadius: designSystem.borderRadius.md,
+              padding: designSystem.spacing.sm,
+              marginBottom: designSystem.spacing.md,
+              fontSize: designSystem.typography.fontSize.sm,
+              color: designSystem.colors.primary[700],
+              textAlign: 'center',
+            }}
+          >
+            💡 Wallets from your current period have been added below
+          </div>
+        )}
 
         {formData.wallets.length === 0 && !showAddForm ? (
           <EmptyState>
             <EmptyIcon icon={walletOutline} />
             <h3>No wallets yet</h3>
-            <p>Add your first wallet to get started with budgeting</p>
+            <p>
+              {currentWallets && currentWallets.length > 0
+                ? 'Copy current wallets or add new ones'
+                : 'Add your first wallet to get started with budgeting'}
+            </p>
           </EmptyState>
         ) : formData.wallets.length > 0 ? (
           <WalletList>
@@ -320,25 +405,51 @@ const StepWallets: React.FC<StepWalletsProps> = ({
             </form>
           </AddWalletForm>
         ) : (
-          <ActionButton
-            expand='block'
-            fill='outline'
-            onClick={() => setShowAddForm(true)}
-            isLoading={false}
-            isDisabled={false}
-            label='Add Wallet'
-          >
-            <IonIcon icon={addOutline} slot='start' />
-          </ActionButton>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: designSystem.spacing.sm }}>
+            <ActionButton
+              expand='block'
+              fill='outline'
+              onClick={() => setShowAddForm(true)}
+              isLoading={false}
+              isDisabled={false}
+              label='Add New Wallet'
+            >
+              <IonIcon icon={addOutline} slot='start' />
+            </ActionButton>
+
+            {/* Show option to add from current wallets if there are wallets not yet added */}
+            {currentWallets &&
+              currentWallets.some(
+                (currentWallet) =>
+                  !formData.wallets.some(
+                    (formWallet) =>
+                      formWallet.name.toLowerCase().trim() ===
+                      currentWallet.name.toLowerCase().trim(),
+                  ),
+              ) && (
+                <ActionButton
+                  expand='block'
+                  fill='clear'
+                  onClick={addWalletsFromCurrent}
+                  isLoading={false}
+                  isDisabled={false}
+                  label='Add Remaining Current Wallets'
+                >
+                  <IonIcon icon={copyOutline} slot='start' />
+                </ActionButton>
+              )}
+          </div>
         )}
 
         {/* Total Budget Display */}
         {formData.wallets.length > 0 && (
-          <TotalBudgetDisplay>
-            <TotalLabel>Total Period Budget</TotalLabel>
-            <TotalAmount>{currency.format(totalBudget)}</TotalAmount>
-            <IonNote>This will be your total spending limit for the period</IonNote>
-          </TotalBudgetDisplay>
+          <div style={{ marginTop: designSystem.spacing.xl }}>
+            <TotalBudgetDisplay>
+              <TotalLabel>Total Period Budget</TotalLabel>
+              <TotalAmount>{currency.format(totalBudget)}</TotalAmount>
+              <IonNote>This will be your total spending limit for the period</IonNote>
+            </TotalBudgetDisplay>
+          </div>
         )}
       </WalletSection>
     </>

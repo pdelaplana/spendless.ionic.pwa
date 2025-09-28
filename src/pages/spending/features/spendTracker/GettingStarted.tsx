@@ -4,6 +4,7 @@ import { CenterContainer, CenterContent } from '@/components/layouts';
 import { ActionButton, Gap } from '@/components/shared';
 import { useCreatePeriod, useCreateWallet, useUpdateAccount } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui';
+import { useAuth } from '@/providers/auth';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { GradientBackground } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
@@ -103,6 +104,7 @@ interface QuickStartForm {
 
 const GettingStarted: React.FC = () => {
   const { account } = useSpendingAccount();
+  const { reloadAccount } = useAuth();
   const createPeriod = useCreatePeriod();
   const createWallet = useCreateWallet();
   const updateAccount = useUpdateAccount();
@@ -181,10 +183,14 @@ const GettingStarted: React.FC = () => {
         id: account.id,
         data: {
           ...account,
+          currency: account.currency || 'AUD',
           onboardingCompleted: true,
           onboardingCompletedAt: new Date(),
         },
       });
+
+      // Reload account data to trigger UI update
+      await reloadAccount();
 
       showNotification('Welcome to Spendless! Your journey begins now. 🎉');
     } catch (error) {

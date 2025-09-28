@@ -3,12 +3,12 @@ import { addWeeks } from 'date-fns';
 import { useState } from 'react';
 
 export interface PeriodFormData {
-  // Step 1: Basics
+  // Step 0: Basics
   goals: string;
   startAt: string;
   endAt: string;
 
-  // Step 2: Wallets
+  // Step 1: Wallets
   wallets: Array<{
     id: string; // temporary ID for form management
     name: string;
@@ -16,8 +16,19 @@ export interface PeriodFormData {
     isDefault: boolean;
   }>;
 
+  // Step 2: Recurring Expenses
+  recurringExpenses: Array<{
+    id: string;
+    description: string;
+    amount: number;
+    originalDate: Date;
+    newDate: Date;
+    category: string;
+    walletId: string;
+  }>;
+
   // Internal state
-  currentStep: 1 | 2 | 3;
+  currentStep: 0 | 1 | 2 | 3;
 }
 
 const getInitialFormData = (): PeriodFormData => ({
@@ -25,7 +36,8 @@ const getInitialFormData = (): PeriodFormData => ({
   startAt: new Date().toISOString().split('T')[0],
   endAt: addWeeks(new Date(), 4).toISOString().split('T')[0],
   wallets: [],
-  currentStep: 1,
+  recurringExpenses: [],
+  currentStep: 0,
 });
 
 export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
@@ -35,19 +47,19 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
   }));
 
   // Step navigation
-  const goToStep = (step: 1 | 2 | 3) => {
+  const goToStep = (step: 0 | 1 | 2 | 3) => {
     setFormData((prev) => ({ ...prev, currentStep: step }));
   };
 
   const nextStep = () => {
     if (formData.currentStep < 3) {
-      setFormData((prev) => ({ ...prev, currentStep: (prev.currentStep + 1) as 1 | 2 | 3 }));
+      setFormData((prev) => ({ ...prev, currentStep: (prev.currentStep + 1) as 0 | 1 | 2 | 3 }));
     }
   };
 
   const prevStep = () => {
-    if (formData.currentStep > 1) {
-      setFormData((prev) => ({ ...prev, currentStep: (prev.currentStep - 1) as 1 | 2 | 3 }));
+    if (formData.currentStep > 0) {
+      setFormData((prev) => ({ ...prev, currentStep: (prev.currentStep - 1) as 0 | 1 | 2 | 3 }));
     }
   };
 
@@ -104,8 +116,21 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
     }));
   };
 
+  // Recurring expenses management
+  const setRecurringExpenses = (expenses: PeriodFormData['recurringExpenses']) => {
+    setFormData((prev) => ({ ...prev, recurringExpenses: expenses }));
+  };
+
+  const removeRecurringExpense = (expenseId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      recurringExpenses: prev.recurringExpenses.filter((e) => e.id !== expenseId),
+    }));
+  };
+
   // Validation
-  const isStep1Valid = () => {
+  const isStep0Valid = () => {
+    // Step 0: Basics validation
     return (
       formData.goals.trim().length >= 3 &&
       formData.startAt &&
@@ -114,27 +139,40 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
     );
   };
 
-  const isStep2Valid = () => {
+  const isStep1Valid = () => {
+    // Step 1: Wallets validation
     return (
       formData.wallets.length > 0 &&
       formData.wallets.every((w) => w.name.trim() && Number.parseFloat(w.spendingLimit) > 0)
     );
   };
 
+  const isStep2Valid = () => {
+    // Step 2: Recurring expenses step is always valid (user can skip/remove all)
+    return true;
+  };
+
+  const isStep3Valid = () => {
+    // Step 3: Review step is always valid (final review)
+    return true;
+  };
+
   const canGoNext = () => {
     switch (formData.currentStep) {
+      case 0:
+        return isStep0Valid();
       case 1:
         return isStep1Valid();
       case 2:
         return isStep2Valid();
       case 3:
-        return false; // Final step
+        return isStep3Valid();
       default:
         return false;
     }
   };
 
-  const canGoBack = () => formData.currentStep > 1;
+  const canGoBack = () => formData.currentStep > 0;
 
   // Calculated values
   const totalBudget = formData.wallets.reduce(
@@ -150,13 +188,20 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
       isDefault: w.isDefault,
     }));
 
+    // Generate period name from date range
+    const startDate = new Date(formData.startAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const endDate = new Date(formData.endAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const periodName = `${startDate} - ${endDate}`;
+
     return {
+      name: periodName,
       goals: formData.goals,
       startAt: new Date(formData.startAt),
       endAt: new Date(formData.endAt),
       walletSetup,
       targetSpend: totalBudget,
       targetSavings: 0, // Could be calculated or set separately
+      reflection: '', // Required field, start with empty string
     };
   };
 
@@ -188,9 +233,14 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
     updateWallet,
     setDefaultWallet,
 
+    // Recurring expenses management
+    setRecurringExpenses,
+    removeRecurringExpense,
+
     // Validation
     isStep1Valid,
     isStep2Valid,
+    isStep3Valid,
 
     // Conversion
     toPeriodData,

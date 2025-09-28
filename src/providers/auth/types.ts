@@ -28,6 +28,7 @@ export interface AuthContextType {
   updateDisplayName: (displayName: string) => Promise<void>;
   updatePhotoUrl: (photoURL: string) => Promise<void>;
   updateEmail: (email: string) => Promise<void>;
+  reloadAccount: () => Promise<void>;
   error: string | null;
   authStateLoading: boolean;
   isAuthenticated: boolean;

@@ -22,7 +22,7 @@ const NextButton = styled.div`
 `;
 
 interface NavigationButtonsProps {
-  currentStep: 1 | 2 | 3;
+  currentStep: 0 | 1 | 2 | 3;
   canGoBack: boolean;
   canGoNext: boolean;
   isLoading?: boolean;
@@ -42,8 +42,10 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
 }) => {
   const getNextButtonLabel = () => {
     switch (currentStep) {
-      case 1:
+      case 0:
         return 'Next: Setup Wallets';
+      case 1:
+        return 'Next: Expenses';
       case 2:
         return 'Next: Review';
       case 3:
@@ -61,6 +63,8 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     }
   };
 
+  // Navigation buttons are now always visible since we removed the reflection step
+
   return (
     <NavigationContainer>
       {canGoBack && (
@@ -75,7 +79,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           fill='solid'
           onClick={handleNextClick}
           isLoading={isLoading}
-          isDisabled={!canGoNext && currentStep !== 3}
+          isDisabled={!canGoNext && currentStep !== 2}
           label={getNextButtonLabel()}
         />
       </NextButton>

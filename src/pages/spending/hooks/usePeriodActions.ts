@@ -1,5 +1,6 @@
 import { usePrompt } from '@/hooks';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { useWallet } from '@/providers/wallet';
 import { addWeeks } from 'date-fns';
 import { usePeriodListModal } from '../modals/periodList/PeriodListModal';
 import { usePeriodEditModal } from '../modals/periodModal/usePeriodEditModal';
@@ -10,6 +11,7 @@ export const usePeriodActions = () => {
     account,
     selectedPeriod,
     periods,
+    spending,
     setSelectedPeriod,
     updatePeriod,
     deleteClosedPeriod,
@@ -18,11 +20,22 @@ export const usePeriodActions = () => {
     resetMutationState,
   } = useSpendingAccount();
 
+  const { wallets } = useWallet();
   const { showConfirmPrompt } = usePrompt();
 
   const { open: openPeriodModal } = usePeriodModalV2();
   const { open: openPeriodEditModal } = usePeriodEditModal();
   const { open: openPeriodListModal } = usePeriodListModal();
+
+  // Get recurring expenses from the current period
+  const getCurrentRecurringExpenses = () => {
+    if (!selectedPeriod?.id) return [];
+
+    return spending.filter(
+      (spend) =>
+        spend.periodId === selectedPeriod.id && (spend.recurring === true || spend.recurring),
+    );
+  };
 
   const editCurrentPeriodHandler = () => {
     if (selectedPeriod) {
@@ -48,6 +61,8 @@ export const usePeriodActions = () => {
   };
 
   const startNewPeriodHandler = () => {
+    const recurringExpenses = getCurrentRecurringExpenses();
+
     openPeriodModal(
       undefined, // No existing period for new period creation
       async (data) => {
@@ -57,6 +72,8 @@ export const usePeriodActions = () => {
         resetMutationState();
         refetchSpending();
       },
+      wallets, // Pass current wallets for copying
+      recurringExpenses, // Pass current recurring expenses
     );
   };
 

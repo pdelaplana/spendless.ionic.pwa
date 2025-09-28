@@ -45,7 +45,7 @@ interface ISignupForm {
 
 const SignupPage: React.FC = () => {
   const { t } = useTranslation();
-  const { signup, authStateLoading, error } = useAuth();
+  const { signup, authStateLoading, error, reloadAccount } = useAuth();
   const { showErrorNotification } = useAppNotifications();
   const createAccount = useCreateAccount();
 
@@ -69,11 +69,15 @@ const SignupPage: React.FC = () => {
             userId: userCredential.user.uid,
             data: {
               name: userCredential.user.displayName || userCredential.user.email || '',
-              currency: '',
+              currency: 'AUD',
               onboardingCompleted: false,
               onboardingCompletedAt: undefined,
             },
           });
+
+          // Reload account data to ensure AuthProvider has the latest account info
+          await reloadAccount();
+
           push(ROUTES.SPENDING);
         } catch (error) {
           console.error('Error creating account:', error);

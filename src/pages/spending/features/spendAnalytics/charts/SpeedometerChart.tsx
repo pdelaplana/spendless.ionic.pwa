@@ -97,7 +97,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
     labels: ['Remaining', 'Scheduled', 'Spent'],
     datasets: [
       {
-        data: [ remainingPercentage, futureSpendPercentage,  currentSpendPercentage,],
+        data: [remainingPercentage, futureSpendPercentage, currentSpendPercentage],
         backgroundColor: [
           designSystem.colors.primary[500], // Remaining (primary color)
           designSystem.colors.primary[300], // Future spend (secondary/lighter primary)

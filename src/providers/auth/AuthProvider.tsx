@@ -379,6 +379,21 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const reloadAccount = async () => {
+    if (!user?.uid) {
+      return;
+    }
+
+    try {
+      const accountData = await loadAccountData(user.uid);
+      updateState({
+        account: accountData,
+      });
+    } catch (error) {
+      console.error('Error reloading account data:', error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -390,6 +405,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         updateDisplayName,
         updatePhotoUrl,
         updateEmail,
+        reloadAccount,
         error,
         authStateLoading,
         isAuthenticated: !!user,
