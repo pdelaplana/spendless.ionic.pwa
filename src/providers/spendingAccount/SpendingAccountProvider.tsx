@@ -174,7 +174,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
         const newPeriod = await createPeriod({
           accountId: spendingAccount?.id || '',
           data: {
-            name: '',
+            name: data.name || '',
             goals: data.goals || '',
             targetSpend: data.targetSpend || 0,
             targetSavings: data.targetSavings || 0,

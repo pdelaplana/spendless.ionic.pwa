@@ -110,6 +110,13 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   const watchedStartAt = watch('startAt');
   const watchedEndAt = watch('endAt');
 
+  // Sync React Hook Form with multi-step form state
+  useEffect(() => {
+    setValue('goals', formData.goals);
+    setValue('startAt', formData.startAt);
+    setValue('endAt', formData.endAt);
+  }, [formData.goals, formData.startAt, formData.endAt, setValue]);
+
   // Initialize recurring expenses from props only once
   useEffect(() => {
     if (
@@ -145,9 +152,9 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
 
   // Custom validation function that uses React Hook Form state
   const isStep0ValidRHF = () => {
-    const goals = watchedGoals || '';
-    const startAt = watchedStartAt || '';
-    const endAt = watchedEndAt || '';
+    const goals = watchedGoals || formData.goals || '';
+    const startAt = watchedStartAt || formData.startAt || '';
+    const endAt = watchedEndAt || formData.endAt || '';
 
     return goals.trim().length >= 3 && startAt && endAt && new Date(endAt) > new Date(startAt);
   };
@@ -194,9 +201,9 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
     try {
       // Sync React Hook Form values to multi-step form before creating period data
       const currentFormValues = {
-        goals: watchedGoals || '',
-        startAt: watchedStartAt || formData.startAt,
-        endAt: watchedEndAt || formData.endAt,
+        goals: watchedGoals || formData.goals || '',
+        startAt: watchedStartAt || formData.startAt || '',
+        endAt: watchedEndAt || formData.endAt || '',
       };
       updateBasics(currentFormValues);
 
