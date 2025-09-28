@@ -189,8 +189,15 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
     }));
 
     // Generate period name from date range
-    const startDate = new Date(formData.startAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const endDate = new Date(formData.endAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const startDate = new Date(formData.startAt).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+    const endDate = new Date(formData.endAt).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
     const periodName = `${startDate} - ${endDate}`;
 
     return {

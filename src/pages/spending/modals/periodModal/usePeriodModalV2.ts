@@ -31,7 +31,12 @@ export const usePeriodModalV2 = (): {
   });
 
   return {
-    open: (period?: IPeriod, onSave?: (period: Partial<IPeriod>) => void, currentWallets?: IWallet[], currentRecurringExpenses?: ISpend[]) => {
+    open: (
+      period?: IPeriod,
+      onSave?: (period: Partial<IPeriod>) => void,
+      currentWallets?: IWallet[],
+      currentRecurringExpenses?: ISpend[],
+    ) => {
       setInputs({
         period,
         currentWallets,

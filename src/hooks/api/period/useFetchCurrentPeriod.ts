@@ -23,6 +23,7 @@ export function useFetchCurrentPeriod(accountId: string | undefined) {
         }
 
         const doc = querySnapshot.docs[0];
+        console.log('Fetched current period:', doc.id, doc.data());
         return mapFromFirestore(doc.id, doc.data());
       } catch (error) {
         console.error('Error fetching current period:', error);

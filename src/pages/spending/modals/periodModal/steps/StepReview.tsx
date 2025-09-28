@@ -177,7 +177,7 @@ const StepReview: React.FC<StepReviewProps> = ({ formData, totalBudget, onEditSt
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric',
     });
   };
@@ -261,12 +261,11 @@ const StepReview: React.FC<StepReviewProps> = ({ formData, totalBudget, onEditSt
                     <ExpenseDescription>{expense.description}</ExpenseDescription>
                     <ExpenseDate>
                       <IonIcon icon={calendarOutline} />
-                      {formatDate(expense.originalDate.toISOString().split('T')[0])} → {formatDate(expense.newDate.toISOString().split('T')[0])}
+                      {formatDate(expense.originalDate.toISOString().split('T')[0])} →{' '}
+                      {formatDate(expense.newDate.toISOString().split('T')[0])}
                     </ExpenseDate>
                   </ExpenseInfo>
-                  <ExpenseAmount>
-                    {currency.format(expense.amount)}
-                  </ExpenseAmount>
+                  <ExpenseAmount>{currency.format(expense.amount)}</ExpenseAmount>
                 </ExpenseItem>
               ))}
               <IonNote style={{ marginTop: designSystem.spacing.md, display: 'block' }}>
@@ -274,9 +273,7 @@ const StepReview: React.FC<StepReviewProps> = ({ formData, totalBudget, onEditSt
               </IonNote>
             </>
           ) : (
-            <EmptyExpenses>
-              No recurring expenses will be copied to this period.
-            </EmptyExpenses>
+            <EmptyExpenses>No recurring expenses will be copied to this period.</EmptyExpenses>
           )}
         </SummaryCard>
       </ReviewSection>

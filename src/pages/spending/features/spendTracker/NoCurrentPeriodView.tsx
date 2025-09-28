@@ -10,7 +10,7 @@ import { checkmarkCircleOutline, rocketOutline, timeOutline } from 'ionicons/ico
 import type React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { usePeriodModal } from '../../modals/periodModal';
+import { usePeriodModalV2 } from '../../modals/periodModal/usePeriodModalV2';
 
 const OnboardingCard = styled(IonCard)`
   margin: auto 0;
@@ -139,30 +139,19 @@ interface NoCurrentPeriodViewProps {
 const NoCurrentPeriodView: React.FC<NoCurrentPeriodViewProps> = ({ isFirstTime = false }) => {
   const { account, createPeriod, didMutationSucceed, didMutationFail, resetMutationState } =
     useSpendingAccount();
-  const { open } = usePeriodModal();
+  const { open } = usePeriodModalV2();
   const [isStarting, setIsStarting] = useState(false);
 
   const handleStartNewPeriod = async () => {
     setIsStarting(true);
     try {
-      open(
-        {
-          name: '',
-          goals: '',
-          targetSpend: 0,
-          targetSavings: 0,
-          startAt: new Date(),
-          endAt: new Date(),
-          reflection: '',
-        },
-        onSavePeriod,
-      );
+      await open(undefined, onSavePeriod);
     } finally {
       setIsStarting(false);
     }
   };
 
-  const onSavePeriod = async (period: IPeriod) => {
+  const onSavePeriod = async (period: Partial<IPeriod>) => {
     await createPeriod({ data: period });
   };
 

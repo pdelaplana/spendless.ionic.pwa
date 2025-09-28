@@ -287,22 +287,25 @@ const StepWallets: React.FC<StepWalletsProps> = ({
       {/* Prominent Wallet Section */}
       <ProminentWalletSection>
         {/* Tip box when wallets have been added from current period */}
-        {hasLoadedCurrentWallets && currentWallets && currentWallets.length > 0 && formData.wallets.length > 0 && (
-          <div
-            style={{
-              background: designSystem.colors.primary[50],
-              border: `1px solid ${designSystem.colors.primary[200]}`,
-              borderRadius: designSystem.borderRadius.md,
-              padding: designSystem.spacing.sm,
-              marginBottom: designSystem.spacing.md,
-              fontSize: designSystem.typography.fontSize.sm,
-              color: designSystem.colors.primary[700],
-              textAlign: 'center',
-            }}
-          >
-            💡 Wallets from your current period have been added below
-          </div>
-        )}
+        {hasLoadedCurrentWallets &&
+          currentWallets &&
+          currentWallets.length > 0 &&
+          formData.wallets.length > 0 && (
+            <div
+              style={{
+                background: designSystem.colors.primary[50],
+                border: `1px solid ${designSystem.colors.primary[200]}`,
+                borderRadius: designSystem.borderRadius.md,
+                padding: designSystem.spacing.sm,
+                marginBottom: designSystem.spacing.md,
+                fontSize: designSystem.typography.fontSize.sm,
+                color: designSystem.colors.primary[700],
+                textAlign: 'center',
+              }}
+            >
+              💡 Wallets from your current period have been added below
+            </div>
+          )}
 
         {formData.wallets.length === 0 && !showAddForm ? (
           <EmptyState>

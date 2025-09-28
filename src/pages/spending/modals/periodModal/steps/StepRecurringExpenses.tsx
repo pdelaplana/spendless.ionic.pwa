@@ -107,7 +107,8 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
 
   // Calculate period duration in days
   const periodDurationDays = Math.ceil(
-    (new Date(formData.endAt).getTime() - new Date(formData.startAt).getTime()) / (1000 * 60 * 60 * 24)
+    (new Date(formData.endAt).getTime() - new Date(formData.startAt).getTime()) /
+      (1000 * 60 * 60 * 24),
   );
 
   // Calculate new dates for recurring expenses
@@ -118,7 +119,7 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
   };
 
   const handleRemoveExpense = (expenseId: string) => {
-    const expense = currentRecurringExpenses.find(e => e.id === expenseId);
+    const expense = currentRecurringExpenses.find((e) => e.id === expenseId);
     if (expense) {
       onRemoveRecurringExpense(expenseId);
       presentToast({
@@ -141,8 +142,9 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
   return (
     <RecurringSection>
       <InfoBox>
-        📅 These expenses from your current period are marked as recurring. They will be copied to your new period
-        with dates adjusted by {periodDurationDays} days. You can remove any you don't want to copy.
+        📅 These expenses from your current period are marked as recurring. They will be copied to
+        your new period with dates adjusted by {periodDurationDays} days. You can remove any you
+        don't want to copy.
       </InfoBox>
 
       {currentRecurringExpenses.length === 0 ? (
@@ -164,8 +166,8 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
                 </RecurringDate>
               </RecurringInfo>
               <DeleteButton
-                fill="clear"
-                size="small"
+                fill='clear'
+                size='small'
                 onClick={() => handleRemoveExpense(expense.id!)}
               >
                 <IonIcon icon={trashOutline} />
@@ -177,7 +179,8 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
 
       {currentRecurringExpenses.length > 0 && (
         <IonNote>
-          {currentRecurringExpenses.length} recurring expense{currentRecurringExpenses.length > 1 ? 's' : ''}
+          {currentRecurringExpenses.length} recurring expense
+          {currentRecurringExpenses.length > 1 ? 's' : ''}
           will be copied to your new period
         </IonNote>
       )}

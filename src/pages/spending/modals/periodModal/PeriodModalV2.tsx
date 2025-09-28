@@ -5,6 +5,7 @@ import type { IPeriod } from '@/domain/Period';
 import type { ISpend } from '@/domain/Spend';
 import type { IWallet } from '@/domain/Wallet';
 import { usePrompt } from '@/hooks';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
 import { IonTitle } from '@ionic/react';
 import type React from 'react';
@@ -43,8 +44,15 @@ interface PeriodModalV2Props {
   onDismiss: (data?: any, role?: string) => void;
 }
 
-const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, currentWallets, currentRecurringExpenses, onSave, onDismiss }) => {
+const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
+  period,
+  currentWallets,
+  currentRecurringExpenses,
+  onSave,
+  onDismiss,
+}) => {
   const { showConfirmPrompt } = usePrompt();
+  const { showErrorNotification } = useAppNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const hasInitializedRecurringExpenses = useRef(false);
 
@@ -104,11 +112,16 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, currentWallets, c
 
   // Initialize recurring expenses from props only once
   useEffect(() => {
-    if (currentRecurringExpenses && currentRecurringExpenses.length > 0 && !hasInitializedRecurringExpenses.current) {
+    if (
+      currentRecurringExpenses &&
+      currentRecurringExpenses.length > 0 &&
+      !hasInitializedRecurringExpenses.current
+    ) {
       hasInitializedRecurringExpenses.current = true;
 
       const periodDurationDays = Math.ceil(
-        (new Date(formData.endAt).getTime() - new Date(formData.startAt).getTime()) / (1000 * 60 * 60 * 24)
+        (new Date(formData.endAt).getTime() - new Date(formData.startAt).getTime()) /
+          (1000 * 60 * 60 * 24),
       );
 
       const recurringExpensesData = currentRecurringExpenses.map((expense) => {
@@ -173,26 +186,65 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({ period, currentWallets, c
 
   const handleFormSubmit = async () => {
     if (formData.wallets.length === 0) {
-      showPrompt('Please add at least one wallet before creating the period');
+      showErrorNotification('Please add at least one wallet before creating the period');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const periodData = toPeriodData();
+      // Sync React Hook Form values to multi-step form before creating period data
+      const currentFormValues = {
+        goals: watchedGoals || '',
+        startAt: watchedStartAt || formData.startAt,
+        endAt: watchedEndAt || formData.endAt,
+      };
+      updateBasics(currentFormValues);
+
+      // Create period data manually to ensure we use the current form values
+      const walletSetup = formData.wallets.map((w) => ({
+        name: w.name,
+        spendingLimit: Number.parseFloat(w.spendingLimit),
+        isDefault: w.isDefault,
+      }));
+
+      const totalBudget = walletSetup.reduce((total, wallet) => total + wallet.spendingLimit, 0);
+
+      // Generate period name from date range
+      const startDate = new Date(currentFormValues.startAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+      const endDate = new Date(currentFormValues.endAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+      const periodName = `${startDate} - ${endDate}`;
+
+      const periodData = {
+        name: periodName,
+        goals: currentFormValues.goals,
+        startAt: new Date(currentFormValues.startAt),
+        endAt: new Date(currentFormValues.endAt),
+        walletSetup,
+        targetSpend: totalBudget,
+        targetSavings: 0,
+        reflection: '',
+      };
 
       if (period) {
         // Editing existing period
-        onSave({ ...periodData, id: period.id });
+        await onSave({ ...periodData, id: period.id });
       } else {
         // Creating new period
-        onSave(periodData);
+        await onSave(periodData);
       }
 
       onDismiss();
     } catch (error) {
       console.error('Failed to save period:', error);
-      showPrompt('Failed to save period. Please try again.');
+      // Show error toast notification to user
+      showErrorNotification('Failed to save period. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

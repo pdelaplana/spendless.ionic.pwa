@@ -21,6 +21,7 @@ import {
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
 import type React from 'react';
+import { useEffect, useRef } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -45,16 +46,14 @@ interface ISignupForm {
 
 const SignupPage: React.FC = () => {
   const { t } = useTranslation();
-  const { signup, authStateLoading, error, reloadAccount } = useAuth();
+  const { signup, error } = useAuth();
   const { showErrorNotification } = useAppNotifications();
-  const createAccount = useCreateAccount();
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting, isDirty },
-    reset,
   } = useForm<ISignupForm>();
 
   const password = watch('password');
@@ -64,28 +63,12 @@ const SignupPage: React.FC = () => {
     try {
       const userCredential = await signup(formData.email, formData.password);
       if (userCredential?.user) {
-        try {
-          await createAccount.mutateAsync({
-            userId: userCredential.user.uid,
-            data: {
-              name: userCredential.user.displayName || userCredential.user.email || '',
-              currency: 'AUD',
-              onboardingCompleted: false,
-              onboardingCompletedAt: undefined,
-            },
-          });
-
-          // Reload account data to ensure AuthProvider has the latest account info
-          await reloadAccount();
-
-          push(ROUTES.SPENDING);
-        } catch (error) {
-          console.error('Error creating account:', error);
-          showErrorNotification('Failed to create account. Please try again.');
-        }
+        push(ROUTES.SPENDING);
       }
     } catch (e) {
       // Error will be handled by useAuth
+      showErrorNotification(t('server.errors.auth.signupFailed'));
+      console.error('Signup error:', e);
     }
   };
 

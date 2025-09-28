@@ -1,24 +1,29 @@
 import { BasePageLayout } from '@/components/layouts';
+import AccountSetupLoading from '@/components/loading/AccountSetupLoading';
 import MainMenuContent from '@/components/menu/MainMenuContent';
 import { SentryErrorBoundary, SuspenseLoadingScreen } from '@/components/shared';
-import { useAuth } from '@/providers/auth';
+import { useEnsureAccount } from '@/hooks';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useIonRouter } from '@ionic/react';
 import { Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
-import GettingStarted from './features/spendTracker/GettingStarted';
 import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
 
 const SpendingPage: React.FC = () => {
   const { t } = useTranslation();
 
   const { push } = useIonRouter();
-  const { account: authAccount } = useAuth(); // Get account from AuthProvider for onboarding check
+  const { isAccountLoading, account: authAccount } = useEnsureAccount();
   const { selectedPeriod, periods } = useSpendingAccount();
   const isFirstTime = !periods || periods.length === 0;
 
   const PeriodDashboard = lazy(() => import('./features/spendTracker/PeriodDashboard'));
   const GettingStarted = lazy(() => import('./features/spendTracker/GettingStarted'));
+
+  // Show account setup loading state if account is not yet available
+  if (isAccountLoading) {
+    return <AccountSetupLoading />;
+  }
 
   return (
     <BasePageLayout
@@ -35,6 +40,9 @@ const SpendingPage: React.FC = () => {
         <SentryErrorBoundary>
           {!authAccount?.onboardingCompleted && <GettingStarted />}
           {authAccount?.onboardingCompleted && selectedPeriod && <PeriodDashboard />}
+          {authAccount?.onboardingCompleted && !selectedPeriod && (
+            <NoCurrentPeriodView isFirstTime={isFirstTime} />
+          )}
         </SentryErrorBoundary>
       </Suspense>
     </BasePageLayout>
