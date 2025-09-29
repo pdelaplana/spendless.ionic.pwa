@@ -20,7 +20,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'favicon.png', 'images/header.logo.png'],
+      includeAssets: ['favicon.ico', 'favicon.png', 'images/header.logo.png', 'images/icons/apple-icon-180.png', 'images/icons/manifest-icon-192.maskable.png', 'images/icons/manifest-icon-512.maskable.png'],
       manifest: {
         name: 'Spendless - A mindful spending tracker',
         short_name: 'Spendless',
@@ -28,56 +28,33 @@ export default defineConfig({
           'A mindful spending tracker that helps you keep track of your expenses and income.',
         theme_color: '#ffffff',
         background_color: '#ffffff',
+        display: 'standalone',
+        orientation: 'portrait',
+        scope: '/',
+        start_url: '/',
+        lang: 'en-US',
+        dir: 'ltr',
+        categories: ['finance', 'productivity', 'lifestyle'],
         icons: [
           {
             src: '/favicon.png',
-            sizes: '64x64',
+            sizes: '512x512',
             type: 'image/png',
           },
           {
-            src: '/images/icons/icon-72x72.png',
-            sizes: '72x72',
+            src: '/images/icons/apple-icon-180.png',
+            sizes: '180x180',
             type: 'image/png',
-            purpose: 'maskable any',
+            purpose: 'any',
           },
           {
-            src: '/images/icons/icon-96x96.png',
-            sizes: '96x96',
-            type: 'image/png',
-            purpose: 'maskable any',
-          },
-          {
-            src: '/images/icons/icon-128x128.png',
-            sizes: '128x128',
-            type: 'image/png',
-            purpose: 'maskable any',
-          },
-          {
-            src: '/images/icons/icon-144x144.png',
-            sizes: '144x144',
-            type: 'image/png',
-            purpose: 'maskable any',
-          },
-          {
-            src: '/images/icons/icon-152x152.png',
-            sizes: '152x152',
-            type: 'image/png',
-            purpose: 'maskable any',
-          },
-          {
-            src: '/images/icons/icon-192x192.png',
+            src: '/images/icons/manifest-icon-192.maskable.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'maskable any',
           },
           {
-            src: '/images/icons/icon-384x384.png',
-            sizes: '384x384',
-            type: 'image/png',
-            purpose: 'maskable any',
-          },
-          {
-            src: '/images/icons/icon-512x512.png',
+            src: '/images/icons/manifest-icon-512.maskable.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable any',
@@ -86,6 +63,40 @@ export default defineConfig({
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024, // Set limit to 4 MiB
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'google-fonts-stylesheets',
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-webfonts',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+        ],
+      },
+      devOptions: {
+        enabled: false,
       },
     }),
   ],
