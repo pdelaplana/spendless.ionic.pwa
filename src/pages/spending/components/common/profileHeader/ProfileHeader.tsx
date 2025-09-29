@@ -6,8 +6,11 @@ import type React from 'react';
 import styled from 'styled-components';
 
 const ProfileHeaderContainer = styled.div`
-  background: transparent;
-  padding: ${designSystem.spacing.lg} ${designSystem.spacing.md} ${designSystem.spacing.xs};
+  position: sticky;
+  top: 0;
+  background: ${designSystem.colors.background};
+  z-index: 100;
+  padding: ${designSystem.spacing.xl} ${designSystem.spacing.md} ${designSystem.spacing.xs};
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
