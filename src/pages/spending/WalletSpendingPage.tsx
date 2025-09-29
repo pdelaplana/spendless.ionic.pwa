@@ -62,14 +62,14 @@ const WalletSpendingPage: React.FC = () => {
         selectedWallet,
         (walletData) => {
           updateWalletMutation.mutate({
-            accountId: account.id,
-            periodId: selectedPeriod.id,
-            walletId: selectedWallet.id,
+            accountId: account.id!,
+            periodId: selectedPeriod.id!,
+            walletId: selectedWallet.id!,
             updates: walletData,
           });
         },
-        account.id,
-        selectedPeriod.id,
+        account.id!,
+        selectedPeriod.id!,
         wallets,
         account.currency,
         handleDeleteWallet,

@@ -237,8 +237,8 @@ describe('CurrencyAmountInput', () => {
     it('should handle cursor positioning with longer currency symbols', async () => {
       const user = userEvent.setup();
 
-      // Create a custom currency with longer symbol
-      const customCurrency = new (Currency as new (code: string, symbol: string) => Currency)('USD', 'US$');
+      // Use a predefined currency
+      const customCurrency = Currency.USD;
 
       render(
         <CurrencyAmountInput

@@ -38,7 +38,7 @@ vi.mock('@ionic/react', async () => {
     ),
     IonIcon: ({ icon, ...props }: { icon: unknown; [key: string]: unknown }) => (
       <span data-testid='ion-icon' {...props}>
-        {icon}
+        {icon as React.ReactNode}
       </span>
     ),
     IonList: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (

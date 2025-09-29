@@ -136,7 +136,7 @@ const PeriodSpendingView: React.FC = () => {
               targetSpend={targetSpend}
               periodStartDate={selectedPeriod?.startAt}
               periodEndDate={selectedPeriod?.endAt}
-              selectedWallet={selectedWallet}
+              selectedWallet={selectedWallet || undefined}
             />
 
             <QuickActionButtons

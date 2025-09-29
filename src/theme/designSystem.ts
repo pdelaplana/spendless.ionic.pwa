@@ -210,7 +210,7 @@ export const getColor = (path: string): string => {
     }
   }
 
-  return value;
+  return value as unknown as string;
 };
 
 export const getSpacing = (key: keyof typeof designSystem.spacing): string => {

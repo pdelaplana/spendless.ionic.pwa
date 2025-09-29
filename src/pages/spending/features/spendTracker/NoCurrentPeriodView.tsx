@@ -1,7 +1,7 @@
 import { CenterContainer, CenterContent } from '@/components/layouts';
 import { ActionButton, Gap, MutationNotificationHandler } from '@/components/shared';
 import { brandVoice } from '@/constants/brandVoice';
-import type { IPeriod } from '@/domain/Period';
+import type { CreatePeriodDTO, IPeriod } from '@/domain/Period';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { GradientBackground } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
@@ -152,7 +152,7 @@ const NoCurrentPeriodView: React.FC<NoCurrentPeriodViewProps> = ({ isFirstTime =
   };
 
   const onSavePeriod = async (period: Partial<IPeriod>) => {
-    await createPeriod({ data: period });
+    await createPeriod({ data: period as CreatePeriodDTO });
   };
 
   const benefits = [
