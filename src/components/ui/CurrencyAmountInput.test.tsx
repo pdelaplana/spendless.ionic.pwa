@@ -237,8 +237,8 @@ describe('CurrencyAmountInput', () => {
     it('should handle cursor positioning with longer currency symbols', async () => {
       const user = userEvent.setup();
 
-      // Use a predefined currency
-      const customCurrency = Currency.USD;
+      // Use AUD currency which has a longer symbol 'A$'
+      const customCurrency = Currency.AUD;
 
       render(
         <CurrencyAmountInput
@@ -255,9 +255,9 @@ describe('CurrencyAmountInput', () => {
       await user.click(input);
 
       await waitFor(() => {
-        // Cursor should be positioned after the 'US$' symbol (position 3)
-        expect(input.selectionStart).toBe(3);
-        expect(input.selectionEnd).toBe(3);
+        // Cursor should be positioned after the 'A$' symbol (position 2)
+        expect(input.selectionStart).toBe(2);
+        expect(input.selectionEnd).toBe(2);
       });
     });
 
