@@ -84,6 +84,7 @@ export function useUpdateSpend() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['spending', data.accountId, data.periodId] });
+      queryClient.invalidateQueries({ queryKey: ['useFetchSpendingForCharts'] });
     },
     onError: (error) => {
       logError(error);

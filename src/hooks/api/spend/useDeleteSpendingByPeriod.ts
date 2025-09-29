@@ -49,6 +49,9 @@ export function useDeleteSpendingByPeriod() {
       queryClient.invalidateQueries({
         queryKey: ['spendingTotals', data.accountId, data.periodId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['useFetchSpendingForCharts'],
+      });
     },
   });
 }
