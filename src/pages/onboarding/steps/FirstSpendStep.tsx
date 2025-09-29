@@ -7,7 +7,7 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { designSystem } from '@/theme/designSystem';
 import { IonCard, IonCardContent, IonItem, IonLabel, IonList } from '@ionic/react';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import OnboardingStep, { type OnboardingStepProps } from '../components/OnboardingStep';
@@ -172,7 +172,7 @@ const FirstSpendStep: React.FC<FirstSpendStepProps> = ({
   const hasEmotionalState = watchedEmotionalState;
 
   // Update tutorial step based on completion
-  const updateTutorialStep = () => {
+  const updateTutorialStep = useCallback(() => {
     if (hasAmount && hasDescription && !hasCategory) {
       setCurrentTutorialStep(1);
     } else if (hasAmount && hasDescription && hasCategory && !hasEmotionalState) {
@@ -180,11 +180,11 @@ const FirstSpendStep: React.FC<FirstSpendStepProps> = ({
     } else if (hasAmount && hasDescription && hasCategory && hasEmotionalState) {
       setCurrentTutorialStep(3);
     }
-  };
+  }, [hasAmount, hasDescription, hasCategory, hasEmotionalState]);
 
   useEffect(() => {
     updateTutorialStep();
-  }, [hasAmount, hasDescription, hasCategory, hasEmotionalState]);
+  }, [updateTutorialStep]);
 
   const onSubmit = async (data: SpendForm) => {
     if (!account?.id || !periodId || !walletId) {
@@ -251,7 +251,7 @@ const FirstSpendStep: React.FC<FirstSpendStepProps> = ({
         {/* Tutorial Progress */}
         <div style={{ marginBottom: designSystem.spacing.lg }}>
           {tutorialSteps.map((step, index) => (
-            <TutorialStep key={index} $isActive={index === currentTutorialStep}>
+            <TutorialStep key={`tutorial-${step.title.replace(/\s+/g, '-').toLowerCase()}`} $isActive={index === currentTutorialStep}>
               <StepNumber>{index + 1}</StepNumber>
               <StepContent>
                 <StepTitle>{step.title}</StepTitle>

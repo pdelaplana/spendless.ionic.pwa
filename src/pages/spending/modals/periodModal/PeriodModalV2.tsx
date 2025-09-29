@@ -136,7 +136,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
         newDate.setDate(newDate.getDate() + periodDurationDays);
 
         return {
-          id: expense.id!,
+          id: expense.id || '',
           description: expense.description,
           amount: expense.amount,
           originalDate: expense.date,
@@ -148,7 +148,8 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
 
       setRecurringExpenses(recurringExpensesData);
     }
-  }, []); // Empty dependency array since we only want this to run once on mount
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally run only once on mount to initialize from props
+  }, []);
 
   // Custom validation function that uses React Hook Form state
   const isStep0ValidRHF = () => {

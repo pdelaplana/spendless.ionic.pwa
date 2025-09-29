@@ -168,7 +168,7 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
               <DeleteButton
                 fill='clear'
                 size='small'
-                onClick={() => handleRemoveExpense(expense.id!)}
+                onClick={() => expense.id && handleRemoveExpense(expense.id)}
               >
                 <IonIcon icon={trashOutline} />
               </DeleteButton>

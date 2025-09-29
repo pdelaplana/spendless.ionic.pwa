@@ -21,7 +21,7 @@ export function useCreateAccount() {
       });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', (data as any).id] });
+      queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', data.id] });
     },
     onError: (error) => {
       logError(error);

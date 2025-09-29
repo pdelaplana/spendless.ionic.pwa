@@ -211,7 +211,7 @@ const CompletionStep: React.FC<CompletionStepProps> = ({ onComplete, ...stepProp
   return (
     <OnboardingStep {...stepProps} title='' hideNavigation>
       <CelebrationContainer>
-        {showConfetti && [...Array(10)].map((_, i) => <Confetti key={i} />)}
+        {showConfetti && Array.from({ length: 10 }, (_, i) => <Confetti key={`confetti-${Math.random()}-${Date.now()}-${i}`} />)}
 
         <CompletionBadge>🎉</CompletionBadge>
 
@@ -223,7 +223,7 @@ const CompletionStep: React.FC<CompletionStepProps> = ({ onComplete, ...stepProp
 
         <AchievementsList>
           {achievements.map((achievement, index) => (
-            <Achievement key={index}>
+            <Achievement key={`achievement-${achievement.text}-${index}`}>
               <AchievementIcon>{achievement.icon}</AchievementIcon>
               <AchievementText>{achievement.text}</AchievementText>
             </Achievement>
@@ -246,7 +246,7 @@ const CompletionStep: React.FC<CompletionStepProps> = ({ onComplete, ...stepProp
 
             <NextStepsList>
               {nextSteps.map((step, index) => (
-                <NextStep key={index}>
+                <NextStep key={`next-step-${step.replace(/\s+/g, '-').toLowerCase()}`}>
                   <StepNumber>{index + 1}</StepNumber>
                   <StepText>{step}</StepText>
                 </NextStep>

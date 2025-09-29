@@ -195,7 +195,7 @@ const NoCurrentPeriodView: React.FC<NoCurrentPeriodViewProps> = ({ isFirstTime =
             <OnboardingContent>
               <BenefitsGrid>
                 {benefits.map((benefit, index) => (
-                  <BenefitItem key={index}>
+                  <BenefitItem key={`benefit-${benefit.title}-${index}`}>
                     <BenefitIcon>
                       <IonIcon icon={benefit.icon} color='success' />
                     </BenefitIcon>

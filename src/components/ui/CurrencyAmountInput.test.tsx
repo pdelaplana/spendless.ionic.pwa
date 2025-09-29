@@ -238,7 +238,7 @@ describe('CurrencyAmountInput', () => {
       const user = userEvent.setup();
 
       // Create a custom currency with longer symbol
-      const customCurrency = new (Currency as any)('USD', 'US$');
+      const customCurrency = new (Currency as new (code: string, symbol: string) => Currency)('USD', 'US$');
 
       render(
         <CurrencyAmountInput

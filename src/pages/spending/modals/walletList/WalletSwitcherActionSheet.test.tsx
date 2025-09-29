@@ -1,5 +1,6 @@
 import type { IWallet } from '@/domain/Wallet';
 import { fireEvent, render, screen } from '@testing-library/react';
+import type React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import WalletSwitcherActionSheet from './WalletSwitcherActionSheet';
 
@@ -9,58 +10,58 @@ vi.mock('@ionic/react', async () => {
   return {
     ...actual,
     useIonToast: vi.fn(() => [vi.fn()]),
-    IonModal: ({ children, isOpen, ...props }: any) =>
+    IonModal: ({ children, isOpen, ...props }: { children: React.ReactNode; isOpen: boolean; [key: string]: unknown }) =>
       isOpen ? (
         <div data-testid='ion-modal' {...props}>
           {children}
         </div>
       ) : null,
-    IonHeader: ({ children, ...props }: any) => (
+    IonHeader: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
       <div data-testid='ion-header' {...props}>
         {children}
       </div>
     ),
-    IonToolbar: ({ children, ...props }: any) => (
+    IonToolbar: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
       <div data-testid='ion-toolbar' {...props}>
         {children}
       </div>
     ),
-    IonTitle: ({ children, ...props }: any) => (
+    IonTitle: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
       <h1 data-testid='ion-title' {...props}>
         {children}
       </h1>
     ),
-    IonButton: ({ children, onClick, ...props }: any) => (
+    IonButton: ({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => (
       <button data-testid='ion-button' onClick={onClick} {...props}>
         {children}
       </button>
     ),
-    IonIcon: ({ icon, ...props }: any) => (
+    IonIcon: ({ icon, ...props }: { icon: unknown; [key: string]: unknown }) => (
       <span data-testid='ion-icon' {...props}>
         {icon}
       </span>
     ),
-    IonList: ({ children, ...props }: any) => (
+    IonList: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
       <div data-testid='ion-list' {...props}>
         {children}
       </div>
     ),
-    IonItem: ({ children, onClick, ...props }: any) => (
+    IonItem: ({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => (
       <div data-testid='ion-item' onClick={onClick} {...props}>
         {children}
       </div>
     ),
-    IonLabel: ({ children, ...props }: any) => (
+    IonLabel: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
       <div data-testid='ion-label' {...props}>
         {children}
       </div>
     ),
-    IonNote: ({ children, ...props }: any) => (
+    IonNote: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
       <span data-testid='ion-note' {...props}>
         {children}
       </span>
     ),
-    IonProgressBar: ({ value, color, ...props }: any) => (
+    IonProgressBar: ({ value, color, ...props }: { value?: number; color?: string; [key: string]: unknown }) => (
       <div data-testid='ion-progress-bar' data-value={value} data-color={color} {...props} />
     ),
   };

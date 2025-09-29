@@ -163,7 +163,9 @@ describe('SpendList', () => {
     const coffeeSpend = screen.getByText('Coffee at Starbucks').closest('ion-item');
     expect(coffeeSpend).toBeInTheDocument();
 
-    fireEvent.click(coffeeSpend!);
+    if (coffeeSpend) {
+      fireEvent.click(coffeeSpend);
+    }
 
     await waitFor(() => {
       expect(mockOnSpendClick).toHaveBeenCalledWith(mockSpending[0]);
@@ -265,8 +267,8 @@ describe('SpendList', () => {
     const ionItems = document.querySelectorAll('ion-item[button]');
 
     // Check that items have proper line attributes
-    ionItems.forEach((item) => {
+    for (const item of ionItems) {
       expect(item).toHaveAttribute('lines');
-    });
+    }
   });
 });

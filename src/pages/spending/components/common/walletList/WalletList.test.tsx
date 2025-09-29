@@ -183,10 +183,12 @@ describe('WalletList', () => {
     const ionItems = document.querySelectorAll('ion-item');
     expect(ionItems.length).toBe(2);
 
-    ionItems?.forEach((item) => {
-      expect(item).toHaveAttribute('aria-label');
-      expect(item).toHaveClass('item-has-start-slot');
-    });
+    if (ionItems) {
+      for (const item of ionItems) {
+        expect(item).toHaveAttribute('aria-label');
+        expect(item).toHaveClass('item-has-start-slot');
+      }
+    }
   });
 
   it('applies custom className', () => {
@@ -220,9 +222,9 @@ describe('WalletList', () => {
     const ionItems = document.querySelectorAll('ion-item');
     expect(ionItems.length).toBe(2);
     // Check that items don't have aria-label (indicating they're not clickable)
-    ionItems.forEach((item) => {
+    for (const item of ionItems) {
       expect(item).not.toHaveAttribute('aria-label');
-    });
+    }
   });
 
   it('displays formatted currency amounts', () => {

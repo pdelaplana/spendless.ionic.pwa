@@ -142,7 +142,7 @@ const ReadyStep: React.FC<ReadyStepProps> = ({ onComplete, ...stepProps }) => {
 
             <ActionsList>
               {quickActions.map((action, index) => (
-                <ActionItem key={index}>
+                <ActionItem key={`action-${action.replace(/\s+/g, '-').toLowerCase()}`}>
                   <ActionIcon>{index + 1}</ActionIcon>
                   <span>{action}</span>
                 </ActionItem>

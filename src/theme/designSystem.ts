@@ -200,10 +200,10 @@ export type DesignSystemComponents = typeof designSystem.components;
 // Helper functions for accessing design tokens
 export const getColor = (path: string): string => {
   const keys = path.split('.');
-  let value: any = designSystem.colors;
+  let value: Record<string, unknown> = designSystem.colors;
 
   for (const key of keys) {
-    value = value[key];
+    value = value[key] as Record<string, unknown>;
     if (value === undefined) {
       console.warn(`Color path "${path}" not found in design system`);
       return '#000000'; // fallback

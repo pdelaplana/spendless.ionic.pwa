@@ -99,9 +99,9 @@ const WalletView: React.FC = () => {
         selectedWallet,
         (walletData) => {
           updateWalletMutation.mutate({
-            accountId: account.id!,
-            periodId: selectedPeriod.id!,
-            walletId: selectedWallet.id!,
+            accountId: account.id,
+            periodId: selectedPeriod.id,
+            walletId: selectedWallet.id,
             updates: walletData,
           });
         },
