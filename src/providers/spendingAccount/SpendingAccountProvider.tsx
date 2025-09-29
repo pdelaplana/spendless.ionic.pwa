@@ -5,6 +5,7 @@ import {
   useDeleteSpend,
   useFetchAccountByUserId,
   useFetchSpendingByAccountId,
+  useFetchSpendingForCharts,
   useUpdateAccount,
   useUpdateSpend,
 } from '@/hooks';
@@ -137,6 +138,19 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     error: fetchSpendingError,
     refetch: refetchSpending,
   } = useFetchSpendingByAccountId(
+    spendingAccount?.id,
+    selectedPeriod?.id ?? currentPeriod?.id,
+    dateRange.startAt,
+    dateRange.endAt,
+  );
+
+  // Separate hook for chart data - no pagination, gets all data for accurate charts
+  const {
+    data: chartSpending = [],
+    isFetching: isFetchingChartData,
+    isError: isChartDataError,
+    error: chartDataError,
+  } = useFetchSpendingForCharts(
     spendingAccount?.id,
     selectedPeriod?.id ?? currentPeriod?.id,
     dateRange.startAt,
@@ -302,6 +316,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       periods: periods ?? [],
 
       spending: flattenedSpending,
+      chartSpending,
       startAt: dateRange.startAt,
       endAt: dateRange.endAt,
       setDateRange: setDateRangeMemo,
@@ -335,6 +350,11 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       isFetching: isFetchingAccount || isFetchingSpending,
       isError: isFetchingAccountError || isFetchingSpendingError,
       fetchError: fetchAccountError || fetchSpendingError,
+
+      isFetchingChartData,
+      isChartDataError,
+      chartDataError,
+
       isMutationPending:
         isUpdatingAccount ||
         isDeletingAccount ||
@@ -372,6 +392,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       spendingAccount,
       periods,
       flattenedSpending,
+      chartSpending,
       dateRange.startAt,
       dateRange.endAt,
       setDateRangeMemo,
@@ -397,6 +418,9 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       isFetchingSpendingError,
       fetchAccountError,
       fetchSpendingError,
+      isFetchingChartData,
+      isChartDataError,
+      chartDataError,
       isUpdatingAccount,
       isDeletingAccount,
       isCreatingSpend,

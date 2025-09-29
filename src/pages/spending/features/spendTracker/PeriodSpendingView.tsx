@@ -46,6 +46,7 @@ const PeriodSpendingView: React.FC = () => {
     selectedPeriod,
     setSelectedPeriod,
     spending,
+    chartSpending,
     hasNextPageSpending,
     fetchNextPageSpending,
     didMutationFail,
@@ -56,11 +57,17 @@ const PeriodSpendingView: React.FC = () => {
   // Wallet context
   const { selectedWallet } = useWallet();
 
-  // Filter spending by selected wallet
+  // Filter spending by selected wallet for UI list (paginated)
   const filteredSpending = useMemo(() => {
     if (!selectedWallet) return spending;
     return spending.filter((spend) => spend.walletId === selectedWallet.id);
   }, [spending, selectedWallet]);
+
+  // Filter complete chart spending by selected wallet for accurate budget calculations
+  const filteredChartSpending = useMemo(() => {
+    if (!selectedWallet) return chartSpending;
+    return chartSpending.filter((spend) => spend.walletId === selectedWallet.id);
+  }, [chartSpending, selectedWallet]);
 
   const { currentSpending, futureSpending, groupedSpending } = useSpendTracking(filteredSpending);
 
@@ -70,17 +77,23 @@ const PeriodSpendingView: React.FC = () => {
   const { walletListHandler, walletActionSheetHandler, actionSheet } = useWalletActions();
   const { openActionSheet } = useSpendActionSheet();
 
+  // Budget calculations using COMPLETE chart data (not paginated)
   const { remainingBudget, targetSpend, futureSpendingTotal } = useMemo(() => {
-    const total = currentSpending.reduce((sum, spend) => sum + spend.amount, 0);
-    const futureTotal = futureSpending.reduce((sum, spend) => sum + spend.amount, 0);
+    const now = new Date();
+    const currentTotal = filteredChartSpending
+      .filter((spend) => spend.date <= now)
+      .reduce((sum, spend) => sum + spend.amount, 0);
+    const futureTotal = filteredChartSpending
+      .filter((spend) => spend.date > now)
+      .reduce((sum, spend) => sum + spend.amount, 0);
     const target = selectedWallet?.spendingLimit || selectedPeriod?.targetSpend || 0;
     return {
-      totalSpending: total,
-      remainingBudget: target - total,
+      totalSpending: currentTotal,
+      remainingBudget: target - currentTotal - futureTotal, // Fixed: subtract both current AND future spending
       targetSpend: target,
       futureSpendingTotal: futureTotal,
     };
-  }, [currentSpending, futureSpending, selectedPeriod, selectedWallet]);
+  }, [filteredChartSpending, selectedWallet?.spendingLimit, selectedPeriod?.targetSpend]);
 
   return (
     <GradientBackground>
@@ -119,11 +132,11 @@ const PeriodSpendingView: React.FC = () => {
         ) : (
           <>
             <SpendAnalyticsCharts
-              spending={filteredSpending}
               remainingBudget={remainingBudget}
               targetSpend={targetSpend}
               periodStartDate={selectedPeriod?.startAt}
               periodEndDate={selectedPeriod?.endAt}
+              selectedWallet={selectedWallet}
             />
 
             <QuickActionButtons

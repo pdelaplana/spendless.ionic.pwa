@@ -5,8 +5,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import type { ISpend } from '@/domain/Spend';
+import type { IWallet } from '@/domain/Wallet';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { designSystem } from '@/theme/designSystem';
+import { useMemo } from 'react';
 import { BurndownChart, SpeedometerChart, SpendingChart } from './charts';
 
 const ChartsContainer = styled.div`
@@ -64,33 +66,39 @@ const ChartsContainer = styled.div`
 `;
 
 interface SpendAnalyticsChartsProps {
-  spending: ISpend[];
   remainingBudget: number;
   targetSpend?: number;
   periodStartDate?: Date;
   periodEndDate?: Date;
+  selectedWallet?: IWallet;
 }
 
 export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
-  spending,
   remainingBudget,
   targetSpend,
   periodStartDate,
   periodEndDate,
+  selectedWallet,
 }) => {
-  const { account } = useSpendingAccount();
+  const { account, chartSpending, isFetchingChartData } = useSpendingAccount();
 
   // Default dates if not provided
   const startDate = periodStartDate || new Date();
   const endDate = periodEndDate || new Date();
 
-  // Calculate current and future spending
+  // Filter chart spending by selected wallet (if any)
+  const filteredChartSpending = useMemo(() => {
+    if (!selectedWallet) return chartSpending;
+    return chartSpending.filter((spend) => spend.walletId === selectedWallet.id);
+  }, [chartSpending, selectedWallet]);
+
+  // Calculate current and future spending using filtered data
   const now = new Date();
-  const currentSpending = spending
+  const currentSpending = filteredChartSpending
     .filter((s) => s.date <= now)
     .reduce((total, spend) => total + spend.amount, 0);
 
-  const futureSpending = spending
+  const futureSpending = filteredChartSpending
     .filter((s) => s.date > now)
     .reduce((total, spend) => total + spend.amount, 0);
 
@@ -112,13 +120,13 @@ export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
           </SwiperSlide>
           <SwiperSlide>
             <SpendingChart
-              spending={spending.filter((s) => s.date <= new Date())}
+              spending={filteredChartSpending.filter((s) => s.date <= new Date())}
               currency={account?.currency}
             />
           </SwiperSlide>
           <SwiperSlide>
             <BurndownChart
-              spending={spending}
+              spending={filteredChartSpending}
               targetSpend={targetSpend}
               startDate={startDate}
               endDate={endDate}

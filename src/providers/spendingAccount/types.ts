@@ -8,6 +8,7 @@ export interface SpendingAccountContextType {
   selectedPeriod: IPeriod | undefined;
   periods: (IPeriod & { actualSpend: number })[];
   spending: ISpend[];
+  chartSpending: ISpend[];
   startAt?: Date;
   endAt?: Date;
 
@@ -49,6 +50,10 @@ export interface SpendingAccountContextType {
   isFetching: boolean;
   isError: boolean;
   fetchError: unknown;
+
+  isFetchingChartData: boolean;
+  isChartDataError: boolean;
+  chartDataError: unknown;
 
   isMutationPending: boolean;
   didMutationSucceed: boolean;

@@ -4,6 +4,7 @@ export * from './useDeleteSpendingByPeriod';
 export * from './useFetchSpendingByAccountId';
 export * from './useFetchSpendingById';
 export * from './useFetchSpendingByPeriod';
+export * from './useFetchSpendingForCharts';
 export * from './useFetchSpendingTotalsByPeriod';
 export * from './useSpendCategories';
 export * from './useUpdateSpend';
