@@ -158,25 +158,58 @@ const StatusIndicator = styled.div<{ status: 'active' | 'ending' | 'closed' }>`
   margin-right: ${designSystem.spacing.xs};
 `;
 
-const PeriodProgress = styled.div`
-
+const PeriodProgressContainer = styled.div`
   margin-top: ${designSystem.spacing.sm};
   width: 100%;
-  height: 10px;
+  position: relative;
+`;
+
+const PeriodProgress = styled.div`
+  width: 100%;
+  height: 24px;
   background: ${designSystem.colors.gray[200]};
-  border-radius: 2px;
-  margin-top: ${designSystem.spacing.xs};
+  border-radius: ${designSystem.borderRadius.md};
+  border: 1px solid ${designSystem.colors.primary[500]};
   overflow: hidden;
+  position: relative;
 `;
 
 const ProgressFill = styled.div<{ progress: number }>`
   height: 100%;
   background: linear-gradient(90deg,
-    ${designSystem.colors.primary[500]} 0%,
-    ${designSystem.colors.primary[400]} 100%);
+    ${designSystem.colors.primary[400]} 0%,
+    ${designSystem.colors.primary[300]} 100%);
   width: ${({ progress }) => Math.max(2, progress)}%;
   transition: width 0.3s ease;
-  border-radius: 2px;
+  border-radius: ${designSystem.borderRadius.md};
+`;
+
+const ProgressOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${designSystem.spacing.xs};
+  pointer-events: none;
+`;
+
+const ProgressLabel = styled.span`
+  font-size: ${designSystem.typography.fontSize.xs};
+  font-weight: ${designSystem.typography.fontWeight.medium};
+  color: ${designSystem.colors.gray[800]};
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.5px;
+`;
+
+const ProgressAmount = styled.span`
+  font-size: ${designSystem.typography.fontSize.sm};
+  font-weight: ${designSystem.typography.fontWeight.bold};
+  color: ${designSystem.colors.gray[900]};
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
 `;
 
 const ActionHint = styled.span`
@@ -186,29 +219,6 @@ const ActionHint = styled.span`
   margin-top: ${designSystem.spacing.xs};
 `;
 
-const SpendPerDayContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${designSystem.spacing.xs};
-  margin-top: ${designSystem.spacing.sm};
-  padding: ${designSystem.spacing.xs} ${designSystem.spacing.sm};
-  background: rgba(139, 95, 191, 0.1);
-  border-radius: ${designSystem.borderRadius.md};
-  border: 1px solid rgba(139, 95, 191, 0.2);
-`;
-
-const SpendPerDayLabel = styled.span`
-  font-size: ${designSystem.typography.fontSize.sm};
-  font-weight: ${designSystem.typography.fontWeight.medium};
-  color: ${designSystem.colors.text.secondary};
-`;
-
-const SpendPerDayAmount = styled.span`
-  font-size: ${designSystem.typography.fontSize.lg};
-  font-weight: ${designSystem.typography.fontWeight.bold};
-  color: ${designSystem.colors.primary[600]};
-`;
 
 const NoPeriodContainer = styled(GlassCard).attrs({ as: 'button' })`
   padding: ${designSystem.spacing.lg};
@@ -395,17 +405,19 @@ export const PeriodSwitcher: React.FC = () => {
                   : t('spending.daysRemaining', { count: daysRemaining })}
           </PeriodStatus>
           {!isClosed && (
-            <PeriodProgress>
-              <ProgressFill progress={progress} />
-            </PeriodProgress>
-          )}
-          {!isClosed && daysRemaining > 0 && (
-            <SpendPerDayContainer>
-              <SpendPerDayLabel>{t('spending.spendPerDay')}</SpendPerDayLabel>
-              <SpendPerDayAmount>
-                {formatCurrency(spendPerDay, account?.currency)}
-              </SpendPerDayAmount>
-            </SpendPerDayContainer>
+            <PeriodProgressContainer>
+              <PeriodProgress>
+                <ProgressFill progress={progress} />
+                {daysRemaining > 0 && (
+                  <ProgressOverlay>
+                    <ProgressLabel>{t('spending.spendPerDay')}</ProgressLabel>
+                    <ProgressAmount>
+                      {formatCurrency(spendPerDay, account?.currency)}
+                    </ProgressAmount>
+                  </ProgressOverlay>
+                )}
+              </PeriodProgress>
+            </PeriodProgressContainer>
           )}
         </PeriodInfo>
       </PeriodContent>
