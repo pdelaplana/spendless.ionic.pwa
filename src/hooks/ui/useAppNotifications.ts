@@ -11,7 +11,7 @@ export const useAppNotifications = () => {
     });
   };
 
-  const showErrorNotification = (message: string, duration = 2000) => {
+  const showErrorNotification = (message: string, duration = 3000) => {
     present({
       message,
       duration,

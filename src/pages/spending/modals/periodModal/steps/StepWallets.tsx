@@ -3,10 +3,11 @@ import { ActionButton } from '@/components/shared';
 import CurrencyAmountInput from '@/components/ui/CurrencyAmountInput';
 import { Currency } from '@/domain/Currencies';
 import type { IWallet } from '@/domain/Wallet';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { SectionLabel } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
-import { IonButton, IonIcon, IonItem, IonLabel, IonNote, useIonToast } from '@ionic/react';
+import { IonButton, IonIcon, IonItem, IonLabel, IonNote } from '@ionic/react';
 import { addOutline, copyOutline, trashOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
@@ -144,7 +145,7 @@ const StepWallets: React.FC<StepWalletsProps> = ({
   onSetDefaultWallet,
 }) => {
   const { t } = useTranslation();
-  const [presentToast] = useIonToast();
+  const { showNotification, showErrorNotification } = useAppNotifications();
   const [showAddForm, setShowAddForm] = useState(false);
   const [hasLoadedCurrentWallets, setHasLoadedCurrentWallets] = useState(false);
   const hasLoadedRef = useRef(false); // Use ref to persist across effect executions in Strict Mode
@@ -195,22 +196,12 @@ const StepWallets: React.FC<StepWalletsProps> = ({
 
   const onSubmit = (data: WalletFormData) => {
     if (!data.name.trim()) {
-      presentToast({
-        message: 'Wallet name is required',
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification('Wallet name is required');
       return;
     }
 
     if (Number.parseFloat(data.spendingLimit) <= 0) {
-      presentToast({
-        message: 'Spending limit must be greater than zero',
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification('Spending limit must be greater than zero');
       return;
     }
 
@@ -219,12 +210,7 @@ const StepWallets: React.FC<StepWalletsProps> = ({
       (w) => w.name.toLowerCase().trim() === data.name.toLowerCase().trim(),
     );
     if (existingWallet) {
-      presentToast({
-        message: 'A wallet with this name already exists',
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification('A wallet with this name already exists');
       return;
     }
 
@@ -236,12 +222,7 @@ const StepWallets: React.FC<StepWalletsProps> = ({
   const handleDelete = (walletId: string) => {
     const wallet = formData.wallets.find((w) => w.id === walletId);
     if (wallet?.isDefault && formData.wallets.length > 1) {
-      presentToast({
-        message: 'Cannot delete the default wallet. Make another wallet default first.',
-        duration: 3000,
-        color: 'warning',
-        position: 'top',
-      });
+      showErrorNotification('Cannot delete the default wallet. Make another wallet default first.');
       return;
     }
     onRemoveWallet(walletId);
@@ -265,19 +246,11 @@ const StepWallets: React.FC<StepWalletsProps> = ({
       });
 
       if (addedCount > 0) {
-        presentToast({
-          message: `Added ${addedCount} wallet${addedCount > 1 ? 's' : ''} from current period`,
-          duration: 3000,
-          color: 'success',
-          position: 'top',
-        });
+        showNotification(
+          `Added ${addedCount} wallet${addedCount > 1 ? 's' : ''} from current period`,
+        );
       } else {
-        presentToast({
-          message: 'All wallets from current period already exist',
-          duration: 3000,
-          color: 'warning',
-          position: 'top',
-        });
+        showNotification('All wallets from current period already exist');
       }
     }
   };

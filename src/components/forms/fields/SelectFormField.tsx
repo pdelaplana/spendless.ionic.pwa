@@ -65,10 +65,10 @@ const SelectFormField: React.FC<SelectFormFieldProps> = ({
               },
             }
           : onChange
-          ? {
-              onIonChange: onChange,
-            }
-          : {})}
+            ? {
+                onIonChange: onChange,
+              }
+            : {})}
       >
         {optionsList?.map((option) => (
           <IonSelectOption key={option.value} value={option.value}>

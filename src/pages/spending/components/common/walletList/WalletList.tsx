@@ -1,5 +1,6 @@
 import type { IWallet } from '@/domain/Wallet';
 import { useCreateWallet, useDeleteWallet, useUpdateWallet } from '@/hooks/api/wallet';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import useFormatters from '@/hooks/ui/useFormatters';
 import {
   EmptyContainer,
@@ -19,7 +20,6 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useWallet } from '@/providers/wallet';
 import { StyledIonList } from '@/styles/IonList.styled';
 import { IonIcon, IonSpinner } from '@ionic/react';
-import { useIonToast } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import type React from 'react';
 import { useWalletModal } from '../../../modals/walletModal';
@@ -34,7 +34,7 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
   const { account, selectedPeriod } = useSpendingAccount();
   const { formatCurrency } = useFormatters();
   const { open: openWalletModal } = useWalletModal();
-  const [presentToast] = useIonToast();
+  const { showNotification, showErrorNotification } = useAppNotifications();
 
   // Create a currency-aware format function
   const formatAccountCurrency = (amount: number) => formatCurrency(amount, account?.currency);
@@ -65,20 +65,10 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
           ...walletData,
         },
       });
-      presentToast({
-        message: 'Wallet created successfully',
-        duration: 2000,
-        color: 'success',
-        position: 'top',
-      });
+      showNotification('Wallet created successfully');
     } catch (error) {
       console.error('Failed to create wallet:', error);
-      presentToast({
-        message: 'Failed to create wallet',
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification('Failed to create wallet');
     }
   };
 
@@ -95,20 +85,10 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
         walletId: wallet.id || '',
         updates: walletData,
       });
-      presentToast({
-        message: 'Wallet updated successfully',
-        duration: 2000,
-        color: 'success',
-        position: 'top',
-      });
+      showNotification('Wallet updated successfully');
     } catch (error) {
       console.error('Failed to update wallet:', error);
-      presentToast({
-        message: 'Failed to update wallet',
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification('Failed to update wallet');
     }
   };
 

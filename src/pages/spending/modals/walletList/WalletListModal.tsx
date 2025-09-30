@@ -1,6 +1,7 @@
 import { CenterContainer } from '@/components/layouts';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import type { IWallet } from '@/domain/Wallet';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import {
   IonItem,
   IonLabel,
@@ -9,7 +10,6 @@ import {
   IonRadioGroup,
   IonTitle,
   useIonModal,
-  useIonToast,
 } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useState } from 'react';
@@ -31,7 +31,7 @@ const WalletListModal: React.FC<WalletListModalProps> = ({
   currentWallet,
 }) => {
   const { t } = useTranslation();
-  const [presentToast] = useIonToast();
+  const { showNotification } = useAppNotifications();
   const [selectedWalletId, setSelectedWalletId] = useState<string | undefined>(currentWallet?.id);
 
   // Handle wallet selection - now closes modal automatically
@@ -52,11 +52,7 @@ const WalletListModal: React.FC<WalletListModalProps> = ({
     onWalletSelected?.(selectedWallet);
     onDismiss(selectedWallet, 'select');
 
-    presentToast({
-      message: `Switched to ${selectedWallet.name}`,
-      duration: 2000,
-      color: 'success',
-    });
+    showNotification(`Switched to ${selectedWallet.name}`);
   };
 
   // Calculate totals for summary

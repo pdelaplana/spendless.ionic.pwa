@@ -1,7 +1,8 @@
 import { Currency } from '@/domain/Currencies';
 import type { ISpend } from '@/domain/Spend';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
-import { IonButton, IonIcon, IonItem, IonLabel, IonList, IonNote, useIonToast } from '@ionic/react';
+import { IonButton, IonIcon, IonItem, IonLabel, IonList, IonNote } from '@ionic/react';
 import { calendarOutline, trashOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -102,7 +103,7 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
   onRemoveRecurringExpense,
 }) => {
   const { t } = useTranslation();
-  const [presentToast] = useIonToast();
+  const { showNotification } = useAppNotifications();
   const currency = Currency.USD; // TODO: Get from user preferences
 
   // Calculate period duration in days
@@ -122,12 +123,7 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
     const expense = currentRecurringExpenses.find((e) => e.id === expenseId);
     if (expense) {
       onRemoveRecurringExpense(expenseId);
-      presentToast({
-        message: `Removed "${expense.description}" from recurring expenses`,
-        duration: 3000,
-        color: 'success',
-        position: 'top',
-      });
+      showNotification(`Removed "${expense.description}" from recurring expenses`);
     }
   };
 

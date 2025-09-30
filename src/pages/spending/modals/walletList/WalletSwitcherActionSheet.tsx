@@ -1,5 +1,6 @@
 import type { IWallet } from '@/domain/Wallet';
 import { getWalletUsagePercentage, isWalletOverLimit } from '@/domain/Wallet';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import {
   IonButton,
   IonHeader,
@@ -12,7 +13,6 @@ import {
   IonProgressBar,
   IonTitle,
   IonToolbar,
-  useIonToast,
 } from '@ionic/react';
 import { checkmarkCircle, close, star } from 'ionicons/icons';
 import { useRef, useState } from 'react';
@@ -35,7 +35,7 @@ const WalletSwitcherActionSheet: React.FC<WalletSwitcherActionSheetProps> = ({
 }) => {
   const modal = useRef<HTMLIonModalElement>(null);
   const { t } = useTranslation();
-  const [presentToast] = useIonToast();
+  const { showNotification } = useAppNotifications();
 
   const handleWalletSelect = (wallet: IWallet) => {
     // Check if the selection is different from current
@@ -48,11 +48,7 @@ const WalletSwitcherActionSheet: React.FC<WalletSwitcherActionSheetProps> = ({
     onWalletSelected?.(wallet);
     onDismiss();
 
-    presentToast({
-      message: `Switched to ${wallet.name}`,
-      duration: 2000,
-      color: 'success',
-    });
+    showNotification(`Switched to ${wallet.name}`);
   };
 
   const formatCurrency = (amount: number): string => {

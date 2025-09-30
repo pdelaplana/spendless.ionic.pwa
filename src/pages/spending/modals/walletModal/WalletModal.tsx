@@ -6,17 +6,10 @@ import CurrencyAmountInput from '@/components/ui/CurrencyAmountInput';
 import { Currency } from '@/domain/Currencies';
 import { validateSingleWalletSetup } from '@/domain/validation/walletValidation';
 import { usePrompt } from '@/hooks';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
-import {
-  IonButton,
-  IonCheckbox,
-  IonItem,
-  IonLabel,
-  IonListHeader,
-  IonNote,
-  useIonToast,
-} from '@ionic/react';
+import { IonButton, IonCheckbox, IonItem, IonLabel, IonListHeader, IonNote } from '@ionic/react';
 import { useCallback, useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +37,7 @@ const WalletModal: React.FC<WalletModalProps> = ({
   onDismiss,
 }) => {
   const { t } = useTranslation();
-  const [presentToast] = useIonToast();
+  const { showNotification, showErrorNotification } = useAppNotifications();
   const { showConfirmPrompt } = usePrompt();
   const currency = Currency.fromCode(currencyCode ?? 'USD') ?? Currency.USD;
 
@@ -106,12 +99,7 @@ const WalletModal: React.FC<WalletModalProps> = ({
     // Validate wallet setup
     const validationErrors = validateSingleWalletSetup(walletSetup);
     if (validationErrors.length > 0) {
-      presentToast({
-        message: validationErrors[0],
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification(validationErrors[0]);
       return;
     }
 
@@ -120,12 +108,7 @@ const WalletModal: React.FC<WalletModalProps> = ({
       (w) => w.name.toLowerCase().trim() === walletSetup.name.toLowerCase() && w.id !== wallet?.id,
     );
     if (existingWallet) {
-      presentToast({
-        message: 'A wallet with this name already exists',
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification('A wallet with this name already exists');
       return;
     }
 
@@ -134,12 +117,7 @@ const WalletModal: React.FC<WalletModalProps> = ({
       onDismiss();
     } catch (error) {
       console.error('Wallet operation failed:', error);
-      presentToast({
-        message: isEditing ? 'Failed to update wallet' : 'Failed to create wallet',
-        duration: 3000,
-        color: 'danger',
-        position: 'top',
-      });
+      showErrorNotification(isEditing ? 'Failed to update wallet' : 'Failed to create wallet');
     }
   };
 
