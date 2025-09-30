@@ -57,7 +57,16 @@ const SelectFormField: React.FC<SelectFormFieldProps> = ({
           : {})}
         {...(setValue
           ? {
-              onIonChange: (e) => setValue(name, e.detail.value, { shouldDirty: true }),
+              onIonChange: (e) => {
+                setValue(name, e.detail.value, { shouldDirty: true });
+                if (onChange) {
+                  onChange(e);
+                }
+              },
+            }
+          : onChange
+          ? {
+              onIonChange: onChange,
             }
           : {})}
       >

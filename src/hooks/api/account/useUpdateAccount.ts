@@ -31,6 +31,7 @@ export function useUpdateAccount() {
       );
     },
     onSuccess: (data) => {
+      // Use the account id (which is the same as userId in this system) for query invalidation
       queryClient.invalidateQueries({ queryKey: ['useFetchAccountByUserId', data.id] });
     },
     onError: (error) => {

@@ -1,5 +1,6 @@
+import { SelectFormField } from '@/components/forms';
 import { BasePageLayout, CenterContainer, Content } from '@/components/layouts';
-import { ActionButton } from '@/components/shared';
+import { ActionButton, Gap } from '@/components/shared';
 import DestructiveButton from '@/components/shared/base/buttons/DestructiveButton';
 import { CURRENCIES, type Currency } from '@/domain/Currencies';
 import { DATEFORMATS, type DateFormat } from '@/domain/DateFormats';
@@ -8,19 +9,64 @@ import { useDeleteAccountFunction, useExportDataFunction } from '@/hooks/functio
 import { useAuth } from '@/providers/auth';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
-import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
-import { IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
+import { StyledIonList, StyledItem, TransparentIonList } from '@/styles/IonList.styled';
+import { designSystem } from '@/theme/designSystem';
+import { IonItem, IonLabel } from '@ionic/react';
+import { magnetSharp } from 'ionicons/icons';
 import { useEffect, useMemo } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import styled from 'styled-components';
+
+const SectionLabel = styled.div`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: ${designSystem.colors.textPrimary};
+  text-align: left;
+  margin-bottom: ${designSystem.spacing.md};
+  margin-left: ${designSystem.spacing.lg};
+`;
+
+const DangerSectionLabel = styled(SectionLabel)`
+  color: ${designSystem.colors.danger};
+`;
+
+interface SettingsFormData {
+  currency: string;
+  dateFormat: string;
+}
 
 const SettingsPage: React.FC = () => {
   const { signout } = useAuth();
   const { account, updateAccount, didMutationFail } = useSpendingAccount();
+
   const currencies = useMemo(() => {
-    return CURRENCIES;
+    return CURRENCIES.map((currency: Currency) => ({
+      label: `${currency.code} (${currency.symbol})`,
+      value: currency.code,
+    }));
   }, []);
+
   const dateFormats = useMemo(() => {
-    return DATEFORMATS;
+    return DATEFORMATS.map((format: DateFormat) => ({
+      label: format.label,
+      value: format.code,
+    }));
   }, []);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors, isDirty, isSubmitting },
+    reset,
+  } = useForm<SettingsFormData>({
+    defaultValues: {
+      currency: account?.currency || 'USD',
+      dateFormat: account?.dateFormat || 'MM/DD/YYYY',
+    },
+    mode: 'onChange',
+  });
 
   const { showConfirmPrompt } = usePrompt();
   const { showNotification, showErrorNotification } = useAppNotifications();
@@ -29,9 +75,39 @@ const SettingsPage: React.FC = () => {
   const { mutateAsync: deleteAccount, isPending: deleteAccountPending } =
     useDeleteAccountFunction();
 
-  const currencyChangeHandler = (currency: string) => {
+  const onCurrencyChange = async (currency: string) => {
     if (account) {
-      updateAccount({ id: account.id ?? '', data: { ...account, currency } });
+      try {
+        await updateAccount({
+          id: account.id ?? '',
+          data: {
+            ...account,
+            currency,
+          },
+        });
+        setValue('currency', currency, { shouldDirty: false });
+        showNotification('Currency updated successfully');
+      } catch (error) {
+        showErrorNotification('Failed to update currency');
+      }
+    }
+  };
+
+  const onDateFormatChange = async (dateFormat: string) => {
+    if (account) {
+      try {
+        await updateAccount({
+          id: account.id ?? '',
+          data: {
+            ...account,
+            dateFormat,
+          },
+        });
+        setValue('dateFormat', dateFormat, { shouldDirty: false });
+        showNotification('Date format updated successfully');
+      } catch (error) {
+        showErrorNotification('Failed to update date format');
+      }
     }
   };
 
@@ -71,8 +147,17 @@ const SettingsPage: React.FC = () => {
   };
 
   useEffect(() => {
+    if (account) {
+      reset({
+        currency: account.currency || 'USD',
+        dateFormat: account.dateFormat || 'MM/DD/YYYY',
+      });
+    }
+  }, [account, reset]);
+
+  useEffect(() => {
     if (didMutationFail) {
-      showErrorNotification('Failed to update settings settings');
+      showErrorNotification('Failed to update settings');
     }
   }, [didMutationFail, showErrorNotification]);
 
@@ -84,45 +169,72 @@ const SettingsPage: React.FC = () => {
       defaultBackButtonHref={ROUTES.SPENDING}
     >
       <CenterContainer>
-        <div className='ion-margin'>Regional Settings</div>
-
-        <StyledIonList>
-          <IonItem lines='full'>
+        <Gap size={designSystem.spacing.lg} />
+        <SectionLabel>Regional Settings</SectionLabel>
+        <TransparentIonList
+          lines='none'
+          className='ion-no-padding ion-no-margin'
+          style={{ marginLeft: designSystem.spacing.sm }}
+        >
+          <IonItem>
             <IonLabel>
               <h2>Preferred Currency</h2>
+              <p>Currently: {account?.currency || 'USD'}</p>
             </IonLabel>
-            <IonSelect
-              slot='end'
-              value={account?.currency}
-              interface={'popover'}
-              onIonChange={(e) => currencyChangeHandler(e.detail.value)}
-            >
-              {currencies.map((currency: Currency) => (
-                <IonSelectOption key={currency.code} value={currency.code}>
-                  {currency.code}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
+            <div slot='end' style={{ minWidth: '120px' }}>
+              <SelectFormField
+                name='currency'
+                label=''
+                placeholder='Select currency'
+                register={register}
+                setValue={setValue}
+                getValues={getValues}
+                error={errors.currency}
+                optionsList={currencies}
+                validationRules={{
+                  required: 'Currency is required',
+                }}
+                onChange={(e) => onCurrencyChange(e.detail.value)}
+              />
+            </div>
           </IonItem>
-          <IonItem lines='full'>
+
+          <IonItem>
             <IonLabel>
               <h2>Date Format</h2>
+              <p>Currently: {account?.dateFormat || 'MM/DD/YYYY'}</p>
             </IonLabel>
-            <IonSelect slot='end' value={account?.dateFormat} interface={'popover'}>
-              {dateFormats.map((format: DateFormat) => (
-                <IonSelectOption key={format.code} value={format.code}>
-                  {format.label}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
+            <div slot='end' style={{ minWidth: '120px' }}>
+              <SelectFormField
+                name='dateFormat'
+                label=''
+                placeholder='Select date format'
+                register={register}
+                setValue={setValue}
+                getValues={getValues}
+                error={errors.dateFormat}
+                optionsList={dateFormats}
+                validationRules={{
+                  required: 'Date format is required',
+                }}
+                onChange={(e) => onDateFormatChange(e.detail.value)}
+              />
+            </div>
           </IonItem>
-        </StyledIonList>
+        </TransparentIonList>
 
-        <div className='ion-margin'>Account Settings</div>
-        <StyledIonList>
-          <StyledItem lines='full'>
+        <Gap size={designSystem.spacing.lg} />
+
+        <SectionLabel>Account Settings</SectionLabel>
+        <TransparentIonList
+          lines='none'
+          className='ion-no-padding ion-no-margin'
+          style={{ marginLeft: designSystem.spacing.sm }}
+        >
+          <IonItem>
             <IonLabel>
               <h2>Export Data</h2>
+              <p>Download all your spending data and settings</p>
             </IonLabel>
             <div slot='end'>
               <ActionButton
@@ -133,21 +245,55 @@ const SettingsPage: React.FC = () => {
                 style={{ width: '100px' }}
               />
             </div>
-          </StyledItem>
-        </StyledIonList>
-        <Content>
-          <DestructiveButton
-            className='ion-padding-top ion-padding-bottom ion-margin-start ion-margin-end'
-            fill='solid'
-            label={'Delete Account'}
-            prompt={
-              'Are you sure you want to delete your Spendless account?  This action cannot be undone and you will be automatically signed out of your account.'
-            }
-            expand={'full'}
-            onClick={deleteAccountHandler}
-            isLoading={deleteAccountPending}
-          />
-        </Content>
+          </IonItem>
+        </TransparentIonList>
+
+        <Gap size={designSystem.spacing.xl} />
+
+        <DangerSectionLabel>Danger Zone</DangerSectionLabel>
+        <TransparentIonList
+          lines='none'
+          className='ion-no-padding ion-no-margin'
+          style={{ marginLeft: designSystem.spacing.sm }}
+        >
+          <IonItem>
+            <IonLabel>
+              <h2
+                style={{
+                  color: designSystem.colors.danger,
+                  margin: 0,
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                }}
+              >
+                Delete Account
+              </h2>
+              <p
+                style={{
+                  color: designSystem.colors.textSecondary,
+                  margin: '4px 0 0 0',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.4',
+                }}
+              >
+                Once you delete your account, there is no going back. Please be certain.
+              </p>
+            </IonLabel>
+            <div slot='end'>
+              <DestructiveButton
+                fill='solid'
+                expand='block'
+                label={'Delete'}
+                prompt={
+                  'Are you sure you want to delete your Spendless account? This action cannot be undone and you will be automatically signed out of your account.'
+                }
+                onClick={deleteAccountHandler}
+                isLoading={deleteAccountPending}
+                style={{ minWidth: '100px' }}
+              />
+            </div>
+          </IonItem>
+        </TransparentIonList>
       </CenterContainer>
     </BasePageLayout>
   );
