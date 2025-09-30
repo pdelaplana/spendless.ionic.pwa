@@ -251,7 +251,10 @@ const FirstSpendStep: React.FC<FirstSpendStepProps> = ({
         {/* Tutorial Progress */}
         <div style={{ marginBottom: designSystem.spacing.lg }}>
           {tutorialSteps.map((step, index) => (
-            <TutorialStep key={`tutorial-${step.title.replace(/\s+/g, '-').toLowerCase()}`} $isActive={index === currentTutorialStep}>
+            <TutorialStep
+              key={`tutorial-${step.title.replace(/\s+/g, '-').toLowerCase()}`}
+              $isActive={index === currentTutorialStep}
+            >
               <StepNumber>{index + 1}</StepNumber>
               <StepContent>
                 <StepTitle>{step.title}</StepTitle>

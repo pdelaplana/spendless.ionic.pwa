@@ -1,9 +1,9 @@
-import { IonIcon } from '@ionic/react';
-import { refresh, close, checkmark } from 'ionicons/icons';
-import React, { useState } from 'react';
-import styled from 'styled-components';
 import { usePwaUpdate } from '@/hooks/pwa/usePwaUpdate';
 import { designSystem } from '@/theme/designSystem';
+import { IonIcon } from '@ionic/react';
+import { checkmark, close, refresh } from 'ionicons/icons';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Button } from './Button';
 
 const NotificationContainer = styled.div<{ isVisible: boolean; variant: 'update' | 'success' }>`
@@ -11,16 +11,15 @@ const NotificationContainer = styled.div<{ isVisible: boolean; variant: 'update'
   top: ${designSystem.spacing.lg};
   left: ${designSystem.spacing.md};
   right: ${designSystem.spacing.md};
-  background: ${props => props.variant === 'success'
-    ? designSystem.colors.success
-    : designSystem.colors.primary[500]};
+  background: ${(props) =>
+    props.variant === 'success' ? designSystem.colors.success : designSystem.colors.primary[500]};
   color: ${designSystem.colors.text.inverse};
   border-radius: ${designSystem.borderRadius.lg};
   padding: ${designSystem.spacing.lg};
   box-shadow: ${designSystem.shadows.xl};
   z-index: 1001;
-  transform: ${props => props.isVisible ? 'translateY(0)' : 'translateY(-100%)'};
-  opacity: ${props => props.isVisible ? 1 : 0};
+  transform: ${(props) => (props.isVisible ? 'translateY(0)' : 'translateY(-100%)')};
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
   transition: all 0.3s ease;
   max-width: 500px;
   margin: 0 auto;
@@ -126,7 +125,7 @@ export const PwaUpdateNotification: React.FC<PwaUpdateNotificationProps> = ({
   autoShow = true,
   onUpdateStarted,
   onUpdateCompleted,
-  className
+  className,
 }) => {
   const { updateAvailable, updateApplied, updateServiceWorker } = usePwaUpdate();
   const [isDismissed, setIsDismissed] = useState(false);
@@ -184,12 +183,8 @@ export const PwaUpdateNotification: React.FC<PwaUpdateNotificationProps> = ({
 
   if (shouldShowSuccessMessage) {
     return (
-      <NotificationContainer
-        isVisible={true}
-        variant="success"
-        className={className}
-      >
-        <CloseButton onClick={handleDismiss} aria-label="Dismiss notification">
+      <NotificationContainer isVisible={true} variant='success' className={className}>
+        <CloseButton onClick={handleDismiss} aria-label='Dismiss notification'>
           <IonIcon icon={close} />
         </CloseButton>
 
@@ -212,10 +207,10 @@ export const PwaUpdateNotification: React.FC<PwaUpdateNotificationProps> = ({
   return (
     <NotificationContainer
       isVisible={shouldShowUpdateMessage}
-      variant="update"
+      variant='update'
       className={className}
     >
-      <CloseButton onClick={handleDismiss} aria-label="Dismiss update notification">
+      <CloseButton onClick={handleDismiss} aria-label='Dismiss update notification'>
         <IonIcon icon={close} />
       </CloseButton>
 
@@ -232,20 +227,15 @@ export const PwaUpdateNotification: React.FC<PwaUpdateNotificationProps> = ({
 
           <ActionArea>
             <UpdateButton
-              variant="outline"
-              size="sm"
+              variant='outline'
+              size='sm'
               onClick={handleUpdate}
               loading={isUpdating}
               disabled={isUpdating}
             >
               {isUpdating ? 'Updating...' : 'Update Now'}
             </UpdateButton>
-            <LaterButton
-              variant="ghost"
-              size="sm"
-              onClick={handleDismiss}
-              disabled={isUpdating}
-            >
+            <LaterButton variant='ghost' size='sm' onClick={handleDismiss} disabled={isUpdating}>
               Later
             </LaterButton>
           </ActionArea>
@@ -261,10 +251,7 @@ interface PwaUpdateBadgeProps {
   className?: string;
 }
 
-export const PwaUpdateBadge: React.FC<PwaUpdateBadgeProps> = ({
-  onClick,
-  className
-}) => {
+export const PwaUpdateBadge: React.FC<PwaUpdateBadgeProps> = ({ onClick, className }) => {
   const { updateAvailable } = usePwaUpdate();
 
   if (!updateAvailable) {
@@ -272,13 +259,7 @@ export const PwaUpdateBadge: React.FC<PwaUpdateBadgeProps> = ({
   }
 
   return (
-    <Button
-      variant="primary"
-      size="sm"
-      startIcon={refresh}
-      onClick={onClick}
-      className={className}
-    >
+    <Button variant='primary' size='sm' startIcon={refresh} onClick={onClick} className={className}>
       Update Available
     </Button>
   );

@@ -20,7 +20,14 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'favicon.png', 'images/header.logo.png', 'images/icons/apple-icon-180.png', 'images/icons/manifest-icon-192.maskable.png', 'images/icons/manifest-icon-512.maskable.png'],
+      includeAssets: [
+        'favicon.ico',
+        'favicon.png',
+        'images/header.logo.png',
+        'images/icons/apple-icon-180.png',
+        'images/icons/manifest-icon-192.maskable.png',
+        'images/icons/manifest-icon-512.maskable.png',
+      ],
       manifest: {
         name: 'Spendless - A mindful spending tracker',
         short_name: 'Spendless',

@@ -1,9 +1,9 @@
-import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
-import { cloudOffline, refresh, analytics, home } from 'ionicons/icons';
-import React from 'react';
-import styled from 'styled-components';
 import { useNetworkStatus } from '@/providers/networkStatus/useNetworkStatus';
 import { designSystem } from '@/theme/designSystem';
+import { IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { analytics, cloudOffline, home, refresh } from 'ionicons/icons';
+import type React from 'react';
+import styled from 'styled-components';
 import { Button } from './Button';
 
 const OfflineContainer = styled.div`
@@ -111,8 +111,8 @@ const StatusIndicator = styled.div<{ isOnline: boolean }>`
   align-items: center;
   gap: ${designSystem.spacing.sm};
   padding: ${designSystem.spacing.sm} ${designSystem.spacing.md};
-  background: ${props => props.isOnline ? designSystem.colors.success : designSystem.colors.gray[100]};
-  color: ${props => props.isOnline ? designSystem.colors.text.inverse : designSystem.colors.text.secondary};
+  background: ${(props) => (props.isOnline ? designSystem.colors.success : designSystem.colors.gray[100])};
+  color: ${(props) => (props.isOnline ? designSystem.colors.text.inverse : designSystem.colors.text.secondary)};
   border-radius: ${designSystem.borderRadius.md};
   font-size: ${designSystem.typography.fontSize.sm};
   font-weight: ${designSystem.typography.fontWeight.medium};
@@ -123,7 +123,7 @@ const StatusDot = styled.div<{ isOnline: boolean }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${props => props.isOnline ? designSystem.colors.text.inverse : designSystem.colors.gray[400]};
+  background: ${(props) => (props.isOnline ? designSystem.colors.text.inverse : designSystem.colors.gray[400])};
 `;
 
 interface OfflinePageHandlerProps {
@@ -137,7 +137,7 @@ export const OfflinePageHandler: React.FC<OfflinePageHandlerProps> = ({
   showFullPage = false,
   onRetry,
   onNavigateHome,
-  className
+  className,
 }) => {
   const { isOnline } = useNetworkStatus();
 
@@ -173,43 +173,25 @@ export const OfflinePageHandler: React.FC<OfflinePageHandlerProps> = ({
         <IonIcon icon={cloudOffline} />
       </OfflineIcon>
 
-      <OfflineTitle>
-        {isOnline ? 'Back Online!' : 'You\'re Offline'}
-      </OfflineTitle>
+      <OfflineTitle>{isOnline ? 'Back Online!' : "You're Offline"}</OfflineTitle>
 
       <OfflineDescription>
         {isOnline
           ? 'Your internet connection has been restored. You can now access all features.'
-          : 'Don\'t worry - Spendless works offline too! You can still track your spending and view your data.'
-        }
+          : "Don't worry - Spendless works offline too! You can still track your spending and view your data."}
       </OfflineDescription>
 
       <ActionArea>
         {isOnline ? (
-          <Button
-            variant="primary"
-            startIcon={refresh}
-            onClick={handleRetry}
-            fullWidth
-          >
+          <Button variant='primary' startIcon={refresh} onClick={handleRetry} fullWidth>
             Refresh Page
           </Button>
         ) : (
           <>
-            <Button
-              variant="outline"
-              startIcon={refresh}
-              onClick={handleRetry}
-              fullWidth
-            >
+            <Button variant='outline' startIcon={refresh} onClick={handleRetry} fullWidth>
               Try Again
             </Button>
-            <Button
-              variant="ghost"
-              startIcon={home}
-              onClick={handleNavigateHome}
-              fullWidth
-            >
+            <Button variant='ghost' startIcon={home} onClick={handleNavigateHome} fullWidth>
               Go Home
             </Button>
           </>
@@ -266,14 +248,10 @@ export const OfflinePageHandler: React.FC<OfflinePageHandlerProps> = ({
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>
-              {isOnline ? 'Back Online' : 'Offline Mode'}
-            </IonTitle>
+            <IonTitle>{isOnline ? 'Back Online' : 'Offline Mode'}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          {content}
-        </IonContent>
+        <IonContent>{content}</IonContent>
       </IonPage>
     );
   }
@@ -287,10 +265,11 @@ export const useOfflineHandler = () => {
 
   const showOfflineFallback = (error?: Error) => {
     // Check if the error is network-related
-    const isNetworkError = error?.message?.includes('fetch') ||
-                          error?.message?.includes('network') ||
-                          error?.message?.includes('ERR_INTERNET_DISCONNECTED') ||
-                          !isOnline;
+    const isNetworkError =
+      error?.message?.includes('fetch') ||
+      error?.message?.includes('network') ||
+      error?.message?.includes('ERR_INTERNET_DISCONNECTED') ||
+      !isOnline;
 
     return isNetworkError;
   };

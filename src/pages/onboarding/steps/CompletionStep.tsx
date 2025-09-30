@@ -211,7 +211,10 @@ const CompletionStep: React.FC<CompletionStepProps> = ({ onComplete, ...stepProp
   return (
     <OnboardingStep {...stepProps} title='' hideNavigation>
       <CelebrationContainer>
-        {showConfetti && Array.from({ length: 10 }, (_, i) => <Confetti key={`confetti-${Math.random()}-${Date.now()}-${i}`} />)}
+        {showConfetti &&
+          Array.from({ length: 10 }, (_, i) => (
+            <Confetti key={`confetti-${Math.random()}-${Date.now()}-${i}`} />
+          ))}
 
         <CompletionBadge>🎉</CompletionBadge>
 

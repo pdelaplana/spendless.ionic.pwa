@@ -42,8 +42,8 @@ import AppRoutes from './routes/AppRoutes';
 import './app.css';
 import './positioning.css';
 import NetworkStatusNotifier from './components/networkStatusNotifier/NetworkStatusNotifier';
-import { NetworkStatusProvider } from './providers/networkStatus';
 import { PwaInstallPrompt, PwaUpdateNotification } from './components/ui';
+import { NetworkStatusProvider } from './providers/networkStatus';
 
 setupIonicReact({ mode: 'md' });
 

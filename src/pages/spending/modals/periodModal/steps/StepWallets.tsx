@@ -186,7 +186,7 @@ const StepWallets: React.FC<StepWalletsProps> = ({
       });
     }
     // Remove formData.wallets.length from dependencies to prevent infinite loops
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally limited dependencies to prevent infinite loops
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally limited dependencies to prevent infinite loops
   }, [currentWallets, hasLoadedCurrentWallets]);
 
   const handleAmountChange = (value: number) => {

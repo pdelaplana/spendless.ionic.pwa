@@ -1,9 +1,9 @@
-import { IonIcon } from '@ionic/react';
-import { download, close } from 'ionicons/icons';
-import React, { useState } from 'react';
-import styled from 'styled-components';
 import { usePwaInstall } from '@/hooks/pwa/usePwaInstall';
 import { designSystem } from '@/theme/designSystem';
+import { IonIcon } from '@ionic/react';
+import { close, download } from 'ionicons/icons';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Button } from './Button';
 
 const PromptContainer = styled.div<{ isVisible: boolean }>`
@@ -16,8 +16,8 @@ const PromptContainer = styled.div<{ isVisible: boolean }>`
   padding: ${designSystem.spacing.lg};
   box-shadow: ${designSystem.shadows.xl};
   z-index: 1000;
-  transform: ${props => props.isVisible ? 'translateY(0)' : 'translateY(100%)'};
-  opacity: ${props => props.isVisible ? 1 : 0};
+  transform: ${(props) => (props.isVisible ? 'translateY(0)' : 'translateY(100%)')};
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
   transition: all 0.3s ease;
   border: 1px solid ${designSystem.colors.gray[200]};
 `;
@@ -100,7 +100,7 @@ interface PwaInstallPromptProps {
 export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
   autoShow = true,
   delay = 3000,
-  className
+  className,
 }) => {
   const { canInstall, isInstalled, installPwa } = usePwaInstall();
   const [isDismissed, setIsDismissed] = useState(false);
@@ -147,9 +147,9 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
     if (canInstall && !isInstalled) {
       // Reset dismissal after 7 days
       const dismissedDate = localStorage.getItem('pwa-install-dismissed-date');
-      const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
-      if (!dismissedDate || parseInt(dismissedDate) < sevenDaysAgo) {
+      if (!dismissedDate || Number.parseInt(dismissedDate) < sevenDaysAgo) {
         localStorage.removeItem('pwa-install-dismissed');
         localStorage.setItem('pwa-install-dismissed-date', Date.now().toString());
         setIsDismissed(false);
@@ -164,7 +164,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
 
   return (
     <PromptContainer isVisible={showPrompt} className={className}>
-      <CloseButton onClick={handleDismiss} aria-label="Dismiss install prompt">
+      <CloseButton onClick={handleDismiss} aria-label='Dismiss install prompt'>
         <IonIcon icon={close} />
       </CloseButton>
 
@@ -176,14 +176,15 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
         <ContentArea>
           <Title>Install Spendless</Title>
           <Description>
-            Install our app for a better experience with offline access, faster loading, and native app features.
+            Install our app for a better experience with offline access, faster loading, and native
+            app features.
           </Description>
 
           <ActionArea>
-            <Button variant="primary" size="sm" onClick={handleInstall}>
+            <Button variant='primary' size='sm' onClick={handleInstall}>
               Install App
             </Button>
-            <Button variant="ghost" size="sm" onClick={handleDismiss}>
+            <Button variant='ghost' size='sm' onClick={handleDismiss}>
               Not Now
             </Button>
           </ActionArea>
@@ -205,7 +206,7 @@ export const PwaInstallButton: React.FC<PwaInstallButtonProps> = ({
   variant = 'outline',
   size = 'md',
   fullWidth = false,
-  className
+  className,
 }) => {
   const { canInstall, isInstalled, installPwa } = usePwaInstall();
 

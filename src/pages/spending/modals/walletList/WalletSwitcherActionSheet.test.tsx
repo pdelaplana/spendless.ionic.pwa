@@ -10,7 +10,11 @@ vi.mock('@ionic/react', async () => {
   return {
     ...actual,
     useIonToast: vi.fn(() => [vi.fn()]),
-    IonModal: ({ children, isOpen, ...props }: { children: React.ReactNode; isOpen: boolean; [key: string]: unknown }) =>
+    IonModal: ({
+      children,
+      isOpen,
+      ...props
+    }: { children: React.ReactNode; isOpen: boolean; [key: string]: unknown }) =>
       isOpen ? (
         <div data-testid='ion-modal' {...props}>
           {children}
@@ -31,7 +35,11 @@ vi.mock('@ionic/react', async () => {
         {children}
       </h1>
     ),
-    IonButton: ({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => (
+    IonButton: ({
+      children,
+      onClick,
+      ...props
+    }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => (
       <button data-testid='ion-button' onClick={onClick} {...props}>
         {children}
       </button>
@@ -46,7 +54,11 @@ vi.mock('@ionic/react', async () => {
         {children}
       </div>
     ),
-    IonItem: ({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => (
+    IonItem: ({
+      children,
+      onClick,
+      ...props
+    }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => (
       <div data-testid='ion-item' onClick={onClick} {...props}>
         {children}
       </div>
@@ -61,7 +73,11 @@ vi.mock('@ionic/react', async () => {
         {children}
       </span>
     ),
-    IonProgressBar: ({ value, color, ...props }: { value?: number; color?: string; [key: string]: unknown }) => (
+    IonProgressBar: ({
+      value,
+      color,
+      ...props
+    }: { value?: number; color?: string; [key: string]: unknown }) => (
       <div data-testid='ion-progress-bar' data-value={value} data-color={color} {...props} />
     ),
   };
