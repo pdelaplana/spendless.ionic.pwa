@@ -1,5 +1,6 @@
 import { useAuth } from '@/providers/auth/useAuth';
 import { designSystem } from '@/theme/designSystem';
+import { Gap } from '@components/shared';
 import { IonIcon, IonMenuToggle } from '@ionic/react';
 import { personCircleOutline } from 'ionicons/icons';
 import type React from 'react';
@@ -78,6 +79,7 @@ export const ProfileHeader: React.FC = () => {
 
   return (
     <ProfileHeaderContainer>
+      <Gap size={designSystem.spacing.lg} />
       <GreetingContainer>
         <GreetingText>
           <GreetingPrefix>{greeting},</GreetingPrefix>
