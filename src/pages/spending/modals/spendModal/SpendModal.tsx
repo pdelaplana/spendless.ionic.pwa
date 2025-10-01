@@ -11,6 +11,7 @@ import { spendValidation } from '@/domain/validation';
 import { usePrompt } from '@/hooks';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
 import { IonItem, IonLabel } from '@ionic/react';
 import { useCallback, useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
@@ -52,7 +53,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
     control,
   } = useForm<SpendFormData>({
     defaultValues: {
-      date: new Date().toISOString().split('T')[0],
+      date: dateUtils.getTodayString(),
       amount: '0',
       category: 'need',
       description: '',
@@ -72,7 +73,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
       accountId: formData.accountId,
       periodId: formData?.periodId ?? '',
       walletId: formData.walletId, // Include walletId from form data
-      date: new Date(formData.date),
+      date: dateUtils.fromDateInput(formData.date),
       category: formData.category,
       amount: Number(formData.amount),
       description: formData.description,
@@ -184,7 +185,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
         accountId: spend.accountId,
         periodId: spend.periodId,
         walletId: spend.walletId, // Preserve existing walletId
-        date: spend.date?.toISOString().split('T')[0] ?? '',
+        date: spend.date ? dateUtils.toDateInput(spend.date) : '',
         category: spend.category,
         amount: amountValue,
         description: spend.description,

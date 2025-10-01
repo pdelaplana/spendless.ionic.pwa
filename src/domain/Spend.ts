@@ -1,3 +1,5 @@
+import { dateUtils } from '@/utils';
+
 export type SpendCategory = 'need' | 'want' | 'culture' | 'unexpected';
 
 export interface ISpend {
@@ -27,7 +29,7 @@ export type CreateSpendDTO = Omit<ISpend, 'id' | 'createdAt' | 'updatedAt'>;
 
 export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   accountId: data.accountId ?? '',
-  date: data.date ?? new Date(),
+  date: data.date ?? dateUtils.getCurrentDate(),
   category: data.category ?? 'need',
   amount: Number(data.amount ?? 0),
   description: data.description ?? '',
@@ -40,8 +42,8 @@ export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   necessityRating: data.necessityRating ?? 0,
   personalReflections: data.personalReflections ?? [],
   tags: data.tags ?? [],
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: dateUtils.getCurrentDate(),
+  updatedAt: dateUtils.getCurrentDate(),
 });
 
 export const createEmptySpend = (): ISpend => createSpend({});
@@ -62,5 +64,5 @@ export const updateSpend = (spend: ISpend, updates: Partial<ISpend>): ISpend => 
   ...(updates.necessityRating !== undefined && { necessityRating: updates.necessityRating }),
   ...(updates.personalReflections && { personalReflections: updates.personalReflections }),
   ...(updates.tags && { tags: updates.tags }),
-  updatedAt: new Date(),
+  updatedAt: dateUtils.getCurrentDate(),
 });

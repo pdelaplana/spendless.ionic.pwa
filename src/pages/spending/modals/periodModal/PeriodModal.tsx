@@ -7,6 +7,7 @@ import { periodValidation } from '@/domain/validation/periodValidation';
 import { usePrompt } from '@/hooks';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
 import { IonItem, IonLabel, useIonModal } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { useEffect, useState } from 'react';
@@ -33,15 +34,15 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
       goals: '',
       targetSpend: '0',
       targetSavings: '0',
-      startAt: new Date().toISOString().split('T')[0],
-      endAt: new Date().toISOString().split('T')[0],
+      startAt: dateUtils.getTodayString(),
+      endAt: dateUtils.getTodayString(),
       reflection: '',
     },
   });
 
   const onSubmit: SubmitHandler<PeriodFormData> = async (formData) => {
-    const startDate = new Date(formData.startAt);
-    const endDate = new Date(formData.endAt);
+    const startDate = dateUtils.fromDateInput(formData.startAt);
+    const endDate = dateUtils.fromDateInput(formData.endAt);
     const periodName = `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
 
     const periodData: Partial<IPeriod> = {
@@ -49,8 +50,8 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
       goals: formData.goals,
       targetSpend: Number(formData.targetSpend),
       targetSavings: Number(formData.targetSavings),
-      startAt: new Date(formData.startAt),
-      endAt: new Date(formData.endAt),
+      startAt: startDate,
+      endAt: endDate,
     };
     if (formData.id) {
       onSave({ ...periodData, id: formData.id });
@@ -100,8 +101,8 @@ const PeriodModal: React.FC<PeriodModalProps> = ({ period, onSave, onDismiss }) 
         goals: period.goals,
         targetSpend: period.targetSpend.toFixed(2),
         targetSavings: period.targetSavings.toFixed(2),
-        startAt: period.startAt.toISOString().split('T')[0],
-        endAt: period.endAt.toISOString().split('T')[0],
+        startAt: dateUtils.toDateInput(period.startAt),
+        endAt: dateUtils.toDateInput(period.endAt),
         reflection: period.reflection,
       });
     }

@@ -1,6 +1,7 @@
 import type { ISpend } from '@/domain/Spend';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
 import styled from '@emotion/styled';
 import {
   CategoryScale,
@@ -57,13 +58,10 @@ export const BurndownChart: FC<BurndownChartProps> = ({
 
   const { labels, actualData, projectedData, idealData } = useMemo(() => {
     // Sort all spending by date
-    const sortedSpending = [...spending].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
+    const sortedSpending = [...spending].sort((a, b) => a.date.getTime() - b.date.getTime());
 
     // Get today's date at midnight
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = dateUtils.getCurrentDate();
 
     // Calculate the total number of days in the period
     const totalDays =
@@ -71,7 +69,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
 
     // Create array of all dates in the period
     const allDates: Date[] = [];
-    const current = new Date(startDate);
+    const current = new Date(startDate.getTime());
     while (current <= endDate) {
       allDates.push(new Date(current));
       current.setDate(current.getDate() + 1);

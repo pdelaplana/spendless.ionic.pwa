@@ -4,6 +4,7 @@ import { useCreatePeriod } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
 import { IonCard, IonCardContent, IonItem, IonLabel, IonList } from '@ionic/react';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -134,12 +135,12 @@ const GuidedPeriodStep: React.FC<GuidedPeriodStepProps> = ({ onComplete, ...step
 
   // Set default dates when component loads
   useEffect(() => {
-    const today = new Date();
+    const today = dateUtils.getCurrentDate();
     const nextWeek = new Date(today);
     nextWeek.setDate(today.getDate() + 7);
 
-    setValue('startAt', today.toISOString().split('T')[0]);
-    setValue('endAt', nextWeek.toISOString().split('T')[0]);
+    setValue('startAt', dateUtils.toDateInput(today));
+    setValue('endAt', dateUtils.toDateInput(nextWeek));
   }, [setValue]);
 
   const handleTemplateSelect = (template: PeriodTemplate) => {
@@ -147,12 +148,12 @@ const GuidedPeriodStep: React.FC<GuidedPeriodStepProps> = ({ onComplete, ...step
     setValue('goals', template.goals);
 
     if (template.id !== 'custom') {
-      const today = new Date();
+      const today = dateUtils.getCurrentDate();
       const endDate = new Date(today);
       endDate.setDate(today.getDate() + template.durationDays);
 
-      setValue('startAt', today.toISOString().split('T')[0]);
-      setValue('endAt', endDate.toISOString().split('T')[0]);
+      setValue('startAt', dateUtils.toDateInput(today));
+      setValue('endAt', dateUtils.toDateInput(endDate));
     }
   };
 
@@ -168,12 +169,12 @@ const GuidedPeriodStep: React.FC<GuidedPeriodStepProps> = ({ onComplete, ...step
       const period = await createPeriod.mutateAsync({
         accountId: account.id,
         data: {
-          name: `${new Date(data.startAt).toLocaleDateString()} - ${new Date(data.endAt).toLocaleDateString()}`,
+          name: `${dateUtils.fromDateInput(data.startAt).toLocaleDateString()} - ${dateUtils.fromDateInput(data.endAt).toLocaleDateString()}`,
           goals: data.goals,
           targetSpend: 0, // Will be set when wallets are added
           targetSavings: 0,
-          startAt: new Date(data.startAt),
-          endAt: new Date(data.endAt),
+          startAt: dateUtils.fromDateInput(data.startAt),
+          endAt: dateUtils.fromDateInput(data.endAt),
           reflection: '',
           walletSetup: [], // Will add wallets in next step
         },
@@ -195,7 +196,7 @@ const GuidedPeriodStep: React.FC<GuidedPeriodStepProps> = ({ onComplete, ...step
       watchedGoals.length >= 10 &&
       watchedStartAt &&
       watchedEndAt &&
-      new Date(watchedEndAt) > new Date(watchedStartAt),
+      dateUtils.fromDateInput(watchedEndAt) > dateUtils.fromDateInput(watchedStartAt),
   );
 
   return (
@@ -297,8 +298,8 @@ const GuidedPeriodStep: React.FC<GuidedPeriodStepProps> = ({ onComplete, ...step
                   validationRules={{
                     required: 'End date is required',
                     validate: (value) => {
-                      const startDate = new Date(watchedStartAt || '');
-                      const endDate = new Date(value || '');
+                      const startDate = dateUtils.fromDateInput(watchedStartAt || '');
+                      const endDate = dateUtils.fromDateInput(value || '');
                       return endDate > startDate || 'End date must be after start date';
                     },
                   }}

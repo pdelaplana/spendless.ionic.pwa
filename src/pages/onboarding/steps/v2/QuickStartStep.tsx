@@ -5,6 +5,7 @@ import { useCreatePeriod, useCreateWallet } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
 import { IonCard, IonCardContent, IonItem, IonLabel, IonList } from '@ionic/react';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -135,7 +136,7 @@ const QuickStartStep: React.FC<QuickStartStepProps> = ({ onComplete, ...stepProp
 
     try {
       // Create period with smart defaults (7-day period starting today)
-      const today = new Date();
+      const today = dateUtils.getCurrentDate();
       const endDate = new Date(today);
       endDate.setDate(today.getDate() + 7);
 

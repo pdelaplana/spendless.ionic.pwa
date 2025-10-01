@@ -1,3 +1,4 @@
+import { dateUtils } from '@/utils';
 import type { IWalletSetup } from './Wallet';
 import { validateWalletSetupArray } from './Wallet';
 
@@ -23,8 +24,8 @@ export const createPeriod = (data: Partial<CreatePeriodDTO>): IPeriod => ({
   goals: data.goals ?? '',
   targetSpend: data.targetSpend ?? 0,
   targetSavings: data.targetSavings ?? 0,
-  startAt: data.startAt ?? new Date(),
-  endAt: data.endAt ?? new Date(),
+  startAt: data.startAt ?? dateUtils.getCurrentDate(),
+  endAt: data.endAt ?? dateUtils.getCurrentDate(),
   reflection: data.reflection ?? '',
   walletSetup: data.walletSetup ?? [
     {
@@ -33,8 +34,8 @@ export const createPeriod = (data: Partial<CreatePeriodDTO>): IPeriod => ({
       isDefault: true,
     },
   ],
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: dateUtils.getCurrentDate(),
+  updatedAt: dateUtils.getCurrentDate(),
 });
 
 export const updatePeriod = (period: IPeriod, updates: Partial<IPeriod>): IPeriod => ({
@@ -48,17 +49,17 @@ export const updatePeriod = (period: IPeriod, updates: Partial<IPeriod>): IPerio
   ...(updates.reflection !== undefined && { reflection: updates.reflection }),
   ...(updates.walletSetup && { walletSetup: updates.walletSetup }),
   ...(updates.closedAt !== undefined && { closedAt: updates.closedAt }),
-  updatedAt: new Date(),
+  updatedAt: dateUtils.getCurrentDate(),
 });
 
 export const closePeriod = (period: IPeriod): IPeriod => ({
   ...period,
-  closedAt: new Date(),
-  updatedAt: new Date(),
+  closedAt: dateUtils.getCurrentDate(),
+  updatedAt: dateUtils.getCurrentDate(),
 });
 
 export const isPeriodActive = (period: IPeriod): boolean => {
-  const now = new Date();
+  const now = dateUtils.getCurrentDate();
   return !period.closedAt && period.startAt <= now && period.endAt >= now;
 };
 

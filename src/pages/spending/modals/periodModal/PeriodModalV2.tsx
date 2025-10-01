@@ -7,6 +7,7 @@ import type { IWallet } from '@/domain/Wallet';
 import { usePrompt } from '@/hooks';
 import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
 import { IonTitle } from '@ionic/react';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
@@ -60,8 +61,8 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   const initialData = period
     ? {
         goals: period.goals,
-        startAt: period.startAt.toISOString().split('T')[0],
-        endAt: period.endAt.toISOString().split('T')[0],
+        startAt: dateUtils.toDateInput(period.startAt),
+        endAt: dateUtils.toDateInput(period.endAt),
         wallets:
           period.walletSetup?.map((wallet, index) => ({
             id: `existing-${index}`,
@@ -127,7 +128,8 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
       hasInitializedRecurringExpenses.current = true;
 
       const periodDurationDays = Math.ceil(
-        (new Date(formData.endAt).getTime() - new Date(formData.startAt).getTime()) /
+        (dateUtils.fromDateInput(formData.endAt).getTime() -
+          dateUtils.fromDateInput(formData.startAt).getTime()) /
           (1000 * 60 * 60 * 24),
       );
 
@@ -157,7 +159,12 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
     const startAt = watchedStartAt || formData.startAt || '';
     const endAt = watchedEndAt || formData.endAt || '';
 
-    return goals.trim().length >= 3 && startAt && endAt && new Date(endAt) > new Date(startAt);
+    return (
+      goals.trim().length >= 3 &&
+      startAt &&
+      endAt &&
+      dateUtils.fromDateInput(endAt) > dateUtils.fromDateInput(startAt)
+    );
   };
 
   const stepLabels = ['Period', 'Wallets', 'Expenses', 'Review'];
@@ -218,11 +225,13 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
       const totalBudget = walletSetup.reduce((total, wallet) => total + wallet.spendingLimit, 0);
 
       // Generate period name from date range
-      const startDate = new Date(currentFormValues.startAt).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      });
-      const endDate = new Date(currentFormValues.endAt).toLocaleDateString('en-US', {
+      const startDate = dateUtils
+        .fromDateInput(currentFormValues.startAt)
+        .toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+        });
+      const endDate = dateUtils.fromDateInput(currentFormValues.endAt).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -232,8 +241,8 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
       const periodData = {
         name: periodName,
         goals: currentFormValues.goals,
-        startAt: new Date(currentFormValues.startAt),
-        endAt: new Date(currentFormValues.endAt),
+        startAt: dateUtils.fromDateInput(currentFormValues.startAt),
+        endAt: dateUtils.fromDateInput(currentFormValues.endAt),
         walletSetup,
         targetSpend: totalBudget,
         targetSavings: 0,

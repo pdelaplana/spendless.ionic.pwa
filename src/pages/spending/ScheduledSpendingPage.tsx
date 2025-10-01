@@ -8,6 +8,7 @@ import {
   GroupedTransactionsContainer,
   TransactionsContainer,
 } from '@/theme/components';
+import { dateUtils } from '@/utils';
 import { IonLabel } from '@ionic/react';
 import { t } from 'i18next';
 import { chevronForward } from 'ionicons/icons';
@@ -29,7 +30,7 @@ const ScheduledSpendingPage: React.FC = () => {
   }, [spending, selectedWallet]);
 
   const futureSpending = useMemo(() => {
-    return filteredSpending.filter((spend) => spend.date > new Date());
+    return filteredSpending.filter((spend) => spend.date > dateUtils.getCurrentDate());
   }, [filteredSpending]);
 
   return (

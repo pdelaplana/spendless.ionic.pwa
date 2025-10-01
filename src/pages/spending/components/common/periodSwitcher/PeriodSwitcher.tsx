@@ -5,6 +5,7 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useWallet } from '@/providers/wallet';
 import { CleanCard, GlassCard } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
 import { IonIcon } from '@ionic/react';
 import { checkmarkCircle, chevronDown, time, warning } from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
@@ -261,15 +262,15 @@ export const PeriodSwitcher: React.FC = () => {
     const totalSpentAmount = wallets.reduce((total, wallet) => total + wallet.currentBalance, 0);
 
     // Calculate scheduled/recurring spending for remaining days
-    const now = new Date();
-    const endDate = new Date(selectedPeriod.endAt);
+    const now = dateUtils.getCurrentDate();
+    const endDate = selectedPeriod.endAt;
     const scheduledAmount = spending
       .filter(
         (spend) =>
           spend.periodId === selectedPeriod.id &&
           spend.recurring === true &&
-          new Date(spend.date) > now &&
-          new Date(spend.date) <= endDate,
+          spend.date > now &&
+          spend.date <= endDate,
       )
       .reduce((total, spend) => total + spend.amount, 0);
 
@@ -315,16 +316,16 @@ export const PeriodSwitcher: React.FC = () => {
 
   const calculateDaysRemaining = () => {
     if (isClosed) return 0;
-    const now = new Date();
-    const endDate = new Date(selectedPeriod.endAt);
+    const now = dateUtils.getCurrentDate();
+    const endDate = selectedPeriod.endAt;
     const diffTime = endDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return Math.max(0, diffDays);
   };
 
   const calculateTotalDays = () => {
-    const startDate = new Date(selectedPeriod.startAt);
-    const endDate = new Date(selectedPeriod.endAt);
+    const startDate = selectedPeriod.startAt;
+    const endDate = selectedPeriod.endAt;
     const diffTime = endDate.getTime() - startDate.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };

@@ -1,4 +1,5 @@
 import type { IWalletSetup } from '@/domain/Wallet';
+import { dateUtils } from '@/utils';
 import { addWeeks } from 'date-fns';
 import { useState } from 'react';
 
@@ -33,8 +34,8 @@ export interface PeriodFormData {
 
 const getInitialFormData = (): PeriodFormData => ({
   goals: '',
-  startAt: new Date().toISOString().split('T')[0],
-  endAt: addWeeks(new Date(), 4).toISOString().split('T')[0],
+  startAt: dateUtils.getTodayString(),
+  endAt: dateUtils.toDateInput(addWeeks(dateUtils.getCurrentDate(), 4)),
   wallets: [],
   recurringExpenses: [],
   currentStep: 0,
@@ -135,7 +136,7 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
       formData.goals.trim().length >= 3 &&
       formData.startAt &&
       formData.endAt &&
-      new Date(formData.endAt) > new Date(formData.startAt)
+      dateUtils.fromDateInput(formData.endAt) > dateUtils.fromDateInput(formData.startAt)
     );
   };
 
@@ -189,11 +190,11 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
     }));
 
     // Generate period name from date range
-    const startDate = new Date(formData.startAt).toLocaleDateString('en-US', {
+    const startDate = dateUtils.fromDateInput(formData.startAt).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
     });
-    const endDate = new Date(formData.endAt).toLocaleDateString('en-US', {
+    const endDate = dateUtils.fromDateInput(formData.endAt).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -203,8 +204,8 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
     return {
       name: periodName,
       goals: formData.goals,
-      startAt: new Date(formData.startAt),
-      endAt: new Date(formData.endAt),
+      startAt: dateUtils.fromDateInput(formData.startAt),
+      endAt: dateUtils.fromDateInput(formData.endAt),
       walletSetup,
       targetSpend: totalBudget,
       targetSavings: 0, // Could be calculated or set separately
