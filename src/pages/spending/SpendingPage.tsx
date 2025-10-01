@@ -7,18 +7,15 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useIonRouter } from '@ionic/react';
 import { Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
-import NoCurrentPeriodView from './features/spendTracker/NoCurrentPeriodView';
 
 const SpendingPage: React.FC = () => {
-  const { t } = useTranslation();
-
-  const { push } = useIonRouter();
   const { isAccountLoading, account: authAccount } = useEnsureAccount();
   const { selectedPeriod, periods } = useSpendingAccount();
   const isFirstTime = !periods || periods.length === 0;
 
   const PeriodDashboard = lazy(() => import('./features/spendTracker/PeriodDashboard'));
   const GettingStarted = lazy(() => import('./features/spendTracker/GettingStarted'));
+  const NoCurrentPeriodView = lazy(() => import('./features/spendTracker/NoCurrentPeriodView'));
 
   // Show account setup loading state if account is not yet available
   if (isAccountLoading) {
