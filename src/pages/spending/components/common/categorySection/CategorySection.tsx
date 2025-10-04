@@ -1,13 +1,8 @@
 import type { SpendCategory } from '@/domain/Spend';
 import type { SpendFormData } from '@/pages/spending/modals/spendModal';
+import { getCategoryIcon } from '@/utils';
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
-import {
-  barChartOutline,
-  basketOutline,
-  colorPaletteOutline,
-  sparklesOutline,
-  walletOutline,
-} from 'ionicons/icons';
+import { barChartOutline, heartOutline, heartSharp } from 'ionicons/icons';
 import { useCallback, useMemo } from 'react';
 import { type Control, type FieldValues, type UseFormSetValue, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -55,21 +50,6 @@ interface CategorySectionProps<TFormValues extends FieldValues> {
   control: Control<TFormValues>;
 }
 
-const getCategoryIcon = (category: SpendCategory): string => {
-  switch (category) {
-    case 'need':
-      return walletOutline;
-    case 'want':
-      return basketOutline;
-    case 'culture':
-      return colorPaletteOutline;
-    case 'unexpected':
-      return sparklesOutline;
-    default:
-      return walletOutline;
-  }
-};
-
 const CategorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setValue, control }) => {
   const { t } = useTranslation();
   const category = useWatch({
@@ -94,7 +74,7 @@ const CategorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setVal
         selected={item.value === category}
         onClick={() => categorySelectHandler(item.value)}
       >
-        <IonIcon icon={getCategoryIcon(item.value)} style={{ fontSize: '1.125rem' }} />
+        <IonIcon icon={getCategoryIcon(item.value).icon} style={{ fontSize: '1.125rem' }} />
         {item.label}
       </CategoryItem>
     ));
@@ -104,11 +84,15 @@ const CategorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setVal
     <IonCard color={'primary'}>
       <IonCardHeader>
         <IonCardTitle style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <IonIcon icon={barChartOutline} style={{ fontSize: '1.25rem' }} />
-          Mindful Moment
+          <IonIcon icon={heartSharp} style={{ fontSize: '1.25rem' }} />
+          Mindfulness Categories
         </IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
+        <div className='ion-margin-bottom'>
+          Take a moment to reflect on your spending habits and choose a category that best fits your
+          purchase.
+        </div>
         <CategoryGrid>{categoryItems}</CategoryGrid>
       </IonCardContent>
     </IonCard>

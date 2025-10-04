@@ -57,21 +57,26 @@ const WalletSpendingPage: React.FC = () => {
   );
 
   const handleEditWallet = useCallback(async () => {
-    if (selectedWallet && account?.id && selectedPeriod?.id) {
+    if (selectedWallet?.id && account?.id && selectedPeriod?.id && account.currency) {
+      const accountId = account.id;
+      const periodId = selectedPeriod.id;
+      const walletId = selectedWallet.id;
+      const currency = account.currency;
+
       await openWalletModal(
         selectedWallet,
         (walletData) => {
           updateWalletMutation.mutate({
-            accountId: account.id!,
-            periodId: selectedPeriod.id!,
-            walletId: selectedWallet.id!,
+            accountId,
+            periodId,
+            walletId,
             updates: walletData,
           });
         },
-        account.id!,
-        selectedPeriod.id!,
+        accountId,
+        periodId,
         wallets,
-        account.currency,
+        currency,
         handleDeleteWallet,
         filteredSpending,
       );
@@ -79,11 +84,11 @@ const WalletSpendingPage: React.FC = () => {
   }, [
     selectedWallet,
     account?.id,
+    account?.currency,
     selectedPeriod?.id,
     openWalletModal,
     updateWalletMutation,
     wallets,
-    account?.currency,
     handleDeleteWallet,
     filteredSpending,
   ]);

@@ -138,7 +138,7 @@ const SpendList: React.FC<SpendListProps> = ({
                   lines={index === spends.length - 1 ? 'none' : 'full'}
                 >
                   <SpendIcon category={spend.category} />
-                  <IonLabel>
+                  <IonLabel style={{ marginTop: '6px' }}>
                     <h2>{spend.description}</h2>
                     <p>{t(`spending.categories.${spend.category}`)}</p>
                     <TagsDisplay tags={spend.tags} />

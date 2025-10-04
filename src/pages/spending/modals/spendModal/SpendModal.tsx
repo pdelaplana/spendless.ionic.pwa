@@ -18,6 +18,8 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { SectionLabel } from '../../../../theme/components';
 import CategorySection from '../../components/common/categorySection/CategorySection';
+import EmotionalAwarenessSection from '../../components/common/emotionalAwarenessSection/EmotionalAwarenessSection';
+import RatingSection from '../../components/common/ratingSection/RatingSection';
 import SpendFormSection from '../../components/common/spendFormSection/SpendFormSection';
 import type { SpendFormData } from './types';
 

@@ -68,7 +68,7 @@ const WalletListItem: React.FC<WalletListItemProps> = ({ wallet, onClick, format
           : undefined
       }
     >
-      <div slot='start'>
+      <div slot='start' style={{ marginRight: '0px' }}>
         <WalletIcon />
       </div>
 
