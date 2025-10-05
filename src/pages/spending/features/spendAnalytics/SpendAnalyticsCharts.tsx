@@ -9,7 +9,7 @@ import type { IWallet } from '@/domain/Wallet';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { designSystem } from '@/theme/designSystem';
 import { useMemo } from 'react';
-import { BurndownChart, SpeedometerChart, SpendingChart } from './charts';
+import { BurndownChart, SpeedometerChart, SpendingChart, TagsSpendingChart } from './charts';
 
 const ChartsContainer = styled.div`
   margin: ${designSystem.spacing.lg} ${designSystem.spacing.md};
@@ -130,6 +130,12 @@ export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
               targetSpend={targetSpend}
               startDate={startDate}
               endDate={endDate}
+              currency={account?.currency}
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <TagsSpendingChart
+              spending={filteredChartSpending.filter((s) => s.date <= new Date())}
               currency={account?.currency}
             />
           </SwiperSlide>

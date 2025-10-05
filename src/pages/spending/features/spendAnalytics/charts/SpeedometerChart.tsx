@@ -114,6 +114,15 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    title: {
+      display: true,
+      text: 'Balance Over Time',
+      font: {
+        size: 18,
+        weight: 700,
+      },
+      color: designSystem.colors.text.primary,
+    },
     plugins: {
       legend: {
         display: false,

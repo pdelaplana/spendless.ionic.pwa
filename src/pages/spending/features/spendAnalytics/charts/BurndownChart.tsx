@@ -223,7 +223,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
 
   const options = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     aspectRatio: 1, // Added lower aspect ratio to increase y-axis scale (default is 2)
     plugins: {
       legend: {
@@ -235,7 +235,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
       },
       title: {
         display: true,
-        text: 'Spending Burndown',
+        text: 'Balance Over Time',
         font: {
           size: 18,
           weight: 700,
