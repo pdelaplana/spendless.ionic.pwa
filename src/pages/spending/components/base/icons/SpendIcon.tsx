@@ -1,13 +1,13 @@
 import { IconContainer } from '@/components/shared';
-import type { SpendCategory } from '@/domain/Spend';
-import { getCategoryIcon } from '@/utils';
+import type { ISpend } from '@/domain/Spend';
+import { getSpendIcon } from '@/utils/spendIconUtils';
 
 interface SpendIconProps {
-  category: SpendCategory;
+  spend: ISpend;
 }
 
-export const SpendIcon: React.FC<SpendIconProps> = ({ category }) => {
-  const { icon, bgColor, iconColor } = getCategoryIcon(category);
+export const SpendIcon: React.FC<SpendIconProps> = ({ spend }) => {
+  const { icon, bgColor, iconColor } = getSpendIcon(spend);
 
   return <IconContainer icon={icon} bgColor={bgColor} iconColor={iconColor} marginRight='3px' />;
 };

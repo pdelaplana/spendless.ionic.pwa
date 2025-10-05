@@ -176,7 +176,7 @@ const PeriodSpendingView: React.FC = () => {
                           button
                           lines={index === spends.length ? 'none' : 'full'}
                         >
-                          <SpendIcon category={spend.category} />
+                          <SpendIcon spend={spend} />
                           <IonLabel>
                             <h2>{spend.description}</h2>
                             <p>{t(`spending.categories.${spend.category}`)}</p>

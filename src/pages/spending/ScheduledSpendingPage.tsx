@@ -64,7 +64,7 @@ const ScheduledSpendingPage: React.FC = () => {
                           button
                           lines={index === futureSpending.length - 1 ? 'none' : 'full'}
                         >
-                          <SpendIcon category={spend.category} />
+                          <SpendIcon spend={spend} />
                           <IonLabel>
                             <p>{formatDate(spend.date, true)}</p>
                             <h2>{spend.description}</h2>

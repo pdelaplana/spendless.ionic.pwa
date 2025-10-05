@@ -137,7 +137,7 @@ const SpendList: React.FC<SpendListProps> = ({
                   button
                   lines={index === spends.length - 1 ? 'none' : 'full'}
                 >
-                  <SpendIcon category={spend.category} />
+                  <SpendIcon spend={spend} />
                   <IonLabel style={{ marginTop: '6px' }}>
                     <h2>{spend.description}</h2>
                     <p>{t(`spending.categories.${spend.category}`)}</p>
