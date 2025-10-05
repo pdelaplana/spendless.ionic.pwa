@@ -3,6 +3,7 @@ import ForgotPasswordPage from '@/pages/auth/forgotPassword/ForgotPasswordPage';
 import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
 import SigninPage from '@/pages/auth/signin/SigninPage';
 import SignupPage from '@/pages/auth/signup/SignupPage';
+import HelpPage from '@/pages/help/HelpPage';
 import HomePage from '@/pages/home/HomePage';
 import OnboardingFlow from '@/pages/onboarding/OnboardingFlow';
 import OnboardingFlowV2 from '@/pages/onboarding/OnboardingFlowV2';
@@ -32,6 +33,9 @@ const ProfileRoutes: React.FC = () => {
       </ProtectedRoute>
       <ProtectedRoute path={`${ROUTES.PROFILE}/info`} exact>
         <ProfileInformationPage />
+      </ProtectedRoute>
+      <ProtectedRoute path={`${ROUTES.PROFILE}/help`} exact>
+        <HelpPage />
       </ProtectedRoute>
     </Switch>
   );
