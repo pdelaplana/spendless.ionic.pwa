@@ -65,6 +65,8 @@ const CategorySection: React.FC<CategorySectionProps<SpendFormData>> = ({ setVal
   const categoryItems = useMemo(() => {
     return [
       { label: t('spending.categories.need'), value: 'need' as SpendCategory },
+      { label: t('spending.categories.rituals'), value: 'rituals' as SpendCategory },
+      { label: t('spending.categories.connections'), value: 'connections' as SpendCategory },
       { label: t('spending.categories.want'), value: 'want' as SpendCategory },
       { label: t('spending.categories.culture'), value: 'culture' as SpendCategory },
       { label: t('spending.categories.unexpected'), value: 'unexpected' as SpendCategory },

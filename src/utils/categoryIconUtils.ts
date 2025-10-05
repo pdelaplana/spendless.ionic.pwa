@@ -1,10 +1,14 @@
 import type { SpendCategory } from '@/domain/Spend';
 import {
-  alertOutline,
   bulbOutline,
+  cafeOutline,
   cardOutline,
   giftOutline,
+  heartOutline,
+  homeOutline,
   libraryOutline,
+  peopleOutline,
+  receiptOutline,
   umbrellaOutline,
 } from 'ionicons/icons';
 
@@ -22,7 +26,7 @@ export const getCategoryIcon = (category: SpendCategory): CategoryIconConfig => 
   switch (category) {
     case 'need':
       return {
-        icon: bulbOutline,
+        icon: receiptOutline,
         bgColor: 'rgba(59, 130, 246, 0.1)', // Blue background
         iconColor: '#3B82F6', // Blue icon
       };
@@ -43,6 +47,18 @@ export const getCategoryIcon = (category: SpendCategory): CategoryIconConfig => 
         icon: umbrellaOutline,
         bgColor: 'rgba(239, 68, 68, 0.1)', // Red background
         iconColor: '#EF4444', // Red icon
+      };
+    case 'rituals':
+      return {
+        icon: cafeOutline,
+        bgColor: 'rgba(249, 115, 22, 0.1)', // Orange background
+        iconColor: '#F97316', // Orange icon
+      };
+    case 'connections':
+      return {
+        icon: peopleOutline,
+        bgColor: 'rgba(236, 72, 153, 0.1)', // Pink background
+        iconColor: '#EC4899', // Pink icon
       };
     default:
       return {

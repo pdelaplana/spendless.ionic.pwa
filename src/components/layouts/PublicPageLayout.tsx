@@ -21,9 +21,14 @@ const StyledHeader = styled(IonHeader)`
 
 interface PublicPageLayoutProps extends PropsWithChildren {
   title: string;
+  showHeader?: boolean;
 }
 
-const PublicPageLayout: React.FC<PublicPageLayoutProps> = ({ title, children }) => {
+const PublicPageLayout: React.FC<PublicPageLayoutProps> = ({
+  title,
+  children,
+  showHeader = true,
+}) => {
   const { t } = useTranslation();
 
   useIonViewWillEnter(() => {
@@ -36,14 +41,16 @@ const PublicPageLayout: React.FC<PublicPageLayoutProps> = ({ title, children }) 
 
   return (
     <IonPage>
-      <StyledHeader className='ion-no-border'>
-        <IonToolbar>
-          <div className='ion-flex ion-justify-content-center'>
-            <HeaderLogo />
-          </div>
-          <IonButtons slot='end' />
-        </IonToolbar>
-      </StyledHeader>
+      {showHeader && (
+        <StyledHeader className='ion-no-border'>
+          <IonToolbar>
+            <div className='ion-flex ion-justify-content-center'>
+              <HeaderLogo />
+            </div>
+            <IonButtons slot='end' />
+          </IonToolbar>
+        </StyledHeader>
+      )}
       <IonContent color='light'>
         <CenterContainer>{children}</CenterContainer>
       </IonContent>

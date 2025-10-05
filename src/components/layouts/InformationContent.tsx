@@ -11,7 +11,7 @@ interface InformationContentProps {
 const InformationContent: React.FC<InformationContentProps> = ({ icon, title, children }) => {
   return (
     <CenterContent>
-      <div className='ion-text-center'>
+      <div className='ion-text-center ion-margin'>
         <IonText className='ion-text-center'>
           {icon && <IonIcon icon={icon} style={{ height: '4.5em', width: '4.5em' }} />}
           <h2>{title}</h2>

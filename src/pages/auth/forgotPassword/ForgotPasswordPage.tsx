@@ -70,7 +70,7 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <PublicPageLayout title='Reset Password'>
+    <PublicPageLayout title='Reset Password' showHeader={false}>
       <Gap size='.65rem' />
       <LogoContainer>
         <SpendlessLogo variant='primary' size='large' />

@@ -99,7 +99,7 @@ const ResetPasswordPage: React.FC = () => {
   }, [location, setValue]);
 
   return (
-    <PublicPageLayout title='Reset Password'>
+    <PublicPageLayout title='Reset Password' showHeader={false}>
       <LogoContainer>
         <SpendlessLogo variant='primary' size='large' />
       </LogoContainer>

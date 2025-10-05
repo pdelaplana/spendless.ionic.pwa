@@ -2,8 +2,8 @@ import { IconContainer } from '@/components/shared';
 import type { IWallet } from '@/domain/Wallet';
 import { calculateWalletAvailable } from '@/domain/Wallet';
 import { StyledItem } from '@/styles/IonList.styled';
+import { getWalletIcon } from '@/utils/walletIconUtils';
 import { IonLabel } from '@ionic/react';
-import { walletOutline } from 'ionicons/icons';
 import type React from 'react';
 import styled from 'styled-components';
 
@@ -41,9 +41,14 @@ interface WalletListItemProps {
   formatCurrency: (amount: number) => string;
 }
 
-const WalletIcon: React.FC = () => (
-  <IconContainer icon={walletOutline} bgColor='rgba(59, 130, 246, 0.1)' iconColor={'primary'} />
-);
+interface WalletIconProps {
+  walletName: string;
+}
+
+const WalletIcon: React.FC<WalletIconProps> = ({ walletName }) => {
+  const { icon, bgColor, iconColor } = getWalletIcon(walletName);
+  return <IconContainer icon={icon} bgColor={bgColor} iconColor={iconColor} />;
+};
 
 const WalletListItem: React.FC<WalletListItemProps> = ({ wallet, onClick, formatCurrency }) => {
   const handleClick = () => {
@@ -69,7 +74,7 @@ const WalletListItem: React.FC<WalletListItemProps> = ({ wallet, onClick, format
       }
     >
       <div slot='start' style={{ marginRight: '0px' }}>
-        <WalletIcon />
+        <WalletIcon walletName={wallet.name} />
       </div>
 
       <IonLabel>
