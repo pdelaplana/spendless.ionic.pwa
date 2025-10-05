@@ -1,4 +1,5 @@
 import { AuthLoadingScreen } from '@/components/auth';
+import AboutPage from '@/pages/about/AboutPage';
 import ForgotPasswordPage from '@/pages/auth/forgotPassword/ForgotPasswordPage';
 import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
 import SigninPage from '@/pages/auth/signin/SigninPage';
@@ -36,6 +37,9 @@ const ProfileRoutes: React.FC = () => {
       </ProtectedRoute>
       <ProtectedRoute path={`${ROUTES.PROFILE}/help`} exact>
         <HelpPage />
+      </ProtectedRoute>
+      <ProtectedRoute path={`${ROUTES.PROFILE}/about`} exact>
+        <AboutPage />
       </ProtectedRoute>
     </Switch>
   );
