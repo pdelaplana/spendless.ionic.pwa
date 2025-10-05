@@ -42,7 +42,9 @@ export default {
       categories: {
         need: 'Essentials',
         want: 'Rewards',
+        rituals: 'Rituals',
         culture: 'Growth',
+        connections: 'Connections',
         unexpected: 'Unexpected',
       },
       deleteSpend: 'Delete Spending',

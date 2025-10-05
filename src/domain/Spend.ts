@@ -1,6 +1,6 @@
 import { dateUtils } from '@/utils';
 
-export type SpendCategory = 'need' | 'want' | 'culture' | 'unexpected';
+export type SpendCategory = 'need' | 'want' | 'culture' | 'unexpected' | 'rituals' | 'connections';
 
 export interface ISpend {
   readonly id?: string;
