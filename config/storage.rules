@@ -1,0 +1,79 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules for Spendless
+// These rules ensure users can only access their own files with proper validation
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Helper function to check if user is an admin
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+
+    // Helper function to check if request is from service account
+    function isServiceAccount() {
+      return request.auth != null &&
+             (request.auth.token.firebase.sign_in_provider == 'custom' ||
+              request.auth.uid.matches('.*@.*\\.iam\\.gserviceaccount\\.com'));
+    }
+
+    // Helper function to check if user has elevated permissions
+    function hasElevatedPermissions() {
+      return isAdmin() || isServiceAccount();
+    }
+
+    // Helper function to validate image files
+    function isValidImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // Helper function to validate file size
+    function isUnderSizeLimit(sizeMB) {
+      return request.resource.size < sizeMB * 1024 * 1024;
+    }
+
+    // All user files - users can only access their own folder
+    // Admins and service accounts have full access
+    // Path: /users/{userId}/**
+    match /users/{userId}/{allPaths=**} {
+      // Users can access their own files, admins/service accounts can access all
+      allow read: if isAuthenticated() && (isOwner(userId) || hasElevatedPermissions());
+
+      allow write: if isAuthenticated() &&
+                   (isOwner(userId) || hasElevatedPermissions()) &&
+                   (hasElevatedPermissions() || isUnderSizeLimit(20));  // 20MB limit for regular users
+
+      allow delete: if isAuthenticated() && (isOwner(userId) || hasElevatedPermissions());
+    }
+
+    // User profile images (more restrictive than general rule)
+    // Path: /users/{userId}/profile/{fileName}
+    match /users/{userId}/profile/{fileName} {
+      // Anyone authenticated can read profile images (public)
+      allow read: if isAuthenticated();
+
+      // Only the owner can write their profile images, or admins/service accounts
+      allow write: if isAuthenticated() &&
+                   (isOwner(userId) || hasElevatedPermissions()) &&
+                   (hasElevatedPermissions() || (isValidImage() && isUnderSizeLimit(5)));  // 5MB limit for regular users
+
+      allow delete: if isAuthenticated() && (isOwner(userId) || hasElevatedPermissions());
+    }
+
+    // Deny all other paths by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

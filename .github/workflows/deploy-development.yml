@@ -1,21 +1,17 @@
-name: Deploy PR Preview
+name: Deploy to Development
 
 on:
-  pull_request:
+  push:
     branches:
       - development
-      - main
 
 permissions:
-  checks: write
-  contents: read
-  pull-requests: write
+  contents: write
 
 jobs:
-  build_and_preview:
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+  build_and_deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.base_ref == 'main' && 'production' || 'development' }}
+    environment: development
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -47,9 +43,20 @@ jobs:
           VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: npm run build
 
-      - name: Deploy Preview
+      - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          channelId: live
           projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+
+      - name: Create Development Tag
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          VERSION=$(node -p "require('./package.json').version")
+          BUILD_NUMBER=${{ github.run_number }}
+          TAG="v${VERSION}-dev.${BUILD_NUMBER}"
+          git tag $TAG
+          git push origin $TAG

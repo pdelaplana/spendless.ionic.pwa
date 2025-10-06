@@ -1,26 +1,66 @@
-# Install Firebase CLI globally if not already installed
-# Note: This requires npm to be installed on your system
+# Fetch Firestore Indexes from Firebase
+# Downloads indexes from Firebase and saves to config directory
 
+param(
+    [Parameter(Mandatory=$false)]
+    [string]$ProjectId = "spendless-dev-15971",
+
+    [Parameter(Mandatory=$false)]
+    [string]$OutputPath = "config"
+)
+
+# Color output functions
+function Write-Success {
+    param([string]$Message)
+    Write-Host $Message -ForegroundColor Green
+}
+
+function Write-Info {
+    param([string]$Message)
+    Write-Host $Message -ForegroundColor Cyan
+}
+
+# Check if Firebase CLI is installed
 if (-not (Get-Command firebase -ErrorAction SilentlyContinue)) {
-    Write-Output "Installing Firebase CLI..."
+    Write-Info "Installing Firebase CLI..."
     npm install -g firebase-tools
 }
 
-# Login to Firebase (this will open a browser for authentication)
-Write-Output "Logging in to Firebase..."
-firebase login
+# Check if user is logged in
+Write-Info "Checking Firebase authentication..."
+$loginCheck = firebase login:list 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Write-Info "Logging in to Firebase..."
+    firebase login
+}
 
 # Set the Firebase project
-Write-Host "Setting Firebase project..."
-firebase use spendless-dev-15971
+Write-Info "Setting Firebase project to: $ProjectId"
+firebase use $ProjectId
 
-# Navigate to your project directory if needed
-# Uncomment and modify the path as needed
-Set-Location -Path "D:\Repos\spendless\spendless.ionic.pwa"
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Failed to set Firebase project. Exiting."
+    exit 1
+}
 
-# Export Firestore indexes to a JSON file
-Write-Output "Exporting Firestore indexes..."
+# Create output directory if it doesn't exist
+if (-not (Test-Path $OutputPath)) {
+    New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
+}
+
+# Export Firestore indexes
+Write-Info "Fetching Firestore indexes from $ProjectId..."
 $indexesOutput = firebase firestore:indexes
-$indexesOutput | Out-File -FilePath "firestore.indexes.json" -Encoding utf8
 
-Write-Output "Export complete. Indexes saved to firestore.indexes.json"
+# Save to config directory
+$outputFile = Join-Path $OutputPath "firestore.indexes.json"
+$indexesOutput | Out-File -FilePath $outputFile -Encoding utf8
+
+Write-Success "`n✓ Indexes exported successfully!"
+Write-Info "Saved to: $outputFile"
+
+# Switch back to dev project
+if ($ProjectId -ne "spendless-dev-15971") {
+    Write-Info "`nSwitching back to dev project..."
+    firebase use spendless-dev-15971
+}
