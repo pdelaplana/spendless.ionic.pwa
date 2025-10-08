@@ -12,6 +12,7 @@ import CompletionStep from './steps/CompletionStep';
 import ConceptStep from './steps/ConceptStep';
 import FirstSpendStep from './steps/FirstSpendStep';
 import GuidedPeriodStep from './steps/GuidedPeriodStep';
+import SampleDataStep from './steps/SampleDataStep';
 import WalletSetupStep from './steps/WalletSetupStep';
 import WelcomeStep from './steps/WelcomeStep';
 
@@ -41,15 +42,17 @@ export interface OnboardingData {
   welcomeCompleted: boolean;
   conceptsUnderstood: boolean;
   periodCreated: boolean;
+  sampleDataChoice: boolean; // true if they chose sample data
   walletSetup: boolean;
   firstSpendLogged: boolean;
   completed: boolean;
   periodId?: string;
   walletId?: string;
+  usedSampleData?: boolean;
 }
 
-const TOTAL_STEPS = 6;
-const STEP_LABELS = ['Welcome', 'Learn', 'Period', 'Wallet', 'First Spend', 'Complete'];
+const TOTAL_STEPS = 7;
+const STEP_LABELS = ['Welcome', 'Learn', 'Period', 'Setup', 'Wallet', 'First Spend', 'Complete'];
 
 const OnboardingFlow: React.FC = () => {
   const { user } = useAuth();
@@ -61,9 +64,11 @@ const OnboardingFlow: React.FC = () => {
     welcomeCompleted: false,
     conceptsUnderstood: false,
     periodCreated: false,
+    sampleDataChoice: false,
     walletSetup: false,
     firstSpendLogged: false,
     completed: false,
+    usedSampleData: false,
   });
 
   useEffect(() => {
@@ -102,9 +107,12 @@ const OnboardingFlow: React.FC = () => {
     if (!data.welcomeCompleted) return 1;
     if (!data.conceptsUnderstood) return 2;
     if (!data.periodCreated) return 3;
-    if (!data.walletSetup) return 4;
-    if (!data.firstSpendLogged) return 5;
-    return 6;
+    if (!data.sampleDataChoice) return 4;
+    // If user chose sample data, skip wallet and first spend steps
+    if (data.usedSampleData) return 7;
+    if (!data.walletSetup) return 5;
+    if (!data.firstSpendLogged) return 6;
+    return 7;
   };
 
   const saveProgress = useCallback(
@@ -213,13 +221,39 @@ const OnboardingFlow: React.FC = () => {
         );
       case 4:
         return (
+          <SampleDataStep
+            {...commonProps}
+            accountId={account?.id}
+            periodId={onboardingData.periodId}
+            onComplete={(usedSampleData, periodId, walletId) => {
+              if (usedSampleData) {
+                // Skip wallet and first spend steps, go directly to completion
+                handleStepComplete({
+                  sampleDataChoice: true,
+                  usedSampleData: true,
+                  walletSetup: true,
+                  firstSpendLogged: true,
+                  periodId,
+                  walletId,
+                });
+                // Jump to step 7 (completion)
+                setCurrentStep(7);
+              } else {
+                // Continue with manual setup
+                handleStepComplete({ sampleDataChoice: true, usedSampleData: false });
+              }
+            }}
+          />
+        );
+      case 5:
+        return (
           <WalletSetupStep
             {...commonProps}
             periodId={onboardingData.periodId}
             onComplete={(walletId) => handleStepComplete({ walletSetup: true, walletId })}
           />
         );
-      case 5:
+      case 6:
         return (
           <FirstSpendStep
             {...commonProps}
@@ -228,7 +262,7 @@ const OnboardingFlow: React.FC = () => {
             onComplete={() => handleStepComplete({ firstSpendLogged: true })}
           />
         );
-      case 6:
+      case 7:
         return <CompletionStep {...commonProps} onComplete={handleComplete} canGoBack={false} />;
       default:
         return null;
