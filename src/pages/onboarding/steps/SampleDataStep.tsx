@@ -89,7 +89,7 @@ const ChoiceFeature = styled.li`
 const ProgressContainer = styled.div`
   margin-top: ${designSystem.spacing.lg};
   padding: ${designSystem.spacing.md};
-  background: ${designSystem.colors.background.secondary};
+  background: ${designSystem.colors.gray[50]};
   border-radius: ${designSystem.borderRadius.lg};
 `;
 
