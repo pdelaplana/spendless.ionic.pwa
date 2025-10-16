@@ -125,7 +125,10 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     endAt: undefined,
   });
 
-  const [selectedPeriod, setSelectedPeriod] = useState<IPeriod | undefined>(undefined);
+  // Initialize selectedPeriod with currentPeriod to prevent flickering
+  const [selectedPeriod, setSelectedPeriod] = useState<IPeriod | undefined>(
+    currentPeriod ?? undefined,
+  );
 
   const {
     data: spending,
@@ -239,17 +242,12 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     return Array.from(new Set(allTags)).sort((a, b) => a.localeCompare(b));
   }, [flattenedSpending]);
 
+  // Only update selectedPeriod when currentPeriod changes and selectedPeriod is undefined
   useEffect(() => {
-    if (selectedPeriod === undefined) {
-      setSelectedPeriod(currentPeriod ?? undefined);
+    if (selectedPeriod === undefined && currentPeriod !== undefined && currentPeriod !== null) {
+      setSelectedPeriod(currentPeriod);
     }
   }, [currentPeriod, selectedPeriod]);
-
-  useEffect(() => {
-    if (selectedPeriod) {
-      refetchSpending();
-    }
-  }, [selectedPeriod, refetchSpending]);
 
   useEffect(() => {
     if (updateAccountError) {

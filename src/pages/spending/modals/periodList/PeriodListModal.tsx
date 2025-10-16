@@ -153,6 +153,7 @@ export const usePeriodListModal = (): {
     onSelect: (period: IPeriod) => void,
     onDeletePeriod?: (periodId: string) => void,
   ) => Promise<{ period: IPeriod; role: string }>;
+  dismiss: () => void;
 } => {
   const [inputs, setInputs] = useState<{
     periods: (IPeriod & { actualSpend: number })[];
@@ -193,6 +194,7 @@ export const usePeriodListModal = (): {
         });
       });
     },
+    dismiss,
   };
 };
 

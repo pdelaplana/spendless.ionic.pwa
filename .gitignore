@@ -42,5 +42,7 @@ serviceAccountKey.json
 *-service-account.json
 firebase-adminsdk-*.json
 
-# Local Secrets (for development only)
+# Local Development
 .secrets/
+.local/*
+
