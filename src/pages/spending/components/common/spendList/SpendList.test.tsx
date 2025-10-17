@@ -173,12 +173,7 @@ describe('SpendList', () => {
   });
 
   it('does not render load more button (pagination removed)', () => {
-    render(
-      <SpendList
-        spending={mockSpending}
-        groupedSpending={mockGroupedSpending}
-      />,
-    );
+    render(<SpendList spending={mockSpending} groupedSpending={mockGroupedSpending} />);
 
     const loadMoreButton = screen.queryByText('Load More');
     expect(loadMoreButton).not.toBeInTheDocument();

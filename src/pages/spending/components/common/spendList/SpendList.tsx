@@ -4,10 +4,17 @@ import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { StyledItemDivider } from '@/styles/IonList.styled';
 import { GroupedTransactionsContainer } from '@/theme/components';
-import { IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItemGroup, IonLabel, IonSpinner } from '@ionic/react';
+import {
+  IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonItemGroup,
+  IonLabel,
+  IonSpinner,
+} from '@ionic/react';
 import { add, chevronForward } from 'ionicons/icons';
 import type React from 'react';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { StyledDateLabel, StyledTotalLabel } from '../../../styles/SpendingPage.styled';
@@ -124,7 +131,7 @@ const SpendList: React.FC<SpendListProps> = ({
 
       if (!isScrollable && hasMore) {
         setIsLoadingMore(true);
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         previousDisplayCountRef.current = displayCount;
         const newDisplayCount = Math.min(displayCount + ITEMS_PER_PAGE, spending.length);
@@ -155,7 +162,7 @@ const SpendList: React.FC<SpendListProps> = ({
     setIsLoadingMore(true);
 
     // Small delay to show loading state
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     previousDisplayCountRef.current = displayCount;
     const newDisplayCount = Math.min(displayCount + ITEMS_PER_PAGE, spending.length);
@@ -245,7 +252,9 @@ const SpendList: React.FC<SpendListProps> = ({
                       <p>{t(`spending.categories.${spend.category}`)}</p>
                       <TagsDisplay tags={spend.tags} />
                     </IonLabel>
-                    <IonLabel slot='end'>{formatCurrency(spend.amount, account?.currency)}</IonLabel>
+                    <IonLabel slot='end'>
+                      {formatCurrency(spend.amount, account?.currency)}
+                    </IonLabel>
                   </StyledItem>
                 ))}
                 <StyledItem lines='none' color='light'>
@@ -264,11 +273,11 @@ const SpendList: React.FC<SpendListProps> = ({
         {hasMore && (
           <IonInfiniteScroll
             onIonInfinite={handleInfiniteScroll}
-            threshold="100px"
+            threshold='100px'
             disabled={isLoadingMore}
           >
             <IonInfiniteScrollContent
-              loadingSpinner="crescent"
+              loadingSpinner='crescent'
               loadingText={t('spending.loadingMore') || 'Loading more...'}
             />
           </IonInfiniteScroll>
