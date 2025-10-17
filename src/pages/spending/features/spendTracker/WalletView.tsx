@@ -28,8 +28,6 @@ const WalletView: React.FC = () => {
     setSelectedPeriod,
     spending,
     chartSpending,
-    hasNextPageSpending,
-    fetchNextPageSpending,
     didMutationFail,
     didMutationSucceed,
     resetMutationState,
@@ -220,8 +218,6 @@ const WalletView: React.FC = () => {
             <SpendList
               spending={filteredSpending}
               groupedSpending={groupedSpending}
-              hasNextPage={hasNextPageSpending}
-              onLoadMore={fetchNextPageSpending}
               onSpendClick={editSpendHandler}
               onAddSpend={newSpendHandler}
             />

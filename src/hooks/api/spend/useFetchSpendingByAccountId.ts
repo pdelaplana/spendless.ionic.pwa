@@ -2,25 +2,9 @@ import type { ISpend } from '@/domain/Spend';
 import { useLogging } from '@/hooks';
 import { db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/browser';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import {
-  type DocumentData,
-  type QueryDocumentSnapshot,
-  Timestamp,
-  collection,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  startAfter,
-  where,
-} from 'firebase/firestore';
-import {
-  ACCOUNTS_COLLECTION,
-  PAGE_SIZE,
-  SPENDING_SUBCOLLECTION,
-  mapFromFirestore,
-} from './spendUtils';
+import { useQuery } from '@tanstack/react-query';
+import { Timestamp, collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { ACCOUNTS_COLLECTION, SPENDING_SUBCOLLECTION, mapFromFirestore } from './spendUtils';
 
 export function useFetchSpendingByAccountId(
   accountId: string | undefined,
@@ -29,10 +13,7 @@ export function useFetchSpendingByAccountId(
   endAt?: Date,
 ) {
   const { logError } = useLogging();
-  return useInfiniteQuery<{
-    spending: Array<ISpend>;
-    lastVisible: QueryDocumentSnapshot<DocumentData> | null;
-  }>({
+  return useQuery<Array<ISpend>>({
     queryKey: [
       'useFetchSpendingByAccountId',
       accountId,
@@ -40,9 +21,8 @@ export function useFetchSpendingByAccountId(
       startAt?.toISOString(),
       endAt?.toISOString(),
     ],
-    initialPageParam: null,
 
-    queryFn: async ({ pageParam = null }) => {
+    queryFn: async () => {
       try {
         return Sentry.startSpan(
           {
@@ -51,7 +31,7 @@ export function useFetchSpendingByAccountId(
           },
           async () => {
             // Check if accountId is provided
-            if (!accountId) return { spending: [], lastVisible: null };
+            if (!accountId) return [];
 
             const spendingRef = collection(
               db,
@@ -74,21 +54,11 @@ export function useFetchSpendingByAccountId(
               q = query(q, where('date', '<=', Timestamp.fromDate(endAt)));
             }
 
-            // If we have a page param, start after that document
-            if (pageParam) {
-              q = query(q, startAfter(pageParam), limit(PAGE_SIZE));
-            } else {
-              q = query(q, limit(PAGE_SIZE));
-            }
-
+            // Fetch all spending data for the period (no pagination)
             const querySnapshot = await getDocs(q);
             const spending = querySnapshot.docs.map((doc) => mapFromFirestore(doc.id, doc.data()));
-            const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1] || null;
 
-            return {
-              spending,
-              lastVisible,
-            };
+            return spending;
           },
         );
       } catch (error) {
@@ -96,7 +66,7 @@ export function useFetchSpendingByAccountId(
         throw error;
       }
     },
-    getNextPageParam: (lastPage) => lastPage.lastVisible ?? undefined,
     enabled: !!accountId,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache, same as useFetchSpendingForCharts
   });
 }
