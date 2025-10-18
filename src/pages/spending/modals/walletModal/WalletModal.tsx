@@ -143,7 +143,9 @@ const WalletModal: React.FC<WalletModalProps> = ({
       title: 'Delete Wallet',
       message: `Are you sure you want to delete "${wallet.name}"? This action cannot be undone.`,
       onConfirm: () => {
-        onDelete(wallet.id!);
+        if (wallet.id) {
+          onDelete(wallet.id);
+        }
         onDismiss();
       },
       onCancel: () => {},

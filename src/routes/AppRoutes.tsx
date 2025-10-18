@@ -4,6 +4,7 @@ import ForgotPasswordPage from '@/pages/auth/forgotPassword/ForgotPasswordPage';
 import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
 import SigninPage from '@/pages/auth/signin/SigninPage';
 import SignupPage from '@/pages/auth/signup/SignupPage';
+import StartPage from '@/pages/auth/start/StartPage';
 import HelpPage from '@/pages/help/HelpPage';
 import HomePage from '@/pages/home/HomePage';
 import OnboardingFlow from '@/pages/onboarding/OnboardingFlow';
@@ -131,13 +132,20 @@ const AppRoutes: React.FC = () => {
               return isAuthenticated ? (
                 <Redirect to={ROUTES.SPENDING} />
               ) : (
-                <Redirect to={ROUTES.SIGNIN} />
+                <Redirect to={ROUTES.START} />
               );
             }}
             exact={true}
           />
 
           {/* Public routes */}
+          <Route
+            path={ROUTES.START}
+            render={() => {
+              return !isAuthenticated ? <StartPage /> : <Redirect to={ROUTES.SPENDING} />;
+            }}
+            exact={true}
+          />
           <Route
             path={ROUTES.SIGNIN}
             render={() => {

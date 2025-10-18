@@ -179,16 +179,14 @@ const StepWallets: React.FC<StepWalletsProps> = ({
       setHasLoadedCurrentWallets(true);
 
       // Add wallets from current wallets
-      currentWallets.forEach((wallet) => {
+      for (const wallet of currentWallets) {
         onAddWallet({
           name: wallet.name,
           spendingLimit: wallet.spendingLimit.toString(),
         });
-      });
+      }
     }
-    // Remove formData.wallets.length from dependencies to prevent infinite loops
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally limited dependencies to prevent infinite loops
-  }, [currentWallets, hasLoadedCurrentWallets]);
+  }, [currentWallets, hasLoadedCurrentWallets, formData.wallets.length, onAddWallet]);
 
   const handleAmountChange = (value: number) => {
     setValue('spendingLimit', value.toFixed(2));
@@ -231,7 +229,7 @@ const StepWallets: React.FC<StepWalletsProps> = ({
   const addWalletsFromCurrent = () => {
     if (currentWallets) {
       let addedCount = 0;
-      currentWallets.forEach((wallet) => {
+      for (const wallet of currentWallets) {
         // Check if wallet doesn't already exist
         const existingWallet = formData.wallets.find(
           (w) => w.name.toLowerCase().trim() === wallet.name.toLowerCase().trim(),
@@ -243,7 +241,7 @@ const StepWallets: React.FC<StepWalletsProps> = ({
           });
           addedCount++;
         }
-      });
+      }
 
       if (addedCount > 0) {
         showNotification(
@@ -394,15 +392,14 @@ const StepWallets: React.FC<StepWalletsProps> = ({
             </ActionButton>
 
             {/* Show option to add from current wallets if there are wallets not yet added */}
-            {currentWallets &&
-              currentWallets.some(
-                (currentWallet) =>
-                  !formData.wallets.some(
-                    (formWallet) =>
-                      formWallet.name.toLowerCase().trim() ===
-                      currentWallet.name.toLowerCase().trim(),
-                  ),
-              ) && (
+            {currentWallets?.some(
+              (currentWallet) =>
+                !formData.wallets.some(
+                  (formWallet) =>
+                    formWallet.name.toLowerCase().trim() ===
+                    currentWallet.name.toLowerCase().trim(),
+                ),
+            ) && (
                 <ActionButton
                   expand='block'
                   fill='clear'

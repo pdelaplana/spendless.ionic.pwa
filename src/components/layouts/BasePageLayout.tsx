@@ -10,7 +10,6 @@ import {
   IonIcon,
   IonMenu,
   IonMenuButton,
-  IonMenuToggle,
   IonPage,
   IonText,
   IonTitle,
@@ -25,7 +24,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import '@i18n/config';
 import { ROUTES } from '@/routes/routes.constants';
-import { LetterIcon } from '../shared';
 
 interface BasePageProps extends PropsWithChildren {
   title: string;
@@ -48,7 +46,7 @@ interface BasePageProps extends PropsWithChildren {
 const StyledHeader = styled(IonHeader)`
   border-bottom: 1px solid var(--color-gray-200);
   background: var(--ion-color-light);
-  
+
   ion-toolbar {
     --background: var(--ion-color-light);
     --color: var(--ion-color-dark);
@@ -66,7 +64,7 @@ const CenterTitle = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   ion-text {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
@@ -85,7 +83,7 @@ const StyledContent = styled(IonContent)`
 const StyledMenuButton = styled(IonMenuButton)`
   --color: var(--ion-color-primary);
   margin: 0;
-  
+
   &::part(native) {
     padding: var(--spacing-sm);
   }
@@ -94,7 +92,7 @@ const StyledMenuButton = styled(IonMenuButton)`
 const StyledBackButton = styled(IonBackButton)`
   --color: var(--ion-color-primary);
   margin: 0;
-  
+
   &::part(native) {
     padding: var(--spacing-sm);
   }
@@ -103,7 +101,7 @@ const StyledBackButton = styled(IonBackButton)`
 const StyledProfileButton = styled(IonButton)`
   --color: var(--ion-color-primary);
   margin: 0;
-  
+
   ion-icon {
     font-size: 28px;
   }

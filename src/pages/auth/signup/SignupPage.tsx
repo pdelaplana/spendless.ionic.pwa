@@ -1,182 +1,191 @@
-import { SpendlessLogo } from '@/components/brand';
-import InputFormField from '@/components/forms/fields/InputFormField';
-import { ActionButton, Gap } from '@/components/shared';
-import { useCreateAccount } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui';
 import { ROUTES } from '@/routes/routes.constants';
 import AuthPageLayout from '@components/layouts/AuthPageLayout';
-import styled from '@emotion/styled';
 import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonNote,
-  IonRouterLink,
-  IonText,
+  IonIcon,
   useIonRouter,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
+import { arrowBack } from 'ionicons/icons';
 import type React from 'react';
-import { useEffect, useRef } from 'react';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { LOCATION_OPTIONS } from './components/LocationSelect';
+import Step1BasicInfo, { type SignupFormData } from './steps/Step1BasicInfo';
+import Step2Password from './steps/Step2Password';
+import Step3Welcome from './steps/Step3Welcome';
 
 const StyledIonCard = styled(IonCard)`
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 `;
 
-const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem 0 2rem 0;
-  text-align: center;
+const Container = styled.div`
+  padding: 2rem 1rem;
+  max-width: 500px;
+  margin: 0 auto;
 `;
 
-interface ISignupForm {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+const BackButton = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const Header = styled.div`
+  text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 0.5rem 0;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+  margin: 0;
+`;
 
 const SignupPage: React.FC = () => {
   const { t } = useTranslation();
-  const { signup, error } = useAuth();
+  const { signup } = useAuth();
   const { showErrorNotification } = useAppNotifications();
+  const [currentStep, setCurrentStep] = useState(1);
+  const { push } = useIonRouter();
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting, isDirty },
-  } = useForm<ISignupForm>();
+    trigger,
+    formState: { errors, isSubmitting, isValid },
+    setValue,
+    getValues,
+  } = useForm<SignupFormData>({
+    mode: 'onChange',
+  });
 
-  const password = watch('password');
-  const { push } = useIonRouter();
+  const password = watch('password', '');
+  const name = watch('name', '');
+  const location = watch('location', '');
 
-  const onSubmit: SubmitHandler<ISignupForm> = async (formData) => {
-    try {
-      const userCredential = await signup(formData.email, formData.password);
-      if (userCredential?.user) {
-        push(ROUTES.SPENDING);
-      }
-    } catch (e) {
-      // Error will be handled by useAuth
-      showErrorNotification(t('server.errors.auth.signupFailed'));
-      console.error('Signup error:', e);
+  const handleStep1Next = async () => {
+    const isStep1Valid = await trigger(['email', 'name', 'location']);
+    if (isStep1Valid) {
+      setCurrentStep(2);
     }
   };
 
+  const handleStep2Back = () => {
+    setCurrentStep(1);
+  };
+
+  const handleStep2Submit = handleSubmit(async (formData) => {
+    try {
+      // Find the selected location to get its currency
+      const selectedLocation = LOCATION_OPTIONS.find((loc) => loc.value === formData.location);
+      const currency = selectedLocation?.currency || 'USD';
+
+      // Password is guaranteed to be set at this point since Step 2 validates it
+      const userCredential = await signup(
+        formData.email,
+        formData.password as string,
+        formData.name,
+        formData.location,
+        currency,
+      );
+
+      if (userCredential?.user) {
+        setCurrentStep(3);
+      }
+    } catch (e) {
+      showErrorNotification(t('server.errors.auth.auth/email-already-in-use'));
+      console.error('Signup error:', e);
+    }
+  });
+
+  // Check if step 1 fields are valid
+  const isStep1Valid =
+    !errors.email &&
+    !errors.name &&
+    !errors.location &&
+    watch('email') &&
+    watch('name') &&
+    watch('location');
+
+  // Check if step 2 fields are valid
+  const isStep2Valid = !errors.password && (password?.length ?? 0) >= 6;
+
   return (
     <AuthPageLayout title='Sign up'>
-      <Gap size='.65rem' />
-      <LogoContainer>
-        <SpendlessLogo variant='primary' size='large' />
-      </LogoContainer>
-      <Gap size='1rem' />
-      <StyledIonCard>
-        <IonCardHeader>
-          <IonCardTitle className='ion-margin'>
-            <IonText>Sign up for a Spendless account</IonText>
-          </IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <IonList lines='none'>
-            {error && (
-              <IonItem>
-                <IonNote color='danger' role='alert'>
-                  {t(`server.errors.auth.${error}`)}
-                </IonNote>
-              </IonItem>
+      {currentStep < 3 && (
+        <Container>
+          <BackButton>
+            <IonButtons>
+              {currentStep === 1 && <IonBackButton defaultHref={ROUTES.START} text='' />}
+              {currentStep === 2 && (
+                <IonButton fill='clear' onClick={handleStep2Back}>
+                  <IonIcon slot='icon-only' icon={arrowBack} />
+                </IonButton>
+              )}
+            </IonButtons>
+          </BackButton>
+
+          <Header>
+            {currentStep === 1 && (
+              <>
+                <Title>Let's Get Started</Title>
+                <Subtitle>We need some basic information</Subtitle>
+              </>
             )}
 
-            <form onSubmit={handleSubmit(onSubmit)} aria-label='Sign up form'>
-              <IonItem>
-                <IonLabel>
-                  <InputFormField<ISignupForm>
-                    name='email'
-                    label='Email'
-                    type='email'
-                    fill='outline'
-                    register={register}
-                    error={errors.email}
-                    validationRules={{
-                      required: 'Email is required',
-                      pattern: {
-                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        message: 'Enter a valid email address',
-                      },
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
+            {currentStep === 2 && (
+              <>
+                <Title>Let's protect your account</Title>
+                <Subtitle>Enter a password</Subtitle>
+              </>
+            )}
+          </Header>
 
-              <IonItem>
-                <IonLabel>
-                  <InputFormField<ISignupForm>
-                    name='password'
-                    label='Password'
-                    type='password'
-                    fill='outline'
-                    register={register}
-                    error={errors.password}
-                    validationRules={{
-                      required: 'Password is required',
-                      minLength: {
-                        value: 6,
-                        message: 'Password must be at least 6 characters long',
-                      },
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
+          <StyledIonCard>
+            <IonCardContent>
+              {currentStep === 1 && (
+                <Step1BasicInfo
+                  register={register}
+                  errors={errors}
+                  setValue={setValue}
+                  getValues={getValues}
+                  onNext={handleStep1Next}
+                  isValid={!!isStep1Valid}
+                />
+              )}
 
-              <IonItem>
-                <IonLabel>
-                  <InputFormField<ISignupForm>
-                    name='confirmPassword'
-                    label='Confirm Password'
-                    type='password'
-                    fill='outline'
-                    register={register}
-                    error={errors.confirmPassword}
-                    validationRules={{
-                      required: 'Please confirm your password',
-                      validate: (value: string) => value === password || 'Passwords do not match',
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
+              {currentStep === 2 && (
+                <Step2Password
+                  register={register}
+                  errors={errors}
+                  password={password}
+                  onBack={handleStep2Back}
+                  onSubmit={handleStep2Submit}
+                  isSubmitting={isSubmitting}
+                  isValid={!!isStep2Valid}
+                />
+              )}
+            </IonCardContent>
+          </StyledIonCard>
+        </Container>
+      )}
 
-              <IonItem>
-                <IonLabel>
-                  <ActionButton
-                    size='default'
-                    label='Create Account'
-                    expand='block'
-                    type='submit'
-                    className='ion-padding-top ion-padding-bottom'
-                    aria-busy={isSubmitting}
-                    isLoading={isSubmitting}
-                    isDisabled={!isDirty || isSubmitting}
-                  />
-                </IonLabel>
-              </IonItem>
-            </form>
-
-            <IonItem>
-              <IonLabel className='ion-text-center'>
-                <IonRouterLink href='/signin'>Already have an account? Sign in here</IonRouterLink>
-              </IonLabel>
-            </IonItem>
-          </IonList>
-        </IonCardContent>
-      </StyledIonCard>
+      {currentStep === 3 && <Step3Welcome name={name} />}
     </AuthPageLayout>
   );
 };
