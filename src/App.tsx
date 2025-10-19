@@ -42,7 +42,7 @@ import AppRoutes from './routes/AppRoutes';
 import './app.css';
 import './positioning.css';
 import NetworkStatusNotifier from './components/networkStatusNotifier/NetworkStatusNotifier';
-import { PwaInstallPrompt, PwaUpdateNotification } from './components/ui';
+import { PwaUpdateNotification } from './components/ui';
 import { NetworkStatusProvider } from './providers/networkStatus';
 
 setupIonicReact({ mode: 'md' });
@@ -63,7 +63,6 @@ const App: React.FC = () => (
       <AuthProvider>
         <IonApp>
           <NetworkStatusNotifier />
-          <PwaInstallPrompt />
           <PwaUpdateNotification />
           <AppRoutes />
         </IonApp>

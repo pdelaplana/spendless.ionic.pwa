@@ -12,7 +12,9 @@ const NotificationContainer = styled.div<{ isVisible: boolean; variant: 'update'
   left: ${designSystem.spacing.md};
   right: ${designSystem.spacing.md};
   background: ${(props) =>
-    props.variant === 'success' ? designSystem.colors.success : designSystem.colors.primary[500]};
+    props.variant === 'success'
+      ? designSystem.colors.primary[500]
+      : designSystem.colors.primary[500]};
   color: ${designSystem.colors.text.inverse};
   border-radius: ${designSystem.borderRadius.lg};
   padding: ${designSystem.spacing.lg};

@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CenterContainer } from '../../../../components/layouts';
 import { Gap } from '../../../../components/shared';
+import { PwaInstallPrompt } from '../../../../components/ui/PwaInstallPrompt';
 import { useWallet } from '../../../../providers/wallet';
 import { ROUTES } from '../../../../routes/routes.constants';
 import { GradientBackground } from '../../../../theme';
@@ -36,6 +37,7 @@ const PeriodDashboard: React.FC = () => {
         <PeriodSwitcher />
         <WalletList onWalletClick={handleWalletClick} />
         <PeriodActionsBar />
+        <PwaInstallPrompt />
       </CenterContainer>
     </GradientBackground>
   );

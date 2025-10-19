@@ -1,25 +1,25 @@
 import { usePwaInstall } from '@/hooks/pwa/usePwaInstall';
+import { GlassCard } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import { IonIcon } from '@ionic/react';
-import { close, download } from 'ionicons/icons';
-import React, { useState } from 'react';
+import { download } from 'ionicons/icons';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from './Button';
 
-const PromptContainer = styled.div<{ isVisible: boolean }>`
-  position: fixed;
-  bottom: ${designSystem.spacing.lg};
-  left: ${designSystem.spacing.md};
-  right: ${designSystem.spacing.md};
-  background: ${designSystem.colors.surface};
-  border-radius: ${designSystem.borderRadius.lg};
+const DISMISS_STORAGE_KEY = 'pwa-install-dismissed-timestamp';
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
+const CardContainer = styled(GlassCard)`
+  position: relative;
   padding: ${designSystem.spacing.lg};
-  box-shadow: ${designSystem.shadows.xl};
-  z-index: 1000;
-  transform: ${(props) => (props.isVisible ? 'translateY(0)' : 'translateY(100%)')};
-  opacity: ${(props) => (props.isVisible ? 1 : 0)};
-  transition: all 0.3s ease;
-  border: 1px solid ${designSystem.colors.gray[200]};
+  background: linear-gradient(
+    135deg,
+    ${designSystem.colors.primary[500]} 0%,
+    ${designSystem.colors.primary[600]} 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.2);
 `;
 
 const PromptContent = styled.div`
@@ -32,7 +32,7 @@ const IconContainer = styled.div`
   flex-shrink: 0;
   width: 48px;
   height: 48px;
-  background: ${designSystem.colors.primary[500]};
+  background: rgba(255, 255, 255, 0.2);
   border-radius: ${designSystem.borderRadius.md};
   display: flex;
   align-items: center;
@@ -49,14 +49,14 @@ const Title = styled.h3`
   margin: 0 0 ${designSystem.spacing.xs};
   font-size: ${designSystem.typography.fontSize.lg};
   font-weight: ${designSystem.typography.fontWeight.semibold};
-  color: ${designSystem.colors.text.primary};
+  color: ${designSystem.colors.text.inverse};
   line-height: 1.3;
 `;
 
 const Description = styled.p`
   margin: 0 0 ${designSystem.spacing.md};
   font-size: ${designSystem.typography.fontSize.sm};
-  color: ${designSystem.colors.text.secondary};
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.4;
 `;
 
@@ -66,108 +66,120 @@ const ActionArea = styled.div`
   flex-wrap: wrap;
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: ${designSystem.spacing.sm};
-  right: ${designSystem.spacing.sm};
-  background: none;
-  border: none;
-  color: ${designSystem.colors.gray[500]};
-  padding: ${designSystem.spacing.xs};
-  border-radius: ${designSystem.borderRadius.sm};
+const WhiteButton = styled.button<{ $primary?: boolean }>`
+  padding: ${designSystem.spacing.sm} ${designSystem.spacing.md};
+  border-radius: ${designSystem.borderRadius.md};
+  font-size: ${designSystem.typography.fontSize.sm};
+  font-weight: ${designSystem.typography.fontWeight.semibold};
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: all 0.2s ease;
+  border: none;
 
-  &:hover {
-    background: ${designSystem.colors.gray[100]};
-    color: ${designSystem.colors.text.secondary};
-  }
+  ${({ $primary }) =>
+    $primary
+      ? `
+    background: ${designSystem.colors.surface};
+    color: ${designSystem.colors.primary[600]};
+
+    &:hover {
+      background: ${designSystem.colors.gray[50]};
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  `
+      : `
+    background: transparent;
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:active {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  `}
 
   &:focus {
-    outline: 2px solid ${designSystem.colors.primary[500]};
+    outline: 2px solid rgba(255, 255, 255, 0.5);
     outline-offset: 2px;
   }
 `;
 
 interface PwaInstallPromptProps {
-  autoShow?: boolean;
-  delay?: number;
   className?: string;
 }
 
-export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
-  autoShow = true,
-  delay = 3000,
-  className,
-}) => {
+/**
+ * PWA Install Prompt Card Component
+ * Displays as an inline card in the page (not fixed position)
+ * Manages dismissal state with 7-day re-prompt logic
+ */
+export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({ className }) => {
   const { canInstall, isInstalled, installPwa } = usePwaInstall();
   const [isDismissed, setIsDismissed] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(false);
 
-  // Auto-show logic
-  React.useEffect(() => {
-    if (autoShow && canInstall && !isInstalled && !isDismissed) {
-      const timer = setTimeout(() => {
-        setShowPrompt(true);
-      }, delay);
+  // Check if prompt should be shown based on dismissal timestamp
+  useEffect(() => {
+    const checkDismissalStatus = () => {
+      const dismissedTimestamp = localStorage.getItem(DISMISS_STORAGE_KEY);
 
-      return () => clearTimeout(timer);
-    }
-  }, [autoShow, canInstall, isInstalled, isDismissed, delay]);
+      if (!dismissedTimestamp) {
+        // Never dismissed, show the prompt
+        setIsDismissed(false);
+        return;
+      }
+
+      const dismissedDate = Number.parseInt(dismissedTimestamp, 10);
+      const now = Date.now();
+      const timeSinceDismissal = now - dismissedDate;
+
+      // Show again if more than 7 days have passed
+      if (timeSinceDismissal >= SEVEN_DAYS_MS) {
+        setIsDismissed(false);
+        // Clear old timestamp so we can track new dismissal
+        localStorage.removeItem(DISMISS_STORAGE_KEY);
+      } else {
+        setIsDismissed(true);
+      }
+    };
+
+    checkDismissalStatus();
+  }, []);
 
   const handleInstall = async () => {
     try {
       await installPwa();
-      setShowPrompt(false);
+      // Clear dismissal timestamp on successful install
+      localStorage.removeItem(DISMISS_STORAGE_KEY);
     } catch (error) {
       console.error('Error installing PWA:', error);
     }
   };
 
   const handleDismiss = () => {
-    setShowPrompt(false);
+    // Store current timestamp when user dismisses
+    const now = Date.now();
+    localStorage.setItem(DISMISS_STORAGE_KEY, now.toString());
     setIsDismissed(true);
-
-    // Store dismissal in localStorage to persist across sessions
-    localStorage.setItem('pwa-install-dismissed', 'true');
   };
 
-  // Check if user has previously dismissed the prompt
-  React.useEffect(() => {
-    const dismissed = localStorage.getItem('pwa-install-dismissed');
-    if (dismissed === 'true') {
-      setIsDismissed(true);
-    }
-  }, []);
-
-  // Reset dismissal when app becomes installable again
-  React.useEffect(() => {
-    if (canInstall && !isInstalled) {
-      // Reset dismissal after 7 days
-      const dismissedDate = localStorage.getItem('pwa-install-dismissed-date');
-      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-
-      if (!dismissedDate || Number.parseInt(dismissedDate) < sevenDaysAgo) {
-        localStorage.removeItem('pwa-install-dismissed');
-        localStorage.setItem('pwa-install-dismissed-date', Date.now().toString());
-        setIsDismissed(false);
-      }
-    }
-  }, [canInstall, isInstalled]);
-
-  // Don't show if not installable, already installed, or dismissed
+  // Don't render if:
+  // - App is not installable
+  // - App is already installed
+  // - User dismissed within last 7 days
   if (!canInstall || isInstalled || isDismissed) {
     return null;
   }
 
   return (
-    <PromptContainer isVisible={showPrompt} className={className}>
-      <CloseButton onClick={handleDismiss} aria-label='Dismiss install prompt'>
-        <IonIcon icon={close} />
-      </CloseButton>
-
+    <CardContainer className={className}>
       <PromptContent>
         <IconContainer>
           <IonIcon icon={download} />
@@ -181,16 +193,14 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
           </Description>
 
           <ActionArea>
-            <Button variant='primary' size='sm' onClick={handleInstall}>
+            <WhiteButton $primary onClick={handleInstall}>
               Install App
-            </Button>
-            <Button variant='ghost' size='sm' onClick={handleDismiss}>
-              Not Now
-            </Button>
+            </WhiteButton>
+            <WhiteButton onClick={handleDismiss}>Not Now</WhiteButton>
           </ActionArea>
         </ContentArea>
       </PromptContent>
-    </PromptContainer>
+    </CardContainer>
   );
 };
 
