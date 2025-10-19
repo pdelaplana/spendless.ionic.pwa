@@ -143,7 +143,7 @@ const SignupPage: React.FC = () => {
           <Header>
             {currentStep === 1 && (
               <>
-                <Title>Let's Get Started</Title>
+                <Title>Let's get started</Title>
                 <Subtitle>We need some basic information</Subtitle>
               </>
             )}

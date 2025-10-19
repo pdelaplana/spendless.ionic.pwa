@@ -212,7 +212,7 @@ const AppRoutes: React.FC = () => {
               return isAuthenticated ? (
                 <Redirect to={ROUTES.SPENDING} />
               ) : (
-                <Redirect to={ROUTES.SIGNIN} />
+                <Redirect to={ROUTES.START} />
               );
             }}
           />

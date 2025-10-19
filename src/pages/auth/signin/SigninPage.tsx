@@ -198,13 +198,14 @@ const SigninPage: React.FC = () => {
                     />
                   </IonLabel>
                 </IonItem>
+                <IonItem>
+                  <IonLabel className='ion-text-center'>
+                    <IonRouterLink routerLink={ROUTES.FORGOTPASSWORD}>
+                      Forgot Password?
+                    </IonRouterLink>
+                  </IonLabel>
+                </IonItem>
               </form>
-
-              <IonItem style={{ paddingTop: '0.25rem' }}>
-                <IonLabel className='ion-text-center'>
-                  <IonRouterLink routerLink={ROUTES.FORGOTPASSWORD}>Forgot Password?</IonRouterLink>
-                </IonLabel>
-              </IonItem>
 
               <Divider>
                 <span>or</span>

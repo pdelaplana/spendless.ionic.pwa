@@ -384,7 +384,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         url: `${window.location.origin}/reset-password`,
         handleCodeInApp: true,
       };
-      await sendPasswordResetEmail(auth, email, actionCodeSettings);
+      await sendPasswordResetEmail(auth, email);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to send reset email';
       console.error('Error sending reset password email:', message);

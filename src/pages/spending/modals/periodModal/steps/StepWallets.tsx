@@ -400,17 +400,17 @@ const StepWallets: React.FC<StepWalletsProps> = ({
                     currentWallet.name.toLowerCase().trim(),
                 ),
             ) && (
-                <ActionButton
-                  expand='block'
-                  fill='clear'
-                  onClick={addWalletsFromCurrent}
-                  isLoading={false}
-                  isDisabled={false}
-                  label='Add Remaining Current Wallets'
-                >
-                  <IonIcon icon={copyOutline} slot='start' />
-                </ActionButton>
-              )}
+              <ActionButton
+                expand='block'
+                fill='clear'
+                onClick={addWalletsFromCurrent}
+                isLoading={false}
+                isDisabled={false}
+                label='Add Remaining Current Wallets'
+              >
+                <IonIcon icon={copyOutline} slot='start' />
+              </ActionButton>
+            )}
           </div>
         )}
 

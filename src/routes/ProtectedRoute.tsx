@@ -13,7 +13,7 @@ interface IProtectedRouteProps extends RouteProps {
 const ProtectedRoute: React.FC<IProtectedRouteProps> = ({
   children,
   requiredRoles = [undefined],
-  fallbackPath = ROUTES.SIGNIN,
+  fallbackPath = ROUTES.START,
   ...rest
 }) => {
   const { isAuthenticated, authStateLoading } = useAuth();
