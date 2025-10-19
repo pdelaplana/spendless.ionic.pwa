@@ -1,4 +1,4 @@
-import { type CreateSpendDTO, createSpend } from '@/domain/Spend';
+import { type CreateSpendDTO, type ISpend, createSpend } from '@/domain/Spend';
 import { useLogging } from '@/hooks';
 import { useUpdateWalletBalance } from '@/hooks/api/wallet';
 import { db } from '@/infrastructure/firebase';
@@ -29,7 +29,7 @@ export function useCreateSpend() {
         const spend = createSpend(data);
         const spendWithId = { ...spend, id: newDocRef.id };
 
-        // Save spending transaction
+        // Save spending transaction (persisted to IndexedDB if offline)
         await setDoc(newDocRef, mapToFirestore(spendWithId));
 
         // Update wallet balance
@@ -49,11 +49,53 @@ export function useCreateSpend() {
         return spendWithId;
       });
     },
+    onMutate: async (data: CreateSpendDTO) => {
+      // Optimistically update the cache with the new spend
+      const optimisticSpend = {
+        ...createSpend(data),
+        id: `temp-${Date.now()}`, // Temporary ID for optimistic update
+      };
+
+      // Cancel any outgoing refetches for all spending queries
+      await queryClient.cancelQueries({
+        queryKey: ['useFetchSpendingByAccountId', data.accountId],
+      });
+
+      // Get all matching query keys and update them
+      const queryCache = queryClient.getQueryCache();
+      const queries = queryCache.findAll({
+        queryKey: ['useFetchSpendingByAccountId', data.accountId, data.periodId],
+      });
+
+      const previousValues: Map<string, ISpend[]> = new Map();
+
+      // Update each matching query
+      for (const query of queries) {
+        const oldData = queryClient.getQueryData<ISpend[]>(query.queryKey);
+        if (oldData) {
+          previousValues.set(JSON.stringify(query.queryKey), oldData);
+          queryClient.setQueryData<ISpend[]>(query.queryKey, [optimisticSpend, ...oldData]);
+        }
+      }
+
+      // Return context with previous values for rollback
+      return { previousValues };
+    },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['spending', data.accountId, data.periodId] });
+      // Invalidate all related queries
+      queryClient.invalidateQueries({
+        queryKey: ['useFetchSpendingByAccountId', data.accountId, data.periodId],
+      });
       queryClient.invalidateQueries({ queryKey: ['useFetchSpendingForCharts'] });
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
+      // Rollback all optimistic updates on error
+      if (context?.previousValues) {
+        context.previousValues.forEach((oldData, queryKeyStr) => {
+          const queryKey = JSON.parse(queryKeyStr);
+          queryClient.setQueryData<ISpend[]>(queryKey, oldData);
+        });
+      }
       logError(error);
     },
   });
