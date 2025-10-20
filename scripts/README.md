@@ -1,6 +1,6 @@
-# Firebase Configuration Scripts
+# Spendless Scripts
 
-This directory contains PowerShell scripts for managing Firebase configuration across environments.
+This directory contains utility scripts for Firebase configuration management and sample data loading.
 
 ## Scripts Overview
 
@@ -56,6 +56,61 @@ Optimize PWA build for production.
 ```powershell
 npm run build:pwa
 ```
+
+### 4. `loadSampleData.ts`
+Load demo sample data into Firestore for testing, demos, and development. Uses Firebase Admin SDK for batch operations.
+
+**Usage:**
+```bash
+# Install dependencies first
+npm install firebase-admin tsx --save-dev
+
+# Run the script with your Firebase Auth user ID
+npm run load-sample-data YOUR_USER_ID
+```
+
+**Requirements:**
+- Firebase Admin SDK service account key saved as `serviceAccountKey.json` in project root
+- Download from: Firebase Console > Project Settings > Service Accounts > Generate New Private Key
+
+**What it creates:**
+- 1 Account (linked to your user ID)
+- 1 Period (January 2025, monthly)
+- 5 Wallets (Personal, Groceries, Entertainment, Health, Travel)
+- 40+ realistic spending transactions with tags
+- 5 period goals with progress tracking
+
+**Example output:**
+```
+🎉 Sample data loaded successfully!
+═══════════════════════════════════════
+Account ID: xyz789abc
+Period ID: period123
+Wallets: 5
+Transactions: 40
+Goals: 5
+═══════════════════════════════════════
+```
+
+**See:** [LOAD_SAMPLE_DATA_GUIDE.md](../docs/LOAD_SAMPLE_DATA_GUIDE.md) for detailed instructions
+
+### 5. `loadSampleData.simple.ts`
+Browser-based sample data loader using Firebase client SDK. No service account required.
+
+**Usage:**
+```typescript
+// Import in app code or run from browser console
+import loadSampleDataSimple from './scripts/loadSampleData.simple';
+
+// User must be authenticated
+await loadSampleDataSimple(userId, accountId);
+```
+
+**Advantages:**
+- No service account key needed
+- Can run from browser DevTools console
+- Uses existing Firebase authentication
+- Simpler setup for quick tests
 
 ## Configuration Structure
 

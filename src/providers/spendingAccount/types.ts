@@ -12,9 +12,6 @@ export interface SpendingAccountContextType {
   startAt?: Date;
   endAt?: Date;
 
-  hasNextPageSpending: boolean;
-  fetchNextPageSpending: () => void;
-
   setDateRange: (startAt?: Date, endAt?: Date) => void;
   setSelectedPeriod: (period: IPeriod | undefined) => void;
 

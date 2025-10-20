@@ -55,6 +55,7 @@ export default {
       viewingClosedPeriodMessage:
         'You are viewing a previous spending period. Close to return current period.',
       loadMore: 'Load More',
+      loadingMore: 'Loading more...',
       newSpend: 'New Spend',
       addFirstSpend: 'Add Your First Spending',
       noPeriodSelected: 'No period selected',

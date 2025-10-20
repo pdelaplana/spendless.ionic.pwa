@@ -1,7 +1,7 @@
 import type { IAccount } from '@/domain/Account';
 import type { User, UserCredential } from 'firebase/auth';
 
-export type profileFields = 'role';
+export type profileFields = 'role' | 'location' | 'currency';
 
 export type UserRole = 'user' | 'admin' | undefined;
 
@@ -12,7 +12,13 @@ export interface AuthUser extends User {
 }
 
 export interface AuthContextType {
-  signup: (email: string, password: string, name?: string) => Promise<UserCredential | undefined>;
+  signup: (
+    email: string,
+    password: string,
+    name?: string,
+    location?: string,
+    currency?: string,
+  ) => Promise<UserCredential | undefined>;
   signin: (email: string, password: string) => Promise<UserCredential | undefined>;
   signout: () => Promise<void>;
   setProfileData: ({

@@ -119,6 +119,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   }, [formData.goals, formData.startAt, formData.endAt, setValue]);
 
   // Initialize recurring expenses from props only once
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally run only once on mount to initialize from props - currentRecurringExpenses, formData.startAt, formData.endAt, setRecurringExpenses excluded
   useEffect(() => {
     if (
       currentRecurringExpenses &&
@@ -150,7 +151,6 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
 
       setRecurringExpenses(recurringExpensesData);
     }
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally run only once on mount to initialize from props
   }, []);
 
   // Custom validation function that uses React Hook Form state

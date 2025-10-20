@@ -21,9 +21,12 @@ const ActionButton: React.FC<ButtonProps> = ({
       {isLoading ? (
         <IonSpinner name='dots' /> // Show spinner while loading
       ) : (
-        <IonText style={{ height: '24px' }} className='ion-flex ion-align-items-center'>
-          {label}
-        </IonText>
+        <>
+          {children}
+          <IonText style={{ height: '24px' }} className='ion-flex ion-align-items-center'>
+            {label}
+          </IonText>
+        </>
       )}
     </IonButton>
   );

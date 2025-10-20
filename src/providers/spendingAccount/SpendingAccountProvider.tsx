@@ -125,13 +125,13 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     endAt: undefined,
   });
 
-  const [selectedPeriod, setSelectedPeriod] = useState<IPeriod | undefined>(undefined);
+  // Initialize selectedPeriod with currentPeriod to prevent flickering
+  const [selectedPeriod, setSelectedPeriod] = useState<IPeriod | undefined>(
+    currentPeriod ?? undefined,
+  );
 
   const {
-    data: spending,
-    hasPreviousPage: hasPreviousSpending,
-    fetchNextPage: fetchNextPageSpending,
-    hasNextPage: hasNextPageSpending,
+    data: spending = [],
     isFetching: isFetchingSpending,
     isError: isFetchingSpendingError,
     isSuccess: isFetchingSpendingSuccess,
@@ -229,27 +229,22 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     [currentPeriod?.id, deleteSpendingForPeriod, spendingAccount?.id, deletePeriod],
   );
 
-  // Memoize flattened spending array
+  // Spending is now a flat array (no pagination)
   const flattenedSpending = useMemo(() => {
-    return spending?.pages?.flatMap((page) => page.spending) ?? [];
-  }, [spending?.pages]);
+    return spending ?? [];
+  }, [spending]);
 
   const getUsedSpendingTags = useMemo(() => {
     const allTags = flattenedSpending.flatMap((spend) => spend.tags || []);
     return Array.from(new Set(allTags)).sort((a, b) => a.localeCompare(b));
   }, [flattenedSpending]);
 
+  // Only update selectedPeriod when currentPeriod changes and selectedPeriod is undefined
   useEffect(() => {
-    if (selectedPeriod === undefined) {
-      setSelectedPeriod(currentPeriod ?? undefined);
+    if (selectedPeriod === undefined && currentPeriod !== undefined && currentPeriod !== null) {
+      setSelectedPeriod(currentPeriod);
     }
   }, [currentPeriod, selectedPeriod]);
-
-  useEffect(() => {
-    if (selectedPeriod) {
-      refetchSpending();
-    }
-  }, [selectedPeriod, refetchSpending]);
 
   useEffect(() => {
     if (updateAccountError) {
@@ -324,9 +319,6 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       selectedPeriod: selectedPeriod,
       setSelectedPeriod: setSelectedPeriod,
 
-      hasNextPageSpending,
-      fetchNextPageSpending,
-
       updateAccount,
       deleteAccount,
 
@@ -397,8 +389,6 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       dateRange.endAt,
       setDateRangeMemo,
       selectedPeriod,
-      hasNextPageSpending,
-      fetchNextPageSpending,
       updateAccount,
       deleteAccount,
       createPeriodMemo,

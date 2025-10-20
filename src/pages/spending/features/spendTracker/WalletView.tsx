@@ -7,12 +7,11 @@ import { ROUTES } from '@/routes/routes.constants';
 import { GradientBackground } from '@/theme/components';
 import { IonButton, IonCard, IonCardContent, IonIcon } from '@ionic/react';
 import { close } from 'ionicons/icons';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { ScheduledSpendingItem } from '../../components/common/scheduledSpendingItem';
 import WalletEmptyState from '../../components/common/walletEmptyState/WalletEmptyState';
-import WalletQuickActionButtons from '../../components/common/walletQuickActionButtons/WalletQuickActionButtons';
 import { useSpendActions } from '../../hooks/useSpendActions';
 import { useSpendTracking } from '../../hooks/useSpendTracking';
 import { useWalletActions } from '../../hooks/useWalletActions';
@@ -29,15 +28,26 @@ const WalletView: React.FC = () => {
     setSelectedPeriod,
     spending,
     chartSpending,
-    hasNextPageSpending,
-    fetchNextPageSpending,
     didMutationFail,
     didMutationSucceed,
     resetMutationState,
+    isFetching,
   } = useSpendingAccount();
 
   // Wallet context
-  const { selectedWallet, wallets } = useWallet();
+  const { selectedWallet, wallets, isLoading: isWalletLoading } = useWallet();
+
+  // Track if initial data has loaded
+  const [isStateReady, setIsStateReady] = useState(false);
+
+  // Wait for all data to load before showing content
+  useEffect(() => {
+    const stateIsStable = !isWalletLoading && !isFetching && selectedPeriod !== undefined;
+
+    if (stateIsStable && !isStateReady) {
+      setIsStateReady(true);
+    }
+  }, [isWalletLoading, isFetching, selectedPeriod, isStateReady]);
 
   // Filter spending by selected wallet for UI list (paginated)
   const filteredSpending = useMemo(() => {
@@ -130,7 +140,13 @@ const WalletView: React.FC = () => {
     filteredSpending,
   ]);
 
-  // Show message if no wallet is selected
+  // Wait for state to be ready before showing any content
+  // This prevents showing "no wallet selected" or empty state while data is loading
+  if (!isStateReady) {
+    return null;
+  }
+
+  // Show message if no wallet is selected (after data has loaded)
   if (!selectedWallet) {
     return (
       <GradientBackground>
@@ -202,8 +218,6 @@ const WalletView: React.FC = () => {
             <SpendList
               spending={filteredSpending}
               groupedSpending={groupedSpending}
-              hasNextPage={hasNextPageSpending}
-              onLoadMore={fetchNextPageSpending}
               onSpendClick={editSpendHandler}
               onAddSpend={newSpendHandler}
             />

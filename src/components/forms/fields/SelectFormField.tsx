@@ -44,17 +44,14 @@ const SelectFormField: React.FC<SelectFormFieldProps> = ({
   return (
     <div>
       <IonSelect
-        {...(register ? register(name, validationRules) : {})}
-        labelPlacement='floating'
-        label={label}
-        interface='popover'
         placeholder={placeholder ?? label}
+        label={label}
+        labelPlacement='floating'
+        interface='popover'
+        disabled={readonly}
         {...(fill ? { fill } : {})}
-        {...(getValues
-          ? {
-              value: getValues(name),
-            }
-          : {})}
+        {...(getValues ? { value: getValues(name) } : {})}
+        {...(register ? register(name, validationRules) : {})}
         {...(setValue
           ? {
               onIonChange: (e) => {

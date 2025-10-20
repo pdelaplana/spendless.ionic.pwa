@@ -3,16 +3,18 @@ import { NetworkStatusContext } from './context';
 
 export const NetworkStatusProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isSyncing] = useState(false);
+  const [hasPendingWrites] = useState(false);
 
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      console.log('Application is online');
+      console.log('Application is online - Firestore will auto-sync pending writes');
     };
 
     const handleOffline = () => {
       setIsOnline(false);
-      console.log('Application is offline');
+      console.log('Application is offline - writes will be queued locally');
     };
 
     window.addEventListener('online', handleOnline);
@@ -25,6 +27,8 @@ export const NetworkStatusProvider: React.FC<{ children: ReactNode }> = ({ child
   }, []);
 
   return (
-    <NetworkStatusContext.Provider value={{ isOnline }}>{children}</NetworkStatusContext.Provider>
+    <NetworkStatusContext.Provider value={{ isOnline, isSyncing, hasPendingWrites }}>
+      {children}
+    </NetworkStatusContext.Provider>
   );
 };

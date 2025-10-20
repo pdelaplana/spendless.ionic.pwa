@@ -1,21 +1,19 @@
-import { SpendlessLogo } from '@/components/brand';
 import { InputFormField } from '@/components/forms';
 import InformationContent from '@/components/layouts/InformationContent';
-import PublicPageLayout from '@/components/layouts/PublicPageLayout';
-import { ActionButton, Gap } from '@/components/shared';
+import { ActionButton } from '@/components/shared';
 import { useAppNotifications } from '@/hooks/ui';
 import { useAuth } from '@/providers/auth';
 import { ROUTES } from '@/routes/routes.constants';
-import { StyledIonCard } from '@/styles/IonCard.styled';
+import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import {
+  IonBackButton,
+  IonButtons,
+  IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonItem,
   IonLabel,
   IonList,
   IonRouterLink,
-  IonText,
 } from '@ionic/react';
 import { t } from 'i18next';
 import { mailOutline, sadOutline } from 'ionicons/icons';
@@ -23,12 +21,37 @@ import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem 0 2rem 0;
+const StyledIonCard = styled(IonCard)`
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`;
+
+const Container = styled.div`
+  padding: 2rem 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+`;
+
+const Header = styled.div`
   text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 0.5rem 0;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+  margin: 0;
+`;
+
+const BackButton = styled.div`
+  margin-bottom: 1rem;
 `;
 
 interface ForgotPasswordForm {
@@ -70,100 +93,100 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <PublicPageLayout title='Reset Password' showHeader={false}>
-      <Gap size='.65rem' />
-      <LogoContainer>
-        <SpendlessLogo variant='primary' size='large' />
-      </LogoContainer>
-      <Gap size='1rem' />
+    <AuthPageLayout title='Forgot Password'>
       {pageState.state === 'error' && (
-        <InformationContent icon={sadOutline} title='Error Sending Reset Email'>
-          <p>
-            {pageState.error || t('An error occurred while sending the reset email.')}
-            <br />
-            Please try again or contact support if the issue persists.
-          </p>
-        </InformationContent>
+        <Container>
+          <InformationContent icon={sadOutline} title='Error Sending Reset Email'>
+            <p>
+              {pageState.error || t('An error occurred while sending the reset email.')}
+              <br />
+              Please try again or contact support if the issue persists.
+            </p>
+          </InformationContent>
+        </Container>
       )}
 
       {pageState.state === 'success' && (
-        <InformationContent icon={mailOutline} title='Password Reset Email Sent'>
-          <p>
-            An email has been sent to {getValues('email')} with instructions on how to reset your
-            password
-          </p>
-          <p>If you don't see it, check your spam folder.</p>
-          <p>
-            <IonRouterLink href={ROUTES.SIGNIN}>Back to Sign In</IonRouterLink>
-          </p>
-        </InformationContent>
+        <Container>
+          <InformationContent icon={mailOutline} title='Password Reset Email Sent'>
+            <p>
+              An email has been sent to {getValues('email')} with instructions on how to reset your
+              password
+            </p>
+            <p>If you don't see it, check your spam folder.</p>
+            <p>
+              <IonRouterLink routerLink={ROUTES.SIGNIN}>Back to Sign In</IonRouterLink>
+            </p>
+          </InformationContent>
+        </Container>
       )}
 
       {pageState.state === 'initial' && (
-        <StyledIonCard>
-          <IonCardHeader>
-            <IonCardTitle className='ion-margin'>
-              <IonText>Reset your password</IonText>
-            </IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonList lines='none'>
-              <form onSubmit={handleSubmit(onSubmit)} aria-label='Reset password form'>
-                <IonItem>
-                  <IonLabel>
-                    <InputFormField
-                      name='email'
-                      label='Email'
-                      type='email'
-                      fill='outline'
-                      register={register}
-                      error={errors.email}
-                      validationRules={{
-                        required: 'Email is required',
-                        pattern: {
-                          value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                          message: 'Enter a valid email address',
-                        },
-                      }}
-                    />
+        <Container>
+          <BackButton>
+            <IonButtons>
+              <IonBackButton defaultHref={ROUTES.SIGNIN} text='' />
+            </IonButtons>
+          </BackButton>
+
+          <Header>
+            <Title>Forgot Your Password?</Title>
+            <Subtitle>Enter your email to receive a reset link</Subtitle>
+          </Header>
+
+          <StyledIonCard>
+            <IonCardContent>
+              <IonList lines='none'>
+                <form onSubmit={handleSubmit(onSubmit)} aria-label='Forgot password form'>
+                  <IonItem>
+                    <IonLabel>
+                      <InputFormField
+                        name='email'
+                        label='Email'
+                        type='email'
+                        fill='outline'
+                        register={register}
+                        error={errors.email}
+                        validationRules={{
+                          required: 'Email is required',
+                          pattern: {
+                            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                            message: 'Enter a valid email address',
+                          },
+                        }}
+                      />
+                    </IonLabel>
+                  </IonItem>
+
+                  <IonItem>
+                    <IonLabel>
+                      <ActionButton
+                        size='default'
+                        label='Send Reset Email'
+                        expand='block'
+                        type='submit'
+                        className='ion-no-padding ion-padding-top ion-padding-bottom'
+                        aria-busy={isSubmitting}
+                        isLoading={isSubmitting}
+                        isDisabled={!isDirty}
+                      />
+                    </IonLabel>
+                  </IonItem>
+                </form>
+
+                <IonItem aria-label='Sign in link'>
+                  <IonLabel className='ion-text-center'>
+                    <IonRouterLink routerLink={ROUTES.SIGNIN}>
+                      Remember your password? Sign in
+                    </IonRouterLink>
                   </IonLabel>
                 </IonItem>
-
-                <IonItem>
-                  <IonLabel>
-                    <ActionButton
-                      size='default'
-                      label='Send Reset Email'
-                      expand='block'
-                      type='submit'
-                      className='ion-no-padding ion-padding-top ion-padding-bottom'
-                      aria-busy={isSubmitting}
-                      isLoading={isSubmitting}
-                      isDisabled={!isDirty}
-                    />
-                  </IonLabel>
-                </IonItem>
-              </form>
-
-              <IonItem aria-label='Sign in link'>
-                <IonLabel className='ion-text-center'>
-                  <IonRouterLink href={ROUTES.SIGNIN}>
-                    Remember your password? Sign in here
-                  </IonRouterLink>
-                </IonLabel>
-              </IonItem>
-              <IonItem aria-label='Sign up link'>
-                <IonLabel className='ion-text-center'>
-                  <IonRouterLink href={ROUTES.SIGNUP}>
-                    Don't have an account? Sign up here
-                  </IonRouterLink>
-                </IonLabel>
-              </IonItem>
-            </IonList>
-          </IonCardContent>
-        </StyledIonCard>
+              </IonList>
+            </IonCardContent>
+          </StyledIonCard>
+        </Container>
       )}
-    </PublicPageLayout>
+    </AuthPageLayout>
   );
 };
 

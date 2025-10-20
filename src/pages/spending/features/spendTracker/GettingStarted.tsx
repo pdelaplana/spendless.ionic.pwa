@@ -215,10 +215,6 @@ const GettingStarted: React.FC = () => {
       <CenterContainer>
         <FullHeightCenterContent>
           <ContentContainer>
-            <LogoContainer>
-              <SpendlessLogo variant='primary' size='large' />
-            </LogoContainer>
-
             <WelcomeSection>
               <WelcomeTitle>Welcome to Spendless</WelcomeTitle>
               <WelcomeMessage>

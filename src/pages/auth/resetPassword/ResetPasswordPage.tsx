@@ -1,23 +1,19 @@
-import { SpendlessLogo } from '@/components/brand';
 import { InputFormField } from '@/components/forms';
 import InformationContent from '@/components/layouts/InformationContent';
-import PublicPageLayout from '@/components/layouts/PublicPageLayout';
 import { ActionButton } from '@/components/shared';
 import { useAppNotifications } from '@/hooks';
 import { useAuth } from '@/providers/auth';
 import { ROUTES } from '@/routes/routes.constants';
-import { StyledIonCard } from '@/styles/IonCard.styled';
+import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import type { FirebaseError } from '@firebase/app';
 import {
+  IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonItem,
   IonLabel,
   IonList,
   IonNote,
   IonRouterLink,
-  IonText,
 } from '@ionic/react';
 import { t } from 'i18next';
 import { mailOutline, sadOutline } from 'ionicons/icons';
@@ -26,12 +22,33 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem 0 2rem 0;
+const StyledIonCard = styled(IonCard)`
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`;
+
+const Container = styled.div`
+  padding: 2rem 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+`;
+
+const Header = styled.div`
   text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 0.5rem 0;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+  margin: 0;
 `;
 
 interface ResetPasswordForm {
@@ -64,22 +81,39 @@ const ResetPasswordPage: React.FC = () => {
 
       await confirmPasswordReset(formData.oobCode, formData.password);
       setPageState({ state: 'success' });
-      showNotification(
-        'Your password has been reset successfully! You can now log in with your new password.',
-      );
     } catch (error) {
       let errorMessage = t('common.errors.default');
 
       if (error && typeof error === 'object' && 'code' in error && 'message' in error) {
-        errorMessage = t(
-          `server.errors.auth.${(error as FirebaseError).code}`,
-          (error as FirebaseError).message,
-        );
+        const firebaseError = error as FirebaseError;
+        errorMessage = t(`server.errors.auth.${firebaseError.code}`, firebaseError.message);
+
+        if (firebaseError.code === 'auth/expired-action-code') {
+          setPageState({
+            state: 'error',
+            error:
+              'This password reset link has expired. Please request a new password reset link.',
+          });
+          return;
+        }
+
+        if (
+          firebaseError.code === 'auth/invalid-action-code' ||
+          firebaseError.code === 'auth/user-disabled' ||
+          firebaseError.code === 'auth/user-not-found'
+        ) {
+          setPageState({
+            state: 'error',
+            error:
+              'This password reset link is invalid or has already been used. Please request a new password reset link.',
+          });
+          return;
+        }
       }
 
-      setError('root', {
-        type: 'manual',
-        message: errorMessage,
+      setPageState({
+        state: 'error',
+        error: errorMessage,
       });
     }
   };
@@ -99,93 +133,100 @@ const ResetPasswordPage: React.FC = () => {
   }, [location, setValue]);
 
   return (
-    <PublicPageLayout title='Reset Password' showHeader={false}>
-      <LogoContainer>
-        <SpendlessLogo variant='primary' size='large' />
-      </LogoContainer>
+    <AuthPageLayout title='Reset Password'>
       {pageState.state === 'error' && (
-        <InformationContent icon={sadOutline} title='Invalid Reset Code'>
-          <p>{pageState.error || t('An error occurred while sending the reset email.')}</p>
-          <p>Please try again or contact support if the issue persists.</p>
-        </InformationContent>
+        <Container>
+          <InformationContent icon={sadOutline} title='Password Reset Failed'>
+            <p>{pageState.error}</p>
+            <p>
+              <IonRouterLink routerLink={ROUTES.FORGOTPASSWORD}>
+                Request a new password reset link
+              </IonRouterLink>
+            </p>
+          </InformationContent>
+        </Container>
       )}
 
       {pageState.state === 'success' && (
-        <InformationContent icon={mailOutline} title='Password Reset Successful'>
-          <p>
-            Your password has been reset successfully! You can now log in with your new password.
-          </p>
-          <p>
-            <IonRouterLink href={ROUTES.SIGNIN}>Go to Sign In</IonRouterLink>
-          </p>
-        </InformationContent>
+        <Container>
+          <InformationContent icon={mailOutline} title='Password Reset Successful'>
+            <p>Your password has been reset successfully!</p>
+            <p>Please log back in with your new password.</p>
+            <p>
+              <IonRouterLink routerLink={ROUTES.SIGNIN}>Go to Sign In</IonRouterLink>
+            </p>
+          </InformationContent>
+        </Container>
       )}
 
       {pageState.state === 'initial' && (
-        <StyledIonCard>
-          <IonCardHeader>
-            <IonCardTitle className='ion-margin'>
-              <IonText>Enter your new password</IonText>
-            </IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            {errors.root && (
-              <div className='ion-padding-start ion-padding-end'>
-                <IonNote color='danger' role='alert'>
-                  {errors.root.message}
-                </IonNote>
-              </div>
-            )}
-            <IonList lines='none'>
-              <form onSubmit={handleSubmit(onSubmit)} aria-label='Reset password form'>
-                <IonItem>
-                  <IonLabel>
-                    <InputFormField
-                      name='password'
-                      label='Password'
-                      type='password'
-                      fill='outline'
-                      register={register}
-                      error={errors.password}
-                      validationRules={{
-                        required: 'Password is required',
-                        minLength: {
-                          value: 8,
-                          message: 'Password must be at least 8 characters long',
-                        },
-                      }}
-                    />
+        <Container>
+          <Header>
+            <Title>Reset Your Password</Title>
+            <Subtitle>Enter a new password for your account</Subtitle>
+          </Header>
+
+          <StyledIonCard>
+            <IonCardContent>
+              <IonList lines='none'>
+                {errors.root && (
+                  <IonItem>
+                    <IonNote color='danger' role='alert'>
+                      {errors.root.message}
+                    </IonNote>
+                  </IonItem>
+                )}
+
+                <form onSubmit={handleSubmit(onSubmit)} aria-label='Reset password form'>
+                  <IonItem>
+                    <IonLabel>
+                      <InputFormField
+                        name='password'
+                        label='New Password'
+                        type='password'
+                        fill='outline'
+                        register={register}
+                        error={errors.password}
+                        validationRules={{
+                          required: 'Password is required',
+                          minLength: {
+                            value: 6,
+                            message: 'Password must be at least 6 characters long',
+                          },
+                        }}
+                      />
+                    </IonLabel>
+                  </IonItem>
+
+                  <IonItem>
+                    <IonLabel>
+                      <ActionButton
+                        size='default'
+                        label='Reset Password'
+                        expand='block'
+                        type='submit'
+                        className='ion-no-padding ion-padding-top ion-padding-bottom'
+                        aria-busy={isSubmitting}
+                        isLoading={isSubmitting}
+                        isDisabled={!isDirty}
+                      />
+                    </IonLabel>
+                  </IonItem>
+                </form>
+
+                <IonItem aria-label='Sign in link'>
+                  <IonLabel className='ion-text-center'>
+                    <IonRouterLink routerLink={ROUTES.SIGNIN}>
+                      Remember your password? Sign in
+                    </IonRouterLink>
                   </IonLabel>
                 </IonItem>
-
-                <IonItem>
-                  <IonLabel>
-                    <ActionButton
-                      size='default'
-                      label='Change Password'
-                      expand='block'
-                      type='submit'
-                      className='ion-no-padding ion-padding-top ion-padding-bottom'
-                      aria-busy={isSubmitting}
-                      isLoading={isSubmitting}
-                      isDisabled={!isDirty}
-                    />
-                  </IonLabel>
-                </IonItem>
-              </form>
-
-              <IonItem aria-label='Sign in link'>
-                <IonLabel className='ion-text-center'>
-                  <IonRouterLink href={ROUTES.SIGNIN}>
-                    Remember your password? Sign in here
-                  </IonRouterLink>
-                </IonLabel>
-              </IonItem>
-            </IonList>
-          </IonCardContent>
-        </StyledIonCard>
+              </IonList>
+            </IonCardContent>
+          </StyledIonCard>
+        </Container>
       )}
-    </PublicPageLayout>
+    </AuthPageLayout>
   );
 };
 

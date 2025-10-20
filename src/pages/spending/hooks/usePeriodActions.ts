@@ -25,7 +25,7 @@ export const usePeriodActions = () => {
 
   const { open: openPeriodModal } = usePeriodModalV2();
   const { open: openPeriodEditModal } = usePeriodEditModal();
-  const { open: openPeriodListModal } = usePeriodListModal();
+  const { open: openPeriodListModal, dismiss: dismissPeriodListModal } = usePeriodListModal();
 
   // Get recurring expenses from the current period
   const getCurrentRecurringExpenses = () => {
@@ -88,13 +88,29 @@ export const usePeriodActions = () => {
   };
 
   const deleteClosedPeriodHandler = (periodId: string) => {
+    // Check if trying to delete the current period
+    const isCurrentPeriod = periodId === selectedPeriod?.id;
+
+    if (isCurrentPeriod) {
+      showConfirmPrompt({
+        title: 'Cannot Delete Current Period',
+        message:
+          'You cannot delete the currently selected period. Please select a different period first.',
+        onConfirm: () => {
+          // Just close the dialog
+        },
+      });
+      return;
+    }
+
     showConfirmPrompt({
       title: 'Delete Period',
-      message: 'Are you sure you want to delete this period?',
+      message: 'Are you sure you want to delete this period? This action cannot be undone.',
       onConfirm: async () => {
         await deleteClosedPeriod({ periodId });
         resetMutationState();
         setSelectedPeriod(undefined);
+        dismissPeriodListModal();
       },
       onCancel: () => {
         // Handle cancel action

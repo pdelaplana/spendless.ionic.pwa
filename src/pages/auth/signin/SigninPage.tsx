@@ -4,10 +4,13 @@ import { ActionButton, Gap } from '@/components/shared';
 import { ROUTES } from '@/routes/routes.constants';
 import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import {
+  IonBackButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -17,6 +20,7 @@ import {
   useIonRouter,
 } from '@ionic/react';
 import { useAuth } from '@providers/auth/useAuth';
+import { logoGoogle } from 'ionicons/icons';
 import type React from 'react';
 import { useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
@@ -28,12 +32,52 @@ const StyledIonCard = styled(IonCard)`
   overflow: hidden;
 `;
 
-const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem 0 2rem 0;
+const Container = styled.div`
+  padding: 2rem 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+`;
+
+const Header = styled.div`
   text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 0.5rem 0;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+  margin: 0;
+`;
+
+const BackButton = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const Divider = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--ion-color-light-shade);
+  }
+
+  span {
+    padding: 0 1rem;
+    color: var(--ion-color-medium);
+    font-size: 0.875rem;
+  }
 `;
 
 interface ISigninForm {
@@ -75,100 +119,125 @@ const SigninPage: React.FC = () => {
 
   return (
     <AuthPageLayout title='Sign in'>
-      <Gap size='.65rem' />
-      <LogoContainer>
-        <SpendlessLogo variant='primary' size='large' />
-      </LogoContainer>
-      <Gap size='1rem' />
-      <StyledIonCard>
-        <IonCardHeader>
-          <IonCardTitle className='ion-margin'>
-            <IonText>Sign in with your Spendless account</IonText>
-          </IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <IonList lines='none'>
-            {error && (
-              <IonItem>
-                <IonNote color='danger' role='alert'>
-                  {t('common.errors.signinFailed')}
-                </IonNote>
-              </IonItem>
-            )}
+      <Container>
+        <BackButton>
+          <IonButtons>
+            <IonBackButton defaultHref={ROUTES.START} text='' />
+          </IonButtons>
+        </BackButton>
 
-            <form onSubmit={handleSubmit(onSubmit)} aria-label='Sign in form'>
-              <IonItem>
-                <IonLabel>
-                  <InputFormField<ISigninForm>
-                    name='email'
-                    label='Email'
-                    type='email'
-                    fill='outline'
-                    register={register}
-                    error={errors.email}
-                    validationRules={{
-                      required: 'Email is required',
-                      pattern: {
-                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        message: 'Enter a valid email address',
-                      },
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
+        <Header>
+          <Title>Welcome Back</Title>
+          <Subtitle>Let's pick up where you left off</Subtitle>
+        </Header>
 
-              <IonItem>
-                <IonLabel>
-                  <InputFormField<ISigninForm>
-                    name='password'
-                    label='Password'
-                    type='password'
-                    fill='outline'
-                    register={register}
-                    error={errors.password}
-                    validationRules={{
-                      required: 'Password is required',
-                      minLength: {
-                        value: 6,
-                        message: 'Password must be at least 6 characters long',
-                      },
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
+        <StyledIonCard>
+          <IonCardContent>
+            <IonList lines='none'>
+              {error && (
+                <IonItem>
+                  <IonNote color='danger' role='alert'>
+                    {t('common.errors.signinFailed')}
+                  </IonNote>
+                </IonItem>
+              )}
+
+              <form onSubmit={handleSubmit(onSubmit)} aria-label='Sign in form'>
+                <IonItem>
+                  <IonLabel>
+                    <InputFormField<ISigninForm>
+                      name='email'
+                      label='Email'
+                      type='email'
+                      fill='outline'
+                      register={register}
+                      error={errors.email}
+                      validationRules={{
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                          message: 'Enter a valid email address',
+                        },
+                      }}
+                    />
+                  </IonLabel>
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel>
+                    <InputFormField<ISigninForm>
+                      name='password'
+                      label='Password'
+                      type='password'
+                      fill='outline'
+                      register={register}
+                      error={errors.password}
+                      validationRules={{
+                        required: 'Password is required',
+                        minLength: {
+                          value: 6,
+                          message: 'Password must be at least 6 characters long',
+                        },
+                      }}
+                    />
+                  </IonLabel>
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel>
+                    <ActionButton
+                      size='default'
+                      label='Sign in'
+                      expand='block'
+                      type='submit'
+                      disabled={isSigningIn}
+                      className='ion-no-padding ion-padding-top ion-padding-bottom'
+                      aria-busy={isSigningIn}
+                      isLoading={isSigningIn}
+                      isDisabled={false}
+                    />
+                  </IonLabel>
+                </IonItem>
+                <IonItem>
+                  <IonLabel className='ion-text-center'>
+                    <IonRouterLink routerLink={ROUTES.FORGOTPASSWORD}>
+                      Forgot Password?
+                    </IonRouterLink>
+                  </IonLabel>
+                </IonItem>
+              </form>
+
+              <Divider>
+                <span>or</span>
+              </Divider>
 
               <IonItem>
                 <IonLabel>
                   <ActionButton
                     size='default'
-                    label='Sign in'
+                    label='Continue with Google'
                     expand='block'
-                    type='submit'
-                    disabled={isSigningIn}
+                    fill='outline'
                     className='ion-no-padding ion-padding-top ion-padding-bottom'
-                    aria-busy={isSigningIn}
-                    isLoading={isSigningIn}
-                    isDisabled={false}
-                  />
+                    isLoading={false}
+                    isDisabled={true}
+                    disabled={true}
+                  >
+                    <IonIcon slot='start' icon={logoGoogle} />
+                  </ActionButton>
                 </IonLabel>
               </IonItem>
-            </form>
-
-            <IonItem>
-              <IonLabel className='ion-text-center'>
-                <IonRouterLink href='/forgot-password'>Forgot Password?</IonRouterLink>
-              </IonLabel>
-            </IonItem>
-            <IonItem aria-label='Sign up link'>
-              <IonLabel className='ion-text-center'>
-                <IonRouterLink href={ROUTES.SIGNUP}>
-                  Don't have an account? Sign up here
-                </IonRouterLink>
-              </IonLabel>
-            </IonItem>
-          </IonList>
-        </IonCardContent>
-      </StyledIonCard>
+              <IonItem aria-label='Sign up link'>
+                <IonLabel className='ion-text-center'>
+                  <IonRouterLink routerLink={ROUTES.SIGNUP}>
+                    Don't have an account? Get Started
+                  </IonRouterLink>
+                </IonLabel>
+              </IonItem>
+            </IonList>
+          </IonCardContent>
+        </StyledIonCard>
+      </Container>
     </AuthPageLayout>
   );
 };

@@ -16,7 +16,8 @@
     "fetch-indexes": "powershell -File scripts/fetchFirestoreIndexes.ps1",
     "deploy:firebase-prod": "powershell -File scripts/deploy-to-prod.ps1",
     "generate-pwa-assets": "pwa-assets-generator ./public/favicon.png ./public/images/icons --background \"#ffffff\" --icon-only",
-    "test-context7": "npx -y @upstash/context7-mcp@latest"
+    "test-context7": "npx -y @upstash/context7-mcp@latest",
+    "load-sample-data": "tsx scripts/loadSampleData.ts"
   },
   "dependencies": {
     "@capacitor/app": "7.0.1",
@@ -78,12 +79,14 @@
     "@vitejs/plugin-legacy": "^5.0.0",
     "@vitejs/plugin-react": "^4.0.1",
     "cypress": "^13.5.0",
+    "firebase-admin": "^13.5.0",
     "globals": "^15.15.0",
     "jsdom": "^22.1.0",
     "pwa-asset-generator": "^8.0.5",
     "semantic-release": "^24.2.9",
     "sharp": "^0.34.3",
     "terser": "^5.4.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.1.6",
     "vite": "~5.2.0",
     "vite-plugin-pwa": "^1.0.0",

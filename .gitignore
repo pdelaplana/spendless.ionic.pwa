@@ -36,3 +36,13 @@ yarn-error.log*
 
 .playwright-mcp/
 design-references/
+
+# Firebase Service Account Keys (for loading sample data)
+serviceAccountKey.json
+*-service-account.json
+firebase-adminsdk-*.json
+
+# Local Development
+.secrets/
+.local/*
+

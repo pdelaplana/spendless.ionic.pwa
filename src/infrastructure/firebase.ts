@@ -1,7 +1,11 @@
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { type FirebaseApp, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, initializeFirestore, memoryLocalCache } from 'firebase/firestore';
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentSingleTabManager,
+} from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -25,9 +29,12 @@ export const analytics = async (app: FirebaseApp | undefined) => {
   return null;
 };
 
-//export const db = getFirestore(app);
+// Initialize Firestore with persistent offline cache
+// This enables offline data persistence in IndexedDB and automatic sync when reconnected
 export const db = initializeFirestore(app, {
-  localCache: memoryLocalCache(),
+  localCache: persistentLocalCache({
+    tabManager: persistentSingleTabManager(undefined),
+  }),
 });
 
 export default app;

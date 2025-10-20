@@ -6,3 +6,6 @@ export * from './device';
 export * from './logging';
 export * from './pwa';
 export * from './functions';
+
+// Export individual hooks
+export { useSampleDataLoader } from './useSampleDataLoader';

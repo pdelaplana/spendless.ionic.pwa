@@ -1,6 +1,6 @@
 import { IonButton, IonIcon } from '@ionic/react';
 import { createOutline, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
-import { Suspense, lazy, useCallback, useMemo } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { BasePageLayout } from '../../components/layouts';
 import MainMenuContent from '../../components/menu/MainMenuContent';
@@ -26,11 +26,22 @@ const StyledEditButton = styled(IonButton)`
 `;
 
 const WalletSpendingPage: React.FC = () => {
-  const { selectedWallet, wallets } = useWallet();
+  const { selectedWallet, wallets, isLoading: isWalletLoading } = useWallet();
   const { account, selectedPeriod, spending } = useSpendingAccount();
   const updateWalletMutation = useUpdateWallet();
   const deleteWalletMutation = useDeleteWallet();
   const { open: openWalletModal } = useWalletModal();
+  const [isStateReady, setIsStateReady] = useState(false);
+
+  // Wait for wallet data to load before rendering
+  useEffect(() => {
+    // State is ready when wallet data has finished loading
+    const stateIsStable = !isWalletLoading && selectedPeriod !== undefined;
+
+    if (stateIsStable && !isStateReady) {
+      setIsStateReady(true);
+    }
+  }, [isWalletLoading, selectedPeriod, isStateReady]);
 
   const pageTitle = useMemo(
     () => (selectedWallet ? `${selectedWallet.name}` : 'Wallet'),
@@ -105,6 +116,11 @@ const WalletSpendingPage: React.FC = () => {
       </StyledEditButton>
     ) : undefined;
   }, [selectedWallet, handleEditWallet]);
+
+  // Show loading screen until wallet data is ready
+  if (!isStateReady) {
+    return null;
+  }
 
   return (
     <BasePageLayout

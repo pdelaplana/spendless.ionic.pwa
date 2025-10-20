@@ -172,33 +172,8 @@ describe('SpendList', () => {
     });
   });
 
-  it('renders load more button when hasNextPage is true', async () => {
-    render(
-      <SpendList
-        spending={mockSpending}
-        groupedSpending={mockGroupedSpending}
-        hasNextPage={true}
-        onLoadMore={mockOnLoadMore}
-      />,
-    );
-
-    const loadMoreButton = screen.getByText('Load More');
-    expect(loadMoreButton).toBeInTheDocument();
-
-    fireEvent.click(loadMoreButton);
-    await waitFor(() => {
-      expect(mockOnLoadMore).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it('does not render load more button when hasNextPage is false', () => {
-    render(
-      <SpendList
-        spending={mockSpending}
-        groupedSpending={mockGroupedSpending}
-        hasNextPage={false}
-      />,
-    );
+  it('does not render load more button (pagination removed)', () => {
+    render(<SpendList spending={mockSpending} groupedSpending={mockGroupedSpending} />);
 
     const loadMoreButton = screen.queryByText('Load More');
     expect(loadMoreButton).not.toBeInTheDocument();

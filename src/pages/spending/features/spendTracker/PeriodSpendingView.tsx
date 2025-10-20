@@ -11,7 +11,6 @@ import {
   GroupedTransactionsContainer,
   TransactionsContainer,
 } from '@/theme/components';
-import { designSystem } from '@/theme/designSystem';
 import { IonButton, IonCard, IonCardContent, IonIcon, IonItemGroup, IonLabel } from '@ionic/react';
 import { chevronForward, close } from 'ionicons/icons';
 import { useMemo } from 'react';
@@ -47,8 +46,6 @@ const PeriodSpendingView: React.FC = () => {
     setSelectedPeriod,
     spending,
     chartSpending,
-    hasNextPageSpending,
-    fetchNextPageSpending,
     didMutationFail,
     didMutationSucceed,
     resetMutationState,
@@ -198,19 +195,6 @@ const PeriodSpendingView: React.FC = () => {
                     </IonItemGroup>
                   ))}
                 </GroupedTransactionsContainer>
-
-                {hasNextPageSpending && (
-                  <div style={{ padding: `${designSystem.spacing.md}` }}>
-                    <IonButton
-                      onClick={fetchNextPageSpending}
-                      color='primary'
-                      fill='clear'
-                      expand='full'
-                    >
-                      {t('spending.loadMore')}
-                    </IonButton>
-                  </div>
-                )}
               </div>
             </TransactionsContainer>
           </>
