@@ -16,7 +16,7 @@ export const mapToFirestore = (spend: ISpend): DocumentData => ({
   notes: spend.notes,
   periodId: spend.periodId,
   walletId: spend.walletId,
-  recurring: spend.recurring,
+  recurring: Boolean(spend.recurring), // Ensure boolean type
   emotionalState: spend.emotionalState,
   satisfactionRating: spend.satisfactionRating,
   necessityRating: spend.necessityRating,
@@ -36,7 +36,7 @@ export const mapFromFirestore = (id: string, data: DocumentData): ISpend => {
     notes: data.notes,
     periodId: data.periodId,
     walletId: data.walletId || '', // Handle legacy data without walletId
-    recurring: data.recurring,
+    recurring: Boolean(data.recurring), // Ensure boolean type (handles string "true"/"false")
     emotionalState: data.emotionalState,
     satisfactionRating: data.satisfactionRating,
     necessityRating: data.necessityRating,

@@ -2,10 +2,9 @@ import { Currency } from '@/domain/Currencies';
 import type { ISpend } from '@/domain/Spend';
 import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
-import { IonButton, IonIcon, IonItem, IonLabel, IonList, IonNote } from '@ionic/react';
+import { IonButton, IonIcon, IonNote } from '@ionic/react';
 import { calendarOutline, trashOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import type { PeriodFormData } from '../hooks/useMultiStepForm';
@@ -106,21 +105,11 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
   const { showNotification } = useAppNotifications();
   const currency = Currency.USD; // TODO: Get from user preferences
 
-  // Calculate period duration in days
-  const periodDurationDays = Math.ceil(
-    (new Date(formData.endAt).getTime() - new Date(formData.startAt).getTime()) /
-      (1000 * 60 * 60 * 24),
-  );
-
-  // Calculate new dates for recurring expenses
-  const getNewDate = (originalDate: Date): Date => {
-    const newDate = new Date(originalDate);
-    newDate.setDate(newDate.getDate() + periodDurationDays);
-    return newDate;
-  };
+  // Use the recurring expenses from form data which already have calculated dates
+  const recurringExpenses = formData.recurringExpenses || [];
 
   const handleRemoveExpense = (expenseId: string) => {
-    const expense = currentRecurringExpenses.find((e) => e.id === expenseId);
+    const expense = recurringExpenses.find((e) => e.id === expenseId);
     if (expense) {
       onRemoveRecurringExpense(expenseId);
       showNotification(`Removed "${expense.description}" from recurring expenses`);
@@ -139,11 +128,12 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
     <RecurringSection>
       <InfoBox>
         📅 These expenses from your current period are marked as recurring. They will be copied to
-        your new period with dates adjusted by {periodDurationDays} days. You can remove any you
+        your new period, maintaining their relative position within the period (e.g., if an expense
+        was 7 days into the period, it will be 7 days into the new period). You can remove any you
         don't want to copy.
       </InfoBox>
 
-      {currentRecurringExpenses.length === 0 ? (
+      {recurringExpenses.length === 0 ? (
         <EmptyState>
           <EmptyIcon icon={walletOutline} />
           <h3>No recurring expenses</h3>
@@ -151,14 +141,14 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
         </EmptyState>
       ) : (
         <RecurringList>
-          {currentRecurringExpenses.map((expense) => (
+          {recurringExpenses.map((expense) => (
             <RecurringItem key={expense.id}>
               <RecurringInfo>
                 <RecurringDescription>{expense.description}</RecurringDescription>
                 <RecurringAmount>{currency.format(expense.amount)}</RecurringAmount>
                 <RecurringDate>
                   <IonIcon icon={calendarOutline} />
-                  {formatDate(expense.date)} → {formatDate(getNewDate(expense.date))}
+                  {formatDate(expense.originalDate)} → {formatDate(expense.newDate)}
                 </RecurringDate>
               </RecurringInfo>
               <DeleteButton
@@ -173,10 +163,10 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
         </RecurringList>
       )}
 
-      {currentRecurringExpenses.length > 0 && (
+      {recurringExpenses.length > 0 && (
         <IonNote>
-          {currentRecurringExpenses.length} recurring expense
-          {currentRecurringExpenses.length > 1 ? 's' : ''}
+          {recurringExpenses.length} recurring expense
+          {recurringExpenses.length > 1 ? 's ' : ' '}
           will be copied to your new period
         </IonNote>
       )}
