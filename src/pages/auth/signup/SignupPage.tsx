@@ -17,7 +17,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { LOCATION_OPTIONS } from './components/LocationSelect';
 import Step1BasicInfo, { type SignupFormData } from './steps/Step1BasicInfo';
 import Step2Password from './steps/Step2Password';
 import Step3Welcome from './steps/Step3Welcome';
@@ -76,10 +75,9 @@ const SignupPage: React.FC = () => {
 
   const password = watch('password', '');
   const name = watch('name', '');
-  const location = watch('location', '');
 
   const handleStep1Next = async () => {
-    const isStep1Valid = await trigger(['email', 'name', 'location']);
+    const isStep1Valid = await trigger(['email', 'name']);
     if (isStep1Valid) {
       setCurrentStep(2);
     }
@@ -91,17 +89,11 @@ const SignupPage: React.FC = () => {
 
   const handleStep2Submit = handleSubmit(async (formData) => {
     try {
-      // Find the selected location to get its currency
-      const selectedLocation = LOCATION_OPTIONS.find((loc) => loc.value === formData.location);
-      const currency = selectedLocation?.currency || 'USD';
-
       // Password is guaranteed to be set at this point since Step 2 validates it
       const userCredential = await signup(
         formData.email,
         formData.password as string,
         formData.name,
-        formData.location,
-        currency,
       );
 
       if (userCredential?.user) {
@@ -114,13 +106,7 @@ const SignupPage: React.FC = () => {
   });
 
   // Check if step 1 fields are valid
-  const isStep1Valid =
-    !errors.email &&
-    !errors.name &&
-    !errors.location &&
-    watch('email') &&
-    watch('name') &&
-    watch('location');
+  const isStep1Valid = !errors.email && !errors.name && watch('email') && watch('name');
 
   // Check if step 2 fields are valid
   const isStep2Valid = !errors.password && (password?.length ?? 0) >= 6;

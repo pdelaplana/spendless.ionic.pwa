@@ -213,7 +213,9 @@ export function useCopyRecurringSpend() {
           console.log(`✨ Successfully copied ${newSpends.length} recurring spends`);
 
           // Step 4: Update wallet balances for all affected wallets
-          const affectedWalletIds = new Set(newSpends.map((spend) => spend.walletId).filter(Boolean));
+          const affectedWalletIds = new Set(
+            newSpends.map((spend) => spend.walletId).filter(Boolean),
+          );
 
           console.log(`💳 Updating balances for ${affectedWalletIds.size} wallets`);
 

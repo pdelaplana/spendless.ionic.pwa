@@ -12,13 +12,7 @@ export interface AuthUser extends User {
 }
 
 export interface AuthContextType {
-  signup: (
-    email: string,
-    password: string,
-    name?: string,
-    location?: string,
-    currency?: string,
-  ) => Promise<UserCredential | undefined>;
+  signup: (email: string, password: string, name?: string) => Promise<UserCredential | undefined>;
   signin: (email: string, password: string) => Promise<UserCredential | undefined>;
   signout: () => Promise<void>;
   setProfileData: ({

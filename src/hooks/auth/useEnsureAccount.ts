@@ -1,6 +1,7 @@
 import { useCreateAccount } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui';
 import { useAuth } from '@/providers/auth';
+import { detectCurrencyFromTimezone } from '@/utils/timezoneDetection';
 import { useEffect, useRef } from 'react';
 
 /**
@@ -27,11 +28,16 @@ export const useEnsureAccount = () => {
 
         try {
           console.log('No account found for authenticated user, creating account...');
+
+          // Auto-detect currency from browser timezone
+          const detectedCurrency = detectCurrencyFromTimezone();
+          console.log('Detected currency from timezone:', detectedCurrency);
+
           await createAccount.mutateAsync({
             userId: user.uid,
             data: {
               name: user.displayName || user.email || '',
-              currency: 'AUD',
+              currency: detectedCurrency,
               onboardingCompleted: false,
               onboardingCompletedAt: undefined,
             },
