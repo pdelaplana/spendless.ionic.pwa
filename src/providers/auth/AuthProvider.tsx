@@ -214,30 +214,11 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     email: string,
     password: string,
     name?: string,
-    location?: string,
-    currency?: string,
   ): Promise<UserCredential | undefined> => {
     updateState({ isLoading: true, error: null });
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
-
-      // Store location and currency in Firestore profile extension
-      if (location) {
-        await setProfileData({
-          key: 'location',
-          value: location,
-          uid: userCredential.user.uid,
-        });
-      }
-
-      if (currency) {
-        await setProfileData({
-          key: 'currency',
-          value: currency,
-          uid: userCredential.user.uid,
-        });
-      }
 
       return userCredential;
     } catch (err) {

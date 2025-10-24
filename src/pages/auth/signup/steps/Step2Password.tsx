@@ -8,7 +8,6 @@ import PasswordRequirements from '../components/PasswordRequirements';
 export interface SignupFormData {
   email: string;
   name: string;
-  location: string;
   password?: string;
 }
 

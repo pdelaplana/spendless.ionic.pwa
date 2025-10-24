@@ -1,7 +1,7 @@
 import { useNetworkStatus } from '@/providers/networkStatus/useNetworkStatus';
-import { IonIcon } from '@ionic/react';
 import styled from '@emotion/styled';
-import { cloudOfflineOutline, cloudDoneOutline, syncOutline } from 'ionicons/icons';
+import { IonIcon } from '@ionic/react';
+import { cloudDoneOutline, cloudOfflineOutline, syncOutline } from 'ionicons/icons';
 
 const FloatingStatusIcon = styled.div<{ isVisible: boolean; variant: 'offline' | 'syncing' }>`
   position: fixed;
@@ -68,7 +68,7 @@ const NetworkStatusNotifier: React.FC = () => {
 
   if (showOffline) {
     return (
-      <FloatingStatusIcon isVisible={true} variant="offline" title="You are offline">
+      <FloatingStatusIcon isVisible={true} variant='offline' title='You are offline'>
         <IonIcon icon={cloudOfflineOutline} />
         <span>Offline</span>
       </FloatingStatusIcon>
@@ -77,7 +77,7 @@ const NetworkStatusNotifier: React.FC = () => {
 
   if (showSyncing) {
     return (
-      <FloatingStatusIcon isVisible={true} variant="syncing" title="Syncing data">
+      <FloatingStatusIcon isVisible={true} variant='syncing' title='Syncing data'>
         <IonIcon icon={syncOutline} />
         <span>Syncing...</span>
       </FloatingStatusIcon>

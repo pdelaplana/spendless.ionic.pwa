@@ -1,6 +1,7 @@
+import type { IPeriod } from '@/domain/Period';
 import type { IWalletSetup } from '@/domain/Wallet';
 import { dateUtils } from '@/utils';
-import { addWeeks } from 'date-fns';
+import { addDays, addWeeks } from 'date-fns';
 import { useState } from 'react';
 
 export interface PeriodFormData {
@@ -32,18 +33,28 @@ export interface PeriodFormData {
   currentStep: 0 | 1 | 2 | 3;
 }
 
-const getInitialFormData = (): PeriodFormData => ({
-  goals: '',
-  startAt: dateUtils.getTodayString(),
-  endAt: dateUtils.toDateInput(addWeeks(dateUtils.getCurrentDate(), 4)),
-  wallets: [],
-  recurringExpenses: [],
-  currentStep: 0,
-});
+const getInitialFormData = (currentPeriod?: IPeriod): PeriodFormData => {
+  // If there's a current period, default start date to day after its end date
+  const defaultStartDate = currentPeriod
+    ? addDays(currentPeriod.endAt, 1)
+    : dateUtils.getCurrentDate();
 
-export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
+  return {
+    goals: '',
+    startAt: dateUtils.toDateInput(defaultStartDate),
+    endAt: dateUtils.toDateInput(addWeeks(defaultStartDate, 4)),
+    wallets: [],
+    recurringExpenses: [],
+    currentStep: 0,
+  };
+};
+
+export const useMultiStepForm = (
+  initialData?: Partial<PeriodFormData>,
+  currentPeriod?: IPeriod,
+) => {
   const [formData, setFormData] = useState<PeriodFormData>(() => ({
-    ...getInitialFormData(),
+    ...getInitialFormData(currentPeriod),
     ...initialData,
   }));
 
@@ -74,11 +85,14 @@ export const useMultiStepForm = (initialData?: Partial<PeriodFormData>) => {
   };
 
   // Wallet management
-  const addWallet = (wallet: Omit<PeriodFormData['wallets'][0], 'id' | 'isDefault'>) => {
+  const addWallet = (
+    wallet: Omit<PeriodFormData['wallets'][0], 'id' | 'isDefault'> & { isDefault?: boolean },
+  ) => {
     const newWallet = {
       ...wallet,
       id: `temp-${Date.now()}-${Math.random()}`,
-      isDefault: formData.wallets.length === 0, // First wallet is default
+      // Use provided isDefault value, or make it default if it's the first wallet
+      isDefault: wallet.isDefault !== undefined ? wallet.isDefault : formData.wallets.length === 0,
     };
 
     setFormData((prev) => ({

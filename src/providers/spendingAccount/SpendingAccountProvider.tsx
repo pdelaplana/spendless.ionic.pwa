@@ -195,6 +195,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
             startAt: data.startAt || new Date(),
             endAt: data.endAt || new Date(),
             reflection: '',
+            walletSetup: data.walletSetup,
           },
         });
 
@@ -239,10 +240,15 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     return Array.from(new Set(allTags)).sort((a, b) => a.localeCompare(b));
   }, [flattenedSpending]);
 
-  // Only update selectedPeriod when currentPeriod changes and selectedPeriod is undefined
+  // Update selectedPeriod when currentPeriod changes to ensure newly created periods are displayed
   useEffect(() => {
-    if (selectedPeriod === undefined && currentPeriod !== undefined && currentPeriod !== null) {
-      setSelectedPeriod(currentPeriod);
+    // Set selectedPeriod to currentPeriod when:
+    // 1. selectedPeriod is undefined (initial load)
+    // 2. currentPeriod changes to a different period (new period created)
+    if (currentPeriod !== undefined && currentPeriod !== null) {
+      if (selectedPeriod === undefined || selectedPeriod.id !== currentPeriod.id) {
+        setSelectedPeriod(currentPeriod);
+      }
     }
   }, [currentPeriod, selectedPeriod]);
 

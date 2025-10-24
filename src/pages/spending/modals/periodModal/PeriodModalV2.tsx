@@ -9,6 +9,7 @@ import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
 import { dateUtils } from '@/utils';
 import { IonTitle } from '@ionic/react';
+import { addDays, differenceInDays } from 'date-fns';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -40,6 +41,7 @@ interface PeriodModalV2Props {
   period?: IPeriod;
   currentWallets?: IWallet[];
   currentRecurringExpenses?: ISpend[];
+  currentPeriod?: IPeriod;
   onSave: (period: Partial<IPeriod>) => void;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
@@ -49,13 +51,13 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   period,
   currentWallets,
   currentRecurringExpenses,
+  currentPeriod,
   onSave,
   onDismiss,
 }) => {
   const { showConfirmPrompt } = usePrompt();
   const { showErrorNotification } = useAppNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const hasInitializedRecurringExpenses = useRef(false);
 
   // Initialize form with existing period data if editing
   const initialData = period
@@ -91,7 +93,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
     removeRecurringExpense,
     toPeriodData,
     reset,
-  } = useMultiStepForm(initialData);
+  } = useMultiStepForm(initialData, currentPeriod);
 
   // React Hook Form for validation
   const {
@@ -118,25 +120,22 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
     setValue('endAt', formData.endAt);
   }, [formData.goals, formData.startAt, formData.endAt, setValue]);
 
-  // Initialize recurring expenses from props only once
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally run only once on mount to initialize from props - currentRecurringExpenses, formData.startAt, formData.endAt, setRecurringExpenses excluded
+  // Calculate recurring expenses with new dates whenever the start date changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: setRecurringExpenses is stable and doesn't need to be in deps
   useEffect(() => {
     if (
       currentRecurringExpenses &&
       currentRecurringExpenses.length > 0 &&
-      !hasInitializedRecurringExpenses.current
+      currentPeriod &&
+      formData.startAt
     ) {
-      hasInitializedRecurringExpenses.current = true;
-
-      const periodDurationDays = Math.ceil(
-        (dateUtils.fromDateInput(formData.endAt).getTime() -
-          dateUtils.fromDateInput(formData.startAt).getTime()) /
-          (1000 * 60 * 60 * 24),
-      );
-
       const recurringExpensesData = currentRecurringExpenses.map((expense) => {
-        const newDate = new Date(expense.date);
-        newDate.setDate(newDate.getDate() + periodDurationDays);
+        // Calculate the offset from the current period start date
+        const daysFromCurrentPeriodStart = differenceInDays(expense.date, currentPeriod.startAt);
+
+        // Apply the same offset to the new period start date
+        const newPeriodStartDate = dateUtils.fromDateInput(formData.startAt);
+        const newDate = addDays(newPeriodStartDate, daysFromCurrentPeriodStart);
 
         return {
           id: expense.id || '',
@@ -151,7 +150,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
 
       setRecurringExpenses(recurringExpensesData);
     }
-  }, []);
+  }, [currentRecurringExpenses, currentPeriod, formData.startAt]);
 
   // Custom validation function that uses React Hook Form state
   const isStep0ValidRHF = () => {

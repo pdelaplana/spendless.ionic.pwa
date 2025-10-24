@@ -2,7 +2,7 @@ import { CenterContainer } from '@/components/layouts';
 import EmptyContent from '@/components/layouts/EmptyContent';
 import ModalPageLayout from '@/components/layouts/ModalPageLayout';
 import type { IPeriod } from '@/domain/Period';
-import { isPeriodActive, isPeriodClosed } from '@/domain/Period';
+import { isPeriodClosed } from '@/domain/Period';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { StyledIonCard } from '@/styles/IonCard.styled';
 import { StyledIonList, StyledItem } from '@/styles/IonList.styled';
@@ -36,10 +36,10 @@ const PeriodListModal: React.FC<PeriodListModalProps> = ({
   const { formatCurrency, formatDate } = useFormatters();
 
   const { currentPeriods, pastPeriods } = useMemo(() => {
-    const current = periods.filter((period) => isPeriodActive(period));
-    const past = periods.filter(
-      (period) => isPeriodClosed(period) || (!isPeriodActive(period) && !isPeriodClosed(period)),
-    );
+    // Current period is any period that hasn't been closed
+    const current = periods.filter((period) => !isPeriodClosed(period));
+    // Past periods are those that have been closed
+    const past = periods.filter((period) => isPeriodClosed(period));
 
     // Sort past periods by end date (most recent first)
     past.sort((a, b) => new Date(b.endAt).getTime() - new Date(a.endAt).getTime());
@@ -79,7 +79,7 @@ const PeriodListModal: React.FC<PeriodListModalProps> = ({
             Spent {formatCurrency(period.actualSpend)} of {formatCurrency(period.targetSpend)}
           </p>
         </IonLabel>
-        {onDeletePeriod && (
+        {onDeletePeriod && isPeriodClosed(period) && (
           <IonButton fill='clear' shape='round' onClick={handleDeleteClick}>
             <IonIcon icon={trashBin} slot='icon-only' />
           </IonButton>

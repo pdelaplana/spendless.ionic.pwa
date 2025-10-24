@@ -9,12 +9,10 @@ import type {
   UseFormRegister,
   UseFormSetValue,
 } from 'react-hook-form';
-import LocationSelect from '../components/LocationSelect';
 
 export interface SignupFormData {
   email: string;
   name: string;
-  location: string;
   password?: string;
 }
 
@@ -74,23 +72,6 @@ export const Step1BasicInfo: React.FC<Step1BasicInfoProps> = ({
                 value: 2,
                 message: 'Name must be at least 2 characters',
               },
-            }}
-          />
-        </IonLabel>
-      </IonItem>
-
-      <IonItem>
-        <IonLabel>
-          <LocationSelect<Step1FormData>
-            name='location'
-            label='Location'
-            fill='outline'
-            register={register}
-            setValue={setValue}
-            getValues={getValues}
-            error={errors.location as FieldError | undefined}
-            validationRules={{
-              required: 'Location is required',
             }}
           />
         </IonLabel>

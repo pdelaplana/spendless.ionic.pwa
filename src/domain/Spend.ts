@@ -34,7 +34,7 @@ export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   amount: Number(data.amount ?? 0),
   description: data.description ?? '',
   notes: data.notes ?? '',
-  recurring: data.recurring ?? false,
+  recurring: Boolean(data.recurring ?? false), // Ensure boolean type
   periodId: data.periodId ?? '',
   walletId: data.walletId ?? '',
   emotionalState: data.emotionalState ?? 'Neutral',
@@ -55,7 +55,7 @@ export const updateSpend = (spend: ISpend, updates: Partial<ISpend>): ISpend => 
   ...(updates.amount !== undefined && { amount: Number(updates.amount) }),
   ...(updates.description && { description: updates.description }),
   ...(updates.notes !== undefined && { notes: updates.notes }),
-  ...(updates.recurring !== undefined && { recurring: updates.recurring }),
+  ...(updates.recurring !== undefined && { recurring: Boolean(updates.recurring) }), // Ensure boolean type
   ...(updates.walletId && { walletId: updates.walletId }),
   ...(updates.emotionalState && { emotionalState: updates.emotionalState }),
   ...(updates.satisfactionRating !== undefined && {

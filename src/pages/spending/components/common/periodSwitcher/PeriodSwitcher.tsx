@@ -255,15 +255,19 @@ export const PeriodSwitcher: React.FC = () => {
     const remainingDays = calculateDaysRemaining();
     if (remainingDays <= 0) return 0;
 
+    // Get current date for filtering
+    const now = dateUtils.getCurrentDate();
+    const endDate = selectedPeriod.endAt;
+
     // Get total spending limit from all wallets
     const totalSpendingLimit = wallets.reduce((total, wallet) => total + wallet.spendingLimit, 0);
 
-    // Get total spent amount from all wallets
-    const totalSpentAmount = wallets.reduce((total, wallet) => total + wallet.currentBalance, 0);
+    // Get total spent amount from all spending in this period (past and present, not future)
+    const totalSpentAmount = spending
+      .filter((spend) => spend.periodId === selectedPeriod.id && spend.date <= now)
+      .reduce((total, spend) => total + spend.amount, 0);
 
     // Calculate scheduled/recurring spending for remaining days
-    const now = dateUtils.getCurrentDate();
-    const endDate = selectedPeriod.endAt;
     const scheduledAmount = spending
       .filter(
         (spend) =>

@@ -131,7 +131,7 @@ interface StepWalletsProps {
   formData: PeriodFormData;
   totalBudget: number;
   currentWallets?: IWallet[];
-  onAddWallet: (wallet: { name: string; spendingLimit: string }) => void;
+  onAddWallet: (wallet: { name: string; spendingLimit: string; isDefault?: boolean }) => void;
   onRemoveWallet: (walletId: string) => void;
   onSetDefaultWallet: (walletId: string) => void;
 }
@@ -178,11 +178,12 @@ const StepWallets: React.FC<StepWalletsProps> = ({
       hasLoadedRef.current = true;
       setHasLoadedCurrentWallets(true);
 
-      // Add wallets from current wallets
+      // Add wallets from current wallets, preserving isDefault property
       for (const wallet of currentWallets) {
         onAddWallet({
           name: wallet.name,
           spendingLimit: wallet.spendingLimit.toString(),
+          isDefault: wallet.isDefault,
         });
       }
     }
@@ -238,6 +239,7 @@ const StepWallets: React.FC<StepWalletsProps> = ({
           onAddWallet({
             name: wallet.name,
             spendingLimit: wallet.spendingLimit.toString(),
+            isDefault: wallet.isDefault,
           });
           addedCount++;
         }
