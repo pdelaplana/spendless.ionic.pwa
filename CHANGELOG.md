@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.1.0...v1.2.0) (2025-10-24)
+
+
+### Bug Fixes
+
+* Calculate total spent from spending transactions instead of wallet.currentBalance ([83bbe87](https://github.com/pdelaplana/spendless.ionic.pwa/commit/83bbe8798276318a669f32a85b30ac05a375563f))
+* Remove location field from Step2Password type definition ([4fedf24](https://github.com/pdelaplana/spendless.ionic.pwa/commit/4fedf24260efda10fa299823890307628c21f0bb))
+* start new period ([38d83f7](https://github.com/pdelaplana/spendless.ionic.pwa/commit/38d83f7863595978efe4d23e1b2dc9849d8fd954))
+
+
+### Features
+
+* Detects and sets currency based on browser timezone ([1a132f7](https://github.com/pdelaplana/spendless.ionic.pwa/commit/1a132f73c5e136693158bc6399296db8f5b93937))
+
 # [1.1.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.0.0...v1.1.0) (2025-10-20)
 
 
