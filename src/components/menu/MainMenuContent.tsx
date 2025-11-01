@@ -4,6 +4,7 @@ import { ROUTES } from '@/routes/routes.constants';
 import { designSystem } from '@/theme/designSystem';
 import { IonContent, IonIcon, IonLabel, IonList } from '@ionic/react';
 import {
+  chatbubbleEllipsesOutline,
   helpOutline,
   idCardOutline,
   informationCircleOutline,
@@ -75,23 +76,23 @@ const ModernMenuItem = styled(StyledItem)`
   --inner-border-width: 0;
   margin: ${designSystem.spacing.xs} 0;
   border-radius: ${designSystem.borderRadius.md};
-  
+
   &:hover {
     --background: ${designSystem.colors.gray[50]};
   }
-  
+
   ion-icon {
     color: ${designSystem.colors.primary[500]};
     font-size: 20px;
   }
-  
+
   ion-label h2 {
     font-size: ${designSystem.typography.fontSize.base};
     font-weight: ${designSystem.typography.fontWeight.medium};
     color: ${designSystem.colors.text.primary};
     margin: 0;
   }
-  
+
   ion-label p {
     font-size: ${designSystem.typography.fontSize.sm};
     color: ${designSystem.colors.text.secondary};
@@ -103,11 +104,11 @@ const LogoutMenuItem = styled(ModernMenuItem)`
   &:hover {
     --background: rgba(239, 68, 68, 0.1);
   }
-  
+
   ion-icon {
     color: ${designSystem.colors.danger};
   }
-  
+
   ion-label h2 {
     color: ${designSystem.colors.danger};
   }
@@ -166,6 +167,14 @@ const MainMenuContent: React.FC = () => {
 
         <SectionTitle>Support</SectionTitle>
         <IonList lines='none'>
+          <ModernMenuItem button routerLink={ROUTES.FEEDBACK}>
+            <IonIcon slot='start' icon={chatbubbleEllipsesOutline} />
+            <IonLabel>
+              <h2>Send Feedback</h2>
+              <p>Report bugs or share suggestions</p>
+            </IonLabel>
+          </ModernMenuItem>
+
           <ModernMenuItem button routerLink='/profile/help'>
             <IonIcon slot='start' icon={helpOutline} />
             <IonLabel>
