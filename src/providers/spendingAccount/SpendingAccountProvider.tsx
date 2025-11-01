@@ -20,7 +20,7 @@ import {
   useUpdatePeriod,
 } from '@/hooks/api';
 import type { ReactNode } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SpendingAccountContext } from './context';
 
 export const SpendingAccountProvider: React.FC<{ userId: string; children: ReactNode }> = ({
@@ -240,14 +240,20 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     return Array.from(new Set(allTags)).sort((a, b) => a.localeCompare(b));
   }, [flattenedSpending]);
 
+  // Track the previous currentPeriod.id to detect when a new period is created
+  const prevCurrentPeriodIdRef = useRef<string | undefined>(undefined);
+
   // Update selectedPeriod when currentPeriod changes to ensure newly created periods are displayed
   useEffect(() => {
     // Set selectedPeriod to currentPeriod when:
     // 1. selectedPeriod is undefined (initial load)
-    // 2. currentPeriod changes to a different period (new period created)
+    // 2. currentPeriod.id changes (new period created, not just different from selected)
     if (currentPeriod !== undefined && currentPeriod !== null) {
-      if (selectedPeriod === undefined || selectedPeriod.id !== currentPeriod.id) {
+      const currentPeriodIdChanged = prevCurrentPeriodIdRef.current !== currentPeriod.id;
+
+      if (selectedPeriod === undefined || currentPeriodIdChanged) {
         setSelectedPeriod(currentPeriod);
+        prevCurrentPeriodIdRef.current = currentPeriod.id;
       }
     }
   }, [currentPeriod, selectedPeriod]);

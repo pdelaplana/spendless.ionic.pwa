@@ -273,4 +273,4 @@ Absolutely! Use the Export Data feature in Settings to download all your informa
 
 **Need More Help?**
 
-If you can't find what you're looking for, contact us at support@spendless.app
+If you can't find what you're looking for, contact us at support@getspendless.com
