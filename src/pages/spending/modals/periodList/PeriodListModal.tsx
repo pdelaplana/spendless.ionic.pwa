@@ -17,7 +17,7 @@ import {
 } from '@ionic/react';
 import type { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { trashBin } from 'ionicons/icons';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface PeriodListModalProps {
@@ -155,45 +155,62 @@ export const usePeriodListModal = (): {
   ) => Promise<{ period: IPeriod; role: string }>;
   dismiss: () => void;
 } => {
-  const [inputs, setInputs] = useState<{
-    periods: (IPeriod & { actualSpend: number })[];
-    onSelect?: (period: IPeriod) => void;
-    onDeletePeriod?: (periodId: string) => void;
-  }>();
+  const [periods, setPeriods] = useState<(IPeriod & { actualSpend: number })[]>([]);
+  const [deletePeriodCallback, setDeletePeriodCallback] = useState<
+    ((periodId: string) => void) | undefined
+  >();
+
+  // Use refs to store callbacks to avoid stale closures
+  const onSelectRef = useRef<((period: IPeriod) => void) | undefined>(undefined);
+  const onDeletePeriodRef = useRef<((periodId: string) => void) | undefined>(undefined);
+
+  // Update ref when callback changes
+  useEffect(() => {
+    onDeletePeriodRef.current = deletePeriodCallback;
+  }, [deletePeriodCallback]);
 
   const [present, dismiss] = useIonModal(PeriodListModal, {
-    periods: inputs?.periods,
-    onDeletePeriod: inputs?.onDeletePeriod,
+    periods,
+    onDeletePeriod: deletePeriodCallback,
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     onDismiss: (data: any, role: string) => {
-      if (role === 'select') {
-        inputs?.onSelect?.(data);
+      // Use ref to get the latest callback
+      if (role === 'select' && onSelectRef.current) {
+        onSelectRef.current(data);
       }
       dismiss(data, role);
     },
   });
 
-  return {
-    open: (
-      periods: (IPeriod & { actualSpend: number })[],
+  const open = useCallback(
+    (
+      newPeriods: (IPeriod & { actualSpend: number })[],
       onSelect: (period: IPeriod) => void,
       onDeletePeriod?: (periodId: string) => void,
     ) => {
-      setInputs({
-        periods,
-        onSelect,
-        onDeletePeriod,
-      });
-      return new Promise((resolve) => {
-        present({
-          onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
-            if (ev.detail.role) {
-              resolve({ period: ev.detail.data, role: ev.detail.role });
-            }
-          },
-        });
+      return new Promise<{ period: IPeriod; role: string }>((resolve) => {
+        // Update state and refs
+        setPeriods(newPeriods);
+        setDeletePeriodCallback(() => onDeletePeriod);
+        onSelectRef.current = onSelect;
+
+        // Wait for state updates
+        setTimeout(() => {
+          present({
+            onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
+              if (ev.detail.role) {
+                resolve({ period: ev.detail.data, role: ev.detail.role });
+              }
+            },
+          });
+        }, 50);
       });
     },
+    [present],
+  );
+
+  return {
+    open,
     dismiss,
   };
 };

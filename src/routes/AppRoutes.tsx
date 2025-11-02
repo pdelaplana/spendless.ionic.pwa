@@ -5,6 +5,7 @@ import ResetPasswordPage from '@/pages/auth/resetPassword/ResetPasswordPage';
 import SigninPage from '@/pages/auth/signin/SigninPage';
 import SignupPage from '@/pages/auth/signup/SignupPage';
 import StartPage from '@/pages/auth/start/StartPage';
+import FeedbackPage from '@/pages/feedback/FeedbackPage';
 import HelpPage from '@/pages/help/HelpPage';
 import HomePage from '@/pages/home/HomePage';
 import OnboardingFlow from '@/pages/onboarding/OnboardingFlow';
@@ -191,6 +192,10 @@ const AppRoutes: React.FC = () => {
           {/* Protected routes */}
           <ProtectedRoute path={ROUTES.PROFILE}>
             <ProfileRoutes />
+          </ProtectedRoute>
+
+          <ProtectedRoute path={ROUTES.FEEDBACK} exact={true}>
+            <FeedbackPage />
           </ProtectedRoute>
 
           <ProtectedRoute path={ROUTES.SETTINGS}>

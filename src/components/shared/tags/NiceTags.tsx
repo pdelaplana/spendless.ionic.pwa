@@ -83,6 +83,14 @@ const NiceTags: React.FC<NiceTagsProps> = ({
   // Use initialTags directly as our source of truth
   const tags = initialTags || [];
 
+  const handleInputFocus = () => {
+    // Find the IonContent element and scroll it to top
+    const ionContent = document.querySelector('ion-content');
+    if (ionContent) {
+      ionContent.scrollToTop(300); // 300ms smooth animation
+    }
+  };
+
   const addTag = (tag: string) => {
     if (tag.trim() && !tags.includes(tag.trim())) {
       const updatedTags = [...tags, tag.trim()];
@@ -147,6 +155,8 @@ const NiceTags: React.FC<NiceTagsProps> = ({
           placeholder='Add a tag'
           value={inputValue}
           onIonInput={(e) => handleInputChange(e.detail.value ?? '')}
+          onIonFocus={handleInputFocus}
+          onClick={handleInputFocus}
           onKeyUp={(e: React.KeyboardEvent<HTMLIonInputElement>) => {
             if (e.key === 'Enter') {
               addTag(inputValue);
