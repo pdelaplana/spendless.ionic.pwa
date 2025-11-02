@@ -1,3 +1,5 @@
+export type SubscriptionTier = 'essentials' | 'premium';
+
 export interface IAccount {
   readonly id?: string;
   readonly name: string;
@@ -6,6 +8,8 @@ export interface IAccount {
   readonly dateFormat?: string;
   readonly onboardingCompleted?: boolean;
   readonly onboardingCompletedAt?: Date;
+  readonly subscriptionTier: SubscriptionTier;
+  readonly expiresAt?: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -19,6 +23,8 @@ export const createAccount = (data: Partial<CreateAccountDTO>): IAccount => ({
   dateFormat: data.dateFormat ?? 'dd/MM/yyyy',
   onboardingCompleted: data.onboardingCompleted ?? false,
   onboardingCompletedAt: data.onboardingCompletedAt,
+  subscriptionTier: data.subscriptionTier ?? 'essentials',
+  expiresAt: data.expiresAt,
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -36,5 +42,7 @@ export const updateAccount = (account: IAccount, updates: Partial<IAccount>): IA
   ...(updates.onboardingCompletedAt !== undefined && {
     onboardingCompletedAt: updates.onboardingCompletedAt,
   }),
+  ...(updates.subscriptionTier && { subscriptionTier: updates.subscriptionTier }),
+  ...(updates.expiresAt !== undefined && { expiresAt: updates.expiresAt }),
   updatedAt: new Date(),
 });
