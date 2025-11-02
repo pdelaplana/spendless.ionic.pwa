@@ -1,3 +1,16 @@
+# [1.3.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.2.0...v1.3.0) (2025-11-02)
+
+
+### Bug Fixes
+
+* scroll tags input to top of spend modal on focus ([447ab64](https://github.com/pdelaplana/spendless.ionic.pwa/commit/447ab6432b9e525731c55f24fbf060444473d4f7))
+* selecting past periods in period switcher ([f70612d](https://github.com/pdelaplana/spendless.ionic.pwa/commit/f70612db1f863ec6e297b9304b8a5fab6b533a52))
+
+
+### Features
+
+* Send feedback ([b2b6a69](https://github.com/pdelaplana/spendless.ionic.pwa/commit/b2b6a69a7a73eb14b1485d7406c33e7d9591ee7c))
+
 # [1.2.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.1.0...v1.2.0) (2025-10-24)
 
 
