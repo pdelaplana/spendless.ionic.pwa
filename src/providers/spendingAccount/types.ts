@@ -11,6 +11,7 @@ export interface SpendingAccountContextType {
   chartSpending: ISpend[];
   startAt?: Date;
   endAt?: Date;
+  isDataRestricted: boolean;
 
   setDateRange: (startAt?: Date, endAt?: Date) => void;
   setSelectedPeriod: (period: IPeriod | undefined) => void;

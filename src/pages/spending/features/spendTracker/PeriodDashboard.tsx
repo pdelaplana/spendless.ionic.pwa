@@ -4,7 +4,9 @@ import { Suspense } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CenterContainer } from '../../../../components/layouts';
 import { Gap } from '../../../../components/shared';
+import { SubscriptionRestrictedBanner } from '../../../../components/subscription';
 import { PwaInstallPrompt } from '../../../../components/ui/PwaInstallPrompt';
+import { useSpendingAccount } from '../../../../providers/spendingAccount';
 import { useWallet } from '../../../../providers/wallet';
 import { ROUTES } from '../../../../routes/routes.constants';
 import { GradientBackground } from '../../../../theme';
@@ -16,6 +18,7 @@ import { WalletList } from '../../components/common/walletList';
 const PeriodDashboard: React.FC = () => {
   const history = useHistory();
   const { selectWallet, wallets } = useWallet();
+  const { isDataRestricted } = useSpendingAccount();
 
   const handleWalletClick = async (walletId: string) => {
     // Find the wallet object
@@ -34,8 +37,17 @@ const PeriodDashboard: React.FC = () => {
     <GradientBackground>
       <CenterContainer>
         <ProfileHeader />
+        {isDataRestricted && (
+          <SubscriptionRestrictedBanner
+            onUpgrade={() => {
+              // TODO: Navigate to subscription/pricing page
+              console.log('Navigate to upgrade page');
+            }}
+          />
+        )}
         <PeriodSwitcher />
         <WalletList onWalletClick={handleWalletClick} />
+
         <PeriodActionsBar />
         <PwaInstallPrompt />
       </CenterContainer>

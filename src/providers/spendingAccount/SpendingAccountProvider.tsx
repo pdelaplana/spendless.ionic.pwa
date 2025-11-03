@@ -258,6 +258,27 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     }
   }, [currentPeriod, selectedPeriod]);
 
+  // Apply subscription-based date range restrictions
+  useEffect(() => {
+    if (!spendingAccount || !selectedPeriod) return;
+
+    // For premium users, no restrictions
+    if (spendingAccount.subscriptionTier === 'premium') {
+      setDateRange({ startAt: undefined, endAt: undefined });
+      return;
+    }
+
+    // For essentials users, restrict to last 30 days
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+
+    setDateRange({
+      startAt: thirtyDaysAgo,
+      endAt: today,
+    });
+  }, [spendingAccount, selectedPeriod]);
+
   useEffect(() => {
     if (updateAccountError) {
       console.error('Error updating account:', updateAccountError);
@@ -316,6 +337,11 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
     [startPeriod],
   );
 
+  // Check if data is restricted due to subscription tier
+  const isDataRestricted = useMemo(() => {
+    return spendingAccount?.subscriptionTier === 'essentials';
+  }, [spendingAccount?.subscriptionTier]);
+
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo(
     () => ({
@@ -327,6 +353,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       startAt: dateRange.startAt,
       endAt: dateRange.endAt,
       setDateRange: setDateRangeMemo,
+      isDataRestricted,
 
       selectedPeriod: selectedPeriod,
       setSelectedPeriod: setSelectedPeriod,
@@ -400,6 +427,7 @@ export const SpendingAccountProvider: React.FC<{ userId: string; children: React
       dateRange.startAt,
       dateRange.endAt,
       setDateRangeMemo,
+      isDataRestricted,
       selectedPeriod,
       updateAccount,
       deleteAccount,

@@ -45,7 +45,7 @@ export function useFetchSpendingForCharts(
             if (periodId) {
               q = query(q, where('periodId', '==', periodId));
             }
-            /*
+
             // Add date range filters if provided
             if (startAt) {
               q = query(q, where('date', '>=', Timestamp.fromDate(startAt)));
@@ -53,7 +53,7 @@ export function useFetchSpendingForCharts(
             if (endAt) {
               q = query(q, where('date', '<=', Timestamp.fromDate(endAt)));
             }
-            */
+
             // No pagination - fetch all data for charts
             const querySnapshot = await getDocs(q);
             return querySnapshot.docs.map((doc) => mapFromFirestore(doc.id, doc.data()));
