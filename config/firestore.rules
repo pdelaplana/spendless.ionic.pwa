@@ -50,7 +50,17 @@ service cloud.firestore {
     match /accounts/{accountId} {
       allow read: if isAuthenticated() && (isAccountOwner(accountId) || hasElevatedPermissions());
       allow create: if isAuthenticated() && (isAccountOwner(accountId) || hasElevatedPermissions());
-      allow update: if isAuthenticated() && (isAccountOwner(accountId) || hasElevatedPermissions());
+
+      // Users can update their account BUT NOT subscription fields
+      // Only Cloud Functions (webhooks) can modify subscription fields
+      allow update: if isAuthenticated() && isAccountOwner(accountId) &&
+                       !request.resource.data.diff(resource.data).affectedKeys()
+                         .hasAny(['subscriptionTier', 'expiresAt', 'stripeCustomerId',
+                                 'stripeSubscriptionId', 'stripeSubscriptionStatus', 'lastPaymentFailedAt']);
+
+      // Cloud Functions and Service Accounts can update any field
+      allow update: if hasElevatedPermissions();
+
       allow delete: if isAuthenticated() && (isAccountOwner(accountId) || hasElevatedPermissions());
 
       // All subcollections under /accounts/{accountId}/**

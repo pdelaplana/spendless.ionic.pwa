@@ -109,5 +109,78 @@ export default {
       title: '{{title}} - {{appName}}',
       defaultTitle: '{{appName}} - A mindful spending tracker',
     },
+    subscription: {
+      // Tier names
+      essentialsTier: 'Spendless Essentials',
+      premiumTier: 'Spendless Premium',
+
+      // Descriptions
+      essentialsDescription: 'Free plan with 30 day history',
+
+      // Upgrade buttons
+      upgradeMonthly: 'Upgrade Monthly ($2.99/mo)',
+      upgradeAnnual: 'Upgrade Annual ($24.99/yr)',
+      upgradeAnnualSave: 'Upgrade Annual (Save 30%)',
+
+      // Management
+      manageSubscription: 'Manage Subscription',
+
+      // Expiration
+      expiresOn: 'Expires on {{date}}',
+      renewsOn: 'Renews on {{date}}',
+
+      // Errors
+      configurationError: 'Stripe configuration error. Please contact support.',
+      upgradeError: 'Failed to create checkout session. Please try again.',
+      portalError: 'Failed to open subscription portal. Please try again.',
+
+      // Success page
+      success: {
+        title: 'Payment Successful',
+        heading: 'Welcome to Premium!',
+        subtitle: 'Your subscription is now active',
+        whatHappensNext: 'What happens next?',
+        confirmationMessage:
+          'Your payment was successful and your premium subscription is now active.',
+        benefit1: 'Unlimited spending history',
+        benefit2: 'Unlimited wallets',
+        benefit3: 'Advanced analytics and insights',
+        benefit4: 'Priority support',
+        note: 'Note:',
+        activationNote:
+          'Your account has been upgraded automatically. You can start enjoying premium features right away.',
+        manageTitle: 'Manage Your Subscription',
+        manageDescription:
+          'You can manage your subscription, update payment methods, or view invoices in Settings.',
+        goToSettings: 'Go to Settings',
+        returnToApp: 'Return to App',
+        thankYou: 'Thank you for supporting Spendless!',
+      },
+
+      // Cancel page
+      cancel: {
+        title: 'Subscription Canceled',
+        heading: 'Subscription Not Completed',
+        subtitle: 'No charges were made',
+        message: 'You canceled the subscription process. No payment was taken.',
+        noCharge: 'No Charge Made',
+        noChargeMessage:
+          'You canceled the subscription process. No payment was taken and your card was not charged.',
+        whyUpgrade: 'Why Upgrade to Premium?',
+        premiumBenefits:
+          'Spendless Premium unlocks powerful features to help you manage your spending better:',
+        benefit1: '📊 Unlimited spending history - Track as far back as you want',
+        benefit2: '💼 Unlimited wallets - Organize multiple payment methods',
+        benefit3: '📈 Advanced analytics and insights',
+        readyToUpgrade: 'Ready to upgrade?',
+        whatNow: 'What would you like to do?',
+        tryAgain: 'Try Again',
+        returnToApp: 'Return to App',
+        questions: 'Have questions about Premium?',
+        contactSupport: 'Contact us at support@getspendless.com',
+        stillInterested:
+          'Still interested in premium features? You can upgrade anytime from Settings.',
+      },
+    },
   },
 };

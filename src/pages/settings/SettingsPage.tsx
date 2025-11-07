@@ -2,6 +2,7 @@ import { SelectFormField } from '@/components/forms';
 import { BasePageLayout, CenterContainer, Content } from '@/components/layouts';
 import { ActionButton, Gap } from '@/components/shared';
 import DestructiveButton from '@/components/shared/base/buttons/DestructiveButton';
+import { SubscriptionCard } from '@/components/subscription';
 import { CURRENCIES, type Currency } from '@/domain/Currencies';
 import { DATEFORMATS, type DateFormat } from '@/domain/DateFormats';
 import { useAppNotifications, usePrompt } from '@/hooks';
@@ -222,6 +223,13 @@ const SettingsPage: React.FC = () => {
             </div>
           </IonItem>
         </TransparentIonList>
+
+        <Gap size={designSystem.spacing.lg} />
+
+        <SectionLabel>Subscription</SectionLabel>
+        <div style={{ marginLeft: designSystem.spacing.sm, marginRight: designSystem.spacing.sm }}>
+          <SubscriptionCard account={account || null} />
+        </div>
 
         <Gap size={designSystem.spacing.lg} />
 

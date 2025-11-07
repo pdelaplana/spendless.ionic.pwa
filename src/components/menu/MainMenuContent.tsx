@@ -4,6 +4,7 @@ import { ROUTES } from '@/routes/routes.constants';
 import { designSystem } from '@/theme/designSystem';
 import { IonContent, IonIcon, IonLabel, IonList } from '@ionic/react';
 import {
+  cardOutline,
   chatbubbleEllipsesOutline,
   helpOutline,
   idCardOutline,
@@ -153,6 +154,14 @@ const MainMenuContent: React.FC = () => {
             <IonLabel>
               <h2>Personal Details</h2>
               <p>Update your phone and email</p>
+            </IonLabel>
+          </ModernMenuItem>
+
+          <ModernMenuItem button routerLink={ROUTES.SETTINGS}>
+            <IonIcon slot='start' icon={cardOutline} />
+            <IonLabel>
+              <h2>Subscription & Billing</h2>
+              <p>Manage your subscription plan</p>
             </IonLabel>
           </ModernMenuItem>
 

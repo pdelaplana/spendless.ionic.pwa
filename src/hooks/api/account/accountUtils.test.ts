@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import { Timestamp } from 'firebase/firestore';
 import { createAccount } from '@/domain/Account';
-import { mapToFirestore, mapFromFirestore } from './accountUtils';
+import { Timestamp } from 'firebase/firestore';
+import { describe, expect, it } from 'vitest';
+import { mapFromFirestore, mapToFirestore } from './accountUtils';
 
 describe('accountUtils', () => {
   describe('mapToFirestore', () => {
