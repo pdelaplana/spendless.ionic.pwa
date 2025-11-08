@@ -161,8 +161,8 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ account }) =
                       flexDirection: 'column',
                     }}
                   >
-                    <UpgradeButton plan='monthly' expand='block' size='default' />
-                    <UpgradeButton plan='annual' expand='block' size='default' fill='outline'>
+                    <UpgradeButton plan='monthly' expand='block' size='large' />
+                    <UpgradeButton plan='annual' expand='block' size='large' fill='outline'>
                       {t('subscription.upgradeAnnualSave')}
                     </UpgradeButton>
                   </div>
@@ -172,7 +172,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ account }) =
                     disabled={isCreatingPortal}
                     fill='outline'
                     expand='block'
-                    size='default'
+                    size='large'
                   >
                     {isCreatingPortal ? (
                       <IonSpinner

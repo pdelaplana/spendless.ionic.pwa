@@ -41,6 +41,9 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+          VITE_STRIPE_PRICE_ID_MONTHLY: ${{ secrets.STRIPE_PRICE_ID_MONTHLY }}
+          VITE_STRIPE_PRICE_ID_ANNUAL: ${{ secrets.STRIPE_PRICE_ID_ANNUAL }}
         run: npm run build
 
       - name: Deploy to Firebase

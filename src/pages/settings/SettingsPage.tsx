@@ -240,6 +240,7 @@ const SettingsPage: React.FC = () => {
                       isLoading={exportDataPending}
                       isDisabled={false}
                       expand='block'
+                      size='large'
                     />
                   </div>
                 </IonLabel>
@@ -286,6 +287,7 @@ const SettingsPage: React.FC = () => {
                       }
                       onClick={deleteAccountHandler}
                       isLoading={deleteAccountPending}
+                      size='large'
                     />
                   </div>
                 </IonLabel>
