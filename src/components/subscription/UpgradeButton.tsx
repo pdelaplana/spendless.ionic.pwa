@@ -3,6 +3,7 @@ import { STRIPE_PRICE_ID_ANNUAL, STRIPE_PRICE_ID_MONTHLY } from '@/infrastructur
 import { IonButton, IonSpinner, useIonToast } from '@ionic/react';
 import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
+import { designSystem } from '../../theme';
 
 type SubscriptionPlan = 'monthly' | 'annual';
 
@@ -129,7 +130,11 @@ export const UpgradeButton: React.FC<UpgradeButtonProps> = ({
       expand={expand}
       className={className}
     >
-      {isPending ? <IonSpinner name='crescent' /> : children || defaultLabel}
+      {isPending ? (
+        <IonSpinner name='dots' style={{ height: designSystem.typography.fontSize.sm }} />
+      ) : (
+        children || defaultLabel
+      )}
     </IonButton>
   );
 };

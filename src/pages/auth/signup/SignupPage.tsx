@@ -1,11 +1,11 @@
 import { useAppNotifications } from '@/hooks/ui';
+import { StyledIonCard } from '@/components/ui';
 import { ROUTES } from '@/routes/routes.constants';
 import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import {
   IonBackButton,
   IonButton,
   IonButtons,
-  IonCard,
   IonCardContent,
   IonIcon,
   useIonRouter,
@@ -20,11 +20,6 @@ import styled from 'styled-components';
 import Step1BasicInfo, { type SignupFormData } from './steps/Step1BasicInfo';
 import Step2Password from './steps/Step2Password';
 import Step3Welcome from './steps/Step3Welcome';
-
-const StyledIonCard = styled(IonCard)`
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-`;
 
 const Container = styled.div`
   padding: 2rem 1rem;

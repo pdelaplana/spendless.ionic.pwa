@@ -3,10 +3,18 @@ import { Gap } from '@/components/shared';
 import ActionButton from '@/components/shared/base/buttons/ActionButton';
 import { BasePageLayout, CenterContainer, Content } from '@components/layouts';
 import { useAppNotifications } from '@hooks/ui';
-import { IonItem, IonLabel, IonList } from '@ionic/react';
+import {
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonItem,
+  IonLabel,
+  IonList,
+} from '@ionic/react';
 import { useAuth } from '@providers/auth';
 import { useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
+import { StyledIonCard } from '../../components/ui';
 
 interface ProfileInformationFormData {
   displayName: string;
@@ -80,83 +88,85 @@ const ProfileInformationPage: React.FC = () => {
       //footer={footer}
     >
       <CenterContainer>
-        <Content marginTop={'10px'}>
-          <form id='profile-form' onSubmit={handleSubmit(onSubmit)}>
-            <IonList lines='none'>
-              <IonItem lines='none'>
-                <IonLabel>
-                  <InputFormField
-                    name='displayName'
-                    label='Display Name'
-                    placeholder='Enter your display name'
-                    register={register}
-                    error={errors.displayName}
-                    fill='outline'
-                    type='text'
-                    validationRules={{
-                      required: {
-                        value: true,
-                        message: 'Display name is required',
-                      },
-                      minLength: {
-                        value: 2,
-                        message: 'Display name must be at least 2 characters',
-                      },
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
-              <IonItem lines='none'>
-                <IonLabel>
-                  <InputFormField
-                    name='email'
-                    label='Email'
-                    placeholder='Your email address'
-                    register={register}
-                    error={errors.email}
-                    fill='outline'
-                    type='email'
-                    readonly={true}
-                    validationRules={{
-                      required: {
-                        value: true,
-                        message: 'Email is required',
-                      },
-                      pattern: {
-                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        message: 'Invalid email address',
-                      },
-                    }}
-                  />
-                </IonLabel>
-              </IonItem>
-              <IonItem lines='none'>
-                <IonLabel>
-                  <InputFormField
-                    name='phoneNumber'
-                    label='Phone Number'
-                    placeholder='Your phone number'
-                    register={register}
-                    error={errors.phoneNumber}
-                    fill='outline'
-                    type='tel'
-                    readonly={true}
-                  />
-                </IonLabel>
-              </IonItem>
-            </IonList>
-          </form>
-          <div className='ion-margin'>
-            <ActionButton
-              isLoading={isSubmitting}
-              isDisabled={!isDirty}
-              expand='block'
-              type='submit'
-              form='profile-form'
-              label={'Save'}
-            />
-          </div>
-        </Content>
+        <StyledIonCard>
+          <IonCardContent>
+            <form id='profile-form' onSubmit={handleSubmit(onSubmit)}>
+              <IonList lines='none'>
+                <IonItem lines='none'>
+                  <IonLabel>
+                    <InputFormField
+                      name='displayName'
+                      label='Display Name'
+                      placeholder='Enter your display name'
+                      register={register}
+                      error={errors.displayName}
+                      fill='outline'
+                      type='text'
+                      validationRules={{
+                        required: {
+                          value: true,
+                          message: 'Display name is required',
+                        },
+                        minLength: {
+                          value: 2,
+                          message: 'Display name must be at least 2 characters',
+                        },
+                      }}
+                    />
+                  </IonLabel>
+                </IonItem>
+                <IonItem lines='none'>
+                  <IonLabel>
+                    <InputFormField
+                      name='email'
+                      label='Email'
+                      placeholder='Your email address'
+                      register={register}
+                      error={errors.email}
+                      fill='outline'
+                      type='email'
+                      readonly={true}
+                      validationRules={{
+                        required: {
+                          value: true,
+                          message: 'Email is required',
+                        },
+                        pattern: {
+                          value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                          message: 'Invalid email address',
+                        },
+                      }}
+                    />
+                  </IonLabel>
+                </IonItem>
+                <IonItem lines='none'>
+                  <IonLabel>
+                    <InputFormField
+                      name='phoneNumber'
+                      label='Phone Number'
+                      placeholder='Your phone number'
+                      register={register}
+                      error={errors.phoneNumber}
+                      fill='outline'
+                      type='tel'
+                      readonly={true}
+                    />
+                  </IonLabel>
+                </IonItem>
+              </IonList>
+            </form>
+            <div className='ion-margin'>
+              <ActionButton
+                isLoading={isSubmitting}
+                isDisabled={!isDirty}
+                expand='block'
+                type='submit'
+                form='profile-form'
+                label={'Save'}
+              />
+            </div>
+          </IonCardContent>
+        </StyledIonCard>
       </CenterContainer>
     </BasePageLayout>
   );

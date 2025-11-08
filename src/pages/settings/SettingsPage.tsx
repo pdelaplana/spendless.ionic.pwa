@@ -3,6 +3,7 @@ import { BasePageLayout, CenterContainer, Content } from '@/components/layouts';
 import { ActionButton, Gap } from '@/components/shared';
 import DestructiveButton from '@/components/shared/base/buttons/DestructiveButton';
 import { SubscriptionCard } from '@/components/subscription';
+import { StyledIonCard } from '@/components/ui';
 import { CURRENCIES, type Currency } from '@/domain/Currencies';
 import { DATEFORMATS, type DateFormat } from '@/domain/DateFormats';
 import { useAppNotifications, usePrompt } from '@/hooks';
@@ -12,23 +13,18 @@ import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { StyledIonList, StyledItem, TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
-import { IonItem, IonLabel } from '@ionic/react';
+import { IonCardContent, IonCardHeader, IonCardTitle, IonItem, IonLabel } from '@ionic/react';
 import { magnetSharp } from 'ionicons/icons';
 import { useEffect, useMemo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-const SectionLabel = styled.div`
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: ${designSystem.colors.textPrimary};
-  text-align: left;
-  margin-bottom: ${designSystem.spacing.md};
-  margin-left: ${designSystem.spacing.lg};
-`;
+const DangerCard = styled(StyledIonCard)`
+  border: 1px solid ${designSystem.colors.danger};
 
-const DangerSectionLabel = styled(SectionLabel)`
-  color: ${designSystem.colors.danger};
+  ion-card-title {
+    color: ${designSystem.colors.danger};
+  }
 `;
 
 interface SettingsFormData {
@@ -170,138 +166,133 @@ const SettingsPage: React.FC = () => {
       defaultBackButtonHref={ROUTES.SPENDING}
     >
       <CenterContainer>
-        <Gap size={designSystem.spacing.lg} />
-        <SectionLabel>Regional Settings</SectionLabel>
-        <TransparentIonList
-          lines='none'
-          className='ion-no-padding ion-no-margin'
-          style={{ marginLeft: designSystem.spacing.sm }}
-        >
-          <IonItem>
-            <IonLabel>
-              <h2>Preferred Currency</h2>
-              <p>Currently: {account?.currency || 'USD'}</p>
-            </IonLabel>
-            <div slot='end' style={{ minWidth: '120px' }}>
-              <SelectFormField
-                name='currency'
-                label=''
-                placeholder='Select currency'
-                register={register}
-                setValue={setValue}
-                getValues={getValues}
-                error={errors.currency}
-                optionsList={currencies}
-                validationRules={{
-                  required: 'Currency is required',
-                }}
-                onChange={(e) => onCurrencyChange(e.detail.value)}
-              />
-            </div>
-          </IonItem>
+        <StyledIonCard>
+          <IonCardHeader>
+            <IonCardTitle>Regional Settings</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent className='ion-no-padding'>
+            <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
+              <IonItem lines='full'>
+                <IonLabel>
+                  <h2>Preferred Currency</h2>
+                  <p>Currently: {account?.currency || 'USD'}</p>
+                </IonLabel>
+                <div slot='end' style={{ minWidth: '120px' }}>
+                  <SelectFormField
+                    name='currency'
+                    label=''
+                    placeholder='Select currency'
+                    register={register}
+                    setValue={setValue}
+                    getValues={getValues}
+                    error={errors.currency}
+                    optionsList={currencies}
+                    validationRules={{
+                      required: 'Currency is required',
+                    }}
+                    onChange={(e) => onCurrencyChange(e.detail.value)}
+                  />
+                </div>
+              </IonItem>
 
-          <IonItem>
-            <IonLabel>
-              <h2>Date Format</h2>
-              <p>Currently: {account?.dateFormat || 'MM/DD/YYYY'}</p>
-            </IonLabel>
-            <div slot='end' style={{ minWidth: '120px' }}>
-              <SelectFormField
-                name='dateFormat'
-                label=''
-                placeholder='Select date format'
-                register={register}
-                setValue={setValue}
-                getValues={getValues}
-                error={errors.dateFormat}
-                optionsList={dateFormats}
-                validationRules={{
-                  required: 'Date format is required',
-                }}
-                onChange={(e) => onDateFormatChange(e.detail.value)}
-              />
-            </div>
-          </IonItem>
-        </TransparentIonList>
+              <IonItem>
+                <IonLabel>
+                  <h2>Date Format</h2>
+                  <p>Currently: {account?.dateFormat || 'MM/DD/YYYY'}</p>
+                </IonLabel>
+                <div slot='end' style={{ minWidth: '120px' }}>
+                  <SelectFormField
+                    name='dateFormat'
+                    label=''
+                    placeholder='Select date format'
+                    register={register}
+                    setValue={setValue}
+                    getValues={getValues}
+                    error={errors.dateFormat}
+                    optionsList={dateFormats}
+                    validationRules={{
+                      required: 'Date format is required',
+                    }}
+                    onChange={(e) => onDateFormatChange(e.detail.value)}
+                  />
+                </div>
+              </IonItem>
+            </TransparentIonList>
+          </IonCardContent>
+        </StyledIonCard>
 
-        <Gap size={designSystem.spacing.lg} />
+        <SubscriptionCard account={account || null} />
 
-        <SectionLabel>Subscription</SectionLabel>
-        <div style={{ marginLeft: designSystem.spacing.sm, marginRight: designSystem.spacing.sm }}>
-          <SubscriptionCard account={account || null} />
-        </div>
+        <StyledIonCard>
+          <IonCardHeader>
+            <IonCardTitle>Account Settings</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent className='ion-no-padding'>
+            <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
+              <IonItem>
+                <IonLabel>
+                  <h2>Export Data</h2>
+                  <p>Download all your spending data and settings</p>
+                  <div style={{ marginTop: designSystem.spacing.md }}>
+                    <ActionButton
+                      label={'Export'}
+                      onClick={exportDataHandler}
+                      isLoading={exportDataPending}
+                      isDisabled={false}
+                      expand='block'
+                    />
+                  </div>
+                </IonLabel>
+              </IonItem>
+            </TransparentIonList>
+          </IonCardContent>
+        </StyledIonCard>
 
-        <Gap size={designSystem.spacing.lg} />
-
-        <SectionLabel>Account Settings</SectionLabel>
-        <TransparentIonList
-          lines='none'
-          className='ion-no-padding ion-no-margin'
-          style={{ marginLeft: designSystem.spacing.sm }}
-        >
-          <IonItem>
-            <IonLabel>
-              <h2>Export Data</h2>
-              <p>Download all your spending data and settings</p>
-            </IonLabel>
-            <div slot='end'>
-              <ActionButton
-                label={'Export'}
-                onClick={exportDataHandler}
-                isLoading={exportDataPending}
-                isDisabled={false}
-                style={{ width: '100px' }}
-              />
-            </div>
-          </IonItem>
-        </TransparentIonList>
-
-        <Gap size={designSystem.spacing.xl} />
-
-        <DangerSectionLabel>Danger Zone</DangerSectionLabel>
-        <TransparentIonList
-          lines='none'
-          className='ion-no-padding ion-no-margin'
-          style={{ marginLeft: designSystem.spacing.sm }}
-        >
-          <IonItem>
-            <IonLabel>
-              <h2
-                style={{
-                  color: designSystem.colors.danger,
-                  margin: 0,
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                }}
-              >
-                Delete Account
-              </h2>
-              <p
-                style={{
-                  color: designSystem.colors.textSecondary,
-                  margin: '4px 0 0 0',
-                  fontSize: '0.875rem',
-                  lineHeight: '1.4',
-                }}
-              >
-                Once you delete your account, there is no going back. Please be certain.
-              </p>
-            </IonLabel>
-            <div slot='end'>
-              <DestructiveButton
-                fill='solid'
-                expand='block'
-                label={'Delete'}
-                prompt={
-                  'Are you sure you want to delete your Spendless account? This action cannot be undone and you will be automatically signed out of your account.'
-                }
-                onClick={deleteAccountHandler}
-                isLoading={deleteAccountPending}
-                style={{ minWidth: '100px' }}
-              />
-            </div>
-          </IonItem>
-        </TransparentIonList>
+        <DangerCard>
+          <IonCardHeader>
+            <IonCardTitle>Danger Zone</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent className='ion-no-padding'>
+            <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
+              <IonItem>
+                <IonLabel>
+                  <h2
+                    style={{
+                      color: designSystem.colors.danger,
+                      margin: 0,
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                    }}
+                  >
+                    Delete Account
+                  </h2>
+                  <p
+                    style={{
+                      color: designSystem.colors.textSecondary,
+                      margin: '4px 0 0 0',
+                      fontSize: '0.875rem',
+                      lineHeight: '1.4',
+                    }}
+                  >
+                    Once you delete your account, there is no going back. Please be certain.
+                  </p>
+                  <div style={{ marginTop: designSystem.spacing.md }}>
+                    <DestructiveButton
+                      fill='solid'
+                      expand='block'
+                      label={'Delete'}
+                      prompt={
+                        'Are you sure you want to delete your Spendless account? This action cannot be undone and you will be automatically signed out of your account.'
+                      }
+                      onClick={deleteAccountHandler}
+                      isLoading={deleteAccountPending}
+                    />
+                  </div>
+                </IonLabel>
+              </IonItem>
+            </TransparentIonList>
+          </IonCardContent>
+        </DangerCard>
       </CenterContainer>
     </BasePageLayout>
   );

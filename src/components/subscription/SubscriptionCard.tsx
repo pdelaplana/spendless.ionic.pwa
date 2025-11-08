@@ -1,3 +1,4 @@
+import { StyledIonCard } from '@/components/ui';
 import type { IAccount } from '@/domain/Account';
 import { useCreateCustomerPortalSession } from '@/hooks/functions';
 import { useSubscription } from '@/hooks/subscription';
@@ -5,6 +6,9 @@ import { designSystem } from '@/theme/designSystem';
 import {
   IonBadge,
   IonButton,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
   IonIcon,
   IonItem,
   IonLabel,
@@ -15,21 +19,13 @@ import { format } from 'date-fns';
 import { cardOutline, starOutline } from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { TransparentIonList } from '../../styles/IonList.styled';
 import { UpgradeButton } from './UpgradeButton';
 
-const SubscriptionContainer = styled.div`
+const SubscriptionContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${designSystem.spacing.md};
-  padding: ${designSystem.spacing.md};
-  background: ${designSystem.colors.surface};
-  border-radius: ${designSystem.borderRadius.md};
-`;
-
-const SubscriptionHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 const TierInfo = styled.div`
@@ -108,66 +104,91 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ account }) =
   };
 
   return (
-    <SubscriptionContainer>
-      <SubscriptionHeader>
-        <TierInfo>
-          <TierName>
-            {subscription.isPremium ? (
-              <>
-                <IonIcon icon={starOutline} />
-                {t('subscription.premiumTier')}
-                <IonBadge color='warning'>Premium</IonBadge>
-              </>
-            ) : (
-              <>
-                <IonIcon icon={cardOutline} />
-                {t('subscription.essentialsTier')}
-                <IonBadge color='medium'>Essentials</IonBadge>
-              </>
-            )}
-          </TierName>
+    <StyledIonCard>
+      <IonCardHeader>
+        <IonCardTitle>Subscription</IonCardTitle>
+      </IonCardHeader>
+      <IonCardContent className='ion-no-padding'>
+        <TransparentIonList>
+          <IonItem lines='none'>
+            <IonLabel>
+              <SubscriptionContent>
+                <TierInfo>
+                  <TierName>
+                    {subscription.isPremium ? (
+                      <>
+                        <IonIcon icon={starOutline} />
+                        {t('subscription.premiumTier')}
+                        <IonBadge color='warning'>Premium</IonBadge>
+                      </>
+                    ) : (
+                      <>
+                        <IonIcon icon={cardOutline} />
+                        {t('subscription.essentialsTier')}
+                        <IonBadge color='medium'>Essentials</IonBadge>
+                      </>
+                    )}
+                  </TierName>
 
-          {subscription.isPremium &&
-            subscription.expiresAt &&
-            (subscription.isExpiringSoon ? (
-              <ExpiryWarning>
-                {t('subscription.expiresOn', {
-                  date: format(subscription.expiresAt, 'MMM dd, yyyy'),
-                })}{' '}
-                ({subscription.daysUntilExpiry}{' '}
-                {subscription.daysUntilExpiry === 1 ? 'day' : 'days'} remaining)
-              </ExpiryWarning>
-            ) : (
-              <ExpiryInfo>
-                {t('subscription.renewsOn', {
-                  date: format(subscription.expiresAt, 'MMM dd, yyyy'),
-                })}
-              </ExpiryInfo>
-            ))}
+                  {subscription.isPremium &&
+                    subscription.expiresAt &&
+                    (subscription.isExpiringSoon ? (
+                      <ExpiryWarning>
+                        {t('subscription.expiresOn', {
+                          date: format(subscription.expiresAt, 'MMM dd, yyyy'),
+                        })}{' '}
+                        ({subscription.daysUntilExpiry}{' '}
+                        {subscription.daysUntilExpiry === 1 ? 'day' : 'days'} remaining)
+                      </ExpiryWarning>
+                    ) : (
+                      <ExpiryInfo>
+                        {t('subscription.renewsOn', {
+                          date: format(subscription.expiresAt, 'MMM dd, yyyy'),
+                        })}
+                      </ExpiryInfo>
+                    ))}
 
-          {subscription.isEssentials && (
-            <ExpiryInfo>{t('subscription.essentialsDescription')}</ExpiryInfo>
-          )}
-        </TierInfo>
-      </SubscriptionHeader>
+                  {subscription.isEssentials && (
+                    <ExpiryInfo>{t('subscription.essentialsDescription')}</ExpiryInfo>
+                  )}
+                </TierInfo>
 
-      {subscription.isEssentials ? (
-        <div style={{ display: 'flex', gap: designSystem.spacing.sm, flexDirection: 'column' }}>
-          <UpgradeButton plan='monthly' expand='block' />
-          <UpgradeButton plan='annual' expand='block' fill='outline'>
-            {t('subscription.upgradeAnnualSave')}
-          </UpgradeButton>
-        </div>
-      ) : (
-        <IonButton
-          onClick={handleManageSubscription}
-          disabled={isCreatingPortal}
-          fill='outline'
-          expand='block'
-        >
-          {isCreatingPortal ? <IonSpinner name='crescent' /> : t('subscription.manageSubscription')}
-        </IonButton>
-      )}
-    </SubscriptionContainer>
+                {subscription.isEssentials ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: designSystem.spacing.sm,
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <UpgradeButton plan='monthly' expand='block' size='default' />
+                    <UpgradeButton plan='annual' expand='block' size='default' fill='outline'>
+                      {t('subscription.upgradeAnnualSave')}
+                    </UpgradeButton>
+                  </div>
+                ) : (
+                  <IonButton
+                    onClick={handleManageSubscription}
+                    disabled={isCreatingPortal}
+                    fill='outline'
+                    expand='block'
+                    size='default'
+                  >
+                    {isCreatingPortal ? (
+                      <IonSpinner
+                        name='dots'
+                        style={{ height: designSystem.typography.fontSize.sm }}
+                      />
+                    ) : (
+                      t('subscription.manageSubscription')
+                    )}
+                  </IonButton>
+                )}
+              </SubscriptionContent>
+            </IonLabel>
+          </IonItem>
+        </TransparentIonList>
+      </IonCardContent>
+    </StyledIonCard>
   );
 };

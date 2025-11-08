@@ -7,32 +7,13 @@ import { useAuth } from '@/providers/auth';
 import { ROUTES } from '@/routes/routes.constants';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
-import { IonButton, IonItem, IonLabel, useIonToast } from '@ionic/react';
+import { IonButton, IonCardContent, IonItem, IonLabel, useIonToast } from '@ionic/react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
+import { StyledIonCard } from '../../components/ui';
 import { type FeedbackFormData, useSendFeedback } from '../../hooks/api/feedback/useSendFeedback';
-
-const FormContainer = styled.div`
-  padding: ${designSystem.spacing.lg};
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
-const FormTitle = styled.h2`
-  font-size: ${designSystem.typography.fontSize.xl};
-  font-weight: ${designSystem.typography.fontWeight.semibold};
-  color: ${designSystem.colors.text.primary};
-  margin-bottom: ${designSystem.spacing.sm};
-`;
-
-const FormDescription = styled.p`
-  font-size: ${designSystem.typography.fontSize.base};
-  color: ${designSystem.colors.text.secondary};
-  margin-bottom: ${designSystem.spacing.xl};
-  line-height: 1.5;
-`;
 
 const SubmitButton = styled(IonButton)`
   margin-top: ${designSystem.spacing.lg};
@@ -119,8 +100,8 @@ const FeedbackPage: React.FC = () => {
       defaultBackButtonHref={ROUTES.SPENDING}
     >
       <CenterContainer>
-        <Content>
-          <FormContainer>
+        <StyledIonCard>
+          <IonCardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TransparentIonList lines='none' className='ion-no-padding ion-no-margin'>
                 <IonItem>
@@ -130,8 +111,10 @@ const FeedbackPage: React.FC = () => {
                 </IonItem>
                 <IonItem>
                   <IonLabel>
-                    Help me improve Spendless by reporting bugs, suggesting improvements, or sharing
-                    your thoughts. Your feedback matters!
+                    <p>
+                      Help me improve Spendless by reporting bugs, suggesting improvements, or
+                      sharing your thoughts. Your feedback matters!
+                    </p>
                   </IonLabel>
                 </IonItem>
                 <IonItem>
@@ -208,8 +191,8 @@ const FeedbackPage: React.FC = () => {
                 {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
               </SubmitButton>
             </form>
-          </FormContainer>
-        </Content>
+          </IonCardContent>
+        </StyledIonCard>
       </CenterContainer>
     </BasePageLayout>
   );

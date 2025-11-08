@@ -1,12 +1,12 @@
 import { SpendlessLogo } from '@/components/brand';
 import InputFormField from '@/components/forms/fields/InputFormField';
 import { ActionButton, Gap } from '@/components/shared';
+import { StyledIonCard } from '@/components/ui';
 import { ROUTES } from '@/routes/routes.constants';
 import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import {
   IonBackButton,
   IonButtons,
-  IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
@@ -26,11 +26,6 @@ import { useEffect } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-
-const StyledIonCard = styled(IonCard)`
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-`;
 
 const Container = styled.div`
   padding: 2rem 1rem;
