@@ -1,3 +1,14 @@
+# [1.4.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.3.0...v1.4.0) (2025-11-09)
+
+
+### Features
+
+* add subscriptionCancelled cancelled and subscription price change ([6b567e1](https://github.com/pdelaplana/spendless.ionic.pwa/commit/6b567e1447f518a263c527d6149af2aaf2573de2))
+* add subscriptionTier and expiresAt to Account model ([98d6f6e](https://github.com/pdelaplana/spendless.ionic.pwa/commit/98d6f6e265be1da36256d74513622a32afe70c75))
+* implement 1 month history for essentials account ([1046a95](https://github.com/pdelaplana/spendless.ionic.pwa/commit/1046a951dd9ecab8d75f58c4e557cb6ebf3dd9e5))
+* subscriptions ([6f8a306](https://github.com/pdelaplana/spendless.ionic.pwa/commit/6f8a30667ab64039d148265cb74cdb50999512e3))
+* UI refactoring ([f591816](https://github.com/pdelaplana/spendless.ionic.pwa/commit/f59181652f9ca4472457b17cfcb8122e8856bca7))
+
 # [1.3.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.2.0...v1.3.0) (2025-11-02)
 
 
