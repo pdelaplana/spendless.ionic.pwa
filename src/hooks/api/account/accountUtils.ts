@@ -11,6 +11,9 @@ export const mapToFirestore = (account: IAccount): DocumentData => ({
   onBoardingCompletedAt: account.onboardingCompletedAt
     ? Timestamp.fromDate(account.onboardingCompletedAt)
     : null,
+  subscriptionTier: account.subscriptionTier,
+  expiresAt: account.expiresAt ? Timestamp.fromDate(account.expiresAt) : null,
+  subscriptionCancelled: account.subscriptionCancelled ?? null,
   createdAt: Timestamp.fromDate(account.createdAt),
   updatedAt: Timestamp.fromDate(account.updatedAt),
 });
@@ -27,6 +30,9 @@ export const mapFromFirestore = (id: string, data: DocumentData): IAccount => {
     dateFormat: data.dateFormat,
     onboardingCompleted: data.onboardingCompleted,
     onboardingCompletedAt: data.onboardingCompletedAt ? data.onboardingCompletedAt.toDate() : null,
+    subscriptionTier: data.subscriptionTier ?? 'essentials',
+    expiresAt: data.expiresAt ? data.expiresAt.toDate() : undefined,
+    subscriptionCancelled: data.subscriptionCancelled ?? undefined,
     createdAt: data.createdAt.toDate(),
     updatedAt: data.updatedAt.toDate(),
   };

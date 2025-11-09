@@ -15,6 +15,8 @@ export const ROUTES = {
   SPENDING_PERIODS: '/spending/periods',
   PROFILE: '/profile',
   SETTINGS: '/settings',
+  SUBSCRIPTION_SUCCESS: '/subscription/success',
+  SUBSCRIPTION_CANCEL: '/subscription/cancel',
   FEEDBACK: '/feedback',
   NOT_FOUND: '*',
 } as const;

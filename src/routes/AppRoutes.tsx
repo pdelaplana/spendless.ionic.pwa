@@ -17,6 +17,7 @@ import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendingPage from '@/pages/spending/SpendingPage';
 import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
 import WalletSpendingPage from '@/pages/spending/WalletSpendingPage';
+import { SubscriptionCancelPage, SubscriptionSuccessPage } from '@/pages/subscription';
 import { useAuth } from '@/providers/auth/useAuth';
 import { SpendingAccountProvider } from '@/providers/spendingAccount';
 import { WalletProvider } from '@/providers/wallet';
@@ -196,6 +197,14 @@ const AppRoutes: React.FC = () => {
 
           <ProtectedRoute path={ROUTES.FEEDBACK} exact={true}>
             <FeedbackPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute path={ROUTES.SUBSCRIPTION_SUCCESS} exact={true}>
+            <SubscriptionSuccessPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute path={ROUTES.SUBSCRIPTION_CANCEL} exact={true}>
+            <SubscriptionCancelPage />
           </ProtectedRoute>
 
           <ProtectedRoute path={ROUTES.SETTINGS}>

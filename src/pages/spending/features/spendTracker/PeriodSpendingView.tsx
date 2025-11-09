@@ -1,5 +1,6 @@
 import { CenterContainer, CenterContent } from '@/components/layouts';
 import { Gap, MutationNotificationHandler, StyledItem, TagsDisplay } from '@/components/shared';
+import { SubscriptionRestrictedBanner } from '@/components/subscription';
 import type { IWallet } from '@/domain/Wallet';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
@@ -46,6 +47,7 @@ const PeriodSpendingView: React.FC = () => {
     setSelectedPeriod,
     spending,
     chartSpending,
+    isDataRestricted,
     didMutationFail,
     didMutationSucceed,
     resetMutationState,
@@ -128,6 +130,14 @@ const PeriodSpendingView: React.FC = () => {
           </CenterContent>
         ) : (
           <>
+            {isDataRestricted && (
+              <SubscriptionRestrictedBanner
+                onUpgrade={() => {
+                  // TODO: Navigate to subscription/pricing page
+                  console.log('Navigate to upgrade page');
+                }}
+              />
+            )}
             <SpendAnalyticsCharts
               remainingBudget={remainingBudget}
               targetSpend={targetSpend}

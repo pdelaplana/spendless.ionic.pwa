@@ -6,3 +6,4 @@ export { PwaUpdateNotification, PwaUpdateBadge } from './PwaUpdateNotification';
 export { OfflinePageHandler, useOfflineHandler } from './OfflinePageHandler';
 export { default as ProminentAmountInput } from './ProminentAmountInput';
 export { default as StepIndicator } from './StepIndicator';
+export { StyledIonCard } from './StyledIonCard';

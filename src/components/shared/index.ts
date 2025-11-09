@@ -12,6 +12,7 @@ export { default as LetterIcon } from './base/display/LetterIcon';
 export { PwaInstallPrompt } from './pwa';
 export { default as TagsDisplay } from './tags/TagsDisplay';
 export { IconContainer } from './IconContainer';
+export { InfoCard } from './InfoCard';
 export { SpendList } from '../../pages/spending/components/common/spendList';
 export { SuspenseLoadingScreen, LoadingScreen, AuthLoadingScreen } from './loading';
 

@@ -1,10 +1,14 @@
-import { IonSpinner } from '@ionic/react';
+import { IonSpinner, useIonToast } from '@ionic/react';
 import type React from 'react';
 import { Suspense } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CenterContainer } from '../../../../components/layouts';
 import { Gap } from '../../../../components/shared';
+import { SubscriptionRestrictedBanner } from '../../../../components/subscription';
 import { PwaInstallPrompt } from '../../../../components/ui/PwaInstallPrompt';
+import { useCreateCheckoutSession } from '../../../../hooks/functions';
+import { STRIPE_PRICE_ID_MONTHLY } from '../../../../infrastructure/stripe';
+import { useSpendingAccount } from '../../../../providers/spendingAccount';
 import { useWallet } from '../../../../providers/wallet';
 import { ROUTES } from '../../../../routes/routes.constants';
 import { GradientBackground } from '../../../../theme';
@@ -16,6 +20,9 @@ import { WalletList } from '../../components/common/walletList';
 const PeriodDashboard: React.FC = () => {
   const history = useHistory();
   const { selectWallet, wallets } = useWallet();
+  const { isDataRestricted } = useSpendingAccount();
+  const [presentToast] = useIonToast();
+  const { mutate: createCheckoutSession } = useCreateCheckoutSession();
 
   const handleWalletClick = async (walletId: string) => {
     // Find the wallet object
@@ -30,12 +37,46 @@ const PeriodDashboard: React.FC = () => {
     }
   };
 
+  const handleUpgrade = () => {
+    if (!STRIPE_PRICE_ID_MONTHLY) {
+      presentToast({
+        message: 'Upgrade is currently unavailable. Please try again later.',
+        duration: 3000,
+        color: 'danger',
+      });
+      return;
+    }
+
+    createCheckoutSession(
+      {
+        priceId: STRIPE_PRICE_ID_MONTHLY,
+        successUrl: `${window.location.origin}${ROUTES.SUBSCRIPTION_SUCCESS}`,
+        cancelUrl: `${window.location.origin}${ROUTES.SUBSCRIPTION_CANCEL}`,
+      },
+      {
+        onSuccess: (data) => {
+          // Redirect to Stripe Checkout
+          window.location.href = data.url;
+        },
+        onError: () => {
+          presentToast({
+            message: 'Failed to start upgrade process. Please try again.',
+            duration: 3000,
+            color: 'danger',
+          });
+        },
+      },
+    );
+  };
+
   return (
     <GradientBackground>
       <CenterContainer>
         <ProfileHeader />
+        {isDataRestricted && <SubscriptionRestrictedBanner onUpgrade={handleUpgrade} />}
         <PeriodSwitcher />
         <WalletList onWalletClick={handleWalletClick} />
+
         <PeriodActionsBar />
         <PwaInstallPrompt />
       </CenterContainer>

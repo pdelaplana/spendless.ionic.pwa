@@ -40,6 +40,7 @@ export const useEnsureAccount = () => {
               currency: detectedCurrency,
               onboardingCompleted: false,
               onboardingCompletedAt: undefined,
+              subscriptionTier: 'essentials',
             },
           });
 

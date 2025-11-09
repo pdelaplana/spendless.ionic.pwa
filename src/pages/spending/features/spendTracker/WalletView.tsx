@@ -1,5 +1,6 @@
 import { CenterContainer, CenterContent } from '@/components/layouts';
 import { Gap, MutationNotificationHandler, SpendList } from '@/components/shared';
+import { SubscriptionRestrictedBanner } from '@/components/subscription';
 import { useDeleteWallet, useUpdateWallet } from '@/hooks/api/wallet';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useWallet } from '@/providers/wallet';
@@ -28,6 +29,7 @@ const WalletView: React.FC = () => {
     setSelectedPeriod,
     spending,
     chartSpending,
+    isDataRestricted,
     didMutationFail,
     didMutationSucceed,
     resetMutationState,
@@ -200,6 +202,14 @@ const WalletView: React.FC = () => {
           />
         ) : (
           <>
+            {isDataRestricted && (
+              <SubscriptionRestrictedBanner
+                onUpgrade={() => {
+                  // TODO: Navigate to subscription/pricing page
+                  console.log('Navigate to upgrade page');
+                }}
+              />
+            )}
             <SpendAnalyticsCharts
               remainingBudget={remainingBudget}
               targetSpend={targetSpend}
