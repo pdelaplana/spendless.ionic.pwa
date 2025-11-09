@@ -119,7 +119,9 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ account }) =
                       <>
                         <IonIcon icon={starOutline} />
                         {t('subscription.premiumTier')}
-                        <IonBadge color='warning'>Premium</IonBadge>
+                        <IonBadge color={subscription.isCancelled ? 'medium' : 'warning'}>
+                          Premium
+                        </IonBadge>
                       </>
                     ) : (
                       <>
@@ -132,7 +134,13 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ account }) =
 
                   {subscription.isPremium &&
                     subscription.expiresAt &&
-                    (subscription.isExpiringSoon ? (
+                    (subscription.isCancelled ? (
+                      <ExpiryInfo>
+                        {t('subscription.subscriptionEndsOn', {
+                          date: format(subscription.expiresAt, 'MMM dd, yyyy'),
+                        })}
+                      </ExpiryInfo>
+                    ) : subscription.isExpiringSoon ? (
                       <ExpiryWarning>
                         {t('subscription.expiresOn', {
                           date: format(subscription.expiresAt, 'MMM dd, yyyy'),

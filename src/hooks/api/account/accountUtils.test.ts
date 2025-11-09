@@ -56,6 +56,20 @@ describe('accountUtils', () => {
       expect(essentialsDoc.subscriptionTier).toBe('essentials');
       expect(premiumDoc.subscriptionTier).toBe('premium');
     });
+
+    it('should map subscriptionCancelled to Firestore', () => {
+      const account = createAccount({ subscriptionCancelled: true });
+      const firestoreDoc = mapToFirestore(account);
+
+      expect(firestoreDoc.subscriptionCancelled).toBe(true);
+    });
+
+    it('should map subscriptionCancelled to null when undefined', () => {
+      const account = createAccount({ subscriptionCancelled: undefined });
+      const firestoreDoc = mapToFirestore(account);
+
+      expect(firestoreDoc.subscriptionCancelled).toBeNull();
+    });
   });
 
   describe('mapFromFirestore', () => {
@@ -169,6 +183,47 @@ describe('accountUtils', () => {
 
       expect(account.subscriptionTier).toBe('essentials');
       expect(account.expiresAt).toBeUndefined();
+    });
+
+    it('should map subscriptionCancelled from Firestore', () => {
+      const firestoreData = {
+        currency: 'USD',
+        subscriptionTier: 'premium',
+        subscriptionCancelled: true,
+        createdAt: Timestamp.fromDate(new Date()),
+        updatedAt: Timestamp.fromDate(new Date()),
+      };
+
+      const account = mapFromFirestore('user123', firestoreData);
+
+      expect(account.subscriptionCancelled).toBe(true);
+    });
+
+    it('should handle missing subscriptionCancelled field', () => {
+      const firestoreData = {
+        currency: 'USD',
+        subscriptionTier: 'premium',
+        createdAt: Timestamp.fromDate(new Date()),
+        updatedAt: Timestamp.fromDate(new Date()),
+      };
+
+      const account = mapFromFirestore('user123', firestoreData);
+
+      expect(account.subscriptionCancelled).toBeUndefined();
+    });
+
+    it('should handle null subscriptionCancelled', () => {
+      const firestoreData = {
+        currency: 'USD',
+        subscriptionTier: 'premium',
+        subscriptionCancelled: null,
+        createdAt: Timestamp.fromDate(new Date()),
+        updatedAt: Timestamp.fromDate(new Date()),
+      };
+
+      const account = mapFromFirestore('user123', firestoreData);
+
+      expect(account.subscriptionCancelled).toBeUndefined();
     });
   });
 });

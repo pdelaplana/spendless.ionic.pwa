@@ -1,5 +1,5 @@
-import { useAppNotifications } from '@/hooks/ui';
 import { StyledIonCard } from '@/components/ui';
+import { useAppNotifications } from '@/hooks/ui';
 import { ROUTES } from '@/routes/routes.constants';
 import AuthPageLayout from '@components/layouts/AuthPageLayout';
 import {

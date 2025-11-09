@@ -55,7 +55,7 @@ service cloud.firestore {
       // Only Cloud Functions (webhooks) can modify subscription fields
       allow update: if isAuthenticated() && isAccountOwner(accountId) &&
                        !request.resource.data.diff(resource.data).affectedKeys()
-                         .hasAny(['subscriptionTier', 'expiresAt', 'stripeCustomerId',
+                         .hasAny(['subscriptionTier', 'expiresAt', 'subscriptionCancelled', 'stripeCustomerId',
                                  'stripeSubscriptionId', 'stripeSubscriptionStatus', 'lastPaymentFailedAt']);
 
       // Cloud Functions and Service Accounts can update any field

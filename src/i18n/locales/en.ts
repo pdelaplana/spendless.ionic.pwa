@@ -118,8 +118,8 @@ export default {
       essentialsDescription: 'Free plan with 30 day history',
 
       // Upgrade buttons
-      upgradeMonthly: 'Upgrade Monthly ($2.99/mo)',
-      upgradeAnnual: 'Upgrade Annual ($24.99/yr)',
+      upgradeMonthly: 'Upgrade Monthly ($8.99/mo)',
+      upgradeAnnual: 'Upgrade Annual ($74.99/yr)',
       upgradeAnnualSave: 'Upgrade Annual (Save 30%)',
 
       // Management
@@ -128,6 +128,7 @@ export default {
       // Expiration
       expiresOn: 'Expires on {{date}}',
       renewsOn: 'Renews on {{date}}',
+      subscriptionEndsOn: 'Subscription ends on {{date}}',
 
       // Errors
       configurationError: 'Stripe configuration error. Please contact support.',

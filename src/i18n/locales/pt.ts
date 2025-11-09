@@ -59,5 +59,31 @@ export default {
       title: '{{title}} - {{appName}}',
       defaultTitle: '{{appName}} - Um rastreador de gastos consciente',
     },
+    subscription: {
+      // Tier names
+      essentialsTier: 'Spendless Essentials',
+      premiumTier: 'Spendless Premium',
+
+      // Descriptions
+      essentialsDescription: 'Plano gratuito com histórico de 30 dias',
+
+      // Upgrade buttons
+      upgradeMonthly: 'Atualizar Mensal ($8.99/mês)',
+      upgradeAnnual: 'Atualizar Anual ($75/ano)',
+      upgradeAnnualSave: 'Atualizar Anual (Economize 30%)',
+
+      // Management
+      manageSubscription: 'Gerenciar Assinatura',
+
+      // Expiration
+      expiresOn: 'Expira em {{date}}',
+      renewsOn: 'Renova em {{date}}',
+      subscriptionEndsOn: 'A assinatura termina em {{date}}',
+
+      // Errors
+      configurationError: 'Erro de configuração do Stripe. Entre em contato com o suporte.',
+      upgradeError: 'Falha ao criar sessão de checkout. Tente novamente.',
+      portalError: 'Falha ao abrir portal de assinatura. Tente novamente.',
+    },
   },
 };

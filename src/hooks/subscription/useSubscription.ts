@@ -36,6 +36,11 @@ interface UseSubscriptionReturn {
    * Whether the subscription is about to expire (within 7 days)
    */
   isExpiringSoon: boolean;
+
+  /**
+   * Whether the subscription has been cancelled
+   */
+  isCancelled: boolean;
 }
 
 /**
@@ -69,6 +74,7 @@ export function useSubscription(account: IAccount | null): UseSubscriptionReturn
         expiresAt: null,
         daysUntilExpiry: null,
         isExpiringSoon: false,
+        isCancelled: false,
       };
     }
 
@@ -89,6 +95,9 @@ export function useSubscription(account: IAccount | null): UseSubscriptionReturn
     // Check if expiring soon (within 7 days)
     const isExpiringSoon = daysUntilExpiry !== null && daysUntilExpiry <= 7;
 
+    // Check if subscription is cancelled
+    const isCancelled = account.subscriptionCancelled === true;
+
     // Determine effective tier (expired premium = essentials)
     const effectiveTier = tier === 'premium' && !isExpired ? 'premium' : 'essentials';
 
@@ -100,6 +109,7 @@ export function useSubscription(account: IAccount | null): UseSubscriptionReturn
       expiresAt,
       daysUntilExpiry,
       isExpiringSoon,
+      isCancelled,
     };
   }, [account]);
 }

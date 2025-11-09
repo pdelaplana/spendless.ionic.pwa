@@ -69,6 +69,18 @@ describe('Account Domain', () => {
 
       expect(account.expiresAt).toBe(expiryDate);
     });
+
+    it('should handle subscriptionCancelled as undefined when not provided', () => {
+      const account = createAccount({});
+
+      expect(account.subscriptionCancelled).toBeUndefined();
+    });
+
+    it('should handle subscriptionCancelled when provided', () => {
+      const account = createAccount({ subscriptionCancelled: true });
+
+      expect(account.subscriptionCancelled).toBe(true);
+    });
   });
 
   describe('createEmptyAccount', () => {
@@ -129,6 +141,20 @@ describe('Account Domain', () => {
       expect(updated.name).toBe('Test Account');
       expect(updated.currency).toBe('EUR');
       expect(updated.subscriptionTier).toBe('premium');
+    });
+
+    it('should update subscriptionCancelled', () => {
+      const account = createAccount({});
+      const updated = updateAccount(account, { subscriptionCancelled: true });
+
+      expect(updated.subscriptionCancelled).toBe(true);
+    });
+
+    it('should preserve subscriptionCancelled when update does not include it', () => {
+      const account = createAccount({ subscriptionCancelled: true });
+      const updated = updateAccount(account, { name: 'Updated Name' });
+
+      expect(updated.subscriptionCancelled).toBe(true);
     });
   });
 
