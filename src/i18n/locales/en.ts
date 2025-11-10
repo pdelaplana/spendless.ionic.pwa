@@ -105,6 +105,10 @@ export default {
       backToSpending: 'Back to Spending',
       editWallet: 'Edit Wallet',
     },
+    insights: {
+      title: 'Insights',
+      description: 'Explore your spending to see key insights and trends',
+    },
     meta: {
       title: '{{title}} - {{appName}}',
       defaultTitle: '{{appName}} - A mindful spending tracker',

@@ -13,9 +13,12 @@ import OnboardingFlowV2 from '@/pages/onboarding/OnboardingFlowV2';
 import ProfileInformationPage from '@/pages/profile/ProfileInformationPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import SettingsPage from '@/pages/settings/SettingsPage';
+import InsightsPage from '@/pages/spending/InsightsPage';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
+import SpendAnalysisByTagsPage from '@/pages/spending/SpendAnalysisByTagsPage';
 import SpendingPage from '@/pages/spending/SpendingPage';
 import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
+import TagTransactionsPage from '@/pages/spending/TagTransactionsPage';
 import WalletSpendingPage from '@/pages/spending/WalletSpendingPage';
 import { SubscriptionCancelPage, SubscriptionSuccessPage } from '@/pages/subscription';
 import { useAuth } from '@/providers/auth/useAuth';
@@ -62,6 +65,15 @@ const SpendingRoutes = ({ userId }: { userId: string }) => {
           </Route>
           <Route path={ROUTES.SPENDING_PERIODS} exact={true}>
             <SpendingPeriodsPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_INSIGHTS_TAG_TRANSACTIONS} exact={true}>
+            <TagTransactionsPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_INSIGHTS_TAGS} exact={true}>
+            <SpendAnalysisByTagsPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_INSIGHTS} exact={true}>
+            <InsightsPage />
           </Route>
           <Route path={ROUTES.SPENDING} exact={true}>
             <SpendingPage />

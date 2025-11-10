@@ -55,6 +55,10 @@ export default {
       backToSpending: 'Voltar aos Gastos',
       editWallet: 'Editar Carteira',
     },
+    insights: {
+      title: 'Insights',
+      description: 'Explore seus gastos para ver insights e tendências principais',
+    },
     meta: {
       title: '{{title}} - {{appName}}',
       defaultTitle: '{{appName}} - Um rastreador de gastos consciente',
