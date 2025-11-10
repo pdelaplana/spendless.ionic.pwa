@@ -3,11 +3,11 @@ import MainMenuContent from '@/components/menu/MainMenuContent';
 import { IconContainer } from '@/components/shared';
 import { SentryErrorBoundary } from '@/components/shared';
 import { ROUTES } from '@/routes/routes.constants';
-import { StyledItem, TransparentIonList } from '@/styles/IonList.styled';
+import { StyledItem, StyledItemHeader, TransparentIonList } from '@/styles/IonList.styled';
 import { GlassCard, GradientBackground } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
-import { IonLabel } from '@ionic/react';
-import { statsChartOutline, trendingUpOutline } from 'ionicons/icons';
+import { IonLabel, IonListHeader } from '@ionic/react';
+import { barChartOutline, statsChartOutline, trendingUpOutline } from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -29,6 +29,10 @@ const InsightsPage: React.FC = () => {
     history.push(ROUTES.SPENDING_INSIGHTS_TAGS);
   };
 
+  const handleNavigateToBudget = () => {
+    history.push(ROUTES.SPENDING_INSIGHTS_BUDGET);
+  };
+
   return (
     <BasePageLayout
       title={t('insights.title')}
@@ -45,20 +49,20 @@ const InsightsPage: React.FC = () => {
           <SentryErrorBoundary>
             <InsightsListContainer>
               <TransparentIonList lines='full'>
-                <StyledItem button onClick={handleNavigateToTrending} detail hidden>
+                <StyledItem button onClick={handleNavigateToBudget} detail>
                   <div slot='start' style={{ marginRight: '0px' }}>
                     <IconContainer
-                      icon={trendingUpOutline}
+                      icon={barChartOutline}
                       bgColor='rgba(139, 95, 191, 0.1)'
                       iconColor='#8B5FBF'
                     />
                   </div>
                   <IonLabel>
-                    <h2>Trending</h2>
-                    <p>See what's trending in your spending</p>
+                    <h2>Spend vs Budget</h2>
+                    <p>Compare your spending against budgets across periods</p>
                   </IonLabel>
                 </StyledItem>
-                <StyledItem button onClick={handleNavigateToTags} detail>
+                <StyledItem button onClick={handleNavigateToTags} lines='none' detail>
                   <div slot='start' style={{ marginRight: '0px' }}>
                     <IconContainer
                       icon={statsChartOutline}

@@ -1,5 +1,6 @@
 import { IonItem, IonItemDivider, IonList } from '@ionic/react';
 import styled from 'styled-components';
+import { designSystem } from '../theme/designSystem';
 
 export const StyledIonList = styled(IonList)`
   background-color: var(--color-light);
@@ -28,6 +29,13 @@ export const TransparentIonList = styled(IonList)`
   --background: transparent;
   --ion-background-color: transparent;
   background: transparent !important;
+`;
+
+export const StyledItemHeader = styled.h2`
+  font-size: ${designSystem.typography.fontSize.lg};
+  font-weight: ${designSystem.typography.fontWeight.semibold};
+  color: ${designSystem.colors.text.primary};
+  margin: 0;
 `;
 
 export const StyledItem = styled(IonItem)`

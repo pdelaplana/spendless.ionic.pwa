@@ -16,6 +16,7 @@ import SettingsPage from '@/pages/settings/SettingsPage';
 import InsightsPage from '@/pages/spending/InsightsPage';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendAnalysisByTagsPage from '@/pages/spending/SpendAnalysisByTagsPage';
+import SpendVsBudgetPage from '@/pages/spending/SpendVsBudgetPage';
 import SpendingPage from '@/pages/spending/SpendingPage';
 import SpendingPeriodsPage from '@/pages/spending/SpendingPeriodsPage';
 import TagTransactionsPage from '@/pages/spending/TagTransactionsPage';
@@ -71,6 +72,9 @@ const SpendingRoutes = ({ userId }: { userId: string }) => {
           </Route>
           <Route path={ROUTES.SPENDING_INSIGHTS_TAGS} exact={true}>
             <SpendAnalysisByTagsPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_INSIGHTS_BUDGET} exact={true}>
+            <SpendVsBudgetPage />
           </Route>
           <Route path={ROUTES.SPENDING_INSIGHTS} exact={true}>
             <InsightsPage />

@@ -108,6 +108,10 @@ export default {
     insights: {
       title: 'Insights',
       description: 'Explore your spending to see key insights and trends',
+      spendVsBudget: {
+        title: 'Spend vs Budget',
+        subtitle: 'Track your spending against budgets across periods',
+      },
     },
     meta: {
       title: '{{title}} - {{appName}}',
