@@ -29,6 +29,11 @@ export default {
           'auth/user-not-found': 'User account not found.',
           'auth/weak-password': 'The password is too weak. Please use a stronger password.',
           'auth/email-already-in-use': 'This email is already in use. Please use a different one.',
+          'auth/popup-blocked': 'Popup was blocked by your browser. Please allow popups for this site.',
+          'auth/popup-closed-by-user': 'Sign-in was cancelled. Please try again.',
+          'auth/cancelled-popup-request': 'Only one sign-in popup can be open at a time.',
+          'auth/account-exists-with-different-credential':
+            'An account already exists with the same email address but different sign-in method.',
         },
       },
     },

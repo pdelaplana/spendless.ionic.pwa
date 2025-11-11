@@ -5,6 +5,30 @@ export default {
       loading: 'Carregando...',
       error: 'Erro',
       success: 'Sucesso',
+      errors: {
+        default: 'Ocorreu um erro. Por favor, tente novamente mais tarde.',
+        signinFailed: 'Falha no login. Verifique suas credenciais ou entre em contato com o suporte.',
+      },
+    },
+    server: {
+      errors: {
+        auth: {
+          'auth/expired-action-code':
+            'O código de redefinição de senha expirou. Por favor, solicite um novo.',
+          'auth/invalid-action-code':
+            'O código de redefinição de senha é inválido. Por favor, solicite um novo.',
+          'auth/user-disabled': 'Esta conta de usuário foi desativada.',
+          'auth/user-not-found': 'Conta de usuário não encontrada.',
+          'auth/weak-password': 'A senha é muito fraca. Por favor, use uma senha mais forte.',
+          'auth/email-already-in-use': 'Este e-mail já está em uso. Por favor, use um diferente.',
+          'auth/popup-blocked':
+            'O popup foi bloqueado pelo seu navegador. Por favor, permita popups para este site.',
+          'auth/popup-closed-by-user': 'O login foi cancelado. Por favor, tente novamente.',
+          'auth/cancelled-popup-request': 'Apenas um popup de login pode estar aberto por vez.',
+          'auth/account-exists-with-different-credential':
+            'Uma conta já existe com o mesmo endereço de e-mail, mas com um método de login diferente.',
+        },
+      },
     },
     auth: {
       signout: {

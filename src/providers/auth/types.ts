@@ -14,6 +14,7 @@ export interface AuthUser extends User {
 export interface AuthContextType {
   signup: (email: string, password: string, name?: string) => Promise<UserCredential | undefined>;
   signin: (email: string, password: string) => Promise<UserCredential | undefined>;
+  signInWithGoogle: () => Promise<UserCredential | undefined>;
   signout: () => Promise<void>;
   setProfileData: ({
     key,
@@ -35,6 +36,7 @@ export interface AuthContextType {
   user: AuthUser | null;
   account: IAccount | null;
   isSigningIn: boolean;
+  isSigningInWithGoogle: boolean;
   sendResetPasswordEmail: (email: string) => Promise<void>;
   confirmPasswordReset: (code: string, newPassword: string) => Promise<void>;
 }

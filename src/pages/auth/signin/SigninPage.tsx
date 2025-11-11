@@ -82,7 +82,7 @@ interface ISigninForm {
 
 const SigninPage: React.FC = () => {
   const { t } = useTranslation();
-  const { signin, isSigningIn, error, isAuthenticated } = useAuth();
+  const { signin, signInWithGoogle, isSigningIn, isSigningInWithGoogle, error, isAuthenticated } = useAuth();
 
   const {
     register,
@@ -102,15 +102,24 @@ const SigninPage: React.FC = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      // Navigation will be handled by the useEffect
+    } catch (e) {
+      // Error will be handled by useAuth
+    }
+  };
+
   const { push } = useIonRouter();
 
   useEffect(() => {
-    if (isAuthenticated && !isSigningIn) {
+    if (isAuthenticated && !isSigningIn && !isSigningInWithGoogle) {
       window.history.pushState(null, '', ROUTES.ROOT);
 
       push(ROUTES.ROOT, 'root', 'replace');
     }
-  }, [isAuthenticated, isSigningIn, push]);
+  }, [isAuthenticated, isSigningIn, isSigningInWithGoogle, push]);
 
   return (
     <AuthPageLayout title='Sign in'>
@@ -214,9 +223,10 @@ const SigninPage: React.FC = () => {
                     expand='block'
                     fill='outline'
                     className='ion-no-padding ion-padding-top ion-padding-bottom'
-                    isLoading={false}
-                    isDisabled={true}
-                    disabled={true}
+                    onClick={handleGoogleSignIn}
+                    isLoading={isSigningInWithGoogle}
+                    isDisabled={isSigningIn || isSigningInWithGoogle}
+                    disabled={isSigningIn || isSigningInWithGoogle}
                   >
                     <IonIcon slot='start' icon={logoGoogle} />
                   </ActionButton>
