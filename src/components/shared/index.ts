@@ -9,6 +9,7 @@ export { default as ErrorBoundary } from './base/error';
 export { default as SentryErrorBoundary } from './base/error';
 export { MutationNotificationHandler } from './base/notifications';
 export { default as LetterIcon } from './base/display/LetterIcon';
+export { default as DifferenceIndicator } from './base/display/DifferenceIndicator';
 export { PwaInstallPrompt } from './pwa';
 export { default as TagsDisplay } from './tags/TagsDisplay';
 export { IconContainer } from './IconContainer';

@@ -51,7 +51,7 @@ const Subtitle = styled.p`
 
 const SignupPage: React.FC = () => {
   const { t } = useTranslation();
-  const { signup } = useAuth();
+  const { signup, signInWithGoogle, isSigningInWithGoogle } = useAuth();
   const { showErrorNotification } = useAppNotifications();
   const [currentStep, setCurrentStep] = useState(1);
   const { push } = useIonRouter();
@@ -100,6 +100,20 @@ const SignupPage: React.FC = () => {
     }
   });
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const userCredential = await signInWithGoogle();
+      if (userCredential?.user) {
+        // Show welcome step with the user's display name from Google
+        setValue('name', userCredential.user.displayName || 'there');
+        setCurrentStep(3);
+      }
+    } catch (e) {
+      showErrorNotification(t('common.errors.signinFailed'));
+      console.error('Google sign-in error:', e);
+    }
+  };
+
   // Check if step 1 fields are valid
   const isStep1Valid = !errors.email && !errors.name && watch('email') && watch('name');
 
@@ -147,6 +161,8 @@ const SignupPage: React.FC = () => {
                   getValues={getValues}
                   onNext={handleStep1Next}
                   isValid={!!isStep1Valid}
+                  onGoogleSignIn={handleGoogleSignIn}
+                  isSigningInWithGoogle={isSigningInWithGoogle}
                 />
               )}
 

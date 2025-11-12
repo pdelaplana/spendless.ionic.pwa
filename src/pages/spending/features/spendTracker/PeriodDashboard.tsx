@@ -12,6 +12,7 @@ import { useSpendingAccount } from '../../../../providers/spendingAccount';
 import { useWallet } from '../../../../providers/wallet';
 import { ROUTES } from '../../../../routes/routes.constants';
 import { GradientBackground } from '../../../../theme';
+import InsightsCard from '../../components/common/insightsCard';
 import { PeriodActionsBar } from '../../components/common/periodActionsBar/PeriodActionsBar';
 import { PeriodSwitcher } from '../../components/common/periodSwitcher';
 import { ProfileHeader } from '../../components/common/profileHeader';
@@ -75,6 +76,7 @@ const PeriodDashboard: React.FC = () => {
         <ProfileHeader />
         {isDataRestricted && <SubscriptionRestrictedBanner onUpgrade={handleUpgrade} />}
         <PeriodSwitcher />
+        <InsightsCard />
         <WalletList onWalletClick={handleWalletClick} />
 
         <PeriodActionsBar />

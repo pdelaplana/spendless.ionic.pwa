@@ -4,6 +4,7 @@ import { ACCOUNTS_COLLECTION, mapFromFirestore } from '@/hooks/api/account/accou
 import { Preferences } from '@capacitor/preferences';
 import * as Sentry from '@sentry/react';
 import {
+  GoogleAuthProvider,
   type AuthError,
   type UserCredential,
   confirmPasswordReset as authConfirmPasswordReset,
@@ -11,6 +12,7 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateEmail as updateAuthEmail,
   updateProfile,
@@ -29,6 +31,7 @@ interface AuthState {
   error: string | null;
   isLoading: boolean;
   isSigningIn: boolean;
+  isSigningInWithGoogle: boolean;
   isProfileUpdating: boolean;
 }
 
@@ -37,6 +40,7 @@ const initialState: AuthState = {
   account: null,
   error: null,
   isSigningIn: false,
+  isSigningInWithGoogle: false,
   isLoading: true,
   isProfileUpdating: false,
 };
@@ -243,6 +247,59 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const signInWithGoogle = async (): Promise<UserCredential | undefined> => {
+    updateState({ isSigningInWithGoogle: true, error: null });
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+
+      // Log successful Google sign-in to Sentry
+      Sentry.addBreadcrumb({
+        category: 'auth',
+        message: 'User signed in with Google',
+        level: 'info',
+      });
+
+      return userCredential;
+    } catch (err) {
+      const authError = err as AuthError;
+
+      // Handle specific Google sign-in errors
+      let errorMessage = authError.message;
+
+      switch (authError.code) {
+        case 'auth/popup-blocked':
+          errorMessage = 'Popup was blocked by your browser. Please allow popups for this site.';
+          break;
+        case 'auth/popup-closed-by-user':
+          errorMessage = 'Sign-in was cancelled. Please try again.';
+          break;
+        case 'auth/cancelled-popup-request':
+          errorMessage = 'Only one sign-in popup can be open at a time.';
+          break;
+        case 'auth/account-exists-with-different-credential':
+          errorMessage = 'An account already exists with the same email address but different sign-in method.';
+          break;
+        default:
+          errorMessage = 'Failed to sign in with Google. Please try again.';
+      }
+
+      updateState({ error: errorMessage });
+
+      // Log error to Sentry
+      Sentry.captureException(authError, {
+        tags: {
+          auth_method: 'google',
+          error_code: authError.code,
+        },
+      });
+
+      throw err;
+    } finally {
+      updateState({ isSigningInWithGoogle: false });
+    }
+  };
+
   const signout = async (): Promise<void> => {
     updateState({ isLoading: true, error: null });
     try {
@@ -405,6 +462,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       value={{
         signup,
         signin,
+        signInWithGoogle,
         signout,
         setProfileData,
         getProfileData,
@@ -418,6 +476,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         user,
         account,
         isSigningIn: state.isSigningIn,
+        isSigningInWithGoogle: state.isSigningInWithGoogle,
         sendResetPasswordEmail,
         confirmPasswordReset,
       }}
