@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.4.0...v1.5.0) (2025-11-12)
+
+
+### Features
+
+* BudgetvsSpend Chart across periods ([60840c7](https://github.com/pdelaplana/spendless.ionic.pwa/commit/60840c7f5cdd8fc69faea05f936dce71baa4f43c))
+* Google Signin ([021f980](https://github.com/pdelaplana/spendless.ionic.pwa/commit/021f980190ec51f194bb7b44b0000c8ff39411c0))
+* Spending Analysis By Tags ([842eb55](https://github.com/pdelaplana/spendless.ionic.pwa/commit/842eb55300fabad66fae05d45266f2cc8234595e))
+
 # [1.4.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.3.0...v1.4.0) (2025-11-09)
 
 
