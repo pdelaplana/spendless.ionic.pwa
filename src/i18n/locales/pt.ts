@@ -114,5 +114,14 @@ export default {
       upgradeError: 'Falha ao criar sessão de checkout. Tente novamente.',
       portalError: 'Falha ao abrir portal de assinatura. Tente novamente.',
     },
+    pwa: {
+      ios: {
+        title: 'Instalar Spendless',
+        description: 'Adicione à tela inicial para acesso rápido e melhor experiência.',
+        step1: 'Toque no botão Compartilhar',
+        step2: "Role e toque em 'Adicionar à Tela Inicial'",
+        dismiss: 'Agora Não',
+      },
+    },
   },
 };

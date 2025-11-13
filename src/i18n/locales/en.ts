@@ -197,5 +197,14 @@ export default {
           'Still interested in premium features? You can upgrade anytime from Settings.',
       },
     },
+    pwa: {
+      ios: {
+        title: 'Install Spendless',
+        description: 'Add to your home screen for quick access and a better experience.',
+        step1: 'Tap the Share button',
+        step2: "Scroll and tap 'Add to Home Screen'",
+        dismiss: 'Not Now',
+      },
+    },
   },
 };
