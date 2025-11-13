@@ -530,17 +530,14 @@ function getRandomDate(start: Date, end: Date): Date {
 /**
  * Distribute expenses evenly across the period with some randomness
  */
-function generateExpenseDates(
-  count: number,
-  startDate: Date,
-  endDate: Date,
-): Date[] {
+function generateExpenseDates(count: number, startDate: Date, endDate: Date): Date[] {
   const dates: Date[] = [];
   const totalDays = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
   // Create roughly evenly distributed dates with randomness
   for (let i = 0; i < count; i++) {
-    const dayOffset = Math.floor((totalDays / count) * i) + Math.floor(Math.random() * (totalDays / count));
+    const dayOffset =
+      Math.floor((totalDays / count) * i) + Math.floor(Math.random() * (totalDays / count));
     const date = new Date(startDate);
     date.setDate(startDate.getDate() + dayOffset);
     dates.push(date);
