@@ -213,6 +213,7 @@ export async function loadSampleDataSimple(userId: string, accountId?: string) {
 }
 
 // For browser console usage
+// biome-ignore lint/suspicious/noExplicitAny: Browser console usage requires global window type extension
 (window as any).loadSampleDataSimple = loadSampleDataSimple;
 
 export default loadSampleDataSimple;

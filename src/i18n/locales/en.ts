@@ -29,7 +29,8 @@ export default {
           'auth/user-not-found': 'User account not found.',
           'auth/weak-password': 'The password is too weak. Please use a stronger password.',
           'auth/email-already-in-use': 'This email is already in use. Please use a different one.',
-          'auth/popup-blocked': 'Popup was blocked by your browser. Please allow popups for this site.',
+          'auth/popup-blocked':
+            'Popup was blocked by your browser. Please allow popups for this site.',
           'auth/popup-closed-by-user': 'Sign-in was cancelled. Please try again.',
           'auth/cancelled-popup-request': 'Only one sign-in popup can be open at a time.',
           'auth/account-exists-with-different-credential':
@@ -194,6 +195,15 @@ export default {
         contactSupport: 'Contact us at support@getspendless.com',
         stillInterested:
           'Still interested in premium features? You can upgrade anytime from Settings.',
+      },
+    },
+    pwa: {
+      ios: {
+        title: 'Install Spendless',
+        description: 'Add to your home screen for quick access and a better experience.',
+        step1: 'Tap the Share button',
+        step2: "Scroll and tap 'Add to Home Screen'",
+        dismiss: 'Not Now',
       },
     },
   },

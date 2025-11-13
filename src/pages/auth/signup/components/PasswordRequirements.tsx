@@ -10,6 +10,13 @@ interface PasswordRequirement {
 
 const requirements: PasswordRequirement[] = [
   { label: 'At least 6 characters', test: (p) => p.length >= 6 },
+  { label: 'Contains uppercase letter', test: (p) => /[A-Z]/.test(p) },
+  { label: 'Contains lowercase letter', test: (p) => /[a-z]/.test(p) },
+  { label: 'Contains number', test: (p) => /[0-9]/.test(p) },
+  {
+    label: 'Contains special character',
+    test: (p) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(p),
+  },
 ];
 
 const RequirementsList = styled.ul`

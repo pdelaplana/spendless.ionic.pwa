@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { CenterContainer } from '../../../../components/layouts';
 import { Gap } from '../../../../components/shared';
 import { SubscriptionRestrictedBanner } from '../../../../components/subscription';
+import { IosInstallPrompt } from '../../../../components/ui/IosInstallPrompt';
 import { PwaInstallPrompt } from '../../../../components/ui/PwaInstallPrompt';
 import { useCreateCheckoutSession } from '../../../../hooks/functions';
 import { STRIPE_PRICE_ID_MONTHLY } from '../../../../infrastructure/stripe';
@@ -12,6 +13,7 @@ import { useSpendingAccount } from '../../../../providers/spendingAccount';
 import { useWallet } from '../../../../providers/wallet';
 import { ROUTES } from '../../../../routes/routes.constants';
 import { GradientBackground } from '../../../../theme';
+import { isIOS } from '../../../../utils/platformDetection';
 import InsightsCard from '../../components/common/insightsCard';
 import { PeriodActionsBar } from '../../components/common/periodActionsBar/PeriodActionsBar';
 import { PeriodSwitcher } from '../../components/common/periodSwitcher';
@@ -80,7 +82,7 @@ const PeriodDashboard: React.FC = () => {
         <WalletList onWalletClick={handleWalletClick} />
 
         <PeriodActionsBar />
-        <PwaInstallPrompt />
+        {isIOS() ? <IosInstallPrompt /> : <PwaInstallPrompt />}
       </CenterContainer>
     </GradientBackground>
   );
