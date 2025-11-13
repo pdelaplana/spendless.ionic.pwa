@@ -50,6 +50,21 @@ export const Step2Password: React.FC<Step2PasswordProps> = ({
                   value: 6,
                   message: 'Password must be at least 6 characters long',
                 },
+                maxLength: {
+                  value: 4096,
+                  message: 'Password must not exceed 4096 characters',
+                },
+                validate: {
+                  hasUppercase: (value) =>
+                    /[A-Z]/.test(value ?? '') || 'Password must contain an uppercase letter',
+                  hasLowercase: (value) =>
+                    /[a-z]/.test(value ?? '') || 'Password must contain a lowercase letter',
+                  hasNumber: (value) =>
+                    /[0-9]/.test(value ?? '') || 'Password must contain a number',
+                  hasSpecialChar: (value) =>
+                    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(value ?? '') ||
+                    'Password must contain a special character',
+                },
               }}
             />
           </IonLabel>

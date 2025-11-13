@@ -4,8 +4,8 @@ import { ACCOUNTS_COLLECTION, mapFromFirestore } from '@/hooks/api/account/accou
 import { Preferences } from '@capacitor/preferences';
 import * as Sentry from '@sentry/react';
 import {
-  GoogleAuthProvider,
   type AuthError,
+  GoogleAuthProvider,
   type UserCredential,
   confirmPasswordReset as authConfirmPasswordReset,
   createUserWithEmailAndPassword,
@@ -278,7 +278,8 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
           errorMessage = 'Only one sign-in popup can be open at a time.';
           break;
         case 'auth/account-exists-with-different-credential':
-          errorMessage = 'An account already exists with the same email address but different sign-in method.';
+          errorMessage =
+            'An account already exists with the same email address but different sign-in method.';
           break;
         default:
           errorMessage = 'Failed to sign in with Google. Please try again.';

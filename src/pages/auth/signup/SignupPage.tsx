@@ -117,8 +117,14 @@ const SignupPage: React.FC = () => {
   // Check if step 1 fields are valid
   const isStep1Valid = !errors.email && !errors.name && watch('email') && watch('name');
 
-  // Check if step 2 fields are valid
-  const isStep2Valid = !errors.password && (password?.length ?? 0) >= 6;
+  // Check if step 2 fields are valid - must meet all password requirements
+  const isStep2Valid =
+    !errors.password &&
+    (password?.length ?? 0) >= 6 &&
+    /[A-Z]/.test(password ?? '') &&
+    /[a-z]/.test(password ?? '') &&
+    /[0-9]/.test(password ?? '') &&
+    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password ?? '');
 
   return (
     <AuthPageLayout title='Sign up'>

@@ -7,7 +7,8 @@ export default {
       success: 'Sucesso',
       errors: {
         default: 'Ocorreu um erro. Por favor, tente novamente mais tarde.',
-        signinFailed: 'Falha no login. Verifique suas credenciais ou entre em contato com o suporte.',
+        signinFailed:
+          'Falha no login. Verifique suas credenciais ou entre em contato com o suporte.',
       },
     },
     server: {
