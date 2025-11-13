@@ -1,3 +1,11 @@
+# [1.6.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.5.0...v1.6.0) (2025-11-13)
+
+
+### Features
+
+* Ios Install Card ([0207227](https://github.com/pdelaplana/spendless.ionic.pwa/commit/02072272ea41517fbc87b94f20b33f86d66616ea))
+* Password Complexity Improvement ([00bd4cd](https://github.com/pdelaplana/spendless.ionic.pwa/commit/00bd4cdc99fed4c1dbbb89113b0653d9a66a4df8))
+
 # [1.5.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.4.0...v1.5.0) (2025-11-12)
 
 
