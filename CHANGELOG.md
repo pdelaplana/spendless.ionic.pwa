@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.6.0...v1.7.0) (2025-12-04)
+
+
+### Features
+
+* AI Checkins ([b89082d](https://github.com/pdelaplana/spendless.ionic.pwa/commit/b89082dc42a849a3acd39f8ff09913619cb75eaf))
+
 # [1.6.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.5.0...v1.6.0) (2025-11-13)
 
 
