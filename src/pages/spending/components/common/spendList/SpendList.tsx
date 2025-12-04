@@ -1,5 +1,6 @@
-import { StyledItem, TagsDisplay } from '@/components/shared';
+import { EmptyState, LoadingState, StyledItem, TagsDisplay } from '@/components/shared';
 import type { ISpend } from '@/domain/Spend';
+import { useInfiniteScrollList } from '@/hooks/ui';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { StyledItemDivider } from '@/styles/IonList.styled';
@@ -10,21 +11,17 @@ import {
   IonInfiniteScrollContent,
   IonItemGroup,
   IonLabel,
-  IonSpinner,
 } from '@ionic/react';
 import { add, chevronForward } from 'ionicons/icons';
 import type React from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { StyledDateLabel, StyledTotalLabel } from '../../../styles/SpendingPage.styled';
 import { SpendIcon } from '../../base';
 import {
-  EmptyContainer,
-  EmptyMessage,
   ErrorContainer,
   ErrorMessage,
-  LoadingContainer,
   RetryButton,
   SpendListContainer,
   SpendListContent,
@@ -80,17 +77,12 @@ const SpendList: React.FC<SpendListProps> = ({
   const { formatCurrency } = useFormatters();
   const { account } = useSpendingAccount();
 
-  // Client-side pagination state for infinite scroll
-  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const previousDisplayCountRef = useRef(ITEMS_PER_PAGE);
+  // Use infinite scroll hook for pagination
+  const { displayCount, hasMore, handleInfiniteScroll } = useInfiniteScrollList(spending, {
+    itemsPerPage: ITEMS_PER_PAGE,
+  });
 
-  // Reset display count when spending data changes
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Reset when spending array reference changes
-  useEffect(() => {
-    setDisplayCount(ITEMS_PER_PAGE);
-    previousDisplayCountRef.current = ITEMS_PER_PAGE;
-  }, [spending]);
+  const previousDisplayCountRef = useRef(ITEMS_PER_PAGE);
 
   // Get visible grouped spending based on display count
   const visibleGroupedSpending = useMemo(() => {
@@ -113,39 +105,6 @@ const SpendList: React.FC<SpendListProps> = ({
     return visible;
   }, [groupedSpending, displayCount]);
 
-  const hasMore = displayCount < spending.length;
-
-  // Auto-load more if content doesn't fill viewport and there's more data
-  useEffect(() => {
-    if (!hasMore || isLoadingMore) return;
-
-    const checkAndLoadMore = async () => {
-      // Find the ion-content element
-      const ionContent = document.querySelector('ion-content');
-      if (!ionContent) return;
-
-      const scrollElement = await ionContent.getScrollElement();
-
-      // Check if content is scrollable
-      const isScrollable = scrollElement.scrollHeight > scrollElement.clientHeight;
-
-      if (!isScrollable && hasMore) {
-        setIsLoadingMore(true);
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        previousDisplayCountRef.current = displayCount;
-        const newDisplayCount = Math.min(displayCount + ITEMS_PER_PAGE, spending.length);
-        setDisplayCount(newDisplayCount);
-
-        setIsLoadingMore(false);
-      }
-    };
-
-    // Small delay to ensure DOM is updated
-    const timer = setTimeout(checkAndLoadMore, 300);
-    return () => clearTimeout(timer);
-  }, [displayCount, hasMore, isLoadingMore, spending.length]);
-
   const handleRetry = async () => {
     if (onRetry) {
       await onRetry();
@@ -158,28 +117,10 @@ const SpendList: React.FC<SpendListProps> = ({
     }
   };
 
-  const handleInfiniteScroll = async (ev: CustomEvent<void>) => {
-    setIsLoadingMore(true);
-
-    // Small delay to show loading state
-    await new Promise((resolve) => setTimeout(resolve, 300));
-
-    previousDisplayCountRef.current = displayCount;
-    const newDisplayCount = Math.min(displayCount + ITEMS_PER_PAGE, spending.length);
-    setDisplayCount(newDisplayCount);
-
-    setIsLoadingMore(false);
-
-    (ev.target as HTMLIonInfiniteScrollElement).complete();
-  };
-
   if (isLoading) {
     return (
       <SpendListContainer className={className}>
-        <LoadingContainer>
-          <IonSpinner name='crescent' />
-          <p style={{ marginTop: '12px', textAlign: 'center' }}>Loading</p>
-        </LoadingContainer>
+        <LoadingState message='Loading' />
       </SpendListContainer>
     );
   }
@@ -200,9 +141,7 @@ const SpendList: React.FC<SpendListProps> = ({
   if (spending.length === 0) {
     return (
       <SpendListContainer className={className}>
-        <EmptyContainer>
-          <EmptyMessage>No spending found for this period</EmptyMessage>
-        </EmptyContainer>
+        <EmptyState title='No spending found for this period' />
       </SpendListContainer>
     );
   }
@@ -271,11 +210,7 @@ const SpendList: React.FC<SpendListProps> = ({
         </GroupedTransactionsContainer>
 
         {hasMore && (
-          <IonInfiniteScroll
-            onIonInfinite={handleInfiniteScroll}
-            threshold='100px'
-            disabled={isLoadingMore}
-          >
+          <IonInfiniteScroll onIonInfinite={handleInfiniteScroll} threshold='100px'>
             <IonInfiniteScrollContent
               loadingSpinner='crescent'
               loadingText={t('spending.loadingMore') || 'Loading more...'}

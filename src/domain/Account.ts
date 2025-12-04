@@ -11,6 +11,8 @@ export interface IAccount {
   readonly subscriptionTier: SubscriptionTier;
   readonly expiresAt?: Date;
   readonly subscriptionCancelled?: boolean;
+  readonly aiCheckinEnabled?: boolean;
+  readonly lastAiCheckinAt?: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -27,6 +29,8 @@ export const createAccount = (data: Partial<CreateAccountDTO>): IAccount => ({
   subscriptionTier: data.subscriptionTier ?? 'essentials',
   expiresAt: data.expiresAt,
   subscriptionCancelled: data.subscriptionCancelled,
+  aiCheckinEnabled: data.aiCheckinEnabled ?? false,
+  lastAiCheckinAt: data.lastAiCheckinAt,
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -48,6 +52,12 @@ export const updateAccount = (account: IAccount, updates: Partial<IAccount>): IA
   ...(updates.expiresAt !== undefined && { expiresAt: updates.expiresAt }),
   ...(updates.subscriptionCancelled !== undefined && {
     subscriptionCancelled: updates.subscriptionCancelled,
+  }),
+  ...(updates.aiCheckinEnabled !== undefined && {
+    aiCheckinEnabled: updates.aiCheckinEnabled,
+  }),
+  ...(updates.lastAiCheckinAt !== undefined && {
+    lastAiCheckinAt: updates.lastAiCheckinAt,
   }),
   updatedAt: new Date(),
 });

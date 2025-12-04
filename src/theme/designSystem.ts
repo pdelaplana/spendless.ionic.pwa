@@ -2,25 +2,39 @@
 
 export const designSystem = {
   colors: {
-    // Brand Colors (from brand identity)
+    // Brand Colors (AI Financial Coach Design System)
     brand: {
-      purple: '#8B5FBF', // Primary brand color
-      purpleDark: '#7c3aed', // Purple dark variant
-      purpleLight: '#c084fc', // Purple light variant
+      primary: '#3D1B5B', // Dark, deep purple - core brand color
+      secondary: '#5D338C', // Mid-range purple for visual depth
+      accentLight: '#DDD0E6', // Very light, muted purple
     },
 
-    // Primary Purple Scale (Zip Payment inspired)
+    // Primary Purple Scale (AI Financial Coach)
     primary: {
       50: '#faf5ff',
       100: '#f3e8ff',
       200: '#e9d5ff',
-      300: '#d8b4fe',
-      400: '#c084fc',
-      500: '#8B5FBF', // Main brand purple
-      600: '#7c3aed',
-      700: '#6b21a8',
-      800: '#581c87',
-      900: '#4a044e',
+      300: '#DDD0E6', // Accent Light
+      400: '#B788DC', // Action Interactive
+      500: '#5D338C', // Secondary brand
+      600: '#3D1B5B', // Primary brand
+      700: '#2d1443',
+      800: '#1d0d2b',
+      900: '#0d0513',
+    },
+
+    // Secondary Purple Scale (for weekly cards)
+    secondary: {
+      50: '#faf5ff',
+      100: '#f3e8ff',
+      200: '#e9d5ff',
+      300: '#DDD0E6', // Accent Light
+      400: '#c9b3db',
+      500: '#B788DC', // Action Interactive
+      600: '#9966cc',
+      700: '#7b52a3',
+      800: '#5D338C', // Secondary brand
+      900: '#3D1B5B', // Primary brand
     },
 
     // Gray Scale (Brand neutrals)
@@ -248,9 +262,9 @@ export const createTypographyCSS = (scale: keyof typeof designSystem.typography.
 
 // Brand constants for easy access
 export const BRAND_COLORS = {
-  purple: designSystem.colors.brand.purple,
-  purpleDark: designSystem.colors.brand.purpleDark,
-  purpleLight: designSystem.colors.brand.purpleLight,
+  primary: designSystem.colors.brand.primary,
+  secondary: designSystem.colors.brand.secondary,
+  accentLight: designSystem.colors.brand.accentLight,
   textPrimary: designSystem.colors.text.primary,
   textSecondary: designSystem.colors.text.secondary,
   background: designSystem.colors.background,

@@ -87,11 +87,11 @@ describe('PasswordRequirements', () => {
   it('should accept various special characters', () => {
     const specialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '-', '='];
 
-    specialChars.forEach((char) => {
+    for (const char of specialChars) {
       const { unmount } = render(<PasswordRequirements password={`Pass123${char}`} />);
       expect(screen.getByText('Contains special character')).toBeInTheDocument();
       unmount();
-    });
+    }
   });
 
   it('should handle edge case passwords', () => {

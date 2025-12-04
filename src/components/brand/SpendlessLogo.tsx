@@ -44,7 +44,7 @@ const LogoContainer = styled.div<{
   align-items: center;
   cursor: ${(props) => (props.interactive ? 'pointer' : 'default')};
   transition: opacity 0.2s ease;
-  
+
   &:hover {
     opacity: ${(props) => (props.interactive ? 0.8 : 1)};
   }
@@ -61,8 +61,8 @@ const PrimaryLogo = styled.div<{ size: string; isReverse: boolean }>`
 `;
 
 const LogoAccent = styled.span<{ isReverse: boolean }>`
-  background: ${(props) => (props.isReverse ? '#ffffff' : BRAND_COLORS.purple)};
-  color: ${(props) => (props.isReverse ? BRAND_COLORS.purple : '#ffffff')};
+  background: ${(props) => (props.isReverse ? '#ffffff' : BRAND_COLORS.secondary)};
+  color: ${(props) => (props.isReverse ? BRAND_COLORS.primary : '#ffffff')};
   padding: 0.1em 0.12em;
   border-radius: 6px;
   margin: 0 1px;
@@ -116,8 +116,8 @@ const LogoIcon = styled.div<{ size: string; isReverse: boolean }>`
         return '60px';
     }
   }};
-  background: ${(props) => (props.isReverse ? '#ffffff' : BRAND_COLORS.purple)};
-  color: ${(props) => (props.isReverse ? BRAND_COLORS.purple : '#ffffff')};
+  background: ${(props) => (props.isReverse ? '#ffffff' : BRAND_COLORS.primary)};
+  color: ${(props) => (props.isReverse ? BRAND_COLORS.primary : '#ffffff')};
   border-radius: 12px;
   display: flex;
   align-items: center;

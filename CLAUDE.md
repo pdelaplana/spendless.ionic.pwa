@@ -147,6 +147,25 @@ src/
 - Validation schemas in `src/domain/validation/`
 - Consistent error messaging and UX patterns
 
+### Shared List Components (IMPORTANT)
+⚠️ **ALWAYS use shared list components and hooks when building list views!**
+
+- **Hook**: `useInfiniteScrollList` from `@/hooks/ui` - Manages pagination
+- **Components**: `DateSeparator`, `LoadingState`, `EmptyState` from `@/components/shared`
+- **Examples**: `SpendList`, `AiInsightsListPage`
+- **Documentation**: `docs/SHARED_LIST_COMPONENTS.md` (comprehensive guide)
+- **Reminders**: `docs/DEVELOPMENT_REMINDERS.md` (critical patterns to follow)
+
+**Quick Reference**:
+```tsx
+import { useInfiniteScrollList } from '@/hooks/ui';
+import { DateSeparator, LoadingState, EmptyState } from '@/components/shared';
+
+const { visibleItems, hasMore, handleInfiniteScroll } = useInfiniteScrollList(items);
+```
+
+DO NOT create custom pagination logic, loading states, or empty states. Use the shared components!
+
 ### Internationalization
 - i18next configuration with English/Portuguese support
 - Translation files in `src/i18n/locales/`
