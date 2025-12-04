@@ -12,11 +12,12 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
+  IonList,
   IonSpinner,
   useIonToast,
 } from '@ionic/react';
 import { format } from 'date-fns';
-import { cardOutline, starOutline } from 'ionicons/icons';
+import { cardOutline, checkmarkCircleOutline, starOutline } from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { TransparentIonList } from '../../styles/IonList.styled';
@@ -51,6 +52,38 @@ const ExpiryInfo = styled.div`
 const ExpiryWarning = styled(ExpiryInfo)`
   color: ${designSystem.colors.warning};
   font-weight: 500;
+`;
+
+const PremiumBenefitsSection = styled.div`
+  margin-top: ${designSystem.spacing.md};
+  padding-top: ${designSystem.spacing.md};
+  border-top: 1px solid ${designSystem.colors.gray[200]};
+`;
+
+const BenefitsSectionTitle = styled.div`
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: ${designSystem.colors.textPrimary};
+  margin-bottom: ${designSystem.spacing.sm};
+`;
+
+const BenefitItem = styled(IonItem)`
+  --background: transparent;
+  --border-color: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --min-height: 32px;
+`;
+
+const BenefitIcon = styled(IonIcon)`
+  font-size: 1.2rem;
+  color: ${designSystem.colors.success};
+  margin-right: ${designSystem.spacing.sm};
+`;
+
+const BenefitText = styled.span`
+  color: ${designSystem.colors.textSecondary};
+  font-size: 0.875rem;
 `;
 
 interface SubscriptionCardProps {
@@ -160,6 +193,40 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ account }) =
                     <ExpiryInfo>{t('subscription.essentialsDescription')}</ExpiryInfo>
                   )}
                 </TierInfo>
+
+                {subscription.isEssentials && (
+                  <PremiumBenefitsSection>
+                    <BenefitsSectionTitle>
+                      {t('subscription.premiumBenefitsTitle')}
+                    </BenefitsSectionTitle>
+                    <IonList lines='none' style={{ background: 'transparent', padding: 0 }}>
+                      <BenefitItem>
+                        <BenefitIcon icon={checkmarkCircleOutline} slot='start' />
+                        <IonLabel>
+                          <BenefitText>{t('subscription.benefits.unlimitedHistory')}</BenefitText>
+                        </IonLabel>
+                      </BenefitItem>
+                      <BenefitItem>
+                        <BenefitIcon icon={checkmarkCircleOutline} slot='start' />
+                        <IonLabel>
+                          <BenefitText>{t('subscription.benefits.aiInsights')}</BenefitText>
+                        </IonLabel>
+                      </BenefitItem>
+                      <BenefitItem>
+                        <BenefitIcon icon={checkmarkCircleOutline} slot='start' />
+                        <IonLabel>
+                          <BenefitText>{t('subscription.benefits.unlimitedWallets')}</BenefitText>
+                        </IonLabel>
+                      </BenefitItem>
+                      <BenefitItem>
+                        <BenefitIcon icon={checkmarkCircleOutline} slot='start' />
+                        <IonLabel>
+                          <BenefitText>{t('subscription.benefits.advancedAnalytics')}</BenefitText>
+                        </IonLabel>
+                      </BenefitItem>
+                    </IonList>
+                  </PremiumBenefitsSection>
+                )}
 
                 {subscription.isEssentials ? (
                   <div

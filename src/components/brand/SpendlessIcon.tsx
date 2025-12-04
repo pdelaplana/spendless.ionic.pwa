@@ -61,18 +61,18 @@ const IconContainer = styled.div<{
       case 'reverse':
         return `
           background: #ffffff;
-          color: ${BRAND_COLORS.purple};
+          color: ${BRAND_COLORS.primary};
           border: 1px solid #e4e4e7;
         `;
       case 'outline':
         return `
           background: transparent;
-          color: ${BRAND_COLORS.purple};
-          border: 2px solid ${BRAND_COLORS.purple};
+          color: ${BRAND_COLORS.primary};
+          border: 2px solid ${BRAND_COLORS.primary};
         `;
       default:
         return `
-          background: ${BRAND_COLORS.purple};
+          background: ${BRAND_COLORS.primary};
           color: #ffffff;
           border: none;
         `;
@@ -89,7 +89,7 @@ const IconContainer = styled.div<{
       ${
         props.variant === 'outline'
           ? `
-        background: ${BRAND_COLORS.purple};
+        background: ${BRAND_COLORS.primary};
         color: #ffffff;
       `
           : ''

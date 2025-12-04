@@ -1,18 +1,10 @@
+import { ClickableInfoCard } from '@/components/shared';
 import { ROUTES } from '@/routes/routes.constants';
-import { IonIcon } from '@ionic/react';
-import { analyticsOutline, chevronForward } from 'ionicons/icons';
+import { designSystem } from '@/theme/designSystem';
+import { analyticsOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import {
-  InsightsCardContainer,
-  InsightsCardContent,
-  InsightsDescription,
-  InsightsIconContainer,
-  InsightsLink,
-  InsightsTextContainer,
-  InsightsTitle,
-} from './InsightsCard.styled';
 
 interface InsightsCardProps {
   className?: string;
@@ -27,21 +19,16 @@ const InsightsCard: React.FC<InsightsCardProps> = ({ className }) => {
   };
 
   return (
-    <InsightsCardContainer className={className}>
-      <InsightsCardContent>
-        <InsightsIconContainer>
-          <IonIcon icon={analyticsOutline} />
-        </InsightsIconContainer>
-        <InsightsTextContainer>
-          <InsightsTitle>{t('insights.title')}</InsightsTitle>
-          <InsightsDescription>{t('insights.description')}</InsightsDescription>
-          <InsightsLink onClick={handleClick}>
-            Start Exploring
-            <IonIcon icon={chevronForward} />
-          </InsightsLink>
-        </InsightsTextContainer>
-      </InsightsCardContent>
-    </InsightsCardContainer>
+    <ClickableInfoCard
+      className={className}
+      icon={analyticsOutline}
+      title={t('insights.title')}
+      description={t('insights.description')}
+      linkText='Start Exploring'
+      onClick={handleClick}
+      iconBackground={designSystem.colors.primary[50]}
+      iconColor={designSystem.colors.primary[500]}
+    />
   );
 };
 

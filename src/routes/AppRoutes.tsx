@@ -13,6 +13,8 @@ import OnboardingFlowV2 from '@/pages/onboarding/OnboardingFlowV2';
 import ProfileInformationPage from '@/pages/profile/ProfileInformationPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import SettingsPage from '@/pages/settings/SettingsPage';
+import AiInsightDetailPage from '@/pages/spending/AiInsightDetailPage';
+import AiInsightsListPage from '@/pages/spending/AiInsightsListPage';
 import InsightsPage from '@/pages/spending/InsightsPage';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendAnalysisByTagsPage from '@/pages/spending/SpendAnalysisByTagsPage';
@@ -75,6 +77,12 @@ const SpendingRoutes = ({ userId }: { userId: string }) => {
           </Route>
           <Route path={ROUTES.SPENDING_INSIGHTS_BUDGET} exact={true}>
             <SpendVsBudgetPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_CHECKINS_DETAIL} exact={true}>
+            <AiInsightDetailPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_CHECKINS} exact={true}>
+            <AiInsightsListPage />
           </Route>
           <Route path={ROUTES.SPENDING_INSIGHTS} exact={true}>
             <InsightsPage />

@@ -62,9 +62,9 @@ Write-Warning "`n===================================="
 Write-Warning "DEPLOYMENT CONFIRMATION"
 Write-Warning "===================================="
 Write-Info "Source files:"
-Write-Host "  - firestore.indexes.json"
-Write-Host "  - firestore.rules"
-Write-Host "  - storage.rules"
+Write-Host "  - config/firestore.indexes.json"
+Write-Host "  - config/firestore.rules"
+Write-Host "  - config/storage.rules"
 Write-Host ""
 Write-Info "Target project: $ProductionProjectId"
 Write-Host ""
@@ -88,12 +88,6 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Copy config files to root for deployment
-Write-Info "`nCopying config files to root directory..."
-Copy-Item config\firestore.indexes.json firestore.indexes.json -Force
-Copy-Item config\firestore.rules firestore.rules -Force
-Copy-Item config\storage.rules storage.rules -Force
-
 # Display current configuration
 Write-Info "`nCurrent configuration to deploy:"
 Write-Host ""
@@ -109,10 +103,6 @@ Write-Host ""
 
 if ($DryRun) {
     Write-Success "`nDRY RUN COMPLETE - No changes were made"
-    # Clean up copied files
-    Remove-Item firestore.indexes.json -ErrorAction SilentlyContinue
-    Remove-Item firestore.rules -ErrorAction SilentlyContinue
-    Remove-Item storage.rules -ErrorAction SilentlyContinue
     exit 0
 }
 

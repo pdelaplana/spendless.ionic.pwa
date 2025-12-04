@@ -114,9 +114,115 @@ export default {
     insights: {
       title: 'Insights',
       description: 'Explore your spending to see key insights and trends',
+
+      // Premium section header
+      premiumInsights: 'Premium Insights',
+      standardInsights: 'Standard Insights',
+
       spendVsBudget: {
         title: 'Spend vs Budget',
         subtitle: 'Track your spending against budgets across periods',
+      },
+
+      aiCheckinCard: {
+        title: 'Check In with Your Financial Coach',
+        description: 'Get personalized AI insights on your spending',
+        viewInsights: 'Checkin Now',
+      },
+
+      aiInsights: {
+        title: 'Details',
+        checkinsTitle: 'Check Ins',
+        subtitle: 'Personalized AI-powered spending insights',
+        premiumRequired: 'Premium Feature',
+
+        // Actions
+        generateNew: 'Generate New Insight',
+        generating: 'Generating insights...',
+        generatingMessage: 'This may take 10-30 seconds',
+        enableFeature: 'Enable Intelligent Spending',
+        disableFeature: 'Disable Intelligent Spending',
+        lastGenerated: 'Last generated {{date}}',
+
+        // Status
+        featureStatus: 'AI Checkin Status',
+        enabled: 'Enabled',
+        disabled: 'Disabled',
+
+        // Filter types
+        all: 'All',
+        weekly: 'Weekly',
+        periodEnd: 'Period End',
+
+        // Empty states
+        noInsights: 'No insights yet',
+        noInsightsDescription: 'Generate your first insight or enable automatic insights',
+        featureDisabled: 'AI Checkin is disabled',
+        featureDisabledDescription: 'Enable AI Checkin to receive weekly and period-end insights',
+        insufficientData: 'Not enough data',
+        insufficientDataDescription: 'Add more spending transactions to generate insights',
+
+        // Settings
+        featureExplanation:
+          'When enabled, you will receive AI-generated insights weekly (every Monday) and at the end of each spending period.',
+        confirmDisable: 'Are you sure you want to disable AI Checkin?',
+
+        // Detail sections
+        overview: 'Overview',
+        totalSpending: 'Total Spending Analyzed',
+        transactionCount: 'Transactions',
+        categoriesAnalyzed: 'Categories',
+        patterns: 'Spending Patterns',
+        summary: 'Summary',
+        spendingPatterns: 'Spending Patterns',
+        overallTrend: 'Overall Trend',
+        recurringSpending: 'Recurring Spending',
+        dayPatterns: 'Day of Week Patterns',
+        unusualPurchases: 'Unusual Purchases',
+        categories: 'Categories',
+        categoryBreakdown: 'Category Breakdown',
+        topCategories: 'Top Categories',
+        tags: 'Tags',
+        tagAnalysis: 'Tag Analysis',
+        topTags: 'Top Tags',
+        tagCorrelations: 'Tag Correlations',
+        tagRecommendations: 'Tag Recommendations',
+        comparison: 'Period Comparison',
+        periodComparison: 'Period Comparison',
+        previousPeriod: 'Previous Period',
+        currentPeriod: 'Current Period',
+        changePercentage: 'Change',
+        improvements: 'Improvements',
+        concerns: 'Concerns',
+        recommendations: 'Actionable Recommendations',
+        metadata: 'Analysis Metadata',
+        categoriesAnalyzedList: 'Categories Analyzed',
+        tagsAnalyzedList: 'Tags Analyzed',
+        aiModel: 'AI Model',
+        tokensUsed: 'Tokens Used',
+        emailStatus: 'Email Status',
+
+        // Trends
+        increasing: 'Increasing',
+        decreasing: 'Decreasing',
+        stable: 'Stable',
+
+        // Feature description (free users)
+        featureDescriptionTitle: 'AI-Powered Spending Insights',
+        featureDescriptionSubtitle: 'Get personalized insights with Google Gemini AI',
+        benefitsList: {
+          personalizedAnalysis: 'Personalized spending analysis',
+          weeklyInsights: 'Weekly and period-end insights',
+          recommendations: 'AI-powered recommendations',
+          categoryBreakdown: 'Category and tag breakdowns',
+          historicalTracking: 'Historical insight tracking',
+        },
+        upgradeNow: 'Upgrade to Premium',
+
+        // Errors
+        generationFailed: 'Failed to generate insights',
+        rateLimited: 'Wait {{minutes}} minutes before generating again',
+        fetchFailed: 'Failed to load insights',
       },
     },
     meta: {
@@ -130,6 +236,15 @@ export default {
 
       // Descriptions
       essentialsDescription: 'Free plan with 30 day history',
+
+      // Premium benefits
+      premiumBenefitsTitle: 'Premium Benefits',
+      benefits: {
+        unlimitedHistory: 'Unlimited spending history',
+        aiInsights: 'AI-powered spending insights with Google Gemini',
+        unlimitedWallets: 'Unlimited wallets',
+        advancedAnalytics: 'Advanced analytics and insights',
+      },
 
       // Upgrade buttons
       upgradeMonthly: 'Upgrade Monthly ($8.99/mo)',

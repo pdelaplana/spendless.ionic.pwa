@@ -83,6 +83,104 @@ export default {
     insights: {
       title: 'Insights',
       description: 'Explore seus gastos para ver insights e tendências principais',
+
+      // Premium section header
+      premiumInsights: 'Insights Premium',
+      standardInsights: 'Insights Padrão',
+
+      spendVsBudget: {
+        title: 'Gasto vs Orçamento',
+        subtitle: 'Acompanhe seus gastos em relação aos orçamentos em períodos',
+      },
+
+      aiCheckinCard: {
+        title: 'Confira com seu coach financeiro',
+        description: 'Obtenha insights de IA personalizados sobre seus gastos',
+        viewInsights: 'Ver Insights',
+      },
+
+      aiInsights: {
+        title: 'Insights de IA',
+        checkinsTitle: 'Check-ins',
+        subtitle: 'Insights de gastos personalizados com IA',
+        premiumRequired: 'Recurso Premium',
+
+        // Actions
+        generateNew: 'Gerar Novo Insight',
+        generating: 'Gerando insights...',
+        generatingMessage: 'Isso pode levar 10-30 segundos',
+        enableFeature: 'Ativar Check-in de IA',
+        disableFeature: 'Desativar Check-in de IA',
+        lastGenerated: 'Último gerado {{date}}',
+
+        // Status
+        featureStatus: 'Status do Check-in de IA',
+        enabled: 'Ativado',
+        disabled: 'Desativado',
+
+        // Filter types
+        all: 'Todos',
+        weekly: 'Semanal',
+        periodEnd: 'Fim do Período',
+
+        // Empty states
+        noInsights: 'Ainda sem insights',
+        noInsightsDescription: 'Gere seu primeiro insight ou ative insights automáticos',
+        featureDisabled: 'Check-in de IA desativado',
+        featureDisabledDescription:
+          'Ative o Check-in de IA para receber insights semanais e ao fim do período',
+        insufficientData: 'Dados insuficientes',
+        insufficientDataDescription: 'Adicione mais transações de gastos para gerar insights',
+
+        // Settings
+        featureExplanation:
+          'Quando ativado, você receberá insights gerados por IA semanalmente (toda segunda-feira) e ao final de cada período de gastos.',
+        confirmDisable: 'Tem certeza de que deseja desativar o Check-in de IA?',
+
+        // Detail sections
+        overview: 'Visão Geral',
+        totalSpending: 'Total de Gastos Analisados',
+        transactionCount: 'Transações',
+        categoriesAnalyzed: 'Categorias',
+        spendingPatterns: 'Padrões de Gastos',
+        overallTrend: 'Tendência Geral',
+        dayPatterns: 'Padrões por Dia da Semana',
+        unusualPurchases: 'Compras Incomuns',
+        categoryBreakdown: 'Detalhamento por Categoria',
+        topCategories: 'Principais Categorias',
+        tagAnalysis: 'Análise de Tags',
+        topTags: 'Principais Tags',
+        tagCorrelations: 'Correlações de Tags',
+        periodComparison: 'Comparação de Períodos',
+        previousPeriod: 'Período Anterior',
+        currentPeriod: 'Período Atual',
+        changePercentage: 'Mudança',
+        improvements: 'Melhorias',
+        concerns: 'Preocupações',
+        recommendations: 'Recomendações Acionáveis',
+
+        // Trends
+        increasing: 'Aumentando',
+        decreasing: 'Diminuindo',
+        stable: 'Estável',
+
+        // Feature description (free users)
+        featureDescriptionTitle: 'Insights de Gastos com IA',
+        featureDescriptionSubtitle: 'Obtenha insights personalizados com Google Gemini AI',
+        benefitsList: {
+          personalizedAnalysis: 'Análise de gastos personalizada',
+          weeklyInsights: 'Insights semanais e ao fim do período',
+          recommendations: 'Recomendações com IA',
+          categoryBreakdown: 'Detalhamento por categoria e tags',
+          historicalTracking: 'Rastreamento histórico de insights',
+        },
+        upgradeNow: 'Atualizar para Premium',
+
+        // Errors
+        generationFailed: 'Falha ao gerar insights',
+        rateLimited: 'Aguarde {{minutes}} minutos antes de gerar novamente',
+        fetchFailed: 'Falha ao carregar insights',
+      },
     },
     meta: {
       title: '{{title}} - {{appName}}',
@@ -95,6 +193,15 @@ export default {
 
       // Descriptions
       essentialsDescription: 'Plano gratuito com histórico de 30 dias',
+
+      // Premium benefits
+      premiumBenefitsTitle: 'Benefícios Premium',
+      benefits: {
+        unlimitedHistory: 'Histórico de gastos ilimitado',
+        aiInsights: 'Insights de gastos com IA do Google Gemini',
+        unlimitedWallets: 'Carteiras ilimitadas',
+        advancedAnalytics: 'Análises e insights avançados',
+      },
 
       // Upgrade buttons
       upgradeMonthly: 'Atualizar Mensal ($8.99/mês)',

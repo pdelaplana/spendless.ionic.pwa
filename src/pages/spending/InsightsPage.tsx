@@ -3,11 +3,11 @@ import MainMenuContent from '@/components/menu/MainMenuContent';
 import { IconContainer } from '@/components/shared';
 import { SentryErrorBoundary } from '@/components/shared';
 import { ROUTES } from '@/routes/routes.constants';
-import { StyledItem, StyledItemHeader, TransparentIonList } from '@/styles/IonList.styled';
+import { StyledItem, TransparentIonList } from '@/styles/IonList.styled';
 import { GlassCard, GradientBackground } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
-import { IonLabel, IonListHeader } from '@ionic/react';
-import { barChartOutline, statsChartOutline, trendingUpOutline } from 'ionicons/icons';
+import { IonLabel } from '@ionic/react';
+import { barChartOutline, statsChartOutline } from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -19,11 +19,6 @@ const InsightsListContainer = styled(GlassCard)`
 const InsightsPage: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
-  const handleNavigateToTrending = () => {
-    // TODO: Navigate to trending page when implemented
-    console.log('Navigate to Trending - not yet implemented');
-  };
 
   const handleNavigateToTags = () => {
     history.push(ROUTES.SPENDING_INSIGHTS_TAGS);
@@ -58,10 +53,11 @@ const InsightsPage: React.FC = () => {
                     />
                   </div>
                   <IonLabel>
-                    <h2>Spend vs Budget</h2>
-                    <p>Compare your spending against budgets across periods</p>
+                    <h2>{t('insights.spendVsBudget.title')}</h2>
+                    <p>{t('insights.spendVsBudget.subtitle')}</p>
                   </IonLabel>
                 </StyledItem>
+
                 <StyledItem button onClick={handleNavigateToTags} lines='none' detail>
                   <div slot='start' style={{ marginRight: '0px' }}>
                     <IconContainer

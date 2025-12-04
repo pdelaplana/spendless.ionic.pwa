@@ -14,6 +14,7 @@ import { useWallet } from '../../../../providers/wallet';
 import { ROUTES } from '../../../../routes/routes.constants';
 import { GradientBackground } from '../../../../theme';
 import { isIOS } from '../../../../utils/platformDetection';
+import AiCheckinCard from '../../components/common/aiCheckinCard';
 import InsightsCard from '../../components/common/insightsCard';
 import { PeriodActionsBar } from '../../components/common/periodActionsBar/PeriodActionsBar';
 import { PeriodSwitcher } from '../../components/common/periodSwitcher';
@@ -78,6 +79,7 @@ const PeriodDashboard: React.FC = () => {
         <ProfileHeader />
         {isDataRestricted && <SubscriptionRestrictedBanner onUpgrade={handleUpgrade} />}
         <PeriodSwitcher />
+        <AiCheckinCard />
         <InsightsCard />
         <WalletList onWalletClick={handleWalletClick} />
 
