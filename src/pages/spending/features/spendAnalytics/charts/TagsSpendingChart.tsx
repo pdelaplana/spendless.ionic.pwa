@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import type { FC } from 'react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Bar } from 'react-chartjs-2';
 
 // Register Chart.js components
@@ -34,6 +35,7 @@ interface TagsSpendingChartProps {
 }
 
 export const TagsSpendingChart: FC<TagsSpendingChartProps> = ({ spending, currency }) => {
+  const { t } = useTranslation();
   const { formatCurrency } = useFormatters();
 
   const { labels, amounts } = useMemo(() => {
@@ -64,7 +66,7 @@ export const TagsSpendingChart: FC<TagsSpendingChartProps> = ({ spending, curren
     labels,
     datasets: [
       {
-        label: 'Total Spend',
+        label: t('charts.totalSpend'),
         data: amounts,
         backgroundColor: designSystem.colors.primary[500],
         borderColor: designSystem.colors.primary[600],
@@ -83,7 +85,7 @@ export const TagsSpendingChart: FC<TagsSpendingChartProps> = ({ spending, curren
       },
       title: {
         display: true,
-        text: 'Spending by Tags',
+        text: t('charts.spendingByTags'),
         font: {
           size: 16,
           weight: 700,
@@ -142,7 +144,7 @@ export const TagsSpendingChart: FC<TagsSpendingChartProps> = ({ spending, curren
             fontSize: '14px',
           }}
         >
-          No tags found in spending data
+          {t('charts.noTagsFound')}
         </div>
       </ChartContainer>
     );

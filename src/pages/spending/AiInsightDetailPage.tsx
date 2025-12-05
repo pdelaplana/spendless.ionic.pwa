@@ -349,7 +349,7 @@ const AiInsightDetailPage: React.FC = () => {
                   {insight.insights.patterns.trends &&
                     insight.insights.patterns.trends.length > 0 && (
                       <>
-                        <StatLabel>Spending Trends</StatLabel>
+                        <StatLabel>{t('insights.aiInsights.spendingTrends')}</StatLabel>
 
                         <List>
                           {insight.insights.patterns.trends.map((trend, index) => (
@@ -428,7 +428,7 @@ const AiInsightDetailPage: React.FC = () => {
 
                   {insight.insights.categories.budgetPerformance && (
                     <>
-                      <StatLabel>Budget Performance</StatLabel>
+                      <StatLabel>{t('insights.aiInsights.budgetPerformance')}</StatLabel>
                       <List>
                         <ListItem>
                           <ReactMarkdown>
@@ -496,7 +496,7 @@ const AiInsightDetailPage: React.FC = () => {
                   {insight.insights.tags.budgetRecommendations &&
                     insight.insights.tags.budgetRecommendations.length > 0 && (
                       <>
-                        <StatLabel>Budget Recommendations</StatLabel>
+                        <StatLabel>{t('insights.aiInsights.budgetRecommendations')}</StatLabel>
                         <List>
                           {insight.insights.tags.budgetRecommendations.map(
                             (recommendation, index) => (
@@ -514,7 +514,7 @@ const AiInsightDetailPage: React.FC = () => {
                   {insight.insights.tags.tagTrends &&
                     insight.insights.tags.tagTrends.length > 0 && (
                       <div>
-                        <StatLabel>Tag Trends</StatLabel>
+                        <StatLabel>{t('insights.aiInsights.tagTrends')}</StatLabel>
                         <List>
                           {insight.insights.tags.tagTrends.map((trendItem, index) => (
                             <ListItem key={generateListItemKey(trendItem.tag, index, 'tag-trend')}>
@@ -537,7 +537,7 @@ const AiInsightDetailPage: React.FC = () => {
 
                   {insight.insights.comparison.summary && (
                     <>
-                      <StatLabel>Summary</StatLabel>
+                      <StatLabel>{t('insights.aiInsights.summary')}</StatLabel>
                       <List>
                         <ListItem>
                           <ReactMarkdown>{insight.insights.comparison.summary}</ReactMarkdown>

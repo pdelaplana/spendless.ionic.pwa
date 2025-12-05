@@ -38,6 +38,8 @@ export default {
       },
     },
     spending: {
+      deleteSpend: 'Excluir Gasto',
+      deleteSpendMessage: 'Tem certeza de que deseja excluir este gasto?',
       noPeriodSelected: 'Nenhum período selecionado',
       tapToCreatePeriod: 'Toque para criar um novo período',
       activePeriod: 'Ativo',
@@ -151,6 +153,10 @@ export default {
         tagAnalysis: 'Análise de Tags',
         topTags: 'Principais Tags',
         tagCorrelations: 'Correlações de Tags',
+        spendingTrends: 'Tendências de Gastos',
+        budgetPerformance: 'Desempenho do Orçamento',
+        budgetRecommendations: 'Recomendações de Orçamento',
+        tagTrends: 'Tendências de Tags',
         periodComparison: 'Comparação de Períodos',
         previousPeriod: 'Período Anterior',
         currentPeriod: 'Período Atual',
@@ -229,6 +235,44 @@ export default {
         step2: "Role e toque em 'Adicionar à Tela Inicial'",
         dismiss: 'Agora Não',
       },
+    },
+    charts: {
+      // Títulos de Gráficos
+      spendingByCategory: 'Gastos por Categoria',
+      balanceOverTime: 'Saldo ao Longo do Tempo',
+      spendingByTags: 'Gastos por Tags',
+      budgetVsActual: 'Orçamento Total vs Gastos Reais por Período',
+
+      // Rótulos de Eixos
+      periods: 'Períodos',
+      amount: 'Valor',
+
+      // Rótulos do Velocímetro
+      remaining: 'Restante',
+      scheduled: 'Agendado',
+      spent: 'Gasto',
+      daysToGo: 'Dias Restantes',
+      remainingBudget: 'Orçamento Restante',
+
+      // Gráfico de Barras
+      totalSpend: 'Gasto Total',
+
+      // Gráfico de Orçamento
+      budget: 'Orçamento',
+      actualSpending: 'Gastos Reais',
+      actual: 'Real',
+      used: 'Usado',
+      overBudgetBy: 'Acima do orçamento em',
+      underBudgetBy: 'Abaixo do orçamento em',
+
+      // Gráfico Burndown
+      actualRemaining: 'Restante Real',
+      projectedRemaining: 'Restante Projetado',
+      idealSpendingPath: 'Caminho de Gastos Ideal',
+
+      // Estados Vazios
+      noTagsFound: 'Nenhuma tag encontrada nos dados de gastos',
+      noDataAvailable: 'Nenhum dado disponível para os períodos selecionados',
     },
   },
 };

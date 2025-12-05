@@ -69,7 +69,7 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending, currency }) => {
       },
       title: {
         display: true,
-        text: 'Spending by Category',
+        text: t('charts.spendingByCategory'),
       },
       tooltip: {
         callbacks: {

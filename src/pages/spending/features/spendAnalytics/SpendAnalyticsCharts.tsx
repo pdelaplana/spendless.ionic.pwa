@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -80,6 +81,7 @@ export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
   periodEndDate,
   selectedWallet,
 }) => {
+  const { t } = useTranslation();
   const { account, chartSpending, isFetchingChartData } = useSpendingAccount();
 
   // Default dates if not provided
@@ -111,7 +113,7 @@ export const SpendAnalyticsCharts: FC<SpendAnalyticsChartsProps> = ({
               remainingBudget={remainingBudget}
               min={0}
               max={targetSpend}
-              label='Remaining Budget'
+              label={t('charts.remainingBudget')}
               currency={account?.currency}
               endDate={endDate}
               currentSpend={currentSpending}

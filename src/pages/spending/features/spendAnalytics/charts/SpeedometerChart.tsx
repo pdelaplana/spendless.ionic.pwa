@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { IonText } from '@ionic/react';
 import { ArcElement, Chart as ChartJS, Tooltip } from 'chart.js';
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Doughnut } from 'react-chartjs-2';
 
 const ChartContainer = styled.div`
@@ -85,6 +86,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
   currentSpend = 0,
   futureSpend = 0,
 }) => {
+  const { t } = useTranslation();
   const { formatCurrency, formatDaysUntil } = useFormatters();
 
   // Calculate percentages for three segments
@@ -94,7 +96,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
   const remainingPercentage = (remainingBudget / total) * 100;
 
   const data = {
-    labels: ['Remaining', 'Scheduled', 'Spent'],
+    labels: [t('charts.remaining'), t('charts.scheduled'), t('charts.spent')],
     datasets: [
       {
         data: [remainingPercentage, futureSpendPercentage, currentSpendPercentage],
@@ -166,7 +168,7 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
   return (
     <ChartContainer>
       <DaysToGo>
-        <IonText>{formatDaysUntil(endDate)} Days To Go</IonText>
+        <IonText>{formatDaysUntil(endDate)} {t('charts.daysToGo')}</IonText>
       </DaysToGo>
       <ChartWrapper>
         <Doughnut data={data} options={options} />
