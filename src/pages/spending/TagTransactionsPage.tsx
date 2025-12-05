@@ -14,6 +14,7 @@ import { pricetag } from 'ionicons/icons';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { getTagIcon } from '../../utils/tagIconUtils';
 import { useSpendActions } from './hooks/useSpendActions';
 import { useSpendTracking } from './hooks/useSpendTracking';
 
@@ -162,7 +163,7 @@ const TagTransactionsPage: React.FC = () => {
           <SentryErrorBoundary>
             <SummaryCard>
               <TagTitleContainer>
-                <TagIcon icon={pricetag} />
+                <TagIcon icon={getTagIcon(tagName)} />
                 <TagTitle>{tagName?.toLocaleUpperCase()}</TagTitle>
               </TagTitleContainer>
 
