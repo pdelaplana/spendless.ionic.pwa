@@ -17,6 +17,7 @@ import {
 import type { FC } from 'react';
 import { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 
 // Register Chart.js components
 ChartJS.register(
@@ -54,6 +55,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
   endDate,
   currency,
 }) => {
+  const { t } = useTranslation();
   const { formatCurrency, formatDate } = useFormatters();
 
   const { labels, actualData, projectedData, idealData } = useMemo(() => {
@@ -185,7 +187,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
     labels,
     datasets: [
       {
-        label: 'Actual Remaining',
+        label: t('charts.actualRemaining'),
         data: actualData,
         borderColor: designSystem.colors.primary[500],
         backgroundColor: `${designSystem.colors.primary[500]}20`,
@@ -235,7 +237,7 @@ export const BurndownChart: FC<BurndownChartProps> = ({
       },
       title: {
         display: true,
-        text: 'Balance Over Time',
+        text: t('charts.balanceOverTime'),
         font: {
           size: 18,
           weight: 700,

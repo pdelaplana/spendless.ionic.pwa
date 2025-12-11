@@ -10,6 +10,7 @@ import {
 import type { ChartData, ChartOptions } from 'chart.js';
 import React, { use } from 'react';
 import { Bar } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useSpendingAccount } from '../../../../providers/spendingAccount';
 
@@ -53,6 +54,7 @@ interface ChartDataset {
 }
 
 const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
+  const { t } = useTranslation();
   const { account } = useSpendingAccount();
   // Create datasets for the chart
   const { datasets, labels } = React.useMemo(() => {
@@ -69,7 +71,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
     // Budget dataset (background bar)
     const budgetData = data.map((period) => period.totalBudget);
     chartDatasets.push({
-      label: 'Budget',
+      label: t('charts.budget'),
       data: budgetData,
       backgroundColor: 'rgba(139, 95, 191, 0.5)', // More transparent for background
       borderColor: '#8B5FBF',
@@ -82,7 +84,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
     // Spending dataset (foreground bar)
     const spentData = data.map((period) => period.totalSpent);
     chartDatasets.push({
-      label: 'Actual Spending',
+      label: t('charts.actualSpending'),
       data: spentData,
       backgroundColor: 'rgba(107, 76, 138, 0.8)', // Less transparent for foreground
       borderColor: '#6B4C8A',
@@ -95,7 +97,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
       datasets: chartDatasets,
       labels: periodLabels,
     };
-  }, [data]);
+  }, [data, t]);
 
   const options: ChartOptions<'bar'> = {
     responsive: true,
@@ -120,7 +122,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
       },
       title: {
         display: true,
-        text: 'Total Budget vs Actual Spending by Period',
+        text: t('charts.budgetVsActual'),
         font: {
           size: 16,
           weight: 'bold' as const,
@@ -145,7 +147,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
                 periodData.totalSpent > 0
                   ? ((periodData.totalSpent / periodData.totalBudget) * 100).toFixed(1)
                   : '0.0';
-              return `Budget: ${formatted} | Used: ${percentage}%`;
+              return `${t('charts.budget')}: ${formatted} | ${t('charts.used')}: ${percentage}%`;
             }
 
             // Spending bar (foreground)
@@ -157,10 +159,10 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
             }).format(diff);
 
             if (over) {
-              return `Actual: ${formatted} | Over budget by ${diffFormatted}`;
+              return `${t('charts.actual')}: ${formatted} | ${t('charts.overBudgetBy')} ${diffFormatted}`;
             }
 
-            return `Actual: ${formatted} | Under budget by ${diffFormatted}`;
+            return `${t('charts.actual')}: ${formatted} | ${t('charts.underBudgetBy')} ${diffFormatted}`;
           },
         },
       },
@@ -169,7 +171,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
       x: {
         title: {
           display: true,
-          text: 'Periods',
+          text: t('charts.periods'),
           font: {
             size: 14,
             weight: 'bold' as const,
@@ -189,7 +191,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
       y: {
         title: {
           display: true,
-          text: 'Amount ($)',
+          text: t('charts.amount'),
           font: {
             size: 14,
             weight: 'bold' as const,
@@ -227,7 +229,7 @@ const SpendVsBudgetChart: React.FC<SpendVsBudgetChartProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
       <ChartContainer>
-        <EmptyStateContainer>No data available for the selected periods</EmptyStateContainer>
+        <EmptyStateContainer>{t('charts.noDataAvailable')}</EmptyStateContainer>
       </ChartContainer>
     );
   }

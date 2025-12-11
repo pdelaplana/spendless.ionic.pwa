@@ -187,6 +187,10 @@ export default {
         topTags: 'Top Tags',
         tagCorrelations: 'Tag Correlations',
         tagRecommendations: 'Tag Recommendations',
+        spendingTrends: 'Spending Trends',
+        budgetPerformance: 'Budget Performance',
+        budgetRecommendations: 'Budget Recommendations',
+        tagTrends: 'Tag Trends',
         comparison: 'Period Comparison',
         periodComparison: 'Period Comparison',
         previousPeriod: 'Previous Period',
@@ -321,5 +325,43 @@ export default {
         dismiss: 'Not Now',
       },
     },
+    charts: {
+      // Chart Titles
+      spendingByCategory: 'Spending by Category',
+      balanceOverTime: 'Balance Over Time',
+      spendingByTags: 'Spending by Tags',
+      budgetVsActual: 'Total Budget vs Actual Spending by Period',
+
+      // Axis Labels
+      periods: 'Periods',
+      amount: 'Amount',
+
+      // Speedometer/Gauge Labels
+      remaining: 'Remaining',
+      scheduled: 'Scheduled',
+      spent: 'Spent',
+      daysToGo: 'Days To Go',
+      remainingBudget: 'Remaining Budget',
+
+      // Bar Chart
+      totalSpend: 'Total Spend',
+
+      // Budget Chart
+      budget: 'Budget',
+      actualSpending: 'Actual Spending',
+      actual: 'Actual',
+      used: 'Used',
+      overBudgetBy: 'Over budget by',
+      underBudgetBy: 'Under budget by',
+
+      // Burndown Chart
+      actualRemaining: 'Actual Remaining',
+      projectedRemaining: 'Projected Remaining',
+      idealSpendingPath: 'Ideal Spending Path',
+
+      // Empty States
+      noTagsFound: 'No tags found in spending data',
+      noDataAvailable: 'No data available for the selected periods',
+    },
   },
-};
+} as const;

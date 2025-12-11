@@ -1,8 +1,8 @@
 import { DifferenceIndicator, IconContainer } from '@/components/shared';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { StyledItem } from '@/styles/IonList.styled';
+import { getTagIcon } from '@/utils/tagIconUtils';
 import { IonLabel, IonProgressBar } from '@ionic/react';
-import { pricetag } from 'ionicons/icons';
 import type React from 'react';
 import styled from 'styled-components';
 
@@ -77,7 +77,11 @@ const TagSpendingListItem: React.FC<TagSpendingListItemProps> = ({
   return (
     <StyledItem button detail onClick={handleClick}>
       <div slot='start' style={{ marginRight: '0px' }}>
-        <IconContainer icon={pricetag} bgColor='rgba(139, 95, 191, 0.1)' iconColor='#8B5FBF' />
+        <IconContainer
+          icon={getTagIcon(tagName)}
+          bgColor='rgba(139, 95, 191, 0.1)'
+          iconColor='#8B5FBF'
+        />
       </div>
 
       <IonLabel>

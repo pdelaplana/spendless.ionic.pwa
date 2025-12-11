@@ -98,7 +98,7 @@ const ForgotPasswordPage: React.FC = () => {
         <Container>
           <InformationContent icon={sadOutline} title='Error Sending Reset Email'>
             <p>
-              {pageState.error || t('An error occurred while sending the reset email.')}
+              {pageState.error || 'An error occurred while sending the reset email.'}
               <br />
               Please try again or contact support if the issue persists.
             </p>

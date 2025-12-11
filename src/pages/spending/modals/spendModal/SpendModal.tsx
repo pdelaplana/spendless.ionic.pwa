@@ -101,8 +101,8 @@ const SpendModal: React.FC<SpendModalProps> = ({
       case 'delete':
         // Handle delete action
         showConfirmPrompt({
-          title: t('spend.deleteSpend'),
-          message: t('spend.deleteSpendMessage'),
+          title: t('spending.deleteSpend'),
+          message: t('spending.deleteSpendMessage'),
           onConfirm: async () => {
             onDelete(spend?.id ?? '');
             onDismiss();
@@ -275,8 +275,8 @@ const SpendModal: React.FC<SpendModalProps> = ({
             className='ion-margin-bottom ion-margin-start ion-margin-end'
             onClick={() =>
               showConfirmPrompt({
-                title: t('spend.deleteSpend'),
-                message: t('spend.deleteSpendMessage'),
+                title: t('spending.deleteSpend'),
+                message: t('spending.deleteSpendMessage'),
                 onConfirm: async () => {
                   onDelete(spend?.id ?? '');
                   onDismiss();
