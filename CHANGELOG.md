@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.8.0...v1.8.1) (2025-12-11)
+
+
+### Bug Fixes
+
+* appflow build due to heapsize max limit ([ac88f14](https://github.com/pdelaplana/spendless.ionic.pwa/commit/ac88f140e86a1ce5d1faaa7e9bf095737ff50de4))
+
 # [1.8.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.7.0...v1.8.0) (2025-12-11)
 
 
