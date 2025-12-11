@@ -16,8 +16,8 @@ import {
 } from 'chart.js';
 import type { FC } from 'react';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Line } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 
 // Register Chart.js components
 ChartJS.register(

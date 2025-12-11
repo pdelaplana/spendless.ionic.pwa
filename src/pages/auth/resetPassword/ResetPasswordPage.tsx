@@ -86,7 +86,10 @@ const ResetPasswordPage: React.FC = () => {
 
       if (error && typeof error === 'object' && 'code' in error && 'message' in error) {
         const firebaseError = error as FirebaseError;
-        errorMessage = t(`server.errors.auth.${firebaseError.code}`, firebaseError.message);
+        errorMessage = t(
+          `server.errors.auth.${firebaseError.code}` as never,
+          firebaseError.message,
+        );
 
         if (firebaseError.code === 'auth/expired-action-code') {
           setPageState({

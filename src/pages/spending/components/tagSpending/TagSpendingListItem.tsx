@@ -77,7 +77,11 @@ const TagSpendingListItem: React.FC<TagSpendingListItemProps> = ({
   return (
     <StyledItem button detail onClick={handleClick}>
       <div slot='start' style={{ marginRight: '0px' }}>
-        <IconContainer icon={getTagIcon(tagName)} bgColor='rgba(139, 95, 191, 0.1)' iconColor='#8B5FBF' />
+        <IconContainer
+          icon={getTagIcon(tagName)}
+          bgColor='rgba(139, 95, 191, 0.1)'
+          iconColor='#8B5FBF'
+        />
       </div>
 
       <IonLabel>

@@ -1,7 +1,7 @@
+import { getTagIcon } from '@/utils/tagIconUtils';
 import { IonChip, IonIcon, IonLabel } from '@ionic/react';
 import type React from 'react';
 import { styled } from 'styled-components';
-import { getTagIcon } from '@/utils/tagIconUtils';
 
 const TagsContainer = styled.div`
   display: flex;

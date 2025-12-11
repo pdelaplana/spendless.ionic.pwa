@@ -40,7 +40,7 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending, currency }) => {
 
     // Create labels with both translated category name and amount
     const labelsWithAmounts = Object.entries(categories).map(([category, amount]) => {
-      const translatedCategory = t(`spending.categories.${category}`);
+      const translatedCategory = t(`spending.categories.${category}` as never);
       return `${translatedCategory}: ${formatCurrency(amount, currency)}`;
     });
 
@@ -86,7 +86,7 @@ const SpendingChart: FC<SpendingChartProps> = ({ spending, currency }) => {
             )[categoryIndex];
 
             const amount = tooltipItem.raw as number;
-            return `${t(`spend.categories.${categoryKey}`)}: ${formatCurrency(amount, currency)}`;
+            return `${t(`spend.categories.${categoryKey}` as never)}: ${formatCurrency(amount, currency)}`;
           },
         },
       },

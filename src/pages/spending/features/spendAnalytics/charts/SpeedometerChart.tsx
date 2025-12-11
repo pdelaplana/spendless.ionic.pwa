@@ -4,8 +4,8 @@ import styled from '@emotion/styled';
 import { IonText } from '@ionic/react';
 import { ArcElement, Chart as ChartJS, Tooltip } from 'chart.js';
 import type { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Doughnut } from 'react-chartjs-2';
+import { useTranslation } from 'react-i18next';
 
 const ChartContainer = styled.div`
   position: relative;
@@ -168,7 +168,9 @@ export const SpeedometerChart: FC<SpeedometerChartProps> = ({
   return (
     <ChartContainer>
       <DaysToGo>
-        <IonText>{formatDaysUntil(endDate)} {t('charts.daysToGo')}</IonText>
+        <IonText>
+          {formatDaysUntil(endDate)} {t('charts.daysToGo')}
+        </IonText>
       </DaysToGo>
       <ChartWrapper>
         <Doughnut data={data} options={options} />
