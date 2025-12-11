@@ -1,3 +1,17 @@
+# [1.8.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.7.0...v1.8.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* build errors ([0c553d7](https://github.com/pdelaplana/spendless.ionic.pwa/commit/0c553d77fe7741107d5e6d8cd729d401af4fd70a))
+* localization fixes ([837b71b](https://github.com/pdelaplana/spendless.ionic.pwa/commit/837b71bb603a98ae02bcdce0af04aac19fc9a2c1))
+
+
+### Features
+
+* adaptive tags icon ([26346b8](https://github.com/pdelaplana/spendless.ionic.pwa/commit/26346b88bb269b11850fee59dda09bf27f98ba02))
+* add iOS platform for Appflow builds ([7079964](https://github.com/pdelaplana/spendless.ionic.pwa/commit/7079964a927c6b9e0dca05f34918f1be1969943d))
+
 # [1.7.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.6.0...v1.7.0) (2025-12-04)
 
 
