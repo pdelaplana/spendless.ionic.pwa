@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.8.1...v1.8.2) (2025-12-12)
+
+
+### Bug Fixes
+
+* ui redesign of AI Checkin page ([4942491](https://github.com/pdelaplana/spendless.ionic.pwa/commit/494249141d9961b8720074790ce5ddd27b61d8ac))
+
 ## [1.8.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.8.0...v1.8.1) (2025-12-11)
 
 
