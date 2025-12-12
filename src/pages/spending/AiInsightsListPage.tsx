@@ -9,7 +9,7 @@ import { useInfiniteScrollList } from '@/hooks/ui';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useSpendingAccount } from '@/providers/spendingAccount/useSpendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
-import { GlassCard, GradientBackground } from '@/theme/components';
+import { GradientBackground } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import {
   IonAvatar,
@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-const PageContainer = styled(GlassCard)`
+const PageContainer = styled.div`
   margin: ${designSystem.spacing.lg} ${designSystem.spacing.md};
 `;
 
