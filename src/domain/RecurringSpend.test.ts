@@ -9,7 +9,7 @@ describe('RecurringSpend domain logic', () => {
     startDate: new Date('2026-01-01T00:00:00Z'),
     description: 'Test Spend',
     amount: 100,
-    category: 'ritual',
+    category: 'rituals',
     scheduleFrequency: 'monthly',
     dayOfMonth: 1,
     isActive: true,
