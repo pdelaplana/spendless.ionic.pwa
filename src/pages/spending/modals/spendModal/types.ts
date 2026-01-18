@@ -10,7 +10,7 @@ export interface SpendFormData {
   amount: string;
   description: string;
   notes?: string;
-  recurring?: boolean;
+
   emotionalState?: string;
   satisfactionRating?: number;
   necessityRating?: number;
