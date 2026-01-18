@@ -75,6 +75,7 @@ export const usePeriodActions = () => {
       wallets, // Pass current wallets for copying
       recurringExpenses, // Pass current recurring expenses
       selectedPeriod, // Pass current period for default date calculation
+      account?.id, // Pass accountId for fetching recurring spends
     );
   };
 

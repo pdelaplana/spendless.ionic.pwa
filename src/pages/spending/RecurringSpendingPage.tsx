@@ -142,6 +142,14 @@ const RecurringSpendingPage: React.FC = () => {
                           <IonLabel>
                             <h2>{recurringSpend.description}</h2>
                             <p>{getScheduleDescription(recurringSpend)}</p>
+                            <p style={{ fontSize: '0.875rem', color: 'var(--ion-color-medium)' }}>
+                              Starts:{' '}
+                              {new Date(recurringSpend.startDate).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })}
+                            </p>
                             {recurringSpend.tags && recurringSpend.tags.length > 0 && (
                               <TagsDisplay tags={recurringSpend.tags} />
                             )}

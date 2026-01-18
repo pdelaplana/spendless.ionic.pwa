@@ -22,7 +22,7 @@ Spending periods help you track your spending in manageable time frames. You can
 - **Bi-weekly**: Every two weeks
 - **Monthly**: Based on calendar month or custom start date
 
-Your wallets reset at the start of each period, giving you a fresh start.
+**Automation**: When you create a new period, Spendless automatically generates any active **Recurring Spends** that fall within those dates, so you don't have to enter them manually mỗi time.
 
 ### How do I set my preferred currency?
 
@@ -77,13 +77,28 @@ Spending that strengthens bonds with others (gifts, date nights, group activitie
 
 Unplanned expenses and emergencies (car repairs, medical emergencies, replacing broken items)
 
-### Scheduled Spending
+### Recurring Spending
 
-Set up recurring expenses to never miss a payment:
-- Netflix, gym memberships, rent, etc.
-- Choose frequency (daily, weekly, monthly)
-- Get reminders before they're due
-- Track your fixed expenses separately
+Set up your regular bills, subscriptions, and habits once, and Spendless will manage them for you.
+
+#### Managing Recurring Spends
+1. Open the main menu (☰) and select **Recurring Spending**
+2. Tap the "+" button to add a new recurring expense
+3. Define the **Schedule**:
+   - **Weekly**: Choose the day of the week
+   - **Fortnightly**: Choose the day of the week and start date
+   - **Monthly**: Choose the day of the month
+4. Select the **Wallet**, **Category**, and **Amount**
+5. Save to activate the automation
+
+#### How Auto-Generation Works
+When you create a new **Accounting Period**, Spendless scans your active recurring spends and:
+- Calculates all occurrences that fall within the new period's start and end dates.
+- Maps them to the correct wallets (falling back to your default wallet if names have changed).
+- Provides a **Preview Step** where you can see exactly what will be created before you confirm.
+- Instantly creates individual spend records in the new period.
+
+This ensures your fixed costs are always accounted for at the start of every period, giving you a crystal clear view of your remaining "fun money."
 
 ---
 

@@ -1,10 +1,13 @@
 import { Currency } from '@/domain/Currencies';
-import type { ISpend } from '@/domain/Spend';
+import type { IRecurringSpend } from '@/domain/RecurringSpend';
+import { calculateOccurrencesInPeriod, getScheduleDescription } from '@/domain/RecurringSpend';
+import { useFetchRecurringSpends } from '@/hooks/api';
 import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
-import { IonButton, IonIcon, IonNote } from '@ionic/react';
-import { calendarOutline, trashOutline, walletOutline } from 'ionicons/icons';
+import { IonIcon, IonNote, IonSpinner } from '@ionic/react';
+import { calendarOutline, repeatOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import type { PeriodFormData } from '../hooks/useMultiStepForm';
@@ -15,35 +18,25 @@ const RecurringSection = styled.div`
   padding-right: 16px;
 `;
 
-const RecurringSectionLabel = styled.h2`
-  font-size: ${designSystem.typography.fontSize['2xl']};
-  font-weight: ${designSystem.typography.fontWeight.bold};
-  color: ${designSystem.colors.text.primary};
-  margin-bottom: ${designSystem.spacing.md};
-  text-align: center;
-`;
-
 const RecurringList = styled.div`
   margin-bottom: ${designSystem.spacing.lg};
 `;
 
-const RecurringItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: ${designSystem.spacing.md};
-  background: ${designSystem.colors.surface};
+const RecurringGroup = styled.div`
+  margin-bottom: ${designSystem.spacing.lg};
   border: 1px solid ${designSystem.colors.gray[200]};
   border-radius: ${designSystem.borderRadius.lg};
-  margin-bottom: ${designSystem.spacing.sm};
+  overflow: hidden;
 `;
 
-const RecurringInfo = styled.div`
-  flex: 1;
+const RecurringHeader = styled.div`
+  padding: ${designSystem.spacing.md};
+  background: ${designSystem.colors.gray[50]};
+  border-bottom: 1px solid ${designSystem.colors.gray[200]};
 `;
 
-const RecurringDescription = styled.div`
-  font-weight: ${designSystem.typography.fontWeight.medium};
+const RecurringTitle = styled.div`
+  font-weight: ${designSystem.typography.fontWeight.semibold};
   color: ${designSystem.colors.text.primary};
   margin-bottom: ${designSystem.spacing.xs};
 `;
@@ -55,7 +48,7 @@ const RecurringAmount = styled.div`
   margin-bottom: ${designSystem.spacing.xs};
 `;
 
-const RecurringDate = styled.div`
+const RecurringSchedule = styled.div`
   font-size: ${designSystem.typography.fontSize.sm};
   color: ${designSystem.colors.text.secondary};
   display: flex;
@@ -63,9 +56,22 @@ const RecurringDate = styled.div`
   gap: ${designSystem.spacing.xs};
 `;
 
-const DeleteButton = styled(IonButton)`
-  --color: ${designSystem.colors.danger};
-  --color-hover: ${designSystem.colors.danger};
+const OccurrencesList = styled.div`
+  background: ${designSystem.colors.surface};
+`;
+
+const OccurrenceItem = styled.div`
+  padding: ${designSystem.spacing.sm} ${designSystem.spacing.md};
+  border-bottom: 1px solid ${designSystem.colors.gray[100]};
+  display: flex;
+  align-items: center;
+  gap: ${designSystem.spacing.xs};
+  font-size: ${designSystem.typography.fontSize.sm};
+  color: ${designSystem.colors.text.secondary};
+
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const EmptyState = styled.div`
@@ -90,31 +96,63 @@ const InfoBox = styled.div`
   color: ${designSystem.colors.primary[700]};
 `;
 
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: ${designSystem.spacing.xl};
+`;
+
+const SummaryBox = styled.div`
+  background: ${designSystem.colors.success[50]};
+  border: 1px solid ${designSystem.colors.success[200]};
+  border-radius: ${designSystem.borderRadius.md};
+  padding: ${designSystem.spacing.md};
+  margin-top: ${designSystem.spacing.lg};
+  font-size: ${designSystem.typography.fontSize.sm};
+  color: ${designSystem.colors.success[700]};
+  font-weight: ${designSystem.typography.fontWeight.medium};
+`;
+
 interface StepRecurringExpensesProps {
   formData: PeriodFormData;
-  currentRecurringExpenses?: ISpend[];
-  onRemoveRecurringExpense: (expenseId: string) => void;
+  accountId: string;
 }
 
-const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
-  formData,
-  currentRecurringExpenses = [],
-  onRemoveRecurringExpense,
-}) => {
+const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({ formData, accountId }) => {
   const { t } = useTranslation();
-  const { showNotification } = useAppNotifications();
   const currency = Currency.USD; // TODO: Get from user preferences
 
-  // Use the recurring expenses from form data which already have calculated dates
-  const recurringExpenses = formData.recurringExpenses || [];
+  // Fetch recurring spends from the new collection
+  const { data: recurringSpends = [], isLoading } = useFetchRecurringSpends(accountId);
 
-  const handleRemoveExpense = (expenseId: string) => {
-    const expense = recurringExpenses.find((e) => e.id === expenseId);
-    if (expense) {
-      onRemoveRecurringExpense(expenseId);
-      showNotification(`Removed "${expense.description}" from recurring expenses`);
+  // Calculate all occurrences for each recurring spend within the new period
+  const recurringExpensesWithOccurrences = useMemo(() => {
+    if (!formData.startAt || !formData.endAt) {
+      return [];
     }
-  };
+
+    const periodStart = new Date(formData.startAt);
+    const periodEnd = new Date(formData.endAt);
+
+    const results = recurringSpends
+      .filter((rs) => rs.isActive)
+      .map((rs) => {
+        const occurrences = calculateOccurrencesInPeriod(rs, periodStart, periodEnd);
+
+        return {
+          recurringSpend: rs,
+          occurrences,
+        };
+      })
+      .filter((item) => item.occurrences.length > 0);
+
+    return results;
+  }, [recurringSpends, formData.startAt, formData.endAt]);
+
+  const totalSpends = useMemo(() => {
+    return recurringExpensesWithOccurrences.reduce((sum, item) => sum + item.occurrences.length, 0);
+  }, [recurringExpensesWithOccurrences]);
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('en-US', {
@@ -124,51 +162,87 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
     });
   };
 
+  // Helper function to get wallet name for a recurring spend
+  const getWalletName = (recurringSpend: IRecurringSpend): string => {
+    // Create wallet name map from formData.wallets (same logic as useGenerateRecurringSpends)
+    const walletNameMap = new Map<string, string>();
+    let defaultWalletName = '';
+
+    for (const wallet of formData.wallets) {
+      walletNameMap.set(wallet.name.toLowerCase().trim(), wallet.name);
+      if (wallet.isDefault) {
+        defaultWalletName = wallet.name;
+      }
+    }
+
+    // For now, we can't easily look up the old wallet name from walletId
+    // So we'll just use the default wallet or show "Wallet" as placeholder
+    // The actual generation will map by name when it runs
+    return defaultWalletName || 'Default Wallet';
+  };
+
+  if (isLoading) {
+    return (
+      <RecurringSection>
+        <LoadingContainer>
+          <IonSpinner />
+        </LoadingContainer>
+      </RecurringSection>
+    );
+  }
+
   return (
     <RecurringSection>
       <InfoBox>
-        📅 These expenses from your current period are marked as recurring. They will be copied to
-        your new period, maintaining their relative position within the period (e.g., if an expense
-        was 7 days into the period, it will be 7 days into the new period). You can remove any you
-        don't want to copy.
+        📅 These are your active recurring expenses. The system will automatically create spend
+        records for each occurrence within your new period. Review the dates below to see exactly
+        what will be created.
       </InfoBox>
 
-      {recurringExpenses.length === 0 ? (
+      {recurringExpensesWithOccurrences.length === 0 ? (
         <EmptyState>
           <EmptyIcon icon={walletOutline} />
           <h3>No recurring expenses</h3>
-          <p>You don't have any recurring expenses from your current period to copy over.</p>
+          <p>
+            You don't have any active recurring expenses set up. You can add them from the Recurring
+            Spending page.
+          </p>
         </EmptyState>
       ) : (
-        <RecurringList>
-          {recurringExpenses.map((expense) => (
-            <RecurringItem key={expense.id}>
-              <RecurringInfo>
-                <RecurringDescription>{expense.description}</RecurringDescription>
-                <RecurringAmount>{currency.format(expense.amount)}</RecurringAmount>
-                <RecurringDate>
-                  <IonIcon icon={calendarOutline} />
-                  {formatDate(expense.originalDate)} → {formatDate(expense.newDate)}
-                </RecurringDate>
-              </RecurringInfo>
-              <DeleteButton
-                fill='clear'
-                size='small'
-                onClick={() => expense.id && handleRemoveExpense(expense.id)}
-              >
-                <IonIcon icon={trashOutline} />
-              </DeleteButton>
-            </RecurringItem>
-          ))}
-        </RecurringList>
-      )}
+        <>
+          <RecurringList>
+            {recurringExpensesWithOccurrences.map((item) => (
+              <RecurringGroup key={item.recurringSpend.id}>
+                <RecurringHeader>
+                  <RecurringTitle>{item.recurringSpend.description}</RecurringTitle>
+                  <RecurringAmount>{currency.format(item.recurringSpend.amount)}</RecurringAmount>
+                  <RecurringSchedule>
+                    <IonIcon icon={repeatOutline} />
+                    {getScheduleDescription(item.recurringSpend)}
+                  </RecurringSchedule>
+                  <RecurringSchedule>
+                    <IonIcon icon={walletOutline} style={{ fontSize: '14px' }} />
+                    {getWalletName(item.recurringSpend)}
+                  </RecurringSchedule>
+                </RecurringHeader>
+                <OccurrencesList>
+                  {item.occurrences.map((date) => (
+                    <OccurrenceItem key={date.getTime()}>
+                      <IonIcon icon={calendarOutline} />
+                      {formatDate(date)}
+                    </OccurrenceItem>
+                  ))}
+                </OccurrencesList>
+              </RecurringGroup>
+            ))}
+          </RecurringList>
 
-      {recurringExpenses.length > 0 && (
-        <IonNote>
-          {recurringExpenses.length} recurring expense
-          {recurringExpenses.length > 1 ? 's ' : ' '}
-          will be copied to your new period
-        </IonNote>
+          <SummaryBox>
+            ✨ {totalSpends} spend record{totalSpends !== 1 ? 's' : ''} will be automatically
+            created from {recurringExpensesWithOccurrences.length} recurring expense
+            {recurringExpensesWithOccurrences.length !== 1 ? 's' : ''}
+          </SummaryBox>
+        </>
       )}
     </RecurringSection>
   );

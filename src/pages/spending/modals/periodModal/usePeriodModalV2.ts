@@ -13,6 +13,7 @@ export const usePeriodModalV2 = (): {
     currentWallets?: IWallet[],
     currentRecurringExpenses?: ISpend[],
     currentPeriod?: IPeriod,
+    accountId?: string,
   ) => Promise<{ role: string }>;
 } => {
   const [inputs, setInputs] = useState<{
@@ -20,6 +21,7 @@ export const usePeriodModalV2 = (): {
     currentWallets?: IWallet[];
     currentRecurringExpenses?: ISpend[];
     currentPeriod?: IPeriod;
+    accountId?: string;
     onSave?: (period: Partial<IPeriod>) => void;
   }>();
 
@@ -28,6 +30,7 @@ export const usePeriodModalV2 = (): {
     currentWallets: inputs?.currentWallets,
     currentRecurringExpenses: inputs?.currentRecurringExpenses,
     currentPeriod: inputs?.currentPeriod,
+    accountId: inputs?.accountId || '',
     onSave: inputs?.onSave,
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     onDismiss: (data: any, role: string) => dismiss(data, role),
@@ -40,12 +43,14 @@ export const usePeriodModalV2 = (): {
       currentWallets?: IWallet[],
       currentRecurringExpenses?: ISpend[],
       currentPeriod?: IPeriod,
+      accountId?: string,
     ) => {
       setInputs({
         period,
         currentWallets,
         currentRecurringExpenses,
         currentPeriod,
+        accountId,
         onSave,
       });
       return new Promise((resolve) => {
