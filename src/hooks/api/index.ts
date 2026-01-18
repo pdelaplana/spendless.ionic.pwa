@@ -2,3 +2,4 @@ export * from './period';
 export * from './account';
 export * from './spend';
 export * from './wallet';
+export * from './recurringSpend';

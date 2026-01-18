@@ -57,6 +57,20 @@
       ]
     },
     {
+      "collectionGroup": "recurringSpending",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "description",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "aiInsights",
       "queryScope": "COLLECTION",
       "fields": [

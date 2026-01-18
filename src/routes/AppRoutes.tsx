@@ -16,6 +16,7 @@ import SettingsPage from '@/pages/settings/SettingsPage';
 import AiInsightDetailPage from '@/pages/spending/AiInsightDetailPage';
 import AiInsightsListPage from '@/pages/spending/AiInsightsListPage';
 import InsightsPage from '@/pages/spending/InsightsPage';
+import RecurringSpendingPage from '@/pages/spending/RecurringSpendingPage';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendAnalysisByTagsPage from '@/pages/spending/SpendAnalysisByTagsPage';
 import SpendVsBudgetPage from '@/pages/spending/SpendVsBudgetPage';
@@ -65,6 +66,9 @@ const SpendingRoutes = ({ userId }: { userId: string }) => {
           </Route>
           <Route path={ROUTES.SPENDING_SCHEDULED} exact={true}>
             <ScheduledSpendingPage />
+          </Route>
+          <Route path={ROUTES.SPENDING_RECURRING} exact={true}>
+            <RecurringSpendingPage />
           </Route>
           <Route path={ROUTES.SPENDING_PERIODS} exact={true}>
             <SpendingPeriodsPage />

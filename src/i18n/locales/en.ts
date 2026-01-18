@@ -102,6 +102,39 @@ export default {
         description: 'Start tracking your spending by creating your first period.',
       },
     },
+    recurringSpend: {
+      title: 'Recurring Spending',
+      empty: {
+        title: 'No Recurring Spending',
+        description:
+          'Set up recurring expenses like subscriptions, rent, or bills to track them automatically.',
+        action: 'Add Recurring Spend',
+      },
+      list: {
+        title: 'Recurring Spending',
+        addButton: 'Add new recurring spend',
+      },
+      modal: {
+        description: {
+          label: 'What is this for?',
+          placeholder: 'e.g., Netflix, Rent, Insurance',
+          required: 'Description is required',
+        },
+        wallet: {
+          label: 'Wallet',
+          placeholder: 'Select wallet',
+          required: 'Wallet is required',
+        },
+        delete: {
+          title: 'Delete Recurring Spend',
+          message: 'Are you sure you want to delete this recurring spend?',
+        },
+        unsaved: {
+          title: 'Unsaved Changes',
+          message: 'You have unsaved changes. Are you sure you want to close this form?',
+        },
+      },
+    },
     wallet: {
       noWalletSelected: 'No wallet selected',
       selectWalletToViewSpending: 'Please select a wallet to view spending details.',
