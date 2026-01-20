@@ -64,6 +64,8 @@ export const useWalletModal = (): {
       });
       return new Promise((resolve) => {
         present({
+          initialBreakpoint: 1,
+          breakpoints: [0, 0.75, 1],
           onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
             if (ev.detail.role) {
               resolve({ role: ev.detail.role });
