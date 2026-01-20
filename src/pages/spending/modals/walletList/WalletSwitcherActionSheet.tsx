@@ -76,14 +76,7 @@ const WalletSwitcherActionSheet: React.FC<WalletSwitcherActionSheetProps> = ({
   const overallUsage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
 
   return (
-    <IonModal
-      ref={modal}
-      isOpen={isOpen}
-      onDidDismiss={onDismiss}
-      breakpoints={[0, 0.25, 0.5, 0.75]}
-      initialBreakpoint={0.5}
-      backdropDismiss={true}
-    >
+    <IonModal ref={modal} isOpen={isOpen} onDidDismiss={onDismiss} backdropDismiss={true}>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Switch Wallet</IonTitle>

@@ -66,8 +66,6 @@ export const useRecurringSpendActions = () => {
       {
         suggestedTags,
         currency: account?.currency,
-        initialBreakpoint: 0.99,
-        breakpoints: [0, 0.5, 0.99],
       },
     );
   };
@@ -90,8 +88,6 @@ export const useRecurringSpendActions = () => {
       {
         suggestedTags,
         currency: account?.currency,
-        initialBreakpoint: 0.99,
-        breakpoints: [0, 0.5, 0.99],
       },
     );
   };
