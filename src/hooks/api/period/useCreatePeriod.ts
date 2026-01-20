@@ -93,12 +93,20 @@ export function useCreatePeriod() {
         },
       );
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] });
       queryClient.invalidateQueries({ queryKey: ['useFetchPeriods', variables.accountId] });
 
-      // Also invalidate wallet queries for the new period
-      queryClient.invalidateQueries({ queryKey: ['wallets', variables.accountId] });
+      // Also invalidate wallet and spending queries for the new period
+      queryClient.invalidateQueries({ queryKey: ['wallets', variables.accountId, data.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['useFetchSpendingByAccountId', variables.accountId, data.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['useFetchSpendingForCharts', variables.accountId, data.id],
+      });
+      queryClient.invalidateQueries({ queryKey: ['spending', variables.accountId, data.id] });
+      queryClient.invalidateQueries({ queryKey: ['spendingTotals', variables.accountId, data.id] });
     },
     onError: (error) => {
       logError(error);

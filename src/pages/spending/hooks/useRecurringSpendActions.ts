@@ -11,9 +11,9 @@ import { useWallet } from '@/providers/wallet';
 import { useRecurringSpendModal } from '../modals/recurringSpendModal';
 
 export const useRecurringSpendActions = () => {
-  const { open: openRecurringSpendModal } = useRecurringSpendModal();
   const { account, usedSpendingTags } = useSpendingAccount();
   const { wallets, selectedWallet } = useWallet();
+  const { open: openRecurringSpendModal } = useRecurringSpendModal(wallets);
 
   const { data: recurringSpends = [], refetch: refetchRecurringSpends } = useFetchRecurringSpends(
     account?.id,
@@ -61,7 +61,6 @@ export const useRecurringSpendActions = () => {
     const suggestedTags = usedSpendingTags;
     openRecurringSpendModal(
       recurringSpend,
-      wallets,
       saveRecurringSpendHandler,
       deleteRecurringSpendHandler,
       {
@@ -86,7 +85,6 @@ export const useRecurringSpendActions = () => {
         dayOfMonth: 1,
         isActive: true,
       }),
-      wallets,
       saveRecurringSpendHandler,
       deleteRecurringSpendHandler,
       {

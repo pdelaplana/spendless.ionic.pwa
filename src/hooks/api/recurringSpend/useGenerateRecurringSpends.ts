@@ -68,7 +68,20 @@ export function useGenerateRecurringSpends() {
 
           // Step 3: Fetch wallets for the period
           const walletsPath = getWalletCollectionPath(accountId, periodId);
-          const walletsSnapshot = await getDocs(collection(db, walletsPath));
+          let walletsSnapshot = await getDocs(collection(db, walletsPath));
+
+          // Simple retry logic if no wallets found (wait for Firestore propagation)
+          if (walletsSnapshot.empty) {
+            console.log('⏳ No wallets found initially, retrying in 500ms...');
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            walletsSnapshot = await getDocs(collection(db, walletsPath));
+          }
+
+          if (walletsSnapshot.empty) {
+            console.warn(
+              '⚠️ No wallets found even after retry. Recurring spends might not be assigned correctly.',
+            );
+          }
 
           // Create mapping: wallet name -> wallet ID
           const walletNameToId = new Map<string, string>();
@@ -110,20 +123,11 @@ export function useGenerateRecurringSpends() {
                 walletId = recurringSpend.walletId;
               } else {
                 // Wallet not found by ID, try to find by name
-                // First get the wallet name from the recurring spend's wallet
-                const oldWalletPath = getWalletCollectionPath(
-                  accountId,
-                  recurringSpend.walletId.split('/').pop() || '',
-                );
-                const oldWalletDoc = await getDoc(
-                  doc(db, `${oldWalletPath}/${recurringSpend.walletId}`),
-                ).catch(() => null);
-
-                if (oldWalletDoc?.exists()) {
-                  const oldWallet = mapWalletFromFirestore(oldWalletDoc.id, oldWalletDoc.data());
-                  const walletName = oldWallet.name.toLowerCase().trim();
-                  walletId = walletNameToId.get(walletName) || '';
-                }
+                // To do this, we'd need to know which period the old wallet was in.
+                // Since we don't store that, we'll try to look it up in the wallets mapping
+                // if we can at least get the wallet name from the GLOBAL recurring spend record
+                // (Note: Currently we don't store the name in the recurring record,
+                // so this fallback is limited. In the future we should store the name).
               }
             }
 
@@ -175,12 +179,19 @@ export function useGenerateRecurringSpends() {
     },
     onSuccess: (data, variables) => {
       console.log('✅ useGenerateRecurringSpends onSuccess:', data);
-      // Invalidate spend queries to refresh the UI
+      // Invalidate all spend-related queries for this account and period
+      // We use partial keys to match queries with different date ranges
       queryClient.invalidateQueries({
-        queryKey: ['useFetchSpendingByPeriod', variables.accountId, variables.periodId],
+        queryKey: ['useFetchSpendingByAccountId', variables.accountId, variables.periodId],
       });
       queryClient.invalidateQueries({
-        queryKey: ['useFetchSpendingTotalsByPeriod', variables.accountId, variables.periodId],
+        queryKey: ['useFetchSpendingForCharts', variables.accountId, variables.periodId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['spending', variables.accountId, variables.periodId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['spendingTotals', variables.accountId, variables.periodId],
       });
     },
     onError: (error) => {

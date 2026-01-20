@@ -5,10 +5,11 @@ import type { OverlayEventDetail } from '@ionic/react/dist/types/components/reac
 import { useState } from 'react';
 import RecurringSpendModal from './RecurringSpendModal';
 
-export const useRecurringSpendModal = (): {
+export const useRecurringSpendModal = (
+  wallets: IWallet[],
+): {
   open: (
     recurringSpend: IRecurringSpend,
-    wallets: IWallet[],
     onSave: (recurringSpend: IRecurringSpend) => void,
     onDelete: (recurringSpendId: string) => void,
     options?: {
@@ -21,7 +22,6 @@ export const useRecurringSpendModal = (): {
 } => {
   const [inputs, setInputs] = useState<{
     recurringSpend?: IRecurringSpend;
-    wallets?: IWallet[];
     onSave?: (recurringSpend: IRecurringSpend) => void;
     onDelete?: (recurringSpendId: string) => void;
     suggestedTags?: string[];
@@ -30,7 +30,7 @@ export const useRecurringSpendModal = (): {
 
   const [present, dismiss] = useIonModal(RecurringSpendModal, {
     recurringSpend: inputs?.recurringSpend,
-    wallets: inputs?.wallets || [],
+    wallets,
     onSave: inputs?.onSave,
     onDelete: inputs?.onDelete,
     suggestedTags: inputs?.suggestedTags,
@@ -42,7 +42,6 @@ export const useRecurringSpendModal = (): {
   return {
     open: (
       recurringSpend: IRecurringSpend,
-      wallets: IWallet[],
       onSave: (recurringSpend: IRecurringSpend) => void,
       onDelete: (recurringSpendId: string) => void,
       options?: {
@@ -54,7 +53,6 @@ export const useRecurringSpendModal = (): {
     ) => {
       setInputs({
         recurringSpend,
-        wallets,
         onSave,
         onDelete,
         suggestedTags: options?.suggestedTags,

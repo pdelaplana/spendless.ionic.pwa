@@ -306,6 +306,11 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
         dayOfMonth: recurringSpend.dayOfMonth,
         isActive: recurringSpend.isActive,
       });
+
+      // If the recurring spend has a walletId that's not in our current wallets list,
+      // it might be from an old period. We should try to find a current wallet with the same name.
+      // However, we don't have the old wallet name here.
+      // For now, let's just make sure the dropdown is aware of the current value.
     }
   }, [recurringSpend, reset]);
 
@@ -348,7 +353,7 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
                   getValues={getValues}
                   error={errors.walletId}
                   validationRules={{ required: t('recurringSpend.modal.wallet.required') }}
-                  optionsList={wallets.map((wallet) => ({
+                  optionsList={wallets.map((wallet: IWallet) => ({
                     label: wallet.name,
                     value: wallet.id || '',
                   }))}
