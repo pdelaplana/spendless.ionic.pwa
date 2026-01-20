@@ -11,6 +11,7 @@ import {
   informationCircleOutline,
   logOutOutline,
   personOutline,
+  repeatOutline,
   settingsOutline,
 } from 'ionicons/icons';
 import styled from 'styled-components';
@@ -147,6 +148,17 @@ const MainMenuContent: React.FC = () => {
 
       {/* Menu Items */}
       <MenuSection>
+        <SectionTitle>Spending</SectionTitle>
+        <IonList lines='none'>
+          <ModernMenuItem button routerLink={ROUTES.SPENDING_RECURRING}>
+            <IonIcon slot='start' icon={repeatOutline} />
+            <IonLabel>
+              <h2>Recurring Spending</h2>
+              <p>Manage recurring expenses</p>
+            </IonLabel>
+          </ModernMenuItem>
+        </IonList>
+
         <SectionTitle>Account</SectionTitle>
         <IonList lines='none'>
           <ModernMenuItem button routerLink='/profile/info'>

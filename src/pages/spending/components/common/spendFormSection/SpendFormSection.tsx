@@ -72,19 +72,6 @@ const SpendFormSection: React.FC<SpendFormSectionProps<SpendFormData>> = ({
           />
         </IonLabel>
       </IonItem>
-
-      <IonItem>
-        <IonLabel>
-          <ToggleFormField
-            name='recurring'
-            label='Copy to Next Period'
-            register={register}
-            setValue={setValue}
-            getValues={getValues}
-            error={errors.recurring}
-          />
-        </IonLabel>
-      </IonItem>
     </TransparentIonList>
   );
 };

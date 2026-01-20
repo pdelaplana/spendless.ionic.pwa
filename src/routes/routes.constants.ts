@@ -12,6 +12,7 @@ export const ROUTES = {
   SPENDING: '/spending',
   SPENDING_WALLET: '/spending/wallet',
   SPENDING_SCHEDULED: '/spending/scheduled',
+  SPENDING_RECURRING: '/spending/recurring',
   SPENDING_PERIODS: '/spending/periods',
   SPENDING_INSIGHTS: '/spending/insights',
   SPENDING_INSIGHTS_TAGS: '/spending/insights/tags',

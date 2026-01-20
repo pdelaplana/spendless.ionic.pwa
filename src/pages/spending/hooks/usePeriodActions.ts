@@ -66,15 +66,19 @@ export const usePeriodActions = () => {
     openPeriodModal(
       undefined, // No existing period for new period creation
       async (data) => {
-        await startPeriod({
+        const newPeriod = await startPeriod({
           ...data,
         });
         resetMutationState();
+        if (newPeriod) {
+          setSelectedPeriod(newPeriod);
+        }
         refetchSpending();
       },
       wallets, // Pass current wallets for copying
       recurringExpenses, // Pass current recurring expenses
       selectedPeriod, // Pass current period for default date calculation
+      account?.id, // Pass accountId for fetching recurring spends
     );
   };
 

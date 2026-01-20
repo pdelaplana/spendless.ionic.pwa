@@ -42,6 +42,7 @@ interface PeriodModalV2Props {
   currentWallets?: IWallet[];
   currentRecurringExpenses?: ISpend[];
   currentPeriod?: IPeriod;
+  accountId: string;
   onSave: (period: Partial<IPeriod>) => void;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
@@ -52,6 +53,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   currentWallets,
   currentRecurringExpenses,
   currentPeriod,
+  accountId,
   onSave,
   onDismiss,
 }) => {
@@ -186,6 +188,14 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   };
 
   const handleNext = () => {
+    // Sync React Hook Form values to multi-step form before navigating
+    const currentFormValues = {
+      goals: watchedGoals || formData.goals || '',
+      startAt: watchedStartAt || formData.startAt || '',
+      endAt: watchedEndAt || formData.endAt || '',
+    };
+    updateBasics(currentFormValues);
+
     // Navigation validation is handled by useMultiStepForm's canGoNext()
     nextStep();
   };
@@ -316,16 +326,15 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
           />
         );
       case 2:
-        return (
-          <StepRecurringExpenses
-            formData={formData}
-            currentRecurringExpenses={currentRecurringExpenses || []}
-            onRemoveRecurringExpense={removeRecurringExpense}
-          />
-        );
+        return <StepRecurringExpenses formData={formData} accountId={accountId} />;
       case 3:
         return (
-          <StepReview formData={formData} totalBudget={totalBudget} onEditStep={handleEditStep} />
+          <StepReview
+            formData={formData}
+            totalBudget={totalBudget}
+            accountId={accountId}
+            onEditStep={handleEditStep}
+          />
         );
       default:
         return null;

@@ -5,12 +5,14 @@ import { db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { collection, doc, setDoc, writeBatch } from 'firebase/firestore';
+import { useGenerateRecurringSpends } from '../recurringSpend/useGenerateRecurringSpends';
 import { getWalletCollectionPath, mapWalletToFirestore } from '../wallet/walletUtils';
 import { ACCOUNTS_COLLECTION, PERIODS_SUBCOLLECTION, mapToFirestore } from './periodUtils';
 
 export function useCreatePeriod() {
   const queryClient = useQueryClient();
   const { logError } = useLogging();
+  const { mutateAsync: generateRecurringSpends } = useGenerateRecurringSpends();
 
   return useMutation({
     mutationFn: async ({ accountId, data }: { accountId: string; data: CreatePeriodDTO }) => {
@@ -67,6 +69,21 @@ export function useCreatePeriod() {
           // Commit the batch
           await batch.commit();
 
+          // Generate recurring spends after period creation
+          try {
+            const result = await generateRecurringSpends({
+              accountId,
+              periodId: periodWithId.id || '',
+            });
+            console.log(`✅ Generated ${result.generated} recurring spends for new period`);
+            span.setAttributes({
+              recurringSpendCount: result.generated,
+            });
+          } catch (error) {
+            console.error('⚠️ Failed to generate recurring spends:', error);
+            // Don't fail the period creation if recurring spend generation fails
+          }
+
           span.setAttributes({
             periodId: periodWithId.id,
             periodName: periodWithId.name,
@@ -76,12 +93,20 @@ export function useCreatePeriod() {
         },
       );
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['useFetchCurrentPeriod', variables.accountId] });
       queryClient.invalidateQueries({ queryKey: ['useFetchPeriods', variables.accountId] });
 
-      // Also invalidate wallet queries for the new period
-      queryClient.invalidateQueries({ queryKey: ['wallets', variables.accountId] });
+      // Also invalidate wallet and spending queries for the new period
+      queryClient.invalidateQueries({ queryKey: ['wallets', variables.accountId, data.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['useFetchSpendingByAccountId', variables.accountId, data.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['useFetchSpendingForCharts', variables.accountId, data.id],
+      });
+      queryClient.invalidateQueries({ queryKey: ['spending', variables.accountId, data.id] });
+      queryClient.invalidateQueries({ queryKey: ['spendingTotals', variables.accountId, data.id] });
     },
     onError: (error) => {
       logError(error);
