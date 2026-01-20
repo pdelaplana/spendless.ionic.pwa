@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.9.0...v1.9.1) (2026-01-20)
+
+
+### Bug Fixes
+
+* remove modal breakpoints ([cfaf3e6](https://github.com/pdelaplana/spendless.ionic.pwa/commit/cfaf3e63ab6c609590ee35f89b313e1a465d2f01))
+
 # [1.9.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.8.2...v1.9.0) (2026-01-20)
 
 
