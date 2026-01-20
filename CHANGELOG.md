@@ -1,3 +1,18 @@
+# [1.9.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.8.2...v1.9.0) (2026-01-20)
+
+
+### Bug Fixes
+
+* add breakpoints to all modals ([9924c25](https://github.com/pdelaplana/spendless.ionic.pwa/commit/9924c250baf4e2915820cc1fbc04dd05cd548b06))
+* Remove recurring field from spend form and modal ([81a206c](https://github.com/pdelaplana/spendless.ionic.pwa/commit/81a206cb7ffe7d65e5aa04b4b88589e7bce197fa))
+* unit tests ([3e52c66](https://github.com/pdelaplana/spendless.ionic.pwa/commit/3e52c665743da6f04a82c2b37dad839d78b44fe1))
+
+
+### Features
+
+* Automate recurring spend generation for new periods ([aba506d](https://github.com/pdelaplana/spendless.ionic.pwa/commit/aba506de317a63ce57f6fbe154e21a30a17059ef))
+* Recurring Spend ([a07fcd7](https://github.com/pdelaplana/spendless.ionic.pwa/commit/a07fcd7cb3ba7ef4c2e7f76f22782c6049fa61f2))
+
 ## [1.8.2](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.8.1...v1.8.2) (2025-12-12)
 
 
