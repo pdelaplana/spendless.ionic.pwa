@@ -197,8 +197,6 @@ export const usePeriodListModal = (): {
         // Wait for state updates
         setTimeout(() => {
           present({
-            initialBreakpoint: 0.99,
-            breakpoints: [0, 0.5, 0.99],
             onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
               if (ev.detail.role) {
                 resolve({ period: ev.detail.data, role: ev.detail.role });

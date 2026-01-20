@@ -15,8 +15,6 @@ export const useRecurringSpendModal = (
     options?: {
       suggestedTags?: string[];
       currency?: string;
-      initialBreakpoint?: number;
-      breakpoints?: number[];
     },
   ) => Promise<{ role: string }>;
 } => {
@@ -47,8 +45,6 @@ export const useRecurringSpendModal = (
       options?: {
         suggestedTags?: string[];
         currency?: string;
-        initialBreakpoint?: number;
-        breakpoints?: number[];
       },
     ) => {
       setInputs({
@@ -60,8 +56,6 @@ export const useRecurringSpendModal = (
       });
       return new Promise((resolve) => {
         present({
-          initialBreakpoint: options?.initialBreakpoint,
-          breakpoints: options?.breakpoints,
           onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
             if (ev.detail.role) {
               resolve({ role: ev.detail.role });

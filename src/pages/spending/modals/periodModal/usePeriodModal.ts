@@ -27,8 +27,6 @@ export const usePeriodModal = (): {
       });
       return new Promise((resolve) => {
         present({
-          initialBreakpoint: 0.99,
-          breakpoints: [0, 0.5, 0.99],
           onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => {
             if (ev.detail.role) {
               resolve({ role: ev.detail.role });
