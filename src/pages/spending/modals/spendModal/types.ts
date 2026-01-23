@@ -12,6 +12,7 @@ export interface SpendFormData {
   notes?: string;
 
   emotionalState?: string;
+  emotionalContext?: string[];
   satisfactionRating?: number;
   necessityRating?: number;
   personalReflections?: Array<{

@@ -58,20 +58,6 @@ const SpendFormSection: React.FC<SpendFormSectionProps<SpendFormData>> = ({
           />
         </IonLabel>
       </IonItem>
-
-      <IonItem>
-        <IonLabel>
-          <TextAreaFormField
-            label='Additional notes'
-            name='notes'
-            placeholder='Any extra thoughts or notes?'
-            register={register}
-            error={errors.notes}
-            fill='outline'
-            validationRules={spendValidation.notes}
-          />
-        </IonLabel>
-      </IonItem>
     </TransparentIonList>
   );
 };
