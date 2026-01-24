@@ -18,6 +18,7 @@ export const ROUTES = {
   SPENDING_INSIGHTS_TAGS: '/spending/insights/tags',
   SPENDING_INSIGHTS_TAG_TRANSACTIONS: '/spending/insights/tags/:tagName',
   SPENDING_INSIGHTS_BUDGET: '/spending/insights/budget',
+  SPENDING_INSIGHTS_MOOD: '/spending/insights/mood',
   SPENDING_CHECKINS: '/spending/checkins',
   SPENDING_CHECKINS_DETAIL: '/spending/checkins/:insightId',
   PROFILE: '/profile',

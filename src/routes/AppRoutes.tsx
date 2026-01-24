@@ -16,6 +16,7 @@ import SettingsPage from '@/pages/settings/SettingsPage';
 import AiInsightDetailPage from '@/pages/spending/AiInsightDetailPage';
 import AiInsightsListPage from '@/pages/spending/AiInsightsListPage';
 import InsightsPage from '@/pages/spending/InsightsPage';
+import MoodAnalysisPage from '@/pages/spending/MoodAnalysisPage';
 import RecurringSpendingPage from '@/pages/spending/RecurringSpendingPage';
 import ScheduledSpendingPage from '@/pages/spending/ScheduledSpendingPage';
 import SpendAnalysisByTagsPage from '@/pages/spending/SpendAnalysisByTagsPage';
@@ -80,6 +81,9 @@ const SpendingRoutes = () => {
         </Route>
         <Route path={ROUTES.SPENDING_INSIGHTS_BUDGET} exact={true}>
           <SpendVsBudgetPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_INSIGHTS_MOOD} exact={true}>
+          <MoodAnalysisPage />
         </Route>
         <Route path={ROUTES.SPENDING_CHECKINS_DETAIL} exact={true}>
           <AiInsightDetailPage />
