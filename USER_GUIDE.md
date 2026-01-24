@@ -46,8 +46,17 @@ Wallets are spending categories that help you organize your money. Think of them
 2. Select the wallet
 3. Enter the amount
 4. Choose a mindful category
-5. Add a note if you'd like
+5. Select an emoji to describe your mood
 6. Tap "Save"
+
+### Emotional Awareness
+
+Spendless helps you understand the "why" behind your spending by tracking your emotional state:
+
+1.  **Select your Mood**: When adding a spend, select the emoji that best describes how you feel (Happy, Stressed, Tired, etc.).
+2.  **1-Tap Context**: Use the "Context Chips" below the mood selection to quickly add reasons for your feeling (e.g., "Celebrating a win", "Rough day at work").
+3.  **Custom Contexts**: Tap the "+" chip to add your own personal phrases. Spendless will remember these for next time!
+4.  **Notes Sync**: Tapping a context chip automatically adds it to your notes field. You can still type custom notes alongside them.
 
 ### Mindful Categories
 
@@ -99,6 +108,20 @@ When you create a new **Accounting Period**, Spendless scans your active recurri
 - Instantly creates individual spend records in the new period.
 
 This ensures your fixed costs are always accounted for at the start of every period, giving you a crystal clear view of your remaining "fun money."
+
+### Mood Analysis & Insights
+
+Gain deeper understanding of your habits by visiting the Mood Analysis dashboard:
+
+1.  Open the main menu (☰) and select **Insights**.
+2.  Tap on **Mood Analysis**.
+3.  **Interactive Pie Chart**: See your total spending grouped by emotion.
+    -   **Drill-down**: Tap any mood segment (like "Stressed") to see the specific contextual phrases driving that spending.
+    -   **Back Navigation**: Use the back arrow next to the title to return to the high-level mood overview.
+4.  **Data-Driven Insights**: Scroll down to see automated highlights:
+    -   **Highest Spending Mood**: Identifying which emotion leads to your biggest expenses.
+    -   **Largest Average Purchase**: Which moods are associated with higher individual costs.
+    -   **Emotional Spending Alerts**: A proactive warning if a significant portion of your spending is driven by negative emotions.
 
 ---
 
@@ -283,6 +306,13 @@ Absolutely! Use the Export Data feature in Settings to download all your informa
 - Use notes to remember what purchases brought value
 - Focus on awareness, not judgment
 - Track the "why" not just the "what"
+
+### Managing Emotional Spending
+
+- **Identify Triggers**: Use the Mood Analysis chart to find out if specific situations (like "Late night/Early morning") lead to regretful purchases.
+- **Pause with a Breath**: If you notice you're selecting "Stressed" or "Angry" before a purchase, try taking a 5-minute break before hitting "Save."
+- **Celebrate Positive Patterns**: Notice which purchases made while feeling "Happy" or "Grateful" brought the most lasting value.
+- **Review Regularly**: Use the Mood Insights card at the end of each period to set intentions for the next one.
 
 ---
 
