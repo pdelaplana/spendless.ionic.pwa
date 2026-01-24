@@ -4,21 +4,21 @@ import { SentryErrorBoundary } from '@/components/shared';
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { GlassCard, GradientBackground } from '@/theme/components';
-import { designSystem } from '@/theme/designSystem';
 import type React from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { designSystem } from '../../theme';
 import { MoodInsightsCard, MoodSpendingChart } from './components/moodSpending';
 
-const ListWrapper = styled(GlassCard)`
+const ContentWrapper = styled(GlassCard)`
   margin: ${designSystem.spacing.lg} ${designSystem.spacing.md};
   padding: ${designSystem.spacing.lg};
 `;
 
 const MoodAnalysisPage: React.FC = () => {
-  const { t } = useTranslation();
   const { chartSpending, account } = useSpendingAccount();
+  const { t } = useTranslation();
 
   // Filter current period spending (all wallets)
   const filteredSpending = useMemo(() => {
@@ -28,7 +28,7 @@ const MoodAnalysisPage: React.FC = () => {
 
   return (
     <BasePageLayout
-      title='Mood Analysis'
+      title={t('moodAnalysis.title', 'Mood Analysis')}
       showHeader={true}
       showBackButton={true}
       defaultBackButtonHref={ROUTES.SPENDING_INSIGHTS}
@@ -40,15 +40,15 @@ const MoodAnalysisPage: React.FC = () => {
       <GradientBackground>
         <CenterContainer>
           <SentryErrorBoundary>
-            <ListWrapper>
+            <ContentWrapper>
               <MoodSpendingChart
                 spending={filteredSpending}
                 currency={account?.currency || 'USD'}
               />
-            </ListWrapper>
-            <ListWrapper>
+            </ContentWrapper>
+            <ContentWrapper>
               <MoodInsightsCard spending={filteredSpending} currency={account?.currency || 'USD'} />
-            </ListWrapper>
+            </ContentWrapper>
           </SentryErrorBoundary>
         </CenterContainer>
       </GradientBackground>

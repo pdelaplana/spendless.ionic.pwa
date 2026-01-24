@@ -120,13 +120,19 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
     }
   }, [isAddingContext]);
 
+  const isEmotionSelected = useCallback(
+    (emotion: string) => emotionalState === emotion.toLowerCase(),
+    [emotionalState],
+  );
+
+  const isContextSelected = useCallback(
+    (context: string) => emotionalContext?.includes(context),
+    [emotionalContext],
+  );
+
   const emotionSelectHandler = useCallback(
     (emotion: string) => {
       setValue('emotionalState', emotion, { shouldDirty: true });
-      // Clear context when switching moods if the current context doesn't belong to the new mood?
-      // Actually, better to keep it if it's generic, but let's clear it for simplicity or keep it if it matches.
-      // For now, let's just keep it and let the user toggle.
-      // setValue('emotionalContext', [] as any, { shouldDirty: true });
     },
     [setValue],
   );
@@ -139,7 +145,7 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
       let nextContexts: string[];
       let nextNotes: string;
 
-      if (current.includes(context)) {
+      if (isContextSelected(context)) {
         nextContexts = current.filter((c) => c !== context);
         // Remove from notes
         const escaped = context.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -154,7 +160,7 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
       setValue('emotionalContext', nextContexts, { shouldDirty: true });
       setValue('notes', nextNotes, { shouldDirty: true });
     },
-    [emotionalContext, setValue, getValues],
+    [emotionalContext, setValue, getValues, isContextSelected],
   );
 
   const handleAddContext = useCallback(async () => {
@@ -177,14 +183,14 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
     ].map((item) => (
       <EmotionOption
         key={item.label}
-        selected={item.value === emotionalState}
+        selected={isEmotionSelected(item.value)}
         onClick={() => emotionSelectHandler(item.value)}
       >
         <span className='emotion-icon'>{item.icon}</span>
         <span>{item.label}</span>
       </EmotionOption>
     ));
-  }, [emotionalState, emotionSelectHandler]);
+  }, [isEmotionSelected, emotionSelectHandler]);
 
   const contextOptions = useMemo(() => {
     if (!emotionalState) return null;
@@ -201,7 +207,7 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
         {allContexts.map((ctx) => (
           <ContextChip
             key={ctx}
-            selected={emotionalContext.includes(ctx)}
+            selected={isContextSelected(ctx)}
             onClick={() => toggleContextHandler(ctx)}
           >
             {ctx}
@@ -247,7 +253,7 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
     );
   }, [
     emotionalState,
-    emotionalContext,
+    isContextSelected,
     toggleContextHandler,
     customContexts,
     onAddCustomContext,

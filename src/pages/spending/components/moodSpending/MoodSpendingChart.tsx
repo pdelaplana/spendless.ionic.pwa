@@ -15,14 +15,15 @@ import type { Context } from 'chartjs-plugin-datalabels';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { arrowBackOutline } from 'ionicons/icons';
 import type React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { MOOD_COLORS, MOOD_EMOJIS } from './constants';
+
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
-
 const ChartContainer = styled.div`
   width: 100%;
   height: 400px;
@@ -63,27 +64,14 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
   const { t } = useTranslation();
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
 
-  // Colors for moods
-  const moodColors: Record<string, string> = useMemo(
-    () => ({
-      happy: '#4caf50',
-      stressed: '#ff9800',
-      tired: '#9c27b0',
-      sad: '#2196f3',
-      angry: '#f44336',
-      neutral: '#9e9e9e',
-    }),
-    [],
-  );
-
   const moodLabels: Record<string, string> = useMemo(
     () => ({
-      happy: `😊 ${t('moods.happy', 'Happy')}`,
-      stressed: `😰 ${t('moods.stressed', 'Stressed')}`,
-      tired: `😴 ${t('moods.tired', 'Tired')}`,
-      sad: `😔 ${t('moods.sad', 'Sad')}`,
-      angry: `😡 ${t('moods.angry', 'Angry')}`,
-      neutral: `😐 ${t('moods.neutral', 'Neutral')}`,
+      happy: `${MOOD_EMOJIS.happy} ${t('moods.happy', 'Happy')}`,
+      stressed: `${MOOD_EMOJIS.stressed} ${t('moods.stressed', 'Stressed')}`,
+      tired: `${MOOD_EMOJIS.tired} ${t('moods.tired', 'Tired')}`,
+      sad: `${MOOD_EMOJIS.sad} ${t('moods.sad', 'Sad')}`,
+      angry: `${MOOD_EMOJIS.angry} ${t('moods.angry', 'Angry')}`,
+      neutral: `${MOOD_EMOJIS.neutral} ${t('moods.neutral', 'Neutral')}`,
     }),
     [t],
   );
@@ -94,13 +82,12 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
 
     for (const s of spending) {
       const mood = s.emotionalState?.toLowerCase() || 'neutral';
-      // Ensure we only aggregate known moods or put them in 'neutral'
-      const targetMood = moodColors[mood] ? mood : 'neutral';
+      const targetMood = MOOD_COLORS[mood] ? mood : 'neutral';
       aggregation[targetMood] = (aggregation[targetMood] || 0) + s.amount;
     }
 
     return aggregation;
-  }, [spending, moodColors]);
+  }, [spending]);
 
   // Enhanced labels with amounts
   const moodLabelsWithAmounts = useMemo(() => {
@@ -157,6 +144,10 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
   }, [contextData, currency]);
 
   const chartData: ChartData<'pie'> = useMemo(() => {
+    if (!moodData || moodData.length === 0) {
+      return { datasets: [], labels: [] };
+    }
+
     if (selectedMood && contextData) {
       const keys = Object.keys(contextData);
       const labels = keys.map((k) => contextLabelsWithAmounts[k]);
@@ -164,7 +155,7 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
 
       // Generate some colors for context phrases
       const backgroundColors = keys.map((_, i) => {
-        const baseColor = moodColors[selectedMood];
+        const baseColor = MOOD_COLORS[selectedMood];
         // Simple luminosity adjustment or different shades
         return `${baseColor}${Math.floor(((keys.length - i) / keys.length) * 200 + 55)
           .toString(16)
@@ -190,20 +181,22 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
       datasets: [
         {
           data: Object.values(moodData),
-          backgroundColor: Object.keys(moodData).map((m) => moodColors[m]),
+          backgroundColor: Object.keys(moodData).map((m) => MOOD_COLORS[m]),
           borderColor: '#ffffff',
           borderWidth: 2,
         },
       ],
     };
-  }, [
-    moodData,
-    contextData,
-    selectedMood,
-    moodLabelsWithAmounts,
-    contextLabelsWithAmounts,
-    moodColors,
-  ]);
+  }, [moodData, contextData, selectedMood, moodLabelsWithAmounts, contextLabelsWithAmounts]);
+
+  const isMoodSelected = useCallback(
+    (mood: string) => selectedMood === mood.toLowerCase(),
+    [selectedMood],
+  );
+
+  const isSignificant = useCallback((value: number, total: number) => {
+    return total > 0 && value / total > 0.1;
+  }, []);
 
   // Handle responsiveness for legend position
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -218,13 +211,16 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+
       plugins: {
         legend: {
           position: isMobile ? 'bottom' : ('left' as const),
           labels: {
             usePointStyle: false,
             padding: 20,
+            boxWidth: 10,
           },
+          fullSize: true,
         },
         tooltip: {
           callbacks: {
@@ -255,9 +251,9 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
           // Only show if value is significant (e.g., > 10% of total)
           display: (context: Context) => {
             const dataset = context.dataset;
-            const total = (dataset.data as number[]).reduce((a, b) => a + b, 0);
+            const total = (dataset.data as number[]).reduce((a, b: number) => a + b, 0);
             const value = dataset.data[context.dataIndex] as number;
-            return value / total > 0.1;
+            return isSignificant(value, total);
           },
         },
       },
@@ -269,10 +265,10 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
         }
       },
     }),
-    [isMobile, currency, moodData, selectedMood],
+    [isMobile, currency, moodData, selectedMood, isSignificant],
   );
 
-  if (spending.length === 0) {
+  if (!spending || spending.length === 0) {
     return (
       <ChartContainer>
         <EmptyStateContainer>{t('charts.noDataAvailable')}</EmptyStateContainer>
@@ -289,7 +285,7 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
           </IonButton>
         )}
         <h3 style={{ margin: 0 }}>
-          {selectedMood ? moodLabels[selectedMood] : 'Spending per Mood'}
+          {selectedMood ? moodLabels[selectedMood] : t('moodSpending.title', 'All Moods')}
         </h3>
       </HeaderWrapper>
       <ChartWrapper>
