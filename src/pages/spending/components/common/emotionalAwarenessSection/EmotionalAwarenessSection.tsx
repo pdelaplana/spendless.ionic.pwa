@@ -108,7 +108,7 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
   customContexts,
   onAddCustomContext,
 }) => {
-  const emotionalState = useWatch({ name: 'emotionalState', control }) as string;
+  const emotionalState = (useWatch({ name: 'emotionalState', control }) as string)?.toLowerCase();
   const emotionalContext = (useWatch({ name: 'emotionalContext', control }) || []) as string[];
   const [isAddingContext, setIsAddingContext] = useState(false);
   const [newContext, setNewContext] = useState('');
