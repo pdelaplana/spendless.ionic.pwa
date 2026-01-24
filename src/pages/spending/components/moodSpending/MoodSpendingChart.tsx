@@ -1,8 +1,17 @@
 import type { ISpend } from '@/domain/Spend';
 import { designSystem } from '@/theme/designSystem';
 import { IonButton, IonIcon } from '@ionic/react';
-import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
+import {
+  type ActiveElement,
+  ArcElement,
+  type ChartEvent,
+  Chart as ChartJS,
+  Legend,
+  Tooltip,
+  type TooltipItem,
+} from 'chart.js';
 import type { ChartData, ChartOptions } from 'chart.js';
+import type { Context } from 'chartjs-plugin-datalabels';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { arrowBackOutline } from 'ionicons/icons';
 import type React from 'react';
@@ -219,7 +228,7 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
         },
         tooltip: {
           callbacks: {
-            label: (context: any) => {
+            label: (context: TooltipItem<'pie'>) => {
               const value = context.parsed;
               const formatted = new Intl.NumberFormat('en-US', {
                 style: 'currency',
@@ -244,7 +253,7 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
             }).format(value);
           },
           // Only show if value is significant (e.g., > 10% of total)
-          display: (context: any) => {
+          display: (context: Context) => {
             const dataset = context.dataset;
             const total = (dataset.data as number[]).reduce((a, b) => a + b, 0);
             const value = dataset.data[context.dataIndex] as number;
@@ -252,7 +261,7 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
           },
         },
       },
-      onClick: (_: any, elements: any[]) => {
+      onClick: (_: ChartEvent, elements: ActiveElement[]) => {
         if (!selectedMood && elements.length > 0) {
           const index = elements[0].index;
           const moodKeys = Object.keys(moodData);
