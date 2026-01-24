@@ -38,7 +38,7 @@ export const createSpend = (data: Partial<CreateSpendDTO>): ISpend => ({
   recurring: Boolean(data.recurring ?? false), // Ensure boolean type
   periodId: data.periodId ?? '',
   walletId: data.walletId ?? '',
-  emotionalState: data.emotionalState ?? 'Neutral',
+  emotionalState: data.emotionalState ?? 'neutral',
   emotionalContext: data.emotionalContext ?? [],
   satisfactionRating: data.satisfactionRating ?? 0,
   necessityRating: data.necessityRating ?? 0,

@@ -16,6 +16,7 @@ export const mapToFirestore = (account: IAccount): DocumentData => ({
   subscriptionCancelled: account.subscriptionCancelled ?? null,
   aiCheckinEnabled: account.aiCheckinEnabled ?? false,
   lastAiCheckinAt: account.lastAiCheckinAt ? Timestamp.fromDate(account.lastAiCheckinAt) : null,
+  customEmotionalContexts: account.customEmotionalContexts ?? {},
   createdAt: Timestamp.fromDate(account.createdAt),
   updatedAt: Timestamp.fromDate(account.updatedAt),
 });
@@ -37,6 +38,7 @@ export const mapFromFirestore = (id: string, data: DocumentData): IAccount => {
     subscriptionCancelled: data.subscriptionCancelled ?? undefined,
     aiCheckinEnabled: data.aiCheckinEnabled ?? false,
     lastAiCheckinAt: data.lastAiCheckinAt ? data.lastAiCheckinAt.toDate() : undefined,
+    customEmotionalContexts: data.customEmotionalContexts ?? {},
     createdAt: data.createdAt.toDate(),
     updatedAt: data.updatedAt.toDate(),
   };

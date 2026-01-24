@@ -56,59 +56,55 @@ const ProfileRoutes: React.FC = () => {
   );
 };
 
-const SpendingRoutes = ({ userId }: { userId: string }) => {
+const SpendingRoutes = () => {
   return (
-    <SpendingAccountProvider userId={userId}>
-      <WalletProvider>
-        <Switch>
-          <Route path={ROUTES.SPENDING_WALLET} exact={true}>
-            <WalletSpendingPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_SCHEDULED} exact={true}>
-            <ScheduledSpendingPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_RECURRING} exact={true}>
-            <RecurringSpendingPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_PERIODS} exact={true}>
-            <SpendingPeriodsPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_INSIGHTS_TAG_TRANSACTIONS} exact={true}>
-            <TagTransactionsPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_INSIGHTS_TAGS} exact={true}>
-            <SpendAnalysisByTagsPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_INSIGHTS_BUDGET} exact={true}>
-            <SpendVsBudgetPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_CHECKINS_DETAIL} exact={true}>
-            <AiInsightDetailPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_CHECKINS} exact={true}>
-            <AiInsightsListPage />
-          </Route>
-          <Route path={ROUTES.SPENDING_INSIGHTS} exact={true}>
-            <InsightsPage />
-          </Route>
-          <Route path={ROUTES.SPENDING} exact={true}>
-            <SpendingPage />
-          </Route>
-        </Switch>
-      </WalletProvider>
-    </SpendingAccountProvider>
+    <WalletProvider>
+      <Switch>
+        <Route path={ROUTES.SPENDING_WALLET} exact={true}>
+          <WalletSpendingPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_SCHEDULED} exact={true}>
+          <ScheduledSpendingPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_RECURRING} exact={true}>
+          <RecurringSpendingPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_PERIODS} exact={true}>
+          <SpendingPeriodsPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_INSIGHTS_TAG_TRANSACTIONS} exact={true}>
+          <TagTransactionsPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_INSIGHTS_TAGS} exact={true}>
+          <SpendAnalysisByTagsPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_INSIGHTS_BUDGET} exact={true}>
+          <SpendVsBudgetPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_CHECKINS_DETAIL} exact={true}>
+          <AiInsightDetailPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_CHECKINS} exact={true}>
+          <AiInsightsListPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_INSIGHTS} exact={true}>
+          <InsightsPage />
+        </Route>
+        <Route path={ROUTES.SPENDING} exact={true}>
+          <SpendingPage />
+        </Route>
+      </Switch>
+    </WalletProvider>
   );
 };
 
-const SettingsRoutes: React.FC<{ userId: string }> = ({ userId }) => {
+const SettingsRoutes: React.FC = () => {
   return (
-    <SpendingAccountProvider userId={userId}>
-      <Switch>
-        <ProtectedRoute path={ROUTES.SETTINGS} exact={true}>
-          <SettingsPage />
-        </ProtectedRoute>
-      </Switch>
-    </SpendingAccountProvider>
+    <Switch>
+      <ProtectedRoute path={ROUTES.SETTINGS} exact={true}>
+        <SettingsPage />
+      </ProtectedRoute>
+    </Switch>
   );
 };
 
@@ -205,20 +201,15 @@ const AppRoutes: React.FC = () => {
             exact={true}
           />
 
-          {/* Onboarding routes - require authentication */}
+          {/* Protected routes */}
           <ProtectedRoute path={ROUTES.ONBOARDING} exact={true}>
-            <SpendingAccountProvider userId={user?.uid ?? ''}>
-              <OnboardingFlow />
-            </SpendingAccountProvider>
+            <OnboardingFlow />
           </ProtectedRoute>
 
           <ProtectedRoute path={ROUTES.ONBOARDING_V2} exact={true}>
-            <SpendingAccountProvider userId={user?.uid ?? ''}>
-              <OnboardingFlowV2 />
-            </SpendingAccountProvider>
+            <OnboardingFlowV2 />
           </ProtectedRoute>
 
-          {/* Protected routes */}
           <ProtectedRoute path={ROUTES.PROFILE}>
             <ProfileRoutes />
           </ProtectedRoute>
@@ -236,11 +227,11 @@ const AppRoutes: React.FC = () => {
           </ProtectedRoute>
 
           <ProtectedRoute path={ROUTES.SETTINGS}>
-            <SettingsRoutes userId={user?.uid ?? ''} />
+            <SettingsRoutes />
           </ProtectedRoute>
 
           <ProtectedRoute path={ROUTES.SPENDING}>
-            <SpendingRoutes userId={user?.uid ?? ''} />
+            <SpendingRoutes />
           </ProtectedRoute>
 
           <Route path={ROUTES.ROOT} exact={true}>

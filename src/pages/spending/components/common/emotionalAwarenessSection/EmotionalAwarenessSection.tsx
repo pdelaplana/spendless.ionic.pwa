@@ -2,8 +2,9 @@ import TextAreaFormField from '@/components/forms/fields/TextAreaFormField';
 import { spendValidation } from '@/domain/validation';
 import type { SpendFormData } from '@/pages/spending/modals/spendModal';
 import { StyledIonCard } from '@/styles/IonCard.styled';
-import { IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/react';
-import { useCallback, useMemo } from 'react';
+import { IonCardContent, IonCardHeader, IonCardTitle, IonIcon } from '@ionic/react';
+import { add } from 'ionicons/icons';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   type Control,
   type FieldErrors,
@@ -52,9 +53,9 @@ const EmotionOption = styled.div<{ selected?: boolean }>`
   ${(props) =>
     props.selected &&
     `
-    border-color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
-    color: #667eea;
+    border-color: var(--ion-color-primary);
+    background: var(--ion-color-primary-tiny, rgba(var(--ion-color-primary-rgb), 0.1));
+    color: var(--ion-color-primary);
   `}
 
 `;
@@ -75,13 +76,13 @@ const ContextContainer = styled.div`
 const ContextChip = styled.div<{ selected?: boolean }>`
   padding: 6px 12px;
   border-radius: 20px;
-  background: ${(props) => (props.selected ? '#667eea' : '#f1f3f5')};
-  color: ${(props) => (props.selected ? 'white' : '#495057')};
+  background: ${(props) => (props.selected ? 'var(--ion-color-primary)' : '#f1f3f5')};
+  color: ${(props) => (props.selected ? 'var(--ion-color-primary-contrast, white)' : '#495057')};
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid ${(props) => (props.selected ? '#667eea' : 'transparent')};
+  border: 1px solid ${(props) => (props.selected ? 'var(--ion-color-primary)' : 'transparent')};
 
   &:active {
     transform: scale(0.95);
@@ -94,6 +95,8 @@ interface EmotionalAwarenessSectionProps<TFormValues extends FieldValues> {
   control: Control<TFormValues>;
   register: UseFormRegister<TFormValues>;
   errors: FieldErrors<TFormValues>;
+  customContexts?: Record<string, string[]>;
+  onAddCustomContext?: (mood: string, context: string) => Promise<void>;
 }
 
 const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFormData>> = ({
@@ -102,9 +105,20 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
   control,
   register,
   errors,
+  customContexts,
+  onAddCustomContext,
 }) => {
   const emotionalState = useWatch({ name: 'emotionalState', control }) as string;
   const emotionalContext = (useWatch({ name: 'emotionalContext', control }) || []) as string[];
+  const [isAddingContext, setIsAddingContext] = useState(false);
+  const [newContext, setNewContext] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isAddingContext && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isAddingContext]);
 
   const emotionSelectHandler = useCallback(
     (emotion: string) => {
@@ -143,6 +157,15 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
     [emotionalContext, setValue, getValues],
   );
 
+  const handleAddContext = useCallback(async () => {
+    if (newContext.trim() && emotionalState && onAddCustomContext) {
+      await onAddCustomContext(emotionalState, newContext.trim());
+      toggleContextHandler(newContext.trim());
+      setNewContext('');
+      setIsAddingContext(false);
+    }
+  }, [newContext, emotionalState, onAddCustomContext, toggleContextHandler]);
+
   const emotionOptions = useMemo(() => {
     return [
       { value: 'happy', label: 'Happy', icon: '😊' },
@@ -164,11 +187,18 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
   }, [emotionalState, emotionSelectHandler]);
 
   const contextOptions = useMemo(() => {
-    if (!emotionalState || !MOOD_CONTEXTS[emotionalState]) return null;
+    if (!emotionalState) return null;
+
+    const defaultContexts = MOOD_CONTEXTS[emotionalState] || [];
+    const customMoodContexts = customContexts?.[emotionalState] || [];
+    // Combine and remove duplicates
+    const allContexts = Array.from(new Set([...defaultContexts, ...customMoodContexts]));
+
+    if (allContexts.length === 0 && !onAddCustomContext) return null;
 
     return (
       <ContextContainer>
-        {MOOD_CONTEXTS[emotionalState].map((ctx) => (
+        {allContexts.map((ctx) => (
           <ContextChip
             key={ctx}
             selected={emotionalContext.includes(ctx)}
@@ -177,9 +207,54 @@ const EmotionalAwarenessSection: React.FC<EmotionalAwarenessSectionProps<SpendFo
             {ctx}
           </ContextChip>
         ))}
+        {onAddCustomContext && !isAddingContext && (
+          <ContextChip onClick={() => setIsAddingContext(true)} style={{ opacity: 0.7 }}>
+            <IonIcon icon={add} />
+          </ContextChip>
+        )}
+        {isAddingContext && (
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input
+              type='text'
+              ref={inputRef}
+              value={newContext}
+              onChange={(e) => setNewContext(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleAddContext();
+                }
+              }}
+              onBlur={() => {
+                if (!newContext.trim()) setIsAddingContext(false);
+              }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '20px',
+                border: '1px solid var(--ion-color-primary)',
+                outline: 'none',
+                fontSize: '11px',
+                width: '120px',
+              }}
+              placeholder='Add context...'
+            />
+            <ContextChip onClick={handleAddContext} selected>
+              Add
+            </ContextChip>
+          </div>
+        )}
       </ContextContainer>
     );
-  }, [emotionalState, emotionalContext, toggleContextHandler]);
+  }, [
+    emotionalState,
+    emotionalContext,
+    toggleContextHandler,
+    customContexts,
+    onAddCustomContext,
+    isAddingContext,
+    newContext,
+    handleAddContext,
+  ]);
 
   return (
     <StyledIonCard>

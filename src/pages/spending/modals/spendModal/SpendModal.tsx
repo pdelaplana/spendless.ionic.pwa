@@ -9,11 +9,12 @@ import { Currency } from '@/domain/Currencies';
 import { type ISpend, createSpend } from '@/domain/Spend';
 import { spendValidation } from '@/domain/validation';
 import { usePrompt } from '@/hooks';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
 import { dateUtils } from '@/utils';
 import { IonItem, IonLabel } from '@ionic/react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { type SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { NiceTags } from '../../../../components/shared/tags';
@@ -31,6 +32,8 @@ interface SpendModalProps {
   onDelete: (spendId: string) => void;
   suggestedTags?: string[];
   currency?: string;
+  customContexts?: Record<string, string[]>;
+  onAddCustomContext?: (mood: string, context: string) => Promise<void>;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
 }
@@ -42,10 +45,20 @@ const SpendModal: React.FC<SpendModalProps> = ({
   suggestedTags,
   currency: currencyCode,
   onDismiss,
+  customContexts: initialCustomContexts,
+  onAddCustomContext,
 }) => {
+  const { account } = useSpendingAccount();
   const { t } = useTranslation();
   const { showConfirmPrompt } = usePrompt();
   const currency = Currency.fromCode(currencyCode ?? 'USD') ?? Currency.USD;
+
+  const reactiveCustomContexts = useMemo(() => {
+    return {
+      ...initialCustomContexts,
+      ...(account?.customEmotionalContexts || {}),
+    };
+  }, [initialCustomContexts, account?.customEmotionalContexts]);
 
   const {
     register,
@@ -61,6 +74,8 @@ const SpendModal: React.FC<SpendModalProps> = ({
       amount: '0',
       category: 'need',
       description: '',
+      emotionalState: 'neutral',
+      emotionalContext: [],
     },
     mode: 'onChange',
   });
@@ -276,6 +291,8 @@ const SpendModal: React.FC<SpendModalProps> = ({
             control={control}
             register={register}
             errors={errors}
+            customContexts={reactiveCustomContexts}
+            onAddCustomContext={onAddCustomContext}
           />
         </form>
 

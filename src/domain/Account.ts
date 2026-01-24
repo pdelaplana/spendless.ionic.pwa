@@ -13,6 +13,7 @@ export interface IAccount {
   readonly subscriptionCancelled?: boolean;
   readonly aiCheckinEnabled?: boolean;
   readonly lastAiCheckinAt?: Date;
+  readonly customEmotionalContexts?: Record<string, string[]>;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -31,6 +32,7 @@ export const createAccount = (data: Partial<CreateAccountDTO>): IAccount => ({
   subscriptionCancelled: data.subscriptionCancelled,
   aiCheckinEnabled: data.aiCheckinEnabled ?? false,
   lastAiCheckinAt: data.lastAiCheckinAt,
+  customEmotionalContexts: data.customEmotionalContexts ?? {},
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -58,6 +60,9 @@ export const updateAccount = (account: IAccount, updates: Partial<IAccount>): IA
   }),
   ...(updates.lastAiCheckinAt !== undefined && {
     lastAiCheckinAt: updates.lastAiCheckinAt,
+  }),
+  ...(updates.customEmotionalContexts && {
+    customEmotionalContexts: updates.customEmotionalContexts,
   }),
   updatedAt: new Date(),
 });

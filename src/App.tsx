@@ -37,6 +37,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import './theme/components.css';
 import { AuthProvider } from './providers/auth/AuthProvider';
+import { SpendingAccountProvider } from './providers/spendingAccount';
 import AppRoutes from './routes/AppRoutes';
 
 import './app.css';
@@ -61,11 +62,13 @@ const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
     <NetworkStatusProvider>
       <AuthProvider>
-        <IonApp>
-          <NetworkStatusNotifier />
-          <PwaUpdateNotification />
-          <AppRoutes />
-        </IonApp>
+        <SpendingAccountProvider>
+          <IonApp>
+            <NetworkStatusNotifier />
+            <PwaUpdateNotification />
+            <AppRoutes />
+          </IonApp>
+        </SpendingAccountProvider>
       </AuthProvider>
     </NetworkStatusProvider>
     {import.meta.env.DEV && (

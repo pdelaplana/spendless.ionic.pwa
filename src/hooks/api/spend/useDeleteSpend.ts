@@ -56,7 +56,7 @@ export function useDeleteSpend() {
 
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['spending', data.accountId, data.deletedSpend.periodId],
+        queryKey: ['useFetchSpendingByAccountId', data.accountId, data.deletedSpend.periodId],
       });
       queryClient.invalidateQueries({
         queryKey: ['useFetchSpendingForCharts'],
