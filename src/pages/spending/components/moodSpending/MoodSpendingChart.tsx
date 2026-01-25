@@ -144,8 +144,8 @@ const MoodSpendingChart: React.FC<MoodSpendingChartProps> = ({ spending, currenc
   }, [contextData, currency]);
 
   const chartData: ChartData<'pie'> = useMemo(() => {
-    if (!moodData || moodData.length === 0) {
-      return { datasets: [], labels: [] };
+    if (Object.keys(moodData).length === 0) {
+      return { datasets: [{ data: [] }], labels: [] };
     }
 
     if (selectedMood && contextData) {
