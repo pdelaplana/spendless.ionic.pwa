@@ -20,12 +20,12 @@ import {
 } from '@/hooks/api';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useAuth } from '../auth/useAuth';
 import { SpendingAccountContext } from './context';
 
-export const SpendingAccountProvider: React.FC<{ userId: string; children: ReactNode }> = ({
-  userId,
-  children,
-}) => {
+export const SpendingAccountProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  const userId = user?.uid;
   const {
     data: spendingAccount,
     isLoading: isFetchingAccount,

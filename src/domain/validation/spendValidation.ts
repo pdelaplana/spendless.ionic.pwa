@@ -40,6 +40,7 @@ export const spendValidation: Record<keyof CreateSpendDTO, RegisterOptions<Spend
       ['happy', 'neutral', 'sad', 'angry', 'stressed', 'tired'].includes(value?.toString() || '') ||
       'Invalid emotional state',
   },
+  emotionalContext: {},
   satisfactionRating: {
     min: { value: 0, message: 'Satisfaction rating must be at least 0' },
     max: { value: 5, message: 'Satisfaction rating must be at most 5' },

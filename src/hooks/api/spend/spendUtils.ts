@@ -18,6 +18,7 @@ export const mapToFirestore = (spend: ISpend): DocumentData => ({
   walletId: spend.walletId,
   recurring: Boolean(spend.recurring), // Ensure boolean type
   emotionalState: spend.emotionalState,
+  emotionalContext: spend.emotionalContext || [],
   satisfactionRating: spend.satisfactionRating,
   necessityRating: spend.necessityRating,
   personalReflections: spend.personalReflections,
@@ -42,6 +43,7 @@ export const mapFromFirestore = (id: string, data: DocumentData): ISpend => {
     necessityRating: data.necessityRating,
     tags: data.tags || [],
     personalReflections: data.personalReflections || [],
+    emotionalContext: data.emotionalContext || [],
   });
 
   return {

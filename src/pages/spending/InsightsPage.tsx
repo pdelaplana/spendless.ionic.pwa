@@ -7,7 +7,12 @@ import { StyledItem, TransparentIonList } from '@/styles/IonList.styled';
 import { GlassCard, GradientBackground } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
 import { IonLabel } from '@ionic/react';
-import { barChartOutline, statsChartOutline } from 'ionicons/icons';
+import {
+  barChartOutline,
+  heartCircleOutline,
+  pricetagOutline,
+  statsChartOutline,
+} from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -58,10 +63,10 @@ const InsightsPage: React.FC = () => {
                   </IonLabel>
                 </StyledItem>
 
-                <StyledItem button onClick={handleNavigateToTags} lines='none' detail>
+                <StyledItem button onClick={handleNavigateToTags} detail>
                   <div slot='start' style={{ marginRight: '0px' }}>
                     <IconContainer
-                      icon={statsChartOutline}
+                      icon={pricetagOutline}
                       bgColor='rgba(139, 95, 191, 0.1)'
                       iconColor='#8B5FBF'
                     />
@@ -69,6 +74,25 @@ const InsightsPage: React.FC = () => {
                   <IonLabel>
                     <h2>Spend Analysis by Tags</h2>
                     <p>Analyze your spending patterns by tags</p>
+                  </IonLabel>
+                </StyledItem>
+
+                <StyledItem
+                  button
+                  onClick={() => history.push(ROUTES.SPENDING_INSIGHTS_MOOD)}
+                  lines='none'
+                  detail
+                >
+                  <div slot='start' style={{ marginRight: '0px' }}>
+                    <IconContainer
+                      icon={heartCircleOutline}
+                      bgColor='rgba(139, 95, 191, 0.1)'
+                      iconColor='#8B5FBF'
+                    />
+                  </div>
+                  <IonLabel>
+                    <h2>Mood Analysis</h2>
+                    <p>Understand how your mood affects your spending</p>
                   </IonLabel>
                 </StyledItem>
               </TransparentIonList>

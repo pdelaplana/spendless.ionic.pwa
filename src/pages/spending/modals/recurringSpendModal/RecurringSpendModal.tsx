@@ -16,6 +16,7 @@ import {
 import type { SpendCategory } from '@/domain/Spend';
 import type { IWallet } from '@/domain/Wallet';
 import { usePrompt } from '@/hooks';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
 import { getCategoryIcon } from '@/utils';
@@ -24,7 +25,6 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonDatetime,
   IonIcon,
   IonItem,
   IonLabel,

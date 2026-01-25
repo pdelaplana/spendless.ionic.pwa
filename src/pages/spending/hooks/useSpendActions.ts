@@ -13,6 +13,7 @@ export const useSpendActions = () => {
     createSpend,
     updateSpend,
     deleteSpend,
+    updateAccount,
     refetchSpending,
     resetMutationState,
     usedSpendingTags,
@@ -54,7 +55,15 @@ export const useSpendActions = () => {
 
   const editSpendHandler = (spend: ISpend) => {
     const suggestedTags = usedSpendingTags;
-    openSpendModal(spend, saveSpendHandler, deleteSpendHandler, suggestedTags, account?.currency);
+    openSpendModal(
+      spend,
+      saveSpendHandler,
+      deleteSpendHandler,
+      suggestedTags,
+      account?.currency,
+      account?.customEmotionalContexts,
+      addCustomContextHandler,
+    );
   };
 
   const newSpendHandler = () => {
@@ -72,12 +81,35 @@ export const useSpendActions = () => {
       deleteSpendHandler,
       suggestedTags,
       account?.currency,
+      account?.customEmotionalContexts,
+      addCustomContextHandler,
     );
+  };
+
+  const addCustomContextHandler = async (mood: string, context: string) => {
+    if (!account) return;
+
+    const currentContexts = account.customEmotionalContexts || {};
+    const moodContexts = currentContexts[mood] || [];
+
+    if (!moodContexts.includes(context)) {
+      const updatedContexts = {
+        ...currentContexts,
+        [mood]: [...moodContexts, context],
+      };
+
+      await updateAccount({
+        id: account.id || '',
+        data: { customEmotionalContexts: updatedContexts },
+      });
+    }
   };
 
   return {
     newSpendHandler,
     editSpendHandler,
     deleteSpendHandler,
+    addCustomContextHandler,
+    customEmotionalContexts: account?.customEmotionalContexts,
   };
 };

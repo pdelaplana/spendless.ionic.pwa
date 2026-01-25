@@ -11,6 +11,8 @@ export const useSpendModal = (): {
     onDelete: (spendId: string) => void,
     suggestedTags?: string[],
     currency?: string,
+    customContexts?: Record<string, string[]>,
+    onAddCustomContext?: (mood: string, context: string) => Promise<void>,
   ) => Promise<{ role: string }>;
 } => {
   const [inputs, setInputs] = useState<{
@@ -19,6 +21,8 @@ export const useSpendModal = (): {
     onDelete?: (spendId: string) => void;
     suggestedTags?: string[];
     currency?: string;
+    customContexts?: Record<string, string[]>;
+    onAddCustomContext?: (mood: string, context: string) => Promise<void>;
   }>();
 
   const [present, dismiss] = useIonModal(SpendModal, {
@@ -27,6 +31,8 @@ export const useSpendModal = (): {
     onDelete: inputs?.onDelete,
     suggestedTags: inputs?.suggestedTags,
     currency: inputs?.currency,
+    customContexts: inputs?.customContexts,
+    onAddCustomContext: inputs?.onAddCustomContext,
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     onDismiss: (data: any, role: string) => dismiss(data, role),
   });
@@ -38,6 +44,8 @@ export const useSpendModal = (): {
       onDelete: (spendId: string) => void,
       suggestedTags?: string[],
       currency?: string,
+      customContexts?: Record<string, string[]>,
+      onAddCustomContext?: (mood: string, context: string) => Promise<void>,
     ) => {
       setInputs({
         spend,
@@ -45,6 +53,8 @@ export const useSpendModal = (): {
         onDelete,
         suggestedTags,
         currency,
+        customContexts,
+        onAddCustomContext,
       });
       return new Promise((resolve) => {
         present({

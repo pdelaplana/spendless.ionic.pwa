@@ -9,16 +9,19 @@ import { Currency } from '@/domain/Currencies';
 import { type ISpend, createSpend } from '@/domain/Spend';
 import { spendValidation } from '@/domain/validation';
 import { usePrompt } from '@/hooks';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 import { TransparentIonList } from '@/styles/IonList.styled';
 import { designSystem } from '@/theme/designSystem';
 import { dateUtils } from '@/utils';
 import { IonItem, IonLabel } from '@ionic/react';
-import { useCallback, useEffect } from 'react';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { useCallback, useEffect, useMemo } from 'react';
+import { type SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { NiceTags } from '../../../../components/shared/tags';
 import { SectionLabel } from '../../../../theme/components';
 import CategorySection from '../../components/common/categorySection/CategorySection';
 import EmotionalAwarenessSection from '../../components/common/emotionalAwarenessSection/EmotionalAwarenessSection';
+import PersonalReflectionSection from '../../components/common/personalReflectionSection/PersonalReflectionSection';
 import RatingSection from '../../components/common/ratingSection/RatingSection';
 import SpendFormSection from '../../components/common/spendFormSection/SpendFormSection';
 import type { SpendFormData } from './types';
@@ -29,6 +32,8 @@ interface SpendModalProps {
   onDelete: (spendId: string) => void;
   suggestedTags?: string[];
   currency?: string;
+  customContexts?: Record<string, string[]>;
+  onAddCustomContext?: (mood: string, context: string) => Promise<void>;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onDismiss: (data?: any, role?: string) => void;
 }
@@ -40,10 +45,20 @@ const SpendModal: React.FC<SpendModalProps> = ({
   suggestedTags,
   currency: currencyCode,
   onDismiss,
+  customContexts: initialCustomContexts,
+  onAddCustomContext,
 }) => {
+  const { account } = useSpendingAccount();
   const { t } = useTranslation();
   const { showConfirmPrompt } = usePrompt();
   const currency = Currency.fromCode(currencyCode ?? 'USD') ?? Currency.USD;
+
+  const reactiveCustomContexts = useMemo(() => {
+    return {
+      ...initialCustomContexts,
+      ...(account?.customEmotionalContexts || {}),
+    };
+  }, [initialCustomContexts, account?.customEmotionalContexts]);
 
   const {
     register,
@@ -59,9 +74,13 @@ const SpendModal: React.FC<SpendModalProps> = ({
       amount: '0',
       category: 'need',
       description: '',
+      emotionalState: 'neutral',
+      emotionalContext: [],
     },
     mode: 'onChange',
   });
+
+  const initialTags = useWatch({ control, name: 'tags' });
 
   const handleAmountChange = useCallback(
     (value: number) => {
@@ -81,6 +100,7 @@ const SpendModal: React.FC<SpendModalProps> = ({
       description: formData.description,
       notes: formData.notes,
       emotionalState: formData.emotionalState,
+      emotionalContext: formData.emotionalContext,
       satisfactionRating: formData.satisfactionRating,
       necessityRating: formData.necessityRating,
       personalReflections: formData.personalReflections,
@@ -191,7 +211,8 @@ const SpendModal: React.FC<SpendModalProps> = ({
         amount: amountValue,
         description: spend.description,
         notes: spend.notes,
-        emotionalState: spend.emotionalState,
+        emotionalState: (spend.emotionalState || 'neutral').toLowerCase(),
+        emotionalContext: spend.emotionalContext || [],
         satisfactionRating: spend.satisfactionRating,
         necessityRating: spend.necessityRating,
         personalReflections: spend.personalReflections,
@@ -199,6 +220,13 @@ const SpendModal: React.FC<SpendModalProps> = ({
       });
     }
   }, [spend, reset]);
+
+  const handleTagsChange = useCallback(
+    (tags: string[]) => {
+      setValue('tags', tags, { shouldDirty: true });
+    },
+    [setValue],
+  );
 
   return (
     <ModalPageLayout onDismiss={checkIfCanDismiss}>
@@ -243,16 +271,28 @@ const SpendModal: React.FC<SpendModalProps> = ({
                 />
               </IonLabel>
             </IonItem>
+
+            <IonItem>
+              <IonLabel>
+                <NiceTags
+                  initialTags={initialTags}
+                  suggestions={suggestedTags}
+                  onTagsChange={handleTagsChange}
+                />
+              </IonLabel>
+            </IonItem>
           </TransparentIonList>
 
           <CategorySection setValue={setValue} control={control} />
-          <SpendFormSection
-            register={register}
+
+          <EmotionalAwarenessSection
             setValue={setValue}
             getValues={getValues}
             control={control}
+            register={register}
             errors={errors}
-            suggestedTags={suggestedTags}
+            customContexts={reactiveCustomContexts}
+            onAddCustomContext={onAddCustomContext}
           />
         </form>
 
