@@ -50,7 +50,7 @@ vi.mock('@ionic/react', async () => {
     ...actual,
     IonIcon: () => <div data-testid='ion-icon' />,
     IonButton: ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
-      <button type='button' onClick={onClick}>
+      <button type='button' onClick={onClick} aria-label='go back'>
         {children}
       </button>
     ),
@@ -127,7 +127,7 @@ describe('MoodSpendingChart', () => {
     expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(/sad/i);
 
     // Should show back button
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
 
     // Verify that data is now context-specific
     const contextChartData = JSON.parse(screen.getByTestId('chart-data').textContent || '{}');
@@ -140,14 +140,14 @@ describe('MoodSpendingChart', () => {
 
     // 1. Drill down
     fireEvent.click(screen.getByTestId('mood-pie-chart'));
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
 
     // 2. Click back button
-    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button', { name: /go back/i }));
 
     // 3. Should be back to main view
     expect(screen.getByText('All Moods')).toBeInTheDocument();
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /go back/i })).not.toBeInTheDocument();
   });
 
   it('renders empty state when no spending data', () => {
