@@ -1,3 +1,19 @@
+# [1.10.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.9.1...v1.10.0) (2026-01-25)
+
+
+### Bug Fixes
+
+* 1-tap phrases not appearing for scheduled spending ([2d0e054](https://github.com/pdelaplana/spendless.ionic.pwa/commit/2d0e054903619621cb1303a436308f172841b210))
+* lint and tsc issues ([53af269](https://github.com/pdelaplana/spendless.ionic.pwa/commit/53af269df76fbae64170f960a0d749c943c90d0d))
+* refactoring of MoodSpendingChart ([25a5be3](https://github.com/pdelaplana/spendless.ionic.pwa/commit/25a5be32c2c33955d9de4958f9ea6584b09afd44))
+
+
+### Features
+
+* Add custom contetextual mood phrases ([804a526](https://github.com/pdelaplana/spendless.ionic.pwa/commit/804a526e60161d7010b8aae22eeab19418187f3e))
+* Mood Analysis Visualization ([fb835ca](https://github.com/pdelaplana/spendless.ionic.pwa/commit/fb835ca1f32fd6700495392f343d9c286c53fab0))
+* Mood Tracking ([1cc7e3b](https://github.com/pdelaplana/spendless.ionic.pwa/commit/1cc7e3b292d481a327ddf70da1c9ae3cb07a2bb3))
+
 ## [1.9.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.9.0...v1.9.1) (2026-01-20)
 
 
