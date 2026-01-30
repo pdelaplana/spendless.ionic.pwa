@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.10.0...v1.11.0) (2026-01-30)
+
+
+### Features
+
+* Weekly Spending ([756d7c2](https://github.com/pdelaplana/spendless.ionic.pwa/commit/756d7c203afd518c557c5975818290e1ff9de657))
+
 # [1.10.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.9.1...v1.10.0) (2026-01-25)
 
 
