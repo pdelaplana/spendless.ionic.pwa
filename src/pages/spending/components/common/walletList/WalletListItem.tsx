@@ -1,4 +1,4 @@
-import { IconContainer } from '@/components/shared';
+import { DifferenceIndicator, IconContainer } from '@/components/shared';
 import type { IWallet } from '@/domain/Wallet';
 import { calculateWalletAvailable } from '@/domain/Wallet';
 import { StyledItem } from '@/styles/IonList.styled';
@@ -35,10 +35,23 @@ const SpentRow = styled.p`
   }
 `;
 
+const IconSlot = styled.div`
+  margin-right: 0px;
+`;
+
+const WeeklyHighlight = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
 interface WalletListItemProps {
   wallet: IWallet;
   onClick?: (walletId: string) => void;
   formatCurrency: (amount: number) => string;
+  showWeeklySpending?: boolean;
+  currentWeekAmount?: number;
+  previousWeekAmount?: number;
 }
 
 interface WalletIconProps {
@@ -50,7 +63,14 @@ const WalletIcon: React.FC<WalletIconProps> = ({ walletName }) => {
   return <IconContainer icon={icon} bgColor={bgColor} iconColor={iconColor} />;
 };
 
-const WalletListItem: React.FC<WalletListItemProps> = ({ wallet, onClick, formatCurrency }) => {
+const WalletListItem: React.FC<WalletListItemProps> = ({
+  wallet,
+  onClick,
+  formatCurrency,
+  showWeeklySpending = false,
+  currentWeekAmount = 0,
+  previousWeekAmount = 0,
+}) => {
   const handleClick = () => {
     if (onClick && wallet.id) {
       onClick(wallet.id);
@@ -59,8 +79,11 @@ const WalletListItem: React.FC<WalletListItemProps> = ({ wallet, onClick, format
 
   const spentAmount = wallet.currentBalance;
   const remainingAmount = calculateWalletAvailable(wallet);
-
   const clickable = !!onClick;
+
+  const difference = currentWeekAmount - previousWeekAmount;
+  const isIncrease = difference > 0;
+  const isSame = difference === 0;
 
   return (
     <StyledItem
@@ -73,20 +96,38 @@ const WalletListItem: React.FC<WalletListItemProps> = ({ wallet, onClick, format
           : undefined
       }
     >
-      <div slot='start' style={{ marginRight: '0px' }}>
+      <IconSlot slot='start'>
         <WalletIcon walletName={wallet.name} />
-      </div>
+      </IconSlot>
 
       <IonLabel>
         <h2>{wallet.name}</h2>
-        <SpentRow>
-          <span>Spent</span>
-          <span className='highlight'>{formatCurrency(spentAmount)}</span>
-        </SpentRow>
-        <SpentRow>
-          <span>Remaining</span>
-          <span>{formatCurrency(remainingAmount)}</span>
-        </SpentRow>
+        {showWeeklySpending ? (
+          <>
+            <SpentRow>
+              <span>Current Week</span>
+              <WeeklyHighlight className='highlight'>
+                {!isSame && <DifferenceIndicator increase={isIncrease} />}
+                {formatCurrency(currentWeekAmount)}
+              </WeeklyHighlight>
+            </SpentRow>
+            <SpentRow>
+              <span>Previous Week</span>
+              <span>{formatCurrency(previousWeekAmount)}</span>
+            </SpentRow>
+          </>
+        ) : (
+          <>
+            <SpentRow>
+              <span>Spent</span>
+              <span className='highlight'>{formatCurrency(spentAmount)}</span>
+            </SpentRow>
+            <SpentRow>
+              <span>Remaining</span>
+              <span>{formatCurrency(remainingAmount)}</span>
+            </SpentRow>
+          </>
+        )}
       </IonLabel>
     </StyledItem>
   );

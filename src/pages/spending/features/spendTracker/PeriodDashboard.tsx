@@ -24,7 +24,7 @@ import { WalletList } from '../../components/common/walletList';
 const PeriodDashboard: React.FC = () => {
   const history = useHistory();
   const { selectWallet, wallets } = useWallet();
-  const { isDataRestricted } = useSpendingAccount();
+  const { isDataRestricted, spending, account } = useSpendingAccount();
   const [presentToast] = useIonToast();
   const { mutate: createCheckoutSession } = useCreateCheckoutSession();
 
@@ -81,7 +81,7 @@ const PeriodDashboard: React.FC = () => {
         <PeriodSwitcher />
         <AiCheckinCard />
         <InsightsCard />
-        <WalletList onWalletClick={handleWalletClick} />
+        <WalletList onWalletClick={handleWalletClick} spending={spending} />
 
         <PeriodActionsBar />
         {isIOS() ? <IosInstallPrompt /> : <PwaInstallPrompt />}

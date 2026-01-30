@@ -60,9 +60,15 @@ export const WalletListContent = styled.div`
 
 export const LoadingContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: ${designSystem.spacing.xl};
+`;
+
+export const LoadingText = styled.p`
+  margin-top: 12px;
+  text-align: center;
 `;
 
 export const ErrorContainer = styled.div`
