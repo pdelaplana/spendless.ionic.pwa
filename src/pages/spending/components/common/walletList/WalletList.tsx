@@ -1,3 +1,4 @@
+import type { ISpend } from '@/domain/Spend';
 import type { IWallet } from '@/domain/Wallet';
 import { useCreateWallet, useDeleteWallet, useUpdateWallet } from '@/hooks/api/wallet';
 import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
@@ -8,6 +9,7 @@ import {
   ErrorContainer,
   ErrorMessage,
   LoadingContainer,
+  LoadingText,
   RetryButton,
   WalletListContainer,
   WalletListContent,
@@ -19,25 +21,65 @@ import WalletListItem from '@/pages/spending/components/common/walletList/Wallet
 import { useSpendingAccount } from '@/providers/spendingAccount';
 import { useWallet } from '@/providers/wallet';
 import { StyledIonList } from '@/styles/IonList.styled';
-import { IonIcon, IonSpinner } from '@ionic/react';
+import { getCurrentWeek, getPreviousWeek, isDateInWeek } from '@/utils/weekUtils';
+import { IonIcon, IonSpinner, IonToggle } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import type React from 'react';
+import { useMemo, useState } from 'react';
+import styled from 'styled-components';
 import { useWalletModal } from '../../../modals/walletModal';
+
+const ToggleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+`;
 
 interface WalletListProps {
   onWalletClick?: (walletId: string) => void;
+  spending?: ISpend[];
   className?: string;
 }
 
-const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => {
+const WalletList: React.FC<WalletListProps> = ({ onWalletClick, spending = [], className }) => {
   const { wallets, isLoading, error, refreshWallets } = useWallet();
   const { account, selectedPeriod } = useSpendingAccount();
   const { formatCurrency } = useFormatters();
   const { open: openWalletModal } = useWalletModal();
   const { showNotification, showErrorNotification } = useAppNotifications();
+  const [showWeeklySpending, setShowWeeklySpending] = useState(false);
 
   // Create a currency-aware format function
   const formatAccountCurrency = (amount: number) => formatCurrency(amount, account?.currency);
+
+  // Calculate weekly spending for each wallet
+  const weeklySpendingData = useMemo(() => {
+    const currentWeek = getCurrentWeek();
+    const previousWeek = getPreviousWeek();
+
+    return wallets.map((wallet) => {
+      const walletSpending = spending.filter((spend) => spend.walletId === wallet.id);
+
+      const currentWeekAmount = walletSpending
+        .filter((spend) => isDateInWeek(spend.date, currentWeek.start, currentWeek.end))
+        .reduce((sum, spend) => sum + spend.amount, 0);
+
+      const previousWeekAmount = walletSpending
+        .filter((spend) => isDateInWeek(spend.date, previousWeek.start, previousWeek.end))
+        .reduce((sum, spend) => sum + spend.amount, 0);
+
+      return {
+        walletId: wallet.id,
+        currentWeekAmount,
+        previousWeekAmount,
+      };
+    });
+  }, [wallets, spending]);
 
   // API hooks for wallet operations
   const createWallet = useCreateWallet();
@@ -110,7 +152,7 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
       <WalletListContainer className={className}>
         <LoadingContainer>
           <IonSpinner name='crescent' />
-          <p style={{ marginTop: '12px', textAlign: 'center' }}>Loading</p>
+          <LoadingText>Loading</LoadingText>
         </LoadingContainer>
       </WalletListContainer>
     );
@@ -165,16 +207,30 @@ const WalletList: React.FC<WalletListProps> = ({ onWalletClick, className }) => 
       </WalletListHeaderContainer>
       <WalletListContent>
         <StyledIonList lines='full' style={{ backgroundColor: 'transparent' }}>
-          {wallets.map((wallet) => (
-            <WalletListItem
-              key={wallet.id}
-              wallet={wallet}
-              onClick={onWalletClick}
-              formatCurrency={formatAccountCurrency}
-            />
-          ))}
+          {wallets.map((wallet) => {
+            const weeklyData = weeklySpendingData.find((w) => w.walletId === wallet.id);
+            return (
+              <WalletListItem
+                key={wallet.id}
+                wallet={wallet}
+                onClick={onWalletClick}
+                formatCurrency={formatAccountCurrency}
+                showWeeklySpending={showWeeklySpending}
+                currentWeekAmount={weeklyData?.currentWeekAmount ?? 0}
+                previousWeekAmount={weeklyData?.previousWeekAmount ?? 0}
+              />
+            );
+          })}
         </StyledIonList>
       </WalletListContent>
+      <ToggleContainer>
+        <span>Show Weekly Spending</span>
+        <IonToggle
+          checked={showWeeklySpending}
+          onIonChange={(e) => setShowWeeklySpending(e.detail.checked)}
+          aria-label='Toggle weekly spending view'
+        />
+      </ToggleContainer>
     </WalletListContainer>
   );
 };
