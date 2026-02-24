@@ -1,0 +1,26 @@
+{
+  "name": "Hybrid AI Dev (Ionic + Firebase)",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:1": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ionic.ionic",
+        "firebase.google-cloud-free",
+        "google.gemini-cli-companion",
+        "google.gemini-code-assist-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [8100, 9099, 4000],
+  "postCreateCommand": ". .devcontainer/install-tools.sh",
+  "remoteEnv": {
+    "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
+  }
+}
