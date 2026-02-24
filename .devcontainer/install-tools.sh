@@ -15,15 +15,16 @@ npm install -g @ionic/cli firebase-tools
 echo "♊ Installing Gemini CLI..."
 npm install -g @google/gemini-cli
 
-# 4. Install Gemini Extensions (Conductor + Firebase)
+# 4. Install Claude Code CLI
+echo "🤖 Installing Claude Code..."
+curl -fsSL https://claude.ai/install.sh | bash
+
+# 5. Install Gemini Extensions (Conductor + Firebase)
 echo "🔌 Adding Gemini Extensions..."
 # Conductor for context-driven dev and Firebase for specialized MCP tools
 gemini extensions install https://github.com/gemini-cli-extensions/conductor --auto-update
 gemini extensions install https://github.com/gemini-cli-extensions/firebase --auto-update
 
-# 5. Install Claude Code CLI
-echo "🤖 Installing Claude Code..."
-curl -fsSL https://claude.ai/install.sh | bash
 
 # 6. Pre-configure Claude Superpowers Plugin
 # We automate the marketplace registration so you only have to run the final install
