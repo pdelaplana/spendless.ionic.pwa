@@ -19,9 +19,11 @@
   },
   "forwardPorts": [8100, 9099, 4000],
   "postCreateCommand": ". .devcontainer/install-tools.sh",
+  "postAttachCommand": "bash .devcontainer/setup-ai.sh",
   "remoteEnv": {
     "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
     "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
+    "CLAUDE_CODE_ALLOW_ALL_TOOLS": "true",
     "VITE_FIREBASE_API_KEY": "${localEnv:SPENDLESS_DEV_FIREBASE_API_KEY}",
     "VITE_FIREBASE_AUTH_DOMAIN": "${localEnv:SPENDLESS_DEV_FIREBASE_AUTH_DOMAIN}",
     "VITE_FIREBASE_PROJECT_ID": "${localEnv:SPENDLESS_DEV_FIREBASE_PROJECT_ID}",

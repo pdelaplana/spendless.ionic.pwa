@@ -19,41 +19,5 @@ npm install -g @google/gemini-cli
 echo "🤖 Installing Claude Code..."
 curl -fsSL https://claude.ai/install.sh | bash
 
-# 5. Install Gemini Extensions (Conductor + Firebase)
-echo "🔌 Adding Gemini Extensions..."
-# Conductor for context-driven dev and Firebase for specialized MCP tools
-gemini extensions install https://github.com/gemini-cli-extensions/conductor --auto-update
-gemini extensions install https://github.com/gemini-cli-extensions/firebase --auto-update
-
-
-# 6. Pre-configure Claude Superpowers Plugin
-# We automate the marketplace registration so you only have to run the final install
-echo "🦸 Pre-configuring Claude Superpowers..."
-mkdir -p ~/.claude/
-cat > ~/.claude/plugins.json <<EOF
-{
-  "plugins": {
-    "superpowers": {
-      "type": "github",
-      "owner": "obra",
-      "repo": "superpowers"
-    }
-  },
-  "marketplaces": {
-    "obra/superpowers-marketplace": {
-      "type": "github",
-      "owner": "obra",
-      "repo": "superpowers-marketplace"
-    }
-  }
-}
-EOF
-
-# 7. Finalize Shell Path
-echo "PATH=\$PATH:\$(npm config get prefix)/bin" >> ~/.zshrc
-export PATH=$PATH:$(npm config get prefix)/bin
-
-echo "✅ Setup Complete!"
-echo "Next Steps:"
-echo "1. Type 'claude' then run: /plugin install superpowers@obra/superpowers-marketplace"
-echo "2. Type 'gemini' then run: /conductor:setup"
+# 5. Ensure scripts in the devcontainer are executable
+chmod +x .devcontainer/setup-ai.s
