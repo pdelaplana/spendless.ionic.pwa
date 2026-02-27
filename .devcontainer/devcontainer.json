@@ -1,0 +1,40 @@
+{
+  "name": "Hybrid AI Dev (Ionic + Firebase)",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:1": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ionic.ionic",
+        "firebase.google-cloud-free",
+        "google.gemini-cli-companion",
+        "google.gemini-code-assist-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [8100, 9099, 4000],
+  "postCreateCommand": ". .devcontainer/install-tools.sh",
+  "postAttachCommand": "bash .devcontainer/setup-ai.sh",
+  "remoteEnv": {
+    "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
+    "CLAUDE_CODE_ALLOW_ALL_TOOLS": "true",
+    "VITE_FIREBASE_API_KEY": "${localEnv:SPENDLESS_DEV_FIREBASE_API_KEY}",
+    "VITE_FIREBASE_AUTH_DOMAIN": "${localEnv:SPENDLESS_DEV_FIREBASE_AUTH_DOMAIN}",
+    "VITE_FIREBASE_PROJECT_ID": "${localEnv:SPENDLESS_DEV_FIREBASE_PROJECT_ID}",
+    "VITE_FIREBASE_STORAGE_BUCKET": "${localEnv:SPENDLESS_DEV_FIREBASE_STORAGE_BUCKET}",
+    "VITE_FIREBASE_MESSAGING_SENDER_ID": "${localEnv:SPENDLESS_DEV_FIREBASE_MESSAGING_SENDER_ID}",
+    "VITE_FIREBASE_APP_ID": "${localEnv:SPENDLESS_DEV_FIREBASE_APP_ID}",
+    "VITE_FIREBASE_MEASUREMENT_ID": "${localEnv:SPENDLESS_DEV_FIREBASE_MEASUREMENT_ID}",
+    "VITE_SENTRY_DSN": "${localEnv:SPENDLESS_DEV_SENTRY_DSN}",
+    "VITE_PRODUCTQUARRY_URL": "${localEnv:SPENDLESS_DEV_PRODUCTQUARRY_URL}",
+    "VITE_STRIPE_PUBLISHABLE_KEY": "${localEnv:SPENDLESS_DEV_STRIPE_PUBLISHABLE_KEY}",
+    "VITE_STRIPE_PRICE_ID_MONTHLY": "${localEnv:SPENDLESS_DEV_STRIPE_PRICE_ID_MONTHLY}",
+    "VITE_STRIPE_PRICE_ID_ANNUAL": "${localEnv:SPENDLESS_DEV_STRIPE_PRICE_ID_ANNUAL}"
+  }
+}
