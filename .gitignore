@@ -46,4 +46,5 @@ firebase-adminsdk-*.json
 .secrets/
 .local/*
 
-firebase-debug.log
+*.log
+
