@@ -10,6 +10,7 @@ import {
   idCardOutline,
   informationCircleOutline,
   logOutOutline,
+  mailOutline,
   personOutline,
   repeatOutline,
   settingsOutline,
@@ -148,6 +149,17 @@ const MainMenuContent: React.FC = () => {
 
       {/* Menu Items */}
       <MenuSection>
+        <SectionTitle>Notifications</SectionTitle>
+        <IonList lines='none'>
+          <ModernMenuItem button routerLink={ROUTES.INBOX}>
+            <IonIcon slot='start' icon={mailOutline} />
+            <IonLabel>
+              <h2>Inbox</h2>
+              <p>Your AI spending check-ins</p>
+            </IonLabel>
+          </ModernMenuItem>
+        </IonList>
+
         <SectionTitle>Spending</SectionTitle>
         <IonList lines='none'>
           <ModernMenuItem button routerLink={ROUTES.SPENDING_RECURRING}>
