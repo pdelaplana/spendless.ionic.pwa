@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import MainMenuContent from './MainMenuContent';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 
 vi.mock('@/providers/auth', () => ({
   useAuth: vi.fn(() => ({
@@ -27,7 +28,31 @@ vi.mock('@/components/shared', async () => {
   };
 });
 
+vi.mock('@/providers/spendingAccount', () => ({
+  useSpendingAccount: vi.fn(() => ({
+    account: { subscriptionTier: 'premium' },
+  })),
+}));
+
+vi.mock('@/hooks/subscription', () => ({
+  useSubscription: vi.fn((account) => {
+    const isPremium = account?.subscriptionTier === 'premium';
+    return {
+      tier: isPremium ? 'premium' : 'essentials',
+      isEssentials: !isPremium,
+      isPremium,
+      isExpired: false,
+      expiresAt: null,
+      daysUntilExpiry: null,
+      isExpiringSoon: false,
+      isCancelled: false,
+    };
+  }),
+}));
+
 describe('MainMenuContent', () => {
+  beforeEach(() => vi.clearAllMocks());
+
   it('renders a Notifications section heading', () => {
     render(<MainMenuContent />);
     expect(screen.getByText('Notifications')).toBeInTheDocument();
@@ -52,5 +77,23 @@ describe('MainMenuContent', () => {
   it('renders the Recurring Spending navigation item', () => {
     render(<MainMenuContent />);
     expect(screen.getByText('Recurring Spending')).toBeInTheDocument();
+  });
+
+  it('hides the Inbox item and Notifications heading for non-premium users', () => {
+    vi.mocked(useSpendingAccount).mockReturnValueOnce({
+      account: { subscriptionTier: 'essentials' },
+    } as any);
+
+    render(<MainMenuContent />);
+
+    expect(screen.queryByText('Inbox')).not.toBeInTheDocument();
+    expect(screen.queryByText('Notifications')).not.toBeInTheDocument();
+  });
+
+  it('shows the Inbox item and Notifications heading for premium users', () => {
+    render(<MainMenuContent />);
+
+    expect(screen.getByText('Inbox')).toBeInTheDocument();
+    expect(screen.getByText('Notifications')).toBeInTheDocument();
   });
 });
