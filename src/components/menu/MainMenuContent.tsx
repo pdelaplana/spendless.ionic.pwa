@@ -1,5 +1,7 @@
 import { usePrompt } from '@/hooks';
+import { useSubscription } from '@/hooks/subscription';
 import { useAuth } from '@/providers/auth';
+import { useSpendingAccount } from '@/providers/spendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
 import { designSystem } from '@/theme/designSystem';
 import { IonContent, IonIcon, IonLabel, IonList } from '@ionic/react';
@@ -10,6 +12,7 @@ import {
   idCardOutline,
   informationCircleOutline,
   logOutOutline,
+  mailOutline,
   personOutline,
   repeatOutline,
   settingsOutline,
@@ -126,6 +129,8 @@ const InstallSection = styled.div`
 const MainMenuContent: React.FC = () => {
   const { user, updatePhotoUrl, signout } = useAuth();
   const { showConfirmPrompt } = usePrompt();
+  const { account } = useSpendingAccount();
+  const subscription = useSubscription(account ?? null);
 
   const signoutHandler = () => {
     showConfirmPrompt({
@@ -148,6 +153,21 @@ const MainMenuContent: React.FC = () => {
 
       {/* Menu Items */}
       <MenuSection>
+        {subscription.isPremium && (
+          <>
+            <SectionTitle>Notifications</SectionTitle>
+            <IonList lines='none'>
+              <ModernMenuItem button routerLink={ROUTES.INBOX}>
+                <IonIcon slot='start' icon={mailOutline} />
+                <IonLabel>
+                  <h2>Inbox</h2>
+                  <p>Your AI spending check-ins</p>
+                </IonLabel>
+              </ModernMenuItem>
+            </IonList>
+          </>
+        )}
+
         <SectionTitle>Spending</SectionTitle>
         <IonList lines='none'>
           <ModernMenuItem button routerLink={ROUTES.SPENDING_RECURRING}>

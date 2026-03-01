@@ -10,6 +10,11 @@ This workspace contains the complete Spendless PWA project with all source code,
 
 Spendless is a Progressive Web App (PWA) built with Ionic and React for mindful spending tracking. It's a full-stack application with Firebase backend integration, featuring offline capabilities, multi-currency support, and emotional awareness features for financial tracking.
 
+## Workflow Rules
+- We use **Gemini Conductor** for planning.
+- Always check `conductor/tracks/` for the active `plan.md` before starting work.
+- Mark tasks as [x] in the `plan.md` after successful implementation and testing.
+
 ## Development Commands
 
 ### Essential Commands

@@ -218,6 +218,10 @@ const AppRoutes: React.FC = () => {
             <ProfileRoutes />
           </ProtectedRoute>
 
+          <ProtectedRoute path={ROUTES.INBOX} exact={true}>
+            <AiInsightsListPage />
+          </ProtectedRoute>
+
           <ProtectedRoute path={ROUTES.FEEDBACK} exact={true}>
             <FeedbackPage />
           </ProtectedRoute>
