@@ -1,3 +1,16 @@
+# [1.12.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.11.0...v1.12.0) (2026-03-01)
+
+
+### Bug Fixes
+
+* **conductor:** Apply review suggestions for track 'refactor_inbox_20260227' ([7526d95](https://github.com/pdelaplana/spendless.ionic.pwa/commit/7526d9520074eb64c0dafd390683c789cc710d1c))
+* **menu:** fix beforeEach return type causing TS build error ([bd77d57](https://github.com/pdelaplana/spendless.ionic.pwa/commit/bd77d579ffaaa4727983400e8d63787cd9e5db67))
+
+
+### Features
+
+* **menu:** hide Inbox for non-premium users ([dabc001](https://github.com/pdelaplana/spendless.ionic.pwa/commit/dabc001a0d0058736465d4f24d55139e9aaad04e))
+
 # [1.11.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.10.0...v1.11.0) (2026-01-30)
 
 
