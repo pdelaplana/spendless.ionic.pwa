@@ -51,7 +51,7 @@ vi.mock('@/hooks/subscription', () => ({
 }));
 
 describe('MainMenuContent', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => { vi.clearAllMocks(); });
 
   it('renders a Notifications section heading', () => {
     render(<MainMenuContent />);
