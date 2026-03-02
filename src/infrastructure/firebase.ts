@@ -1,4 +1,5 @@
 import { getAnalytics, isSupported } from 'firebase/analytics';
+import { GoogleAIBackend, getAI } from 'firebase/ai';
 import { type FirebaseApp, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import {
@@ -36,5 +37,7 @@ export const db = initializeFirestore(app, {
     tabManager: persistentSingleTabManager(undefined),
   }),
 });
+
+export const ai = getAI(app, { backend: new GoogleAIBackend() });
 
 export default app;

@@ -236,6 +236,36 @@ export default {
         dismiss: 'Agora Não',
       },
     },
+    coach: {
+      title: 'Coach Financeiro IA',
+      newSession: 'Nova Sessão',
+      noSessions: 'Nenhuma sessão de coaching ainda',
+      noSessionsDescription: 'Inicie uma nova sessão para obter orientação financeira personalizada.',
+      archiveSession: 'Arquivar Sessão',
+      archiveSessionMessage: 'Tem certeza que deseja arquivar esta sessão?',
+      inputPlaceholder: 'Pergunte ao seu coach financeiro...',
+      send: 'Enviar',
+      typing: 'Coach está digitando...',
+      trial: {
+        messagesRemaining: '{{count}} mensagem gratuita restante',
+        messagesRemainingPlural: '{{count}} mensagens gratuitas restantes',
+        trialEnded: 'Seu período gratuito terminou',
+        trialEndedDescription: 'Assine o Premium para sessões de coaching ilimitadas.',
+        upgradeNow: 'Assinar Agora',
+      },
+      context: {
+        toggleLabel: 'Compartilhar contexto de gastos',
+        toggleDescription:
+          'Permite que o coach veja suas transações recentes para conselhos personalizados',
+        contextOn: 'Contexto: Ativo',
+        contextOff: 'Contexto: Inativo',
+      },
+      errors: {
+        sendFailed: 'Falha ao enviar mensagem. Tente novamente.',
+        sessionCreateFailed: 'Falha ao iniciar sessão. Tente novamente.',
+        fetchFailed: 'Falha ao carregar sessões.',
+      },
+    },
     charts: {
       // Títulos de Gráficos
       spendingByCategory: 'Gastos por Categoria',

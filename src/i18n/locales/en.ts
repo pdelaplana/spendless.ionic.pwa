@@ -358,6 +358,35 @@ export default {
         dismiss: 'Not Now',
       },
     },
+    coach: {
+      title: 'AI Financial Coach',
+      newSession: 'New Session',
+      noSessions: 'No coaching sessions yet',
+      noSessionsDescription: 'Start a new session to get personalized financial guidance.',
+      archiveSession: 'Archive Session',
+      archiveSessionMessage: 'Are you sure you want to archive this session?',
+      inputPlaceholder: 'Ask your financial coach...',
+      send: 'Send',
+      typing: 'Coach is typing...',
+      trial: {
+        messagesRemaining: '{{count}} free message remaining',
+        messagesRemainingPlural: '{{count}} free messages remaining',
+        trialEnded: 'Your free trial has ended',
+        trialEndedDescription: 'Upgrade to Premium for unlimited coaching sessions.',
+        upgradeNow: 'Upgrade Now',
+      },
+      context: {
+        toggleLabel: 'Share spending context',
+        toggleDescription: 'Allow the coach to see your recent transactions for personalized advice',
+        contextOn: 'Context: On',
+        contextOff: 'Context: Off',
+      },
+      errors: {
+        sendFailed: 'Failed to send message. Please try again.',
+        sessionCreateFailed: 'Failed to start session. Please try again.',
+        fetchFailed: 'Failed to load sessions.',
+      },
+    },
     charts: {
       // Chart Titles
       spendingByCategory: 'Spending by Category',
