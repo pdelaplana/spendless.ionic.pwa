@@ -1,32 +1,32 @@
 # Implementation Plan: AI Financial Coach (Track: ai_financial_coach_20260302)
 
 ## Phase 1: Infrastructure & Domain Setup
-- [ ] **Task: Initialize Firebase AI Logic**
-    - [ ] Modify `src/infrastructure/firebase.ts` to export `ai` using `getAI` and `GoogleAIBackend`.
-    - [ ] Verify Firebase v11.6.0+ is in `package.json`.
-- [ ] **Task: Define Domain Models**
-    - [ ] Create `src/domain/CoachSession.ts` with `ICoachSession` and `ICoachMessage` interfaces.
-    - [ ] Implement factory functions (e.g., `createCoachSession`, `createCoachMessage`).
-    - [ ] Write unit tests in `src/domain/CoachSession.test.ts`.
-- [ ] **Task: Update i18n Locales**
-    - [ ] Add `coach` namespace to `src/i18n/locales/en.ts`.
-    - [ ] Add `coach` namespace to `src/i18n/locales/pt.ts`.
-    - [ ] Ensure all keys (title, trial, context, errors) are present in both.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Domain Setup' (Protocol in workflow.md)**
+- [x] **Task: Initialize Firebase AI Logic**
+    - [x] Modify `src/infrastructure/firebase.ts` to export `ai` using `getAI` and `GoogleAIBackend`.
+    - [x] Verify Firebase v11.6.0+ is in `package.json`. (Upgraded to 11.9.1 — first version with `firebase/ai`)
+- [x] **Task: Define Domain Models**
+    - [x] Create `src/domain/CoachSession.ts` with `ICoachSession` and `ICoachMessage` interfaces.
+    - [x] Implement factory functions (e.g., `createCoachSession`, `createCoachMessage`).
+    - [x] Write unit tests in `src/domain/CoachSession.test.ts`.
+- [x] **Task: Update i18n Locales**
+    - [x] Add `coach` namespace to `src/i18n/locales/en.ts`.
+    - [x] Add `coach` namespace to `src/i18n/locales/pt.ts`.
+    - [x] Ensure all keys (title, trial, context, errors) are present in both.
+- [x] **Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Domain Setup' (Protocol in workflow.md)**
 
-## Phase 2: Data Access Layer (Hooks)
-- [ ] **Task: Create Firestore Utilities**
-    - [ ] Create `src/hooks/api/coachSessions/coachSessionUtils.ts` for paths and mappers.
-    - [ ] Implement `buildSystemPrompt` utility.
-- [ ] **Task: Implement Session Hooks**
-    - [ ] Create `useCreateCoachSession.ts` (mutation).
-    - [ ] Create `useFetchCoachSessions.ts` (query, infinite scroll support).
-    - [ ] Create `useArchiveCoachSession.ts` (mutation).
-- [ ] **Task: Implement Real-time Message Hook**
-    - [ ] Create `useCoachSessionMessages.ts` using `onSnapshot` pattern.
-- [ ] **Task: Implement Trial Tracking Hook**
-    - [ ] Update user profile logic or create `useCoachTrialStatus.ts` to track `freeCoachMessagesRemaining`.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 2: Data Access Layer (Hooks)' (Protocol in workflow.md)**
+## Phase 2: Data Access Layer (Hooks) [checkpoint: 5074e9f]
+- [x] **Task: Create Firestore Utilities**
+    - [x] Create `src/hooks/api/coachSessions/coachSessionUtils.ts` for paths and mappers.
+    - [x] Implement `buildSystemPrompt` utility.
+- [x] **Task: Implement Session Hooks**
+    - [x] Create `useCreateCoachSession.ts` (mutation).
+    - [x] Create `useFetchCoachSessions.ts` (query, infinite scroll support).
+    - [x] Create `useArchiveCoachSession.ts` (mutation).
+- [x] **Task: Implement Real-time Message Hook**
+    - [x] Create `useCoachSessionMessages.ts` using `onSnapshot` pattern.
+- [x] **Task: Implement Trial Tracking Hook**
+    - [x] Create `useCoachTrialStatus.ts` to track `freeCoachMessagesRemaining` in `userProfileExtensions`.
+- [x] **Task: Conductor - User Manual Verification 'Phase 2: Data Access Layer (Hooks)' (Protocol in workflow.md)**
 
 ## Phase 3: Core AI Integration
 - [ ] **Task: Implement AI Message Sending**
