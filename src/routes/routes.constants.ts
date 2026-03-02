@@ -22,6 +22,8 @@ export const ROUTES = {
   INBOX: '/inbox',
   SPENDING_CHECKINS: '/spending/checkins',
   SPENDING_CHECKINS_DETAIL: '/spending/checkins/:insightId',
+  SPENDING_COACH: '/spending/coach',
+  SPENDING_COACH_SESSION: '/spending/coach/:sessionId',
   PROFILE: '/profile',
   SETTINGS: '/settings',
   SUBSCRIPTION_SUCCESS: '/subscription/success',

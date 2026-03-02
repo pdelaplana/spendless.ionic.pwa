@@ -40,16 +40,16 @@
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: Core AI Integration' (Protocol in workflow.md)**
 
 ## Phase 4: UI Development
-- [ ] **Task: Session List Page**
-    - [ ] Create `src/pages/spending/FinancialCoachPage.tsx`.
-    - [ ] Implement `FeatureGate` with trial support.
-    - [ ] Show list of sessions with "New Session" button.
-- [ ] **Task: Chat Interface Page**
-    - [ ] Create `src/pages/spending/CoachChatPage.tsx`.
-    - [ ] Implement chat bubbles, typing indicator, and auto-scroll.
-    - [ ] Add **Global Context Toggle** in the chat header or input area.
-- [ ] **Task: Context Banner Component**
-    - [ ] Create `SpendingContextBanner` component for use in both pages.
+- [x] **Task: Session List Page**
+    - [x] Create `src/pages/spending/FinancialCoachPage.tsx`.
+    - [x] Implement `FeatureGate` with trial support.
+    - [x] Show list of sessions with "New Session" button.
+- [x] **Task: Chat Interface Page**
+    - [x] Create `src/pages/spending/CoachChatPage.tsx`.
+    - [x] Implement chat bubbles, typing indicator, and auto-scroll.
+    - [x] Add **Global Context Toggle** in the chat header or input area.
+- [x] **Task: Context Banner Component**
+    - [x] Create `SpendingContextBanner` component for use in both pages.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 4: UI Development' (Protocol in workflow.md)**
 
 ## Phase 5: Routing & Final Integration
