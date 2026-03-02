@@ -4,6 +4,7 @@ import { Timestamp } from 'firebase/firestore';
 import { describe, expect, it } from 'vitest';
 import {
   FREE_MESSAGES_DEFAULT,
+  buildGeminiHistory,
   buildSystemPrompt,
   messageFromFirestore,
   messageToFirestore,
@@ -264,6 +265,65 @@ describe('coachSessionUtils', () => {
   describe('FREE_MESSAGES_DEFAULT', () => {
     it('should be 5', () => {
       expect(FREE_MESSAGES_DEFAULT).toBe(5);
+    });
+  });
+
+  describe('buildGeminiHistory', () => {
+    it('should return empty array for empty messages', () => {
+      expect(buildGeminiHistory([])).toEqual([]);
+    });
+
+    it('should map sent user messages to Gemini Content format', () => {
+      const messages = [createCoachMessage({ role: 'user', content: 'Hello', status: 'sent' })];
+      const history = buildGeminiHistory(messages);
+
+      expect(history).toHaveLength(1);
+      expect(history[0].role).toBe('user');
+      expect(history[0].parts).toEqual([{ text: 'Hello' }]);
+    });
+
+    it('should map sent model messages correctly', () => {
+      const messages = [createCoachMessage({ role: 'model', content: 'Hi there!', status: 'sent' })];
+      const history = buildGeminiHistory(messages);
+
+      expect(history[0].role).toBe('model');
+      expect(history[0].parts).toEqual([{ text: 'Hi there!' }]);
+    });
+
+    it('should exclude messages with sending status', () => {
+      const messages = [
+        createCoachMessage({ role: 'user', content: 'Sent message', status: 'sent' }),
+        createCoachMessage({ role: 'user', content: 'In-flight message', status: 'sending' }),
+      ];
+      const history = buildGeminiHistory(messages);
+
+      expect(history).toHaveLength(1);
+      expect(history[0].parts[0].text).toBe('Sent message');
+    });
+
+    it('should exclude messages with error status', () => {
+      const messages = [
+        createCoachMessage({ role: 'user', content: 'Good message', status: 'sent' }),
+        createCoachMessage({ role: 'user', content: 'Failed message', status: 'error' }),
+      ];
+      const history = buildGeminiHistory(messages);
+
+      expect(history).toHaveLength(1);
+      expect(history[0].parts[0].text).toBe('Good message');
+    });
+
+    it('should preserve message order', () => {
+      const messages = [
+        createCoachMessage({ role: 'user', content: 'First', status: 'sent' }),
+        createCoachMessage({ role: 'model', content: 'Second', status: 'sent' }),
+        createCoachMessage({ role: 'user', content: 'Third', status: 'sent' }),
+      ];
+      const history = buildGeminiHistory(messages);
+
+      expect(history).toHaveLength(3);
+      expect(history[0].parts[0].text).toBe('First');
+      expect(history[1].parts[0].text).toBe('Second');
+      expect(history[2].parts[0].text).toBe('Third');
     });
   });
 });

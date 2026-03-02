@@ -58,6 +58,14 @@ export const messageFromFirestore = (id: string, data: DocumentData): ICoachMess
   id,
 });
 
+// Converts ICoachMessage history to the Content format expected by the Gemini chat API
+export const buildGeminiHistory = (
+  messages: ICoachMessage[],
+): { role: 'user' | 'model'; parts: [{ text: string }] }[] =>
+  messages
+    .filter((m) => m.status === 'sent')
+    .map((m) => ({ role: m.role, parts: [{ text: m.content }] }));
+
 // System prompt builder (basic version — refined in Phase 3 with real spending data)
 export const buildSystemPrompt = (options: {
   includeContext: boolean;

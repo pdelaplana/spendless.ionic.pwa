@@ -29,14 +29,14 @@
 - [x] **Task: Conductor - User Manual Verification 'Phase 2: Data Access Layer (Hooks)' (Protocol in workflow.md)**
 
 ## Phase 3: Core AI Integration
-- [ ] **Task: Implement AI Message Sending**
-    - [ ] Create `useSendCoachMessage.ts`.
-    - [ ] Logic: Save user message (sending) -> Gemini call -> Save AI response -> Update session metadata.
-    - [ ] Implement error handling and "sending" status updates.
-    - [ ] Integrate `freeCoachMessagesRemaining` decrement logic.
-- [ ] **Task: Implement System Prompt Building**
-    - [ ] Refine `buildSystemPrompt` to include 30 recent transactions and user profile context.
-    - [ ] Implement the **Global Context Toggle** logic within the prompt builder.
+- [x] **Task: Implement AI Message Sending**
+    - [x] Create `useSendCoachMessage.ts`.
+    - [x] Logic: Save user message (sending) -> Gemini call -> Save AI response -> Update session metadata.
+    - [x] Implement error handling and "sending" status updates.
+    - [x] Integrate `freeCoachMessagesRemaining` decrement logic.
+- [x] **Task: Implement System Prompt Building**
+    - [x] Refine `buildSystemPrompt` to include 30 recent transactions and user profile context.
+    - [x] Implement the **Global Context Toggle** logic within the prompt builder.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: Core AI Integration' (Protocol in workflow.md)**
 
 ## Phase 4: UI Development
