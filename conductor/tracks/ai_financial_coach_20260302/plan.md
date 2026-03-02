@@ -53,11 +53,11 @@
 - [ ] **Task: Conductor - User Manual Verification 'Phase 4: UI Development' (Protocol in workflow.md)**
 
 ## Phase 5: Routing & Final Integration
-- [ ] **Task: Configure Routes**
-    - [ ] Add constants to `src/routes/routes.constants.ts`.
-    - [ ] Update `src/routes/AppRoutes.tsx` with new routes (ordering matters!).
-- [ ] **Task: Add Entry Point**
-    - [ ] Add link to Financial Coach in `InsightsPage.tsx` or `SpendingPage.tsx`.
+- [x] **Task: Configure Routes**
+    - [x] Add constants to `src/routes/routes.constants.ts`.
+    - [x] Update `src/routes/AppRoutes.tsx` with new routes (ordering matters!).
+- [x] **Task: Add Entry Point**
+    - [x] Add link to Financial Coach in `InsightsPage.tsx` or `SpendingPage.tsx`.
 - [ ] **Task: Final Smoke Test**
     - [ ] Verify end-to-end flow: Trial -> Upgrade -> Chat with context -> Archive session.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 5: Routing & Final Integration' (Protocol in workflow.md)**
