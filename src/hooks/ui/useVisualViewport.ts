@@ -12,9 +12,7 @@ export function useVisualViewport(): UseVisualViewportReturn {
     if (!viewport) return;
 
     const update = () => {
-      const vp = window.visualViewport;
-      if (!vp) return;
-      const offset = window.innerHeight - vp.height - vp.offsetTop;
+      const offset = window.innerHeight - viewport.height - viewport.offsetTop;
       setKeyboardOffset(Math.max(0, offset));
     };
 
