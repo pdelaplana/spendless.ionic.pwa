@@ -16,22 +16,19 @@ export function useArchiveCoachSession() {
 
   return useMutation({
     mutationFn: async ({ accountId, sessionId }: ArchiveCoachSessionParams) => {
-      return Sentry.startSpan(
-        { name: 'useArchiveCoachSession', op: 'mutation' },
-        async (span) => {
-          const sessionRef = doc(
-            db,
-            ACCOUNTS_COLLECTION,
-            accountId,
-            COACH_SESSIONS_SUBCOLLECTION,
-            sessionId,
-          );
+      return Sentry.startSpan({ name: 'useArchiveCoachSession', op: 'mutation' }, async (span) => {
+        const sessionRef = doc(
+          db,
+          ACCOUNTS_COLLECTION,
+          accountId,
+          COACH_SESSIONS_SUBCOLLECTION,
+          sessionId,
+        );
 
-          await updateDoc(sessionRef, { archivedAt: Timestamp.now() });
+        await updateDoc(sessionRef, { archivedAt: Timestamp.now() });
 
-          span.setAttributes({ sessionId, accountId });
-        },
-      );
+        span.setAttributes({ sessionId, accountId });
+      });
     },
     onSuccess: (_, { accountId }) => {
       queryClient.invalidateQueries({

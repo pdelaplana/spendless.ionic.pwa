@@ -3,7 +3,7 @@ import { useLogging } from '@/hooks';
 import { db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/browser';
 import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import {
   ACCOUNTS_COLLECTION,
   COACH_SESSIONS_SUBCOLLECTION,
@@ -26,14 +26,12 @@ export function useFetchCoachSessions(accountId: string | undefined) {
           COACH_SESSIONS_SUBCOLLECTION,
         );
 
-        const q = query(
-          sessionsRef,
-          where('archivedAt', '==', null),
-          orderBy('updatedAt', 'desc'),
-        );
+        const q = query(sessionsRef, where('archivedAt', '==', null));
 
         const snapshot = await getDocs(q);
-        return snapshot.docs.map((doc) => sessionFromFirestore(doc.id, doc.data()));
+        return snapshot.docs
+          .map((doc) => sessionFromFirestore(doc.id, doc.data()))
+          .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
       });
     },
     enabled: !!accountId,

@@ -9,7 +9,6 @@ import { designSystem } from '@/theme/designSystem';
 import { IonLabel } from '@ionic/react';
 import {
   barChartOutline,
-  chatbubblesOutline,
   heartCircleOutline,
   pricetagOutline,
   statsChartOutline,
@@ -75,24 +74,6 @@ const InsightsPage: React.FC = () => {
                   <IonLabel>
                     <h2>Spend Analysis by Tags</h2>
                     <p>Analyze your spending patterns by tags</p>
-                  </IonLabel>
-                </StyledItem>
-
-                <StyledItem
-                  button
-                  onClick={() => history.push(ROUTES.SPENDING_COACH)}
-                  detail
-                >
-                  <div slot='start' style={{ marginRight: '0px' }}>
-                    <IconContainer
-                      icon={chatbubblesOutline}
-                      bgColor='rgba(93, 51, 140, 0.1)'
-                      iconColor='#5D338C'
-                    />
-                  </div>
-                  <IonLabel>
-                    <h2>{t('coach.title')}</h2>
-                    <p>{t('insights.aiCheckinCard.description')}</p>
                   </IonLabel>
                 </StyledItem>
 

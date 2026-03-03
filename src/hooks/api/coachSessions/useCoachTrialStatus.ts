@@ -2,10 +2,7 @@ import { useLogging } from '@/hooks';
 import { db } from '@/infrastructure/firebase';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import {
-  FREE_MESSAGES_DEFAULT,
-  USER_PROFILE_EXTENSIONS_COLLECTION,
-} from './coachSessionUtils';
+import { FREE_MESSAGES_DEFAULT, USER_PROFILE_EXTENSIONS_COLLECTION } from './coachSessionUtils';
 
 const TRIAL_QUERY_KEY = 'useCoachTrialStatus';
 

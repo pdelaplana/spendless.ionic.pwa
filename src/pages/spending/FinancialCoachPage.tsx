@@ -1,6 +1,7 @@
-import { BasePageLayout } from '@/components/layouts';
+import { BasePageLayout, CenterContainer } from '@/components/layouts';
 import MainMenuContent from '@/components/menu/MainMenuContent';
 import { EmptyState, LoadingState, SentryErrorBoundary } from '@/components/shared';
+import type { ICoachSession } from '@/domain/CoachSession';
 import {
   useArchiveCoachSession,
   useCoachTrialStatus,
@@ -30,7 +31,6 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import type { ICoachSession } from '@/domain/CoachSession';
 
 const PageContainer = styled.div`
   padding: ${designSystem.spacing.md};
@@ -59,6 +59,7 @@ const TrialText = styled.p`
 `;
 
 const SessionCard = styled.div`
+  width: 100%;
   background: white;
   border-radius: ${designSystem.borderRadius.lg};
   padding: ${designSystem.spacing.md};
@@ -159,7 +160,8 @@ const FinancialCoachPage: React.FC = () => {
     >
       <GradientBackground>
         <SentryErrorBoundary>
-          <PageContainer>
+          <CenterContainer>
+            <PageContainer>
             {showTrialBanner && (
               <TrialBanner>
                 <IonIcon icon={chatbubblesOutline} color='secondary' />
@@ -187,16 +189,14 @@ const FinancialCoachPage: React.FC = () => {
                       <SessionCard onClick={() => handleSessionClick(session)}>
                         <SessionTitle>{session.title}</SessionTitle>
                         <SessionMeta>
-                          {session.messageCount} {session.messageCount === 1 ? 'message' : 'messages'} ·{' '}
+                          {session.messageCount}{' '}
+                          {session.messageCount === 1 ? 'message' : 'messages'} ·{' '}
                           {formatDate(session.updatedAt, false)}
                         </SessionMeta>
                       </SessionCard>
                     </IonItem>
                     <IonItemOptions side='end'>
-                      <IonItemOption
-                        color='medium'
-                        onClick={() => setSessionToArchive(session)}
-                      >
+                      <IonItemOption color='medium' onClick={() => setSessionToArchive(session)}>
                         <IonIcon slot='start' icon={archiveOutline} />
                         {t('coach.archiveSession')}
                       </IonItemOption>
@@ -206,6 +206,7 @@ const FinancialCoachPage: React.FC = () => {
               </IonList>
             )}
           </PageContainer>
+          </CenterContainer>
         </SentryErrorBoundary>
       </GradientBackground>
 

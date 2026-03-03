@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import MainMenuContent from './MainMenuContent';
 import { useSpendingAccount } from '@/providers/spendingAccount';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import MainMenuContent from './MainMenuContent';
 
 vi.mock('@/providers/auth', () => ({
   useAuth: vi.fn(() => ({
@@ -18,9 +18,7 @@ vi.mock('@/hooks', () => ({
 }));
 
 vi.mock('@/components/shared', async () => {
-  const actual = await vi.importActual<typeof import('@/components/shared')>(
-    '@/components/shared',
-  );
+  const actual = await vi.importActual<typeof import('@/components/shared')>('@/components/shared');
   return {
     ...actual,
     ProfilePhoto: () => null,
@@ -51,7 +49,9 @@ vi.mock('@/hooks/subscription', () => ({
 }));
 
 describe('MainMenuContent', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders a Notifications section heading', () => {
     render(<MainMenuContent />);

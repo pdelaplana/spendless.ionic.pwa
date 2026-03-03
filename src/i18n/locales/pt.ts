@@ -240,7 +240,8 @@ export default {
       title: 'Coach Financeiro IA',
       newSession: 'Nova Sessão',
       noSessions: 'Nenhuma sessão de coaching ainda',
-      noSessionsDescription: 'Inicie uma nova sessão para obter orientação financeira personalizada.',
+      noSessionsDescription:
+        'Inicie uma nova sessão para obter orientação financeira personalizada.',
       archiveSession: 'Arquivar Sessão',
       archiveSessionMessage: 'Tem certeza que deseja arquivar esta sessão?',
       inputPlaceholder: 'Pergunte ao seu coach financeiro...',

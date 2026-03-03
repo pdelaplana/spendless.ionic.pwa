@@ -1,8 +1,8 @@
-import styled from 'styled-components';
 import { IonIcon, IonToggle } from '@ionic/react';
+import { designSystem } from '@theme/designSystem';
 import { statsChartOutline } from 'ionicons/icons';
 import { useTranslation } from 'react-i18next';
-import { designSystem } from '@theme/designSystem';
+import styled from 'styled-components';
 
 interface SpendingContextBannerProps {
   includeContext: boolean;
@@ -13,9 +13,10 @@ const BannerContainer = styled.div`
   display: flex;
   align-items: center;
   gap: ${designSystem.spacing.sm};
-  padding: ${designSystem.spacing.sm} ${designSystem.spacing.md};
+  padding: ${designSystem.spacing.md} ${designSystem.spacing.md};
   background: ${designSystem.colors.gray[50]};
-  border-bottom: 1px solid ${designSystem.colors.gray[200]};
+  margin: ${designSystem.spacing.md};
+  border: 1px solid ${designSystem.colors.gray[200]};
 `;
 
 const BannerIcon = styled(IonIcon)`
@@ -54,9 +55,7 @@ export const SpendingContextBanner: React.FC<SpendingContextBannerProps> = ({
       <BannerText>
         <BannerLabel>{t('coach.context.toggleLabel')}</BannerLabel>
         <BannerSubtitle>
-          {includeContext
-            ? t('coach.context.toggleDescription')
-            : t('coach.context.contextOff')}
+          {includeContext ? t('coach.context.toggleDescription') : t('coach.context.contextOff')}
         </BannerSubtitle>
       </BannerText>
       <IonToggle

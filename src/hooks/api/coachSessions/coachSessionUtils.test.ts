@@ -283,7 +283,9 @@ describe('coachSessionUtils', () => {
     });
 
     it('should map sent model messages correctly', () => {
-      const messages = [createCoachMessage({ role: 'model', content: 'Hi there!', status: 'sent' })];
+      const messages = [
+        createCoachMessage({ role: 'model', content: 'Hi there!', status: 'sent' }),
+      ];
       const history = buildGeminiHistory(messages);
 
       expect(history[0].role).toBe('model');

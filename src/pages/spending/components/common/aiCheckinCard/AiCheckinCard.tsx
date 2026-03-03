@@ -28,7 +28,7 @@ const AiCheckinCard: React.FC = () => {
     (!account?.lastAiCheckinAt || insights[0].generatedAt > account.lastAiCheckinAt);
 
   const handleNavigateToCheckins = () => {
-    history.push(ROUTES.SPENDING_CHECKINS);
+    history.push(ROUTES.SPENDING_COACH);
   };
 
   return (

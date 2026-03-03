@@ -377,7 +377,8 @@ export default {
       },
       context: {
         toggleLabel: 'Share spending context',
-        toggleDescription: 'Allow the coach to see your recent transactions for personalized advice',
+        toggleDescription:
+          'Allow the coach to see your recent transactions for personalized advice',
         contextOn: 'Context: On',
         contextOff: 'Context: Off',
       },

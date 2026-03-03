@@ -1,4 +1,4 @@
-import { BasePageLayout } from '@/components/layouts';
+import { BasePageLayout, CenterContainer } from '@/components/layouts';
 import { SentryErrorBoundary } from '@/components/shared';
 import type { ICoachSession } from '@/domain/CoachSession';
 import {
@@ -33,7 +33,7 @@ interface CoachChatParams {
 const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: calc(100dvh - 60px);
 `;
 
 const MessagesArea = styled.div`
@@ -134,22 +134,9 @@ const TrialWarning = styled.div`
 
 const InputArea = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: ${designSystem.spacing.sm};
   padding: ${designSystem.spacing.sm} ${designSystem.spacing.md};
-  background: white;
-  border-top: 1px solid ${designSystem.colors.gray[200]};
-`;
-
-const StyledTextarea = styled(IonTextarea)`
-  --background: ${designSystem.colors.gray[50]};
-  --border-radius: ${designSystem.borderRadius.lg};
-  --padding-start: ${designSystem.spacing.md};
-  --padding-end: ${designSystem.spacing.md};
-  --padding-top: ${designSystem.spacing.sm};
-  --padding-bottom: ${designSystem.spacing.sm};
-  flex: 1;
-  font-size: 0.9375rem;
 `;
 
 const SendButton = styled(IonButton)`
@@ -283,90 +270,94 @@ const CoachChatPage: React.FC = () => {
     >
       <GradientBackground>
         <SentryErrorBoundary>
-          <ChatContainer>
-            <SpendingContextBanner includeContext={includeContext} onToggle={setIncludeContext} />
+          <CenterContainer>
+            <ChatContainer>
+              <SpendingContextBanner includeContext={includeContext} onToggle={setIncludeContext} />
 
-            <MessagesArea>
-              {messagesLoading ? null : (
-                <>
-                  {messages.map((msg) => (
-                    <BubbleRow
-                      key={msg.id ?? msg.createdAt.toISOString()}
-                      $isUser={msg.role === 'user'}
-                    >
-                      <Bubble $isUser={msg.role === 'user'} $isError={msg.status === 'error'}>
-                        {msg.status === 'error' ? (
-                          <span>
-                            <IonIcon icon={warningOutline} /> {t('coach.errors.sendFailed')}
-                          </span>
-                        ) : msg.role === 'model' ? (
-                          <ReactMarkdown
-                            components={markdownComponents}
-                            remarkPlugins={[remarkGfm]}
-                          >
-                            {msg.content}
-                          </ReactMarkdown>
-                        ) : (
-                          msg.content
-                        )}
-                        {msg.role === 'user' && msg.status === 'sending' && (
-                          <BubbleStatus>…</BubbleStatus>
-                        )}
-                      </Bubble>
-                    </BubbleRow>
-                  ))}
+              <MessagesArea>
+                {messagesLoading ? null : (
+                  <>
+                    {messages.map((msg) => (
+                      <BubbleRow
+                        key={msg.id ?? msg.createdAt.toISOString()}
+                        $isUser={msg.role === 'user'}
+                      >
+                        <Bubble $isUser={msg.role === 'user'} $isError={msg.status === 'error'}>
+                          {msg.status === 'error' ? (
+                            <span>
+                              <IonIcon icon={warningOutline} /> {t('coach.errors.sendFailed')}
+                            </span>
+                          ) : msg.role === 'model' ? (
+                            <ReactMarkdown
+                              components={markdownComponents}
+                              remarkPlugins={[remarkGfm]}
+                            >
+                              {msg.content}
+                            </ReactMarkdown>
+                          ) : (
+                            msg.content
+                          )}
+                          {msg.role === 'user' && msg.status === 'sending' && (
+                            <BubbleStatus>…</BubbleStatus>
+                          )}
+                        </Bubble>
+                      </BubbleRow>
+                    ))}
 
-                  {isPending && (
-                    <BubbleRow $isUser={false}>
-                      <TypingIndicator aria-label={t('coach.typing')}>
-                        <span />
-                        <span />
-                        <span />
-                      </TypingIndicator>
-                    </BubbleRow>
-                  )}
-                </>
+                    {isPending && (
+                      <BubbleRow $isUser={false}>
+                        <TypingIndicator aria-label={t('coach.typing')}>
+                          <span />
+                          <span />
+                          <span />
+                        </TypingIndicator>
+                      </BubbleRow>
+                    )}
+                  </>
+                )}
+                <div ref={bottomRef} />
+              </MessagesArea>
+
+              {showTrialWarning && (
+                <TrialWarning>
+                  <IonIcon icon={warningOutline} />
+                  {messagesRemaining === 1
+                    ? t('coach.trial.messagesRemaining', { count: messagesRemaining })
+                    : t('coach.trial.messagesRemainingPlural', { count: messagesRemaining })}
+                </TrialWarning>
               )}
-              <div ref={bottomRef} />
-            </MessagesArea>
 
-            {showTrialWarning && (
-              <TrialWarning>
-                <IonIcon icon={warningOutline} />
-                {messagesRemaining === 1
-                  ? t('coach.trial.messagesRemaining', { count: messagesRemaining })
-                  : t('coach.trial.messagesRemainingPlural', { count: messagesRemaining })}
-              </TrialWarning>
-            )}
-
-            {!subscription.isPremium && hasTrialExpired ? (
-              <UpgradePrompt>
-                <p>{t('coach.trial.trialEndedDescription')}</p>
-                <IonButton color='secondary' routerLink={ROUTES.SETTINGS}>
-                  {t('coach.trial.upgradeNow')}
-                </IonButton>
-              </UpgradePrompt>
-            ) : (
-              <InputArea>
-                <StyledTextarea
-                  value={inputValue}
-                  onIonInput={(e) => setInputValue(e.detail.value ?? '')}
-                  onKeyDown={handleKeyDown}
-                  placeholder={t('coach.inputPlaceholder')}
-                  autoGrow={true}
-                  rows={1}
-                  disabled={isPending}
-                />
-                <SendButton color='secondary' onClick={handleSend} disabled={isSendDisabled}>
-                  {isPending ? (
-                    <IonSpinner slot='icon-only' name='crescent' />
-                  ) : (
-                    <IonIcon slot='icon-only' icon={sendOutline} />
-                  )}
-                </SendButton>
-              </InputArea>
-            )}
-          </ChatContainer>
+              {!subscription.isPremium && hasTrialExpired ? (
+                <UpgradePrompt>
+                  <p>{t('coach.trial.trialEndedDescription')}</p>
+                  <IonButton color='secondary' routerLink={ROUTES.SETTINGS}>
+                    {t('coach.trial.upgradeNow')}
+                  </IonButton>
+                </UpgradePrompt>
+              ) : (
+                <InputArea>
+                  <IonTextarea
+                    value={inputValue}
+                    onIonInput={(e) => setInputValue(e.detail.value ?? '')}
+                    onKeyDown={handleKeyDown}
+                    placeholder={t('coach.inputPlaceholder')}
+                    autoGrow={true}
+                    rows={1}
+                    fill='outline'
+                    disabled={isPending}
+                    style={{ flex: 1 }}
+                  />
+                  <SendButton color='secondary' onClick={handleSend} disabled={isSendDisabled}>
+                    {isPending ? (
+                      <IonSpinner slot='icon-only' name='crescent' />
+                    ) : (
+                      <IonIcon slot='icon-only' icon={sendOutline} />
+                    )}
+                  </SendButton>
+                </InputArea>
+              )}
+            </ChatContainer>
+          </CenterContainer>
         </SentryErrorBoundary>
       </GradientBackground>
     </BasePageLayout>

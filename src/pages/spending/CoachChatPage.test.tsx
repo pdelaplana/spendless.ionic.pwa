@@ -46,6 +46,9 @@ vi.mock('@/components/layouts', () => ({
       {children}
     </div>
   ),
+  CenterContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid='center-container'>{children}</div>
+  ),
 }));
 vi.mock('@/components/shared', () => ({
   SentryErrorBoundary: ({ children }: { children: React.ReactNode }) => (

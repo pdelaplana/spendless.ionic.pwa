@@ -4,8 +4,8 @@ import { useLogging } from '@/hooks';
 import { ai, db } from '@/infrastructure/firebase';
 import * as Sentry from '@sentry/browser';
 import { useMutation } from '@tanstack/react-query';
-import { Timestamp, addDoc, collection, doc, increment, updateDoc } from 'firebase/firestore';
 import { getGenerativeModel } from 'firebase/ai';
+import { Timestamp, addDoc, collection, doc, increment, updateDoc } from 'firebase/firestore';
 import {
   ACCOUNTS_COLLECTION,
   COACH_SESSIONS_SUBCOLLECTION,

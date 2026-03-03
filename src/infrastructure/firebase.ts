@@ -1,5 +1,5 @@
-import { getAnalytics, isSupported } from 'firebase/analytics';
 import { GoogleAIBackend, getAI } from 'firebase/ai';
+import { getAnalytics, isSupported } from 'firebase/analytics';
 import { type FirebaseApp, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import {
