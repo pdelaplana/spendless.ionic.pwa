@@ -8,6 +8,7 @@ import {
 } from '@/hooks/api/coachSessions';
 import { buildSystemPrompt } from '@/hooks/api/coachSessions/coachSessionUtils';
 import { useSubscription } from '@/hooks/subscription';
+import { useVisualViewport } from '@/hooks/ui';
 import { useAuth } from '@/providers/auth/useAuth';
 import { useSpendingAccount } from '@/providers/spendingAccount/useSpendingAccount';
 import { ROUTES } from '@/routes/routes.constants';
@@ -208,6 +209,7 @@ export const CoachChatPage: React.FC = () => {
   const { messages, isLoading: messagesLoading } = useCoachSessionMessages(account?.id, sessionId);
   const { mutate: sendMessage, isPending } = useSendCoachMessage();
   const { messagesRemaining, hasTrialExpired, decrementMessages } = useCoachTrialStatus(user?.uid);
+  const { keyboardOffset } = useVisualViewport();
 
   // Sort spending by date desc and cap at 30 for system prompt
   const recentSpends = useMemo(
@@ -226,10 +228,10 @@ export const CoachChatPage: React.FC = () => {
   );
 
   // Auto-scroll to bottom when messages change or typing indicator appears
-  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll when message list or typing indicator changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll when message list, typing indicator, or keyboard changes
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isPending]);
+  }, [messages, isPending, keyboardOffset]);
 
   const handleSend = () => {
     const content = inputValue.trim();
@@ -271,7 +273,7 @@ export const CoachChatPage: React.FC = () => {
       <GradientBackground>
         <SentryErrorBoundary>
           <CenterContainer>
-            <ChatContainer>
+            <ChatContainer style={{ paddingBottom: keyboardOffset }}>
               <SpendingContextBanner includeContext={includeContext} onToggle={setIncludeContext} />
 
               <MessagesArea>
@@ -363,5 +365,3 @@ export const CoachChatPage: React.FC = () => {
     </BasePageLayout>
   );
 };
-
-
