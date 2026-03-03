@@ -1,5 +1,6 @@
 import { BasePageLayout } from '@/components/layouts';
 import { SentryErrorBoundary } from '@/components/shared';
+import ReactMarkdown from 'react-markdown';
 import type { ICoachSession } from '@/domain/CoachSession';
 import {
   useCoachSessionMessages,
@@ -76,6 +77,10 @@ const Bubble = styled.div<{ $isUser: boolean; $isError?: boolean }>`
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     border: 1px solid ${designSystem.colors.gray[200]};
   `}
+
+  .md-p:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const BubbleStatus = styled.span`
@@ -166,6 +171,42 @@ const UpgradePrompt = styled.div`
     color: ${designSystem.colors.text.secondary};
   }
 `;
+
+// ─── Markdown Components ──────────────────────────────────────────────────────
+
+const markdownComponents = {
+  p: ({ children }: { children: React.ReactNode }) => (
+    <p style={{ margin: '0 0 0.5em', lineHeight: 1.5 }} className='md-p'>{children}</p>
+  ),
+  ul: ({ children }: { children: React.ReactNode }) => (
+    <ul style={{ margin: '0.25em 0', paddingLeft: '1.25em' }}>{children}</ul>
+  ),
+  ol: ({ children }: { children: React.ReactNode }) => (
+    <ol style={{ margin: '0.25em 0', paddingLeft: '1.25em' }}>{children}</ol>
+  ),
+  li: ({ children }: { children: React.ReactNode }) => (
+    <li style={{ margin: '0.15em 0' }}>{children}</li>
+  ),
+  h2: ({ children }: { children: React.ReactNode }) => (
+    <h2 style={{ fontSize: '0.9375rem', fontWeight: 600, margin: '0.5em 0 0.25em' }}>{children}</h2>
+  ),
+  h3: ({ children }: { children: React.ReactNode }) => (
+    <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, margin: '0.5em 0 0.25em' }}>{children}</h3>
+  ),
+  code: ({ children }: { children: React.ReactNode }) => (
+    <code
+      style={{
+        fontFamily: 'monospace',
+        fontSize: '0.875em',
+        background: '#f3f4f6',
+        borderRadius: '3px',
+        padding: '1px 4px',
+      }}
+    >
+      {children}
+    </code>
+  ),
+};
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -269,6 +310,8 @@ const CoachChatPage: React.FC = () => {
                           <span>
                             <IonIcon icon={warningOutline} /> {t('coach.errors.sendFailed')}
                           </span>
+                        ) : msg.role === 'model' ? (
+                          <ReactMarkdown components={markdownComponents}>{msg.content}</ReactMarkdown>
                         ) : (
                           msg.content
                         )}
