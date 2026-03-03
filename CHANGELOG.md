@@ -1,3 +1,22 @@
+# [1.13.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.12.0...v1.13.0) (2026-03-03)
+
+
+### Bug Fixes
+
+* **coach:** Fix pre-existing Biome lint errors in chat page ([e035f96](https://github.com/pdelaplana/spendless.ionic.pwa/commit/e035f963a96a8e2d0496e3b847566a5fe9c9a57d))
+* **coach:** Fix TypeScript types, add remarkGfm, fix import order and CSS ([1798f1b](https://github.com/pdelaplana/spendless.ionic.pwa/commit/1798f1b4543a8de5c0dd935b017a69f6f09636db))
+* **conductor:** Apply review suggestions for track 'ai_financial_coach_20260302' ([123ef64](https://github.com/pdelaplana/spendless.ionic.pwa/commit/123ef644ca5f3865575c58811cd2a4c9261d7350))
+
+
+### Features
+
+* **coach:** Complete AI Financial Coach feature ([cc5cfa3](https://github.com/pdelaplana/spendless.ionic.pwa/commit/cc5cfa3baa648ca484a32d3a7e2f92cb51d0fba9))
+* **coach:** Finalize AI Financial Coach integration and cleanup ([8ae01a4](https://github.com/pdelaplana/spendless.ionic.pwa/commit/8ae01a446697c03fb8a34edfc74c8ef9992af7bc))
+* **coach:** Implement AI message sending hook for Phase 3 ([d096b3c](https://github.com/pdelaplana/spendless.ionic.pwa/commit/d096b3ceacc5b0575cc240126d9ba06245f41395))
+* **coach:** Implement Phase 4 UI — session list, chat interface, context banner ([d1c3442](https://github.com/pdelaplana/spendless.ionic.pwa/commit/d1c34425bd98aeede9b36eaf2d2e9d65a2272533))
+* **coach:** Phase 5 — wire routes and add InsightsPage entry point ([a0c0ea0](https://github.com/pdelaplana/spendless.ionic.pwa/commit/a0c0ea00494b04767dbabf8b76bb6daed177791d))
+* **coach:** Render AI responses as markdown ([ba1e77c](https://github.com/pdelaplana/spendless.ionic.pwa/commit/ba1e77c8fe190690961e646f272d22b546d0ec28))
+
 # [1.12.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.11.0...v1.12.0) (2026-03-01)
 
 
