@@ -10,8 +10,5 @@
     "vitest.explorer",
     "Webnative.webnative"
   ],
-  "unwantedRecommendations": [
-    "esbenp.prettier-vscode",
-    "ms-vscode.vscode-eslint"
-  ]
+  "unwantedRecommendations": ["esbenp.prettier-vscode", "ms-vscode.vscode-eslint"]
 }

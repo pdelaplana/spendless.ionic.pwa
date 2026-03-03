@@ -15,6 +15,8 @@ import ProfilePage from '@/pages/profile/ProfilePage';
 import SettingsPage from '@/pages/settings/SettingsPage';
 import AiInsightDetailPage from '@/pages/spending/AiInsightDetailPage';
 import AiInsightsListPage from '@/pages/spending/AiInsightsListPage';
+import { CoachChatPage } from '@/pages/spending/CoachChatPage';
+import { FinancialCoachPage } from '@/pages/spending/FinancialCoachPage';
 import InsightsPage from '@/pages/spending/InsightsPage';
 import MoodAnalysisPage from '@/pages/spending/MoodAnalysisPage';
 import RecurringSpendingPage from '@/pages/spending/RecurringSpendingPage';
@@ -90,6 +92,12 @@ const SpendingRoutes = () => {
         </Route>
         <Route path={ROUTES.SPENDING_CHECKINS} exact={true}>
           <AiInsightsListPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_COACH_SESSION} exact={true}>
+          <CoachChatPage />
+        </Route>
+        <Route path={ROUTES.SPENDING_COACH} exact={true}>
+          <FinancialCoachPage />
         </Route>
         <Route path={ROUTES.SPENDING_INSIGHTS} exact={true}>
           <InsightsPage />
