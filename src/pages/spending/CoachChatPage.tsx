@@ -1,6 +1,5 @@
 import { BasePageLayout } from '@/components/layouts';
 import { SentryErrorBoundary } from '@/components/shared';
-import ReactMarkdown from 'react-markdown';
 import type { ICoachSession } from '@/domain/CoachSession';
 import {
   useCoachSessionMessages,
@@ -18,7 +17,10 @@ import { IonButton, IonIcon, IonSpinner, IonTextarea } from '@ionic/react';
 import { sendOutline, warningOutline } from 'ionicons/icons';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { Components } from 'react-markdown';
+import ReactMarkdown from 'react-markdown';
 import { useLocation, useParams } from 'react-router-dom';
+import remarkGfm from 'remark-gfm';
 import styled from 'styled-components';
 import { SpendingContextBanner } from './components/coach/SpendingContextBanner';
 
@@ -78,7 +80,7 @@ const Bubble = styled.div<{ $isUser: boolean; $isError?: boolean }>`
     border: 1px solid ${designSystem.colors.gray[200]};
   `}
 
-  .md-p:last-child {
+  p:last-child {
     margin-bottom: 0;
   }
 `;
@@ -174,26 +176,18 @@ const UpgradePrompt = styled.div`
 
 // ─── Markdown Components ──────────────────────────────────────────────────────
 
-const markdownComponents = {
-  p: ({ children }: { children: React.ReactNode }) => (
-    <p style={{ margin: '0 0 0.5em', lineHeight: 1.5 }} className='md-p'>{children}</p>
-  ),
-  ul: ({ children }: { children: React.ReactNode }) => (
-    <ul style={{ margin: '0.25em 0', paddingLeft: '1.25em' }}>{children}</ul>
-  ),
-  ol: ({ children }: { children: React.ReactNode }) => (
-    <ol style={{ margin: '0.25em 0', paddingLeft: '1.25em' }}>{children}</ol>
-  ),
-  li: ({ children }: { children: React.ReactNode }) => (
-    <li style={{ margin: '0.15em 0' }}>{children}</li>
-  ),
-  h2: ({ children }: { children: React.ReactNode }) => (
+const markdownComponents: Components = {
+  p: ({ children }) => <p style={{ margin: '0 0 0.5em', lineHeight: 1.5 }}>{children}</p>,
+  ul: ({ children }) => <ul style={{ margin: '0.25em 0', paddingLeft: '1.25em' }}>{children}</ul>,
+  ol: ({ children }) => <ol style={{ margin: '0.25em 0', paddingLeft: '1.25em' }}>{children}</ol>,
+  li: ({ children }) => <li style={{ margin: '0.15em 0' }}>{children}</li>,
+  h2: ({ children }) => (
     <h2 style={{ fontSize: '0.9375rem', fontWeight: 600, margin: '0.5em 0 0.25em' }}>{children}</h2>
   ),
-  h3: ({ children }: { children: React.ReactNode }) => (
+  h3: ({ children }) => (
     <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, margin: '0.5em 0 0.25em' }}>{children}</h3>
   ),
-  code: ({ children }: { children: React.ReactNode }) => (
+  code: ({ children }) => (
     <code
       style={{
         fontFamily: 'monospace',
@@ -224,14 +218,9 @@ const CoachChatPage: React.FC = () => {
   const [includeContext, setIncludeContext] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { messages, isLoading: messagesLoading } = useCoachSessionMessages(
-    account?.id,
-    sessionId,
-  );
+  const { messages, isLoading: messagesLoading } = useCoachSessionMessages(account?.id, sessionId);
   const { mutate: sendMessage, isPending } = useSendCoachMessage();
-  const { messagesRemaining, hasTrialExpired, decrementMessages } = useCoachTrialStatus(
-    user?.uid,
-  );
+  const { messagesRemaining, hasTrialExpired, decrementMessages } = useCoachTrialStatus(user?.uid);
 
   // Sort spending by date desc and cap at 30 for system prompt
   const recentSpends = useMemo(
@@ -279,8 +268,7 @@ const CoachChatPage: React.FC = () => {
   const isSendDisabled =
     isPending || !inputValue.trim() || (!subscription.isPremium && hasTrialExpired);
 
-  const showTrialWarning =
-    !subscription.isPremium && !hasTrialExpired && messagesRemaining <= 2;
+  const showTrialWarning = !subscription.isPremium && !hasTrialExpired && messagesRemaining <= 2;
 
   return (
     <BasePageLayout
@@ -295,23 +283,28 @@ const CoachChatPage: React.FC = () => {
       <GradientBackground>
         <SentryErrorBoundary>
           <ChatContainer>
-            <SpendingContextBanner
-              includeContext={includeContext}
-              onToggle={setIncludeContext}
-            />
+            <SpendingContextBanner includeContext={includeContext} onToggle={setIncludeContext} />
 
             <MessagesArea>
               {messagesLoading ? null : (
                 <>
                   {messages.map((msg) => (
-                    <BubbleRow key={msg.id ?? msg.createdAt.toISOString()} $isUser={msg.role === 'user'}>
+                    <BubbleRow
+                      key={msg.id ?? msg.createdAt.toISOString()}
+                      $isUser={msg.role === 'user'}
+                    >
                       <Bubble $isUser={msg.role === 'user'} $isError={msg.status === 'error'}>
                         {msg.status === 'error' ? (
                           <span>
                             <IonIcon icon={warningOutline} /> {t('coach.errors.sendFailed')}
                           </span>
                         ) : msg.role === 'model' ? (
-                          <ReactMarkdown components={markdownComponents}>{msg.content}</ReactMarkdown>
+                          <ReactMarkdown
+                            components={markdownComponents}
+                            remarkPlugins={[remarkGfm]}
+                          >
+                            {msg.content}
+                          </ReactMarkdown>
                         ) : (
                           msg.content
                         )}
@@ -325,7 +318,9 @@ const CoachChatPage: React.FC = () => {
                   {isPending && (
                     <BubbleRow $isUser={false}>
                       <TypingIndicator aria-label={t('coach.typing')}>
-                        <span /><span /><span />
+                        <span />
+                        <span />
+                        <span />
                       </TypingIndicator>
                     </BubbleRow>
                   )}
@@ -361,11 +356,7 @@ const CoachChatPage: React.FC = () => {
                   rows={1}
                   disabled={isPending}
                 />
-                <SendButton
-                  color='secondary'
-                  onClick={handleSend}
-                  disabled={isSendDisabled}
-                >
+                <SendButton color='secondary' onClick={handleSend} disabled={isSendDisabled}>
                   {isPending ? (
                     <IonSpinner slot='icon-only' name='crescent' />
                   ) : (
