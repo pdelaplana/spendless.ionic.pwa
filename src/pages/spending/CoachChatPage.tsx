@@ -239,6 +239,7 @@ const CoachChatPage: React.FC = () => {
   );
 
   // Auto-scroll to bottom when messages change or typing indicator appears
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll when message list or typing indicator changes
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isPending]);

@@ -78,7 +78,7 @@ vi.mock('@ionic/react', async () => {
       disabled?: boolean;
       routerLink?: string;
     }) => (
-      <button onClick={onClick} disabled={disabled} data-router-link={routerLink}>
+      <button type='button' onClick={onClick} disabled={disabled} data-router-link={routerLink}>
         {children}
       </button>
     ),
@@ -101,7 +101,8 @@ vi.mock('./components/coach/SpendingContextBanner', () => ({
     includeContext: boolean;
     onToggle: (v: boolean) => void;
   }) => (
-    <div
+    <button
+      type='button'
       data-testid='context-banner'
       data-context={includeContext}
       onClick={() => onToggle(!includeContext)}
@@ -301,8 +302,6 @@ describe('CoachChatPage', () => {
 
     render(<CoachChatPage />);
 
-    expect(
-      screen.getByText('coach.trial.messagesRemainingPlural:2'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('coach.trial.messagesRemainingPlural:2')).toBeInTheDocument();
   });
 });
