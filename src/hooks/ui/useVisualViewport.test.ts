@@ -51,7 +51,7 @@ describe('useVisualViewport', () => {
       value: originalInnerHeight,
     });
     // biome-ignore lint/performance/noDelete: test cleanup
-    delete (window as WindowWithVpHandlers).visualViewport;
+    delete (window as any).visualViewport;
   });
 
   it('returns 0 when keyboard is not open', () => {
@@ -89,7 +89,7 @@ describe('useVisualViewport', () => {
 
   it('returns 0 if visualViewport is not supported', () => {
     // biome-ignore lint/performance/noDelete: test cleanup
-    delete (window as WindowWithVpHandlers).visualViewport;
+    delete (window as any).visualViewport;
     const { result } = renderHook(() => useVisualViewport());
     expect(result.current.keyboardOffset).toBe(0);
   });
