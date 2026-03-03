@@ -123,7 +123,7 @@ import {
 import { useSubscription } from '@/hooks/subscription';
 import { useAuth } from '@/providers/auth/useAuth';
 import { useSpendingAccount } from '@/providers/spendingAccount/useSpendingAccount';
-import CoachChatPage from './CoachChatPage';
+import { CoachChatPage } from './CoachChatPage';
 
 const mockUseCoachSessionMessages = useCoachSessionMessages as Mock;
 const mockUseSendCoachMessage = useSendCoachMessage as Mock;

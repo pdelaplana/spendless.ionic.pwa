@@ -191,7 +191,7 @@ const markdownComponents: Components = {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-const CoachChatPage: React.FC = () => {
+export const CoachChatPage: React.FC = () => {
   const { t } = useTranslation();
   const { sessionId } = useParams<CoachChatParams>();
   const location = useLocation<{ session?: ICoachSession }>();
@@ -364,4 +364,4 @@ const CoachChatPage: React.FC = () => {
   );
 };
 
-export default CoachChatPage;
+

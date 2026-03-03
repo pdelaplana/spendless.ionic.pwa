@@ -77,7 +77,7 @@ vi.mock('@ionic/react', async () => {
       onClick,
       disabled,
     }: { children: React.ReactNode; onClick?: () => void; disabled?: boolean }) => (
-      <button onClick={onClick} disabled={disabled}>
+      <button type='button' onClick={onClick} disabled={disabled}>
         {children}
       </button>
     ),
@@ -85,9 +85,6 @@ vi.mock('@ionic/react', async () => {
     IonAlert: () => null,
     IonList: ({ children }: { children: React.ReactNode }) => <ul>{children}</ul>,
     IonItem: ({ children }: { children: React.ReactNode }) => <li>{children}</li>,
-    IonItemSliding: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    IonItemOptions: () => null,
-    IonItemOption: () => null,
     IonLabel: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
   };
 });
@@ -104,7 +101,7 @@ import { useSubscription } from '@/hooks/subscription';
 import useFormatters from '@/hooks/ui/useFormatters';
 import { useAuth } from '@/providers/auth/useAuth';
 import { useSpendingAccount } from '@/providers/spendingAccount/useSpendingAccount';
-import FinancialCoachPage from './FinancialCoachPage';
+import { FinancialCoachPage } from './FinancialCoachPage';
 
 const mockUseFetchCoachSessions = useFetchCoachSessions as Mock;
 const mockUseCreateCoachSession = useCreateCoachSession as Mock;

@@ -15,19 +15,9 @@ import { useSpendingAccount } from '@/providers/spendingAccount/useSpendingAccou
 import { ROUTES } from '@/routes/routes.constants';
 import { GradientBackground } from '@/theme/components';
 import { designSystem } from '@/theme/designSystem';
-import {
-  IonAlert,
-  IonButton,
-  IonIcon,
-  IonItem,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
-  IonLabel,
-  IonList,
-} from '@ionic/react';
+import { IonAlert, IonButton, IonIcon, IonList } from '@ionic/react';
 import { addOutline, archiveOutline, chatbubblesOutline } from 'ionicons/icons';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -60,6 +50,8 @@ const TrialText = styled.p`
 
 const SessionCard = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
   background: white;
   border-radius: ${designSystem.borderRadius.lg};
   padding: ${designSystem.spacing.md};
@@ -75,6 +67,10 @@ const SessionCard = styled.div`
   }
 `;
 
+const SessionCardContent = styled.div`
+  flex: 1;
+`;
+
 const SessionTitle = styled.h3`
   margin: 0 0 ${designSystem.spacing.xs} 0;
   font-size: 1rem;
@@ -88,15 +84,13 @@ const SessionMeta = styled.p`
   color: ${designSystem.colors.text.secondary};
 `;
 
-const FinancialCoachPage: React.FC = () => {
+export const FinancialCoachPage: React.FC = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const { account } = useSpendingAccount();
   const { user } = useAuth();
   const subscription = useSubscription(account ?? null);
   const { formatDate } = useFormatters();
-  const listRef = useRef<HTMLIonListElement>(null);
-
   const [sessionToArchive, setSessionToArchive] = useState<ICoachSession | null>(null);
 
   const { data: sessions = [], isLoading } = useFetchCoachSessions(account?.id);
@@ -118,7 +112,7 @@ const FinancialCoachPage: React.FC = () => {
       {
         onSuccess: (session) => {
           history.push({
-            pathname: ROUTES.SPENDING_COACH_SESSION.replace(':sessionId', session.id!),
+            pathname: ROUTES.SPENDING_COACH_SESSION.replace(':sessionId', session.id ?? ''),
             state: { session },
           });
         },
@@ -128,7 +122,7 @@ const FinancialCoachPage: React.FC = () => {
 
   const handleSessionClick = (session: ICoachSession) => {
     history.push({
-      pathname: ROUTES.SPENDING_COACH_SESSION.replace(':sessionId', session.id!),
+      pathname: ROUTES.SPENDING_COACH_SESSION.replace(':sessionId', session.id ?? ''),
       state: { session },
     });
   };
@@ -136,7 +130,6 @@ const FinancialCoachPage: React.FC = () => {
   const handleArchiveConfirm = () => {
     if (!sessionToArchive || !account?.id || !sessionToArchive.id) return;
     archiveSession({ accountId: account.id, sessionId: sessionToArchive.id });
-    listRef.current?.closeSlidingItems();
     setSessionToArchive(null);
   };
 
@@ -162,50 +155,52 @@ const FinancialCoachPage: React.FC = () => {
         <SentryErrorBoundary>
           <CenterContainer>
             <PageContainer>
-            {showTrialBanner && (
-              <TrialBanner>
-                <IonIcon icon={chatbubblesOutline} color='secondary' />
-                <TrialText>
-                  {messagesRemaining === 1
-                    ? t('coach.trial.messagesRemaining', { count: messagesRemaining })
-                    : t('coach.trial.messagesRemainingPlural', { count: messagesRemaining })}
-                </TrialText>
-              </TrialBanner>
-            )}
+              {showTrialBanner && (
+                <TrialBanner>
+                  <IonIcon icon={chatbubblesOutline} color='secondary' />
+                  <TrialText>
+                    {messagesRemaining === 1
+                      ? t('coach.trial.messagesRemaining', { count: messagesRemaining })
+                      : t('coach.trial.messagesRemainingPlural', { count: messagesRemaining })}
+                  </TrialText>
+                </TrialBanner>
+              )}
 
-            {isLoading ? (
-              <LoadingState message={t('common.loading')} />
-            ) : sessions.length === 0 ? (
-              <EmptyState
-                icon={chatbubblesOutline}
-                title={t('coach.noSessions')}
-                description={t('coach.noSessionsDescription')}
-              />
-            ) : (
-              <IonList ref={listRef}>
-                {sessions.map((session) => (
-                  <IonItemSliding key={session.id}>
-                    <IonItem lines='none' style={{ '--background': 'transparent' }}>
-                      <SessionCard onClick={() => handleSessionClick(session)}>
+              {isLoading ? (
+                <LoadingState message={t('common.loading')} />
+              ) : sessions.length === 0 ? (
+                <EmptyState
+                  icon={chatbubblesOutline}
+                  title={t('coach.noSessions')}
+                  description={t('coach.noSessionsDescription')}
+                />
+              ) : (
+                <IonList>
+                  {sessions.map((session) => (
+                    <SessionCard key={session.id} onClick={() => handleSessionClick(session)}>
+                      <SessionCardContent>
                         <SessionTitle>{session.title}</SessionTitle>
                         <SessionMeta>
                           {session.messageCount}{' '}
                           {session.messageCount === 1 ? 'message' : 'messages'} ·{' '}
                           {formatDate(session.updatedAt, false)}
                         </SessionMeta>
-                      </SessionCard>
-                    </IonItem>
-                    <IonItemOptions side='end'>
-                      <IonItemOption color='medium' onClick={() => setSessionToArchive(session)}>
-                        <IonIcon slot='start' icon={archiveOutline} />
-                        {t('coach.archiveSession')}
-                      </IonItemOption>
-                    </IonItemOptions>
-                  </IonItemSliding>
-                ))}
-              </IonList>
-            )}
-          </PageContainer>
+                      </SessionCardContent>
+                      <IonButton
+                        fill='clear'
+                        color='medium'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSessionToArchive(session);
+                        }}
+                      >
+                        <IonIcon slot='icon-only' icon={archiveOutline} />
+                      </IonButton>
+                    </SessionCard>
+                  ))}
+                </IonList>
+              )}
+            </PageContainer>
           </CenterContainer>
         </SentryErrorBoundary>
       </GradientBackground>
@@ -224,4 +219,4 @@ const FinancialCoachPage: React.FC = () => {
   );
 };
 
-export default FinancialCoachPage;
+
