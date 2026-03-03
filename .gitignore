@@ -49,3 +49,4 @@ firebase-adminsdk-*.json
 *.log
 
 firebase-debug.log
+.claude/settings.local.json
