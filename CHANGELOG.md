@@ -1,3 +1,18 @@
+# [1.14.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.13.0...v1.14.0) (2026-03-03)
+
+
+### Bug Fixes
+
+* **coach:** keep input visible above iOS keyboard using visualViewport ([770f015](https://github.com/pdelaplana/spendless.ionic.pwa/commit/770f01543ada4f80d53a907d6c8a6738a05ad586))
+* **test:** cast to any when deleting window.visualViewport to satisfy TS2704 ([4753e31](https://github.com/pdelaplana/spendless.ionic.pwa/commit/4753e3145da27e005f9937e4bed90bdc2a3246e1))
+* **ui:** fix import order in useVisualViewport test ([2581181](https://github.com/pdelaplana/spendless.ionic.pwa/commit/25811810680cd36f432c4e36f88f917570b204cd))
+* **ui:** fix lint violations and add scroll event test for useVisualViewport ([a8622d0](https://github.com/pdelaplana/spendless.ionic.pwa/commit/a8622d0a755534495fc059456c0ae0adc13e3f92))
+
+
+### Features
+
+* **ui:** add useVisualViewport hook for iOS keyboard offset ([bca3ef2](https://github.com/pdelaplana/spendless.ionic.pwa/commit/bca3ef2f76e5893c22ffa03584d109b96a80aa17))
+
 # [1.13.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.12.0...v1.13.0) (2026-03-03)
 
 
