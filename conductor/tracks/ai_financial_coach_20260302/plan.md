@@ -37,7 +37,7 @@
 - [x] **Task: Implement System Prompt Building**
     - [x] Refine `buildSystemPrompt` to include 30 recent transactions and user profile context.
     - [x] Implement the **Global Context Toggle** logic within the prompt builder.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 3: Core AI Integration' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 3: Core AI Integration' (Protocol in workflow.md)**
 
 ## Phase 4: UI Development
 - [x] **Task: Session List Page**
@@ -50,7 +50,7 @@
     - [x] Add **Global Context Toggle** in the chat header or input area.
 - [x] **Task: Context Banner Component**
     - [x] Create `SpendingContextBanner` component for use in both pages.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 4: UI Development' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 4: UI Development' (Protocol in workflow.md)**
 
 ## Phase 5: Routing & Final Integration
 - [x] **Task: Configure Routes**
@@ -58,6 +58,9 @@
     - [x] Update `src/routes/AppRoutes.tsx` with new routes (ordering matters!).
 - [x] **Task: Add Entry Point**
     - [x] Add link to Financial Coach in `InsightsPage.tsx` or `SpendingPage.tsx`.
-- [ ] **Task: Final Smoke Test**
-    - [ ] Verify end-to-end flow: Trial -> Upgrade -> Chat with context -> Archive session.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 5: Routing & Final Integration' (Protocol in workflow.md)**
+- [x] **Task: Final Smoke Test**
+    - [x] Verify end-to-end flow: Trial -> Upgrade -> Chat with context -> Archive session.
+- [x] **Task: Conductor - User Manual Verification 'Phase 5: Routing & Final Integration' (Protocol in workflow.md)**
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions 123ef64
