@@ -108,16 +108,15 @@ export const buildSystemPrompt = (options: {
     sections.push(`Period: "${period.name}" (${start} – ${end})`);
     sections.push('');
 
-    const totalSpent = recentSpends.reduce((sum, s) => sum + s.amount, 0);
     const limitFormatted = period.targetSpend.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-    const spentFormatted = totalSpent.toLocaleString('en-US', {
+    const spentFormatted = total.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-    const pct = period.targetSpend > 0 ? Math.round((totalSpent / period.targetSpend) * 100) : 0;
+    const pct = period.targetSpend > 0 ? Math.round((total / period.targetSpend) * 100) : 0;
     sections.push(
       `Budget: ${currency} ${spentFormatted} spent of ${currency} ${limitFormatted} limit (${pct}%)`,
     );
