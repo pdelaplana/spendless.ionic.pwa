@@ -1,3 +1,11 @@
+# [1.15.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.14.0...v1.15.0) (2026-03-04)
+
+
+### Features
+
+* **coach:** enrich system prompt with period dates, budget, and wallet breakdown ([bbd6ae4](https://github.com/pdelaplana/spendless.ionic.pwa/commit/bbd6ae4dd9b8f3fed13df821993a1e95526bd275))
+* **coach:** pass period and wallet data to system prompt builder ([d717210](https://github.com/pdelaplana/spendless.ionic.pwa/commit/d71721041c3932d2300793416c98cea40fb7f166))
+
 # [1.14.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.13.0...v1.14.0) (2026-03-03)
 
 
