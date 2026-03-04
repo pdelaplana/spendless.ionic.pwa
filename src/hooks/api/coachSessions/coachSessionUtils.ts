@@ -90,7 +90,9 @@ export const buildSystemPrompt = (options: {
   }
 
   const currency = options.currency ?? 'USD';
-  const recentSpends = options.spends.slice(0, 30);
+  const recentSpends = [...options.spends]
+    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .slice(0, 30);
 
   const spendLines = recentSpends.map((s) => {
     const date = s.date.toISOString().split('T')[0];

@@ -216,22 +216,16 @@ export const CoachChatPage: React.FC = () => {
   const { messagesRemaining, hasTrialExpired, decrementMessages } = useCoachTrialStatus(user?.uid);
   const { keyboardOffset } = useVisualViewport();
 
-  // Sort spending by date desc and cap at 30 for system prompt
-  const recentSpends = useMemo(
-    () => [...spending].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 30),
-    [spending],
-  );
-
   const systemPrompt = useMemo(
     () =>
       buildSystemPrompt({
         includeContext,
-        spends: recentSpends,
+        spends: spending,
         currency: account?.currency,
         period: selectedPeriod,
         wallets,
       }),
-    [includeContext, recentSpends, account?.currency, selectedPeriod, wallets],
+    [includeContext, spending, account?.currency, selectedPeriod, wallets],
   );
 
   // Auto-scroll to bottom when messages change or typing indicator appears
