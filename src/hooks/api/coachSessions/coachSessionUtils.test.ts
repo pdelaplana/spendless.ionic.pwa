@@ -291,7 +291,13 @@ describe('coachSessionUtils', () => {
           makeWallet({ id: 'w2', name: 'Entertainment', spendingLimit: 200, isDefault: false }),
         ];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
+        const prompt = buildSystemPrompt({
+          includeContext: true,
+          spends,
+          currency: 'USD',
+          period,
+          wallets,
+        });
 
         expect(prompt).toContain('Groceries');
         expect(prompt).toContain('450.00');
@@ -304,9 +310,17 @@ describe('coachSessionUtils', () => {
       it('should show ⚠️ emoji for wallets over their spending limit', () => {
         const spends = [makeSpend({ amount: 280, walletId: 'w2' })];
         const period = makePeriod();
-        const wallets = [makeWallet({ id: 'w2', name: 'Entertainment', spendingLimit: 200, isDefault: true })];
+        const wallets = [
+          makeWallet({ id: 'w2', name: 'Entertainment', spendingLimit: 200, isDefault: true }),
+        ];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
+        const prompt = buildSystemPrompt({
+          includeContext: true,
+          spends,
+          currency: 'USD',
+          period,
+          wallets,
+        });
 
         expect(prompt).toContain('⚠️');
       });
@@ -316,7 +330,13 @@ describe('coachSessionUtils', () => {
         const period = makePeriod();
         const wallets = [makeWallet({ id: 'w1', name: 'Groceries', spendingLimit: 600 })];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
+        const prompt = buildSystemPrompt({
+          includeContext: true,
+          spends,
+          currency: 'USD',
+          period,
+          wallets,
+        });
 
         expect(prompt).not.toContain('⚠️');
       });
@@ -347,7 +367,13 @@ describe('coachSessionUtils', () => {
           makeWallet({ id: 'w3', name: 'Transport', spendingLimit: 300, isDefault: false }),
         ];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
+        const prompt = buildSystemPrompt({
+          includeContext: true,
+          spends,
+          currency: 'USD',
+          period,
+          wallets,
+        });
 
         expect(prompt).toContain('Transport');
         expect(prompt).toContain('0.00');
