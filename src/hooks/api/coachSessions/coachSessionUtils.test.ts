@@ -1,6 +1,7 @@
 import { createCoachMessage, createCoachSession } from '@/domain/CoachSession';
 import type { IPeriod } from '@/domain/Period';
 import type { ISpend } from '@/domain/Spend';
+import type { IWallet } from '@/domain/Wallet';
 import { Timestamp } from 'firebase/firestore';
 import { describe, expect, it } from 'vitest';
 import {
@@ -68,6 +69,19 @@ const makePeriod = (overrides: Partial<IPeriod> = {}): IPeriod => ({
     { name: 'Groceries', spendingLimit: 600, isDefault: true },
     { name: 'Entertainment', spendingLimit: 200, isDefault: false },
   ],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  ...overrides,
+});
+
+const makeWallet = (overrides: Partial<IWallet> = {}): IWallet => ({
+  id: 'w1',
+  accountId: 'acc-1',
+  periodId: 'p1',
+  name: 'Groceries',
+  spendingLimit: 600,
+  currentBalance: 0,
+  isDefault: true,
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides,
@@ -271,14 +285,13 @@ describe('coachSessionUtils', () => {
           makeSpend({ amount: 450, walletId: 'w1' }),
           makeSpend({ amount: 280, walletId: 'w2' }),
         ];
-        const period = makePeriod({
-          walletSetup: [
-            { name: 'Groceries', spendingLimit: 600, isDefault: true },
-            { name: 'Entertainment', spendingLimit: 200, isDefault: false },
-          ],
-        });
+        const period = makePeriod();
+        const wallets = [
+          makeWallet({ id: 'w1', name: 'Groceries', spendingLimit: 600 }),
+          makeWallet({ id: 'w2', name: 'Entertainment', spendingLimit: 200, isDefault: false }),
+        ];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period });
+        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
 
         expect(prompt).toContain('Groceries');
         expect(prompt).toContain('450.00');
@@ -290,26 +303,20 @@ describe('coachSessionUtils', () => {
 
       it('should show ⚠️ emoji for wallets over their spending limit', () => {
         const spends = [makeSpend({ amount: 280, walletId: 'w2' })];
-        const period = makePeriod({
-          walletSetup: [
-            { name: 'Entertainment', spendingLimit: 200, isDefault: true },
-          ],
-        });
+        const period = makePeriod();
+        const wallets = [makeWallet({ id: 'w2', name: 'Entertainment', spendingLimit: 200, isDefault: true })];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period });
+        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
 
         expect(prompt).toContain('⚠️');
       });
 
       it('should NOT show ⚠️ for wallets within their limit', () => {
         const spends = [makeSpend({ amount: 100, walletId: 'w1' })];
-        const period = makePeriod({
-          walletSetup: [
-            { name: 'Groceries', spendingLimit: 600, isDefault: true },
-          ],
-        });
+        const period = makePeriod();
+        const wallets = [makeWallet({ id: 'w1', name: 'Groceries', spendingLimit: 600 })];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period });
+        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
 
         expect(prompt).not.toContain('⚠️');
       });
@@ -334,14 +341,13 @@ describe('coachSessionUtils', () => {
 
       it('should handle a wallet with zero spend correctly', () => {
         const spends = [makeSpend({ amount: 100, walletId: 'w1' })];
-        const period = makePeriod({
-          walletSetup: [
-            { name: 'Groceries', spendingLimit: 600, isDefault: true },
-            { name: 'Transport', spendingLimit: 300, isDefault: false },
-          ],
-        });
+        const period = makePeriod();
+        const wallets = [
+          makeWallet({ id: 'w1', name: 'Groceries', spendingLimit: 600 }),
+          makeWallet({ id: 'w3', name: 'Transport', spendingLimit: 300, isDefault: false }),
+        ];
 
-        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period });
+        const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD', period, wallets });
 
         expect(prompt).toContain('Transport');
         expect(prompt).toContain('0.00');
