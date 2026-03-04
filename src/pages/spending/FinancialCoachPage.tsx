@@ -218,5 +218,3 @@ export const FinancialCoachPage: React.FC = () => {
     </BasePageLayout>
   );
 };
-
-

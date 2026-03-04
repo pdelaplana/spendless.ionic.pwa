@@ -7,6 +7,7 @@ import {
   useSendCoachMessage,
 } from '@/hooks/api/coachSessions';
 import { buildSystemPrompt } from '@/hooks/api/coachSessions/coachSessionUtils';
+import { useFetchWalletsByPeriod } from '@/hooks/api/wallet';
 import { useSubscription } from '@/hooks/subscription';
 import { useVisualViewport } from '@/hooks/ui';
 import { useAuth } from '@/providers/auth/useAuth';
@@ -198,7 +199,11 @@ export const CoachChatPage: React.FC = () => {
   const location = useLocation<{ session?: ICoachSession }>();
   const session = location.state?.session;
 
-  const { account, spending } = useSpendingAccount();
+  const { account, spending, selectedPeriod } = useSpendingAccount();
+  const { data: wallets = [] } = useFetchWalletsByPeriod(
+    account?.id ?? '',
+    selectedPeriod?.id ?? '',
+  );
   const { user } = useAuth();
   const subscription = useSubscription(account ?? null);
 
@@ -211,20 +216,16 @@ export const CoachChatPage: React.FC = () => {
   const { messagesRemaining, hasTrialExpired, decrementMessages } = useCoachTrialStatus(user?.uid);
   const { keyboardOffset } = useVisualViewport();
 
-  // Sort spending by date desc and cap at 30 for system prompt
-  const recentSpends = useMemo(
-    () => [...spending].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 30),
-    [spending],
-  );
-
   const systemPrompt = useMemo(
     () =>
       buildSystemPrompt({
         includeContext,
-        spends: recentSpends,
+        spends: spending,
         currency: account?.currency,
+        period: selectedPeriod,
+        wallets,
       }),
-    [includeContext, recentSpends, account?.currency],
+    [includeContext, spending, account?.currency, selectedPeriod, wallets],
   );
 
   // Auto-scroll to bottom when messages change or typing indicator appears
