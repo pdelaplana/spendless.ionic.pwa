@@ -214,28 +214,7 @@ describe('coachSessionUtils', () => {
     });
 
     it('should include spending data when context is on', () => {
-      const spends: ISpend[] = [
-        {
-          id: '1',
-          accountId: 'acc-1',
-          date: new Date('2026-01-15'),
-          category: 'need',
-          amount: 50,
-          description: 'Grocery',
-          notes: '',
-          periodId: 'p1',
-          walletId: 'w1',
-          recurring: false,
-          emotionalState: undefined,
-          emotionalContext: [],
-          satisfactionRating: undefined,
-          necessityRating: undefined,
-          personalReflections: [],
-          tags: [],
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ];
+      const spends: ISpend[] = [makeSpend()];
 
       const prompt = buildSystemPrompt({ includeContext: true, spends, currency: 'USD' });
 
@@ -246,56 +225,19 @@ describe('coachSessionUtils', () => {
     });
 
     it('should cap spends at 30 transactions', () => {
-      const spends: ISpend[] = Array.from({ length: 40 }, (_, i) => ({
-        id: `${i}`,
-        accountId: 'acc-1',
-        date: new Date('2026-01-01'),
-        category: 'want' as const,
-        amount: 10,
-        description: `Item ${i}`,
-        notes: '',
-        periodId: 'p1',
-        walletId: 'w1',
-        recurring: false,
-        emotionalState: undefined,
-        emotionalContext: [],
-        satisfactionRating: undefined,
-        necessityRating: undefined,
-        personalReflections: [],
-        tags: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
+      const spends: ISpend[] = Array.from({ length: 40 }, (_, i) =>
+        makeSpend({ description: `Item ${i}`, amount: 10 }),
+      );
 
       const prompt = buildSystemPrompt({ includeContext: true, spends });
 
       expect(prompt).toContain('30 most recent transactions');
       expect(prompt).not.toContain('Item 30'); // 31st item should be excluded
+      expect(prompt).toContain('Item 0');
     });
 
     it('should default currency to USD when not provided', () => {
-      const spends: ISpend[] = [
-        {
-          id: '1',
-          accountId: 'acc-1',
-          date: new Date('2026-01-01'),
-          category: 'need',
-          amount: 20,
-          description: 'Test',
-          notes: '',
-          periodId: 'p1',
-          walletId: 'w1',
-          recurring: false,
-          emotionalState: undefined,
-          emotionalContext: [],
-          satisfactionRating: undefined,
-          necessityRating: undefined,
-          personalReflections: [],
-          tags: [],
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ];
+      const spends: ISpend[] = [makeSpend({ amount: 20, description: 'Test' })];
 
       const prompt = buildSystemPrompt({ includeContext: true, spends });
 
