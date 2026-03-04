@@ -7,6 +7,7 @@ import {
   useSendCoachMessage,
 } from '@/hooks/api/coachSessions';
 import { buildSystemPrompt } from '@/hooks/api/coachSessions/coachSessionUtils';
+import { useFetchWalletsByPeriod } from '@/hooks/api/wallet';
 import { useSubscription } from '@/hooks/subscription';
 import { useVisualViewport } from '@/hooks/ui';
 import { useAuth } from '@/providers/auth/useAuth';
@@ -198,7 +199,11 @@ export const CoachChatPage: React.FC = () => {
   const location = useLocation<{ session?: ICoachSession }>();
   const session = location.state?.session;
 
-  const { account, spending } = useSpendingAccount();
+  const { account, spending, selectedPeriod } = useSpendingAccount();
+  const { data: wallets = [] } = useFetchWalletsByPeriod(
+    account?.id ?? '',
+    selectedPeriod?.id ?? '',
+  );
   const { user } = useAuth();
   const subscription = useSubscription(account ?? null);
 
@@ -223,8 +228,10 @@ export const CoachChatPage: React.FC = () => {
         includeContext,
         spends: recentSpends,
         currency: account?.currency,
+        period: selectedPeriod,
+        wallets,
       }),
-    [includeContext, recentSpends, account?.currency],
+    [includeContext, recentSpends, account?.currency, selectedPeriod, wallets],
   );
 
   // Auto-scroll to bottom when messages change or typing indicator appears

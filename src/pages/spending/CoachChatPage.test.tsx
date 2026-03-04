@@ -24,6 +24,9 @@ vi.mock('@/providers/auth/useAuth', () => ({
 vi.mock('@/providers/spendingAccount/useSpendingAccount', () => ({
   useSpendingAccount: vi.fn(),
 }));
+vi.mock('@/hooks/api/wallet', () => ({
+  useFetchWalletsByPeriod: vi.fn().mockReturnValue({ data: [] }),
+}));
 vi.mock('react-router-dom', () => ({
   useParams: vi.fn().mockReturnValue({ sessionId: 'sess-1' }),
   useLocation: vi.fn().mockReturnValue({
