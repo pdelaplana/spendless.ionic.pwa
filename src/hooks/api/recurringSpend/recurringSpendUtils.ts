@@ -8,6 +8,7 @@ export const RECURRING_SPENDING_SUBCOLLECTION = 'recurringSpending';
 export const mapToFirestore = (recurringSpend: IRecurringSpend): DocumentData => ({
   accountId: recurringSpend.accountId,
   walletId: recurringSpend.walletId,
+  walletName: recurringSpend.walletName ?? null,
   startDate: Timestamp.fromDate(recurringSpend.startDate),
   description: recurringSpend.description,
   amount: Number(recurringSpend.amount),
@@ -25,6 +26,7 @@ export const mapFromFirestore = (id: string, data: DocumentData): IRecurringSpen
   const recurringSpend = createRecurringSpend({
     accountId: data.accountId,
     walletId: data.walletId || '',
+    walletName: data.walletName ?? undefined,
     startDate: data.startDate?.toDate(),
     description: data.description,
     amount: Number(data.amount),

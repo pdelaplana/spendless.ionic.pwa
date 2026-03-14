@@ -7,6 +7,7 @@ export interface IRecurringSpend {
   readonly id?: string;
   readonly accountId: string;
   readonly walletId: string;
+  readonly walletName?: string;
   readonly startDate: Date;
   readonly description: string;
   readonly amount: number;
@@ -25,6 +26,7 @@ export type CreateRecurringSpendDTO = Omit<IRecurringSpend, 'id' | 'createdAt' |
 export const createRecurringSpend = (data: Partial<CreateRecurringSpendDTO>): IRecurringSpend => ({
   accountId: data.accountId ?? '',
   walletId: data.walletId ?? '',
+  walletName: data.walletName,
   startDate: data.startDate ?? dateUtils.getCurrentDate(),
   description: data.description ?? '',
   amount: Number(data.amount ?? 0),
@@ -46,6 +48,7 @@ export const updateRecurringSpend = (
 ): IRecurringSpend => ({
   ...recurringSpend,
   ...(updates.walletId && { walletId: updates.walletId }),
+  ...(updates.walletName !== undefined && { walletName: updates.walletName }),
   ...(updates.startDate && { startDate: updates.startDate }),
   ...(updates.description && { description: updates.description }),
   ...(updates.amount !== undefined && { amount: Number(updates.amount) }),

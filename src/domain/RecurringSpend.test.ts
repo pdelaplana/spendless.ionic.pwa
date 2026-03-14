@@ -1,5 +1,54 @@
 import { describe, expect, it } from 'vitest';
-import { type IRecurringSpend, calculateOccurrencesInPeriod } from './RecurringSpend';
+import {
+  type IRecurringSpend,
+  calculateOccurrencesInPeriod,
+  createRecurringSpend,
+  updateRecurringSpend,
+} from './RecurringSpend';
+
+describe('createRecurringSpend', () => {
+  it('stores walletName when provided', () => {
+    const rs = createRecurringSpend({ walletId: 'w1', walletName: 'Savings' });
+    expect(rs.walletName).toBe('Savings');
+  });
+
+  it('leaves walletName undefined when not provided', () => {
+    const rs = createRecurringSpend({ walletId: 'w1' });
+    expect(rs.walletName).toBeUndefined();
+  });
+});
+
+describe('updateRecurringSpend', () => {
+  const base: IRecurringSpend = {
+    accountId: 'acc1',
+    walletId: 'w1',
+    walletName: 'Checking',
+    startDate: new Date('2026-01-01'),
+    description: 'Test',
+    amount: 50,
+    category: 'need',
+    scheduleFrequency: 'monthly',
+    dayOfMonth: 1,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  it('updates walletName when provided', () => {
+    const updated = updateRecurringSpend(base, { walletName: 'Savings' });
+    expect(updated.walletName).toBe('Savings');
+  });
+
+  it('preserves existing walletName when not included in updates', () => {
+    const updated = updateRecurringSpend(base, { amount: 75 });
+    expect(updated.walletName).toBe('Checking');
+  });
+
+  it('preserves existing walletName when update passes undefined', () => {
+    const updated = updateRecurringSpend(base, { walletName: undefined });
+    expect(updated.walletName).toBe('Checking');
+  });
+});
 
 describe('RecurringSpend domain logic', () => {
   const baseRecurringSpend: IRecurringSpend = {

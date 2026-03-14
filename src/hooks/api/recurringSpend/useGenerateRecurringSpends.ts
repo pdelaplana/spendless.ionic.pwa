@@ -34,8 +34,6 @@ export function useGenerateRecurringSpends() {
           attributes: { accountId, periodId },
         },
         async (span) => {
-          console.log('🔄 useGenerateRecurringSpends called with:', { accountId, periodId });
-
           // Step 1: Fetch the period to get date range
           const periodPath = `${PERIOD_ACCOUNTS_COLLECTION}/${accountId}/${PERIODS_SUBCOLLECTION}/${periodId}`;
           const periodDoc = await getDoc(doc(db, periodPath));
@@ -45,11 +43,6 @@ export function useGenerateRecurringSpends() {
           }
 
           const period = mapPeriodFromFirestore(periodDoc.id, periodDoc.data());
-          console.log('📅 Period:', {
-            id: period.id,
-            startAt: period.startAt,
-            endAt: period.endAt,
-          });
 
           // Step 2: Fetch all active recurring spends
           const recurringSpendingPath = `${RECURRING_ACCOUNTS_COLLECTION}/${accountId}/${RECURRING_SPENDING_SUBCOLLECTION}`;
@@ -59,10 +52,7 @@ export function useGenerateRecurringSpends() {
             .map((doc) => mapRecurringSpendFromFirestore(doc.id, doc.data()))
             .filter((rs) => rs.isActive);
 
-          console.log(`📊 Found ${activeRecurringSpends.length} active recurring spends`);
-
           if (activeRecurringSpends.length === 0) {
-            console.log('⚠️ No active recurring spends found');
             return { accountId, periodId, generated: 0 };
           }
 
@@ -72,15 +62,8 @@ export function useGenerateRecurringSpends() {
 
           // Simple retry logic if no wallets found (wait for Firestore propagation)
           if (walletsSnapshot.empty) {
-            console.log('⏳ No wallets found initially, retrying in 500ms...');
             await new Promise((resolve) => setTimeout(resolve, 500));
             walletsSnapshot = await getDocs(collection(db, walletsPath));
-          }
-
-          if (walletsSnapshot.empty) {
-            console.warn(
-              '⚠️ No wallets found even after retry. Recurring spends might not be assigned correctly.',
-            );
           }
 
           // Create mapping: wallet name -> wallet ID
@@ -95,8 +78,6 @@ export function useGenerateRecurringSpends() {
             }
           }
 
-          console.log(`💰 Found ${walletNameToId.size} wallets, default: ${defaultWalletId}`);
-
           // Step 4: Generate spend records
           const batch = writeBatch(db);
           let generatedCount = 0;
@@ -109,26 +90,11 @@ export function useGenerateRecurringSpends() {
               period.endAt,
             );
 
-            console.log(`📆 ${recurringSpend.description}: ${occurrences.length} occurrences`);
-
-            // Map wallet ID by name
+            // Map wallet ID by name using the stable walletName property
             let walletId = '';
-            if (recurringSpend.walletId) {
-              // Try to find wallet by ID first (in case it's the same wallet)
-              const walletDoc = await getDoc(
-                doc(db, `${walletsPath}/${recurringSpend.walletId}`),
-              ).catch(() => null);
-
-              if (walletDoc?.exists()) {
-                walletId = recurringSpend.walletId;
-              } else {
-                // Wallet not found by ID, try to find by name
-                // To do this, we'd need to know which period the old wallet was in.
-                // Since we don't store that, we'll try to look it up in the wallets mapping
-                // if we can at least get the wallet name from the GLOBAL recurring spend record
-                // (Note: Currently we don't store the name in the recurring record,
-                // so this fallback is limited. In the future we should store the name).
-              }
+            if (recurringSpend.walletName) {
+              const normalizedName = recurringSpend.walletName.toLowerCase().trim();
+              walletId = walletNameToId.get(normalizedName) ?? '';
             }
 
             // Fallback to default wallet if no mapping found
@@ -165,7 +131,6 @@ export function useGenerateRecurringSpends() {
           // Commit the batch
           if (generatedCount > 0) {
             await batch.commit();
-            console.log(`✅ Generated ${generatedCount} spend records`);
           }
 
           span.setAttributes({
@@ -178,7 +143,6 @@ export function useGenerateRecurringSpends() {
       );
     },
     onSuccess: (data, variables) => {
-      console.log('✅ useGenerateRecurringSpends onSuccess:', data);
       // Invalidate all spend-related queries for this account and period
       // We use partial keys to match queries with different date ranges
       queryClient.invalidateQueries({
@@ -195,7 +159,6 @@ export function useGenerateRecurringSpends() {
       });
     },
     onError: (error) => {
-      console.error('❌ useGenerateRecurringSpends onError:', error);
       logError(error);
     },
   });
