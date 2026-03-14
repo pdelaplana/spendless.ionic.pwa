@@ -14,6 +14,7 @@ Spendless is a Progressive Web App (PWA) built with Ionic and React for mindful 
 - We use **Gemini Conductor** for planning.
 - Always check `conductor/tracks/` for the active `plan.md` before starting work.
 - Mark tasks as [x] in the `plan.md` after successful implementation and testing.
+- Important!!! Follow the workflow rules defined in `workflow.md`.
 
 ## Development Commands
 
