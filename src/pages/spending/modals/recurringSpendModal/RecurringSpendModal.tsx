@@ -217,11 +217,12 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
   );
 
   const onSubmit: SubmitHandler<RecurringSpendFormData> = async (formData) => {
-    console.log('RecurringSpendModal onSubmit - formData:', formData);
+    const selectedWallet = wallets.find((w) => w.id === formData.walletId);
 
     const newRecurringSpend = createRecurringSpend({
       accountId: formData.accountId,
       walletId: formData.walletId,
+      walletName: selectedWallet?.name,
       startDate: new Date(formData.startDate),
       description: formData.description,
       amount: Number(formData.amount),
@@ -232,8 +233,6 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
       dayOfMonth: formData.dayOfMonth,
       isActive: formData.isActive,
     });
-
-    console.log('RecurringSpendModal onSubmit - newRecurringSpend:', newRecurringSpend);
 
     if (formData.id) {
       onSave({ ...newRecurringSpend, id: formData.id });
@@ -292,10 +291,19 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
 
   useEffect(() => {
     if (recurringSpend) {
+      // Wallet IDs are period-specific, so resolve the correct current wallet:
+      // 1. If walletName is stored, find the matching wallet in the current period by name.
+      // 2. Otherwise, fall back to the stored walletId (may not match if period changed).
+      const resolvedWalletId =
+        (recurringSpend.walletName
+          ? wallets.find((w) => w.name.toLowerCase() === recurringSpend.walletName?.toLowerCase())
+              ?.id
+          : wallets.find((w) => w.id === recurringSpend.walletId)?.id) ?? recurringSpend.walletId;
+
       reset({
         id: recurringSpend.id,
         accountId: recurringSpend.accountId,
-        walletId: recurringSpend.walletId,
+        walletId: resolvedWalletId,
         startDate: new Date(recurringSpend.startDate).toISOString().split('T')[0],
         description: recurringSpend.description,
         amount: recurringSpend.amount.toFixed(2),
@@ -306,13 +314,8 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
         dayOfMonth: recurringSpend.dayOfMonth,
         isActive: recurringSpend.isActive,
       });
-
-      // If the recurring spend has a walletId that's not in our current wallets list,
-      // it might be from an old period. We should try to find a current wallet with the same name.
-      // However, we don't have the old wallet name here.
-      // For now, let's just make sure the dropdown is aware of the current value.
     }
-  }, [recurringSpend, reset]);
+  }, [recurringSpend, wallets, reset]);
 
   return (
     <ModalPageLayout onDismiss={checkIfCanDismiss}>

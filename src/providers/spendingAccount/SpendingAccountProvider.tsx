@@ -22,6 +22,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../auth/useAuth';
 import { SpendingAccountContext } from './context';
+import { computeSubscriptionDateRange } from './subscriptionDateRange';
 
 export const SpendingAccountProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -255,22 +256,7 @@ export const SpendingAccountProvider: React.FC<{ children: ReactNode }> = ({ chi
   // Apply subscription-based date range restrictions
   useEffect(() => {
     if (!spendingAccount || !selectedPeriod) return;
-
-    // For premium users, no restrictions
-    if (spendingAccount.subscriptionTier === 'premium') {
-      setDateRange({ startAt: undefined, endAt: undefined });
-      return;
-    }
-
-    // For essentials users, restrict to last 30 days
-    const today = new Date();
-    const thirtyDaysAgo = new Date(today);
-    thirtyDaysAgo.setDate(today.getDate() - 30);
-
-    setDateRange({
-      startAt: thirtyDaysAgo,
-      endAt: today,
-    });
+    setDateRange(computeSubscriptionDateRange(spendingAccount.subscriptionTier));
   }, [spendingAccount, selectedPeriod]);
 
   useEffect(() => {

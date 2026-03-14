@@ -2,9 +2,8 @@ import { Currency } from '@/domain/Currencies';
 import type { IRecurringSpend } from '@/domain/RecurringSpend';
 import { calculateOccurrencesInPeriod, getScheduleDescription } from '@/domain/RecurringSpend';
 import { useFetchRecurringSpends } from '@/hooks/api';
-import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
-import { IonIcon, IonNote, IonSpinner } from '@ionic/react';
+import { IonIcon, IonSpinner } from '@ionic/react';
 import { calendarOutline, repeatOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useMemo } from 'react';
@@ -164,20 +163,21 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({ formData,
 
   // Helper function to get wallet name for a recurring spend
   const getWalletName = (recurringSpend: IRecurringSpend): string => {
-    // Create wallet name map from formData.wallets (same logic as useGenerateRecurringSpends)
-    const walletNameMap = new Map<string, string>();
     let defaultWalletName = '';
 
     for (const wallet of formData.wallets) {
-      walletNameMap.set(wallet.name.toLowerCase().trim(), wallet.name);
       if (wallet.isDefault) {
         defaultWalletName = wallet.name;
       }
     }
 
-    // For now, we can't easily look up the old wallet name from walletId
-    // So we'll just use the default wallet or show "Wallet" as placeholder
-    // The actual generation will map by name when it runs
+    if (recurringSpend.walletName) {
+      const matched = formData.wallets.find(
+        (w) => w.name.toLowerCase().trim() === recurringSpend.walletName?.toLowerCase().trim(),
+      );
+      return matched?.name ?? recurringSpend.walletName;
+    }
+
     return defaultWalletName || 'Default Wallet';
   };
 
