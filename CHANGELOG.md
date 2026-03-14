@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.15.0...v1.15.1) (2026-03-14)
+
+
+### Bug Fixes
+
+* recurring spend wallet assignment and future spend visibility ([265afd7](https://github.com/pdelaplana/spendless.ionic.pwa/commit/265afd7eae8a28494e985274b145c0b40b22b85b))
+
 # [1.15.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.14.0...v1.15.0) (2026-03-04)
 
 
