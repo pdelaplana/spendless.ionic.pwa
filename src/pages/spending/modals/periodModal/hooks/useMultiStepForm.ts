@@ -145,6 +145,16 @@ export const useMultiStepForm = (
     }));
   };
 
+  const updateRecurringSpendWalletMapping = (recurringSpendId: string, walletName: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      recurringSpendsWalletMapping: {
+        ...prev.recurringSpendsWalletMapping,
+        [recurringSpendId]: walletName,
+      },
+    }));
+  };
+
   // Validation
   const isStep0Valid = () => {
     // Step 0: Basics validation
@@ -260,6 +270,7 @@ export const useMultiStepForm = (
     // Recurring expenses management
     setRecurringExpenses,
     removeRecurringExpense,
+    updateRecurringSpendWalletMapping,
 
     // Validation
     isStep1Valid,
