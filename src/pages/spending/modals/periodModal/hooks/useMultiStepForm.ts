@@ -28,6 +28,7 @@ export interface PeriodFormData {
     category: string;
     walletId: string;
   }>;
+  recurringSpendsWalletMapping: Record<string, string>; // recurringSpendId -> walletName
 
   // Internal state
   currentStep: 0 | 1 | 2 | 3;
@@ -45,6 +46,7 @@ const getInitialFormData = (currentPeriod?: IPeriod): PeriodFormData => {
     endAt: dateUtils.toDateInput(addWeeks(defaultStartDate, 4)),
     wallets: [],
     recurringExpenses: [],
+    recurringSpendsWalletMapping: {},
     currentStep: 0,
   };
 };
