@@ -29,9 +29,9 @@ Update the step components inside the period modal to allow editing and viewing 
 
 ### Tasks
 
-- [ ] Task 2.1: Update `StepRecurringExpenses.tsx` to render a wallet select dropdown for each recurring spend, utilizing `formData.wallets` as options.
-- [ ] Task 2.2: Bind the dropdown in `StepRecurringExpenses.tsx` to `updateRecurringSpendWalletMapping` on change.
-- [ ] Task 2.3: Update `StepReview.tsx` to display the selected wallet name from the mapping rather than the default from the global recurring spend model.
+- [x] Task 2.1: Update `StepRecurringExpenses.tsx` to render a wallet select dropdown for each recurring spend, utilizing `formData.wallets` as options. 8efcd3f
+- [x] Task 2.2: Bind the dropdown in `StepRecurringExpenses.tsx` to `updateRecurringSpendWalletMapping` on change. 8efcd3f
+- [x] Task 2.3: Update `StepReview.tsx` to display the selected wallet name from the mapping rather than the default from the global recurring spend model. 8efcd3f
 
 ### Verification
 
