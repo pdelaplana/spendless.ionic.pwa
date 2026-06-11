@@ -1,0 +1,1 @@
+Task 2.1 - 2.3: Update StepRecurringExpenses.tsx to render a popover IonSelect for each recurring spend, update PeriodModalV2.tsx to hook up callbacks, and update StepReview.tsx to display the selected wallet mappings.
