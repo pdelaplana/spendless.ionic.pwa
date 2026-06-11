@@ -9,7 +9,7 @@
 
 Add support in the new period creation wizard to let users explicitly assign recurring spends to their newly configured period wallets. When the period is created, the system will update the recurring spends in Firestore with the selected wallet name mapping so that the auto-generated spends are correctly assigned.
 
-## Phase 1: Form State & Logic Updates
+## Phase 1: Form State & Logic Updates [checkpoint: 6619d34]
 
 Extend the multi-step form hook to support tracking the custom wallet mappings for recurring spends.
 
