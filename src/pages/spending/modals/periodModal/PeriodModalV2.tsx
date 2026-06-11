@@ -93,6 +93,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
     setDefaultWallet,
     setRecurringExpenses,
     removeRecurringExpense,
+    updateRecurringSpendWalletMapping,
     toPeriodData,
     reset,
   } = useMultiStepForm(initialData, currentPeriod);
@@ -326,7 +327,13 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
           />
         );
       case 2:
-        return <StepRecurringExpenses formData={formData} accountId={accountId} />;
+        return (
+          <StepRecurringExpenses
+            formData={formData}
+            accountId={accountId}
+            onUpdateWalletMapping={updateRecurringSpendWalletMapping}
+          />
+        );
       case 3:
         return (
           <StepReview

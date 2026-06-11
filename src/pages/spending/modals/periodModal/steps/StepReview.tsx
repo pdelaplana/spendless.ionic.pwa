@@ -247,6 +247,10 @@ const StepReview: React.FC<StepReviewProps> = ({
 
   // Helper function to get wallet name for a recurring spend
   const getWalletName = (recurringSpend: IRecurringSpend): string => {
+    if (recurringSpend.id && formData.recurringSpendsWalletMapping[recurringSpend.id]) {
+      return formData.recurringSpendsWalletMapping[recurringSpend.id];
+    }
+
     let defaultWalletName = '';
 
     for (const wallet of formData.wallets) {

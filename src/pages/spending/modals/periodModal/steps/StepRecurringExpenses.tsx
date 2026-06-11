@@ -3,7 +3,7 @@ import type { IRecurringSpend } from '@/domain/RecurringSpend';
 import { calculateOccurrencesInPeriod, getScheduleDescription } from '@/domain/RecurringSpend';
 import { useFetchRecurringSpends } from '@/hooks/api';
 import { designSystem } from '@/theme/designSystem';
-import { IonIcon, IonSpinner } from '@ionic/react';
+import { IonIcon, IonSpinner, IonSelect, IonSelectOption } from '@ionic/react';
 import { calendarOutline, repeatOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useMemo } from 'react';
@@ -53,6 +53,26 @@ const RecurringSchedule = styled.div`
   display: flex;
   align-items: center;
   gap: ${designSystem.spacing.xs};
+`;
+
+const WalletSelectorContainer = styled.div`
+  margin-top: ${designSystem.spacing.xs};
+  display: flex;
+  align-items: center;
+  gap: ${designSystem.spacing.sm};
+  background: ${designSystem.colors.surface};
+  border: 1px solid ${designSystem.colors.gray[200]};
+  border-radius: ${designSystem.borderRadius.md};
+  padding: 4px 12px;
+  
+  ion-select {
+    width: 100%;
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    font-size: ${designSystem.typography.fontSize.sm};
+  }
 `;
 
 const OccurrencesList = styled.div`
@@ -116,9 +136,14 @@ const SummaryBox = styled.div`
 interface StepRecurringExpensesProps {
   formData: PeriodFormData;
   accountId: string;
+  onUpdateWalletMapping: (recurringSpendId: string, walletName: string) => void;
 }
 
-const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({ formData, accountId }) => {
+const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
+  formData,
+  accountId,
+  onUpdateWalletMapping,
+}) => {
   const { t } = useTranslation();
   const currency = Currency.USD; // TODO: Get from user preferences
 
@@ -181,6 +206,14 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({ formData,
     return defaultWalletName || 'Default Wallet';
   };
 
+  // Helper function to get the currently selected wallet name, falling back to default matching logic
+  const getSelectedWalletName = (recurringSpend: IRecurringSpend): string => {
+    return (
+      formData.recurringSpendsWalletMapping[recurringSpend.id || ''] ||
+      getWalletName(recurringSpend)
+    );
+  };
+
   if (isLoading) {
     return (
       <RecurringSection>
@@ -220,10 +253,24 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({ formData,
                     <IonIcon icon={repeatOutline} />
                     {getScheduleDescription(item.recurringSpend)}
                   </RecurringSchedule>
-                  <RecurringSchedule>
-                    <IonIcon icon={walletOutline} style={{ fontSize: '14px' }} />
-                    {getWalletName(item.recurringSpend)}
-                  </RecurringSchedule>
+                  <WalletSelectorContainer>
+                    <IonIcon icon={walletOutline} style={{ fontSize: '14px', color: designSystem.colors.text.secondary }} />
+                    <IonSelect
+                      value={getSelectedWalletName(item.recurringSpend)}
+                      interface="popover"
+                      onIonChange={(e) => {
+                        if (item.recurringSpend.id) {
+                          onUpdateWalletMapping(item.recurringSpend.id, e.detail.value);
+                        }
+                      }}
+                    >
+                      {formData.wallets.map((wallet) => (
+                        <IonSelectOption key={wallet.id} value={wallet.name}>
+                          {wallet.name}
+                        </IonSelectOption>
+                      ))}
+                    </IonSelect>
+                  </WalletSelectorContainer>
                 </RecurringHeader>
                 <OccurrencesList>
                   {item.occurrences.map((date) => (
@@ -249,3 +296,4 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({ formData,
 };
 
 export default StepRecurringExpenses;
+
