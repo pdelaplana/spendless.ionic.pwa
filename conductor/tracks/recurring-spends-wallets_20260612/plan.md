@@ -17,7 +17,7 @@ Extend the multi-step form hook to support tracking the custom wallet mappings f
 
 - [x] Task 1.1: Add `recurringSpendsWalletMapping` property (`Record<string, string>`, mapping `recurringSpendId` to `walletName`) to `PeriodFormData` interface and its initializer. 4db3bfb
 - [x] Task 1.2: Implement `updateRecurringSpendWalletMapping(recurringSpendId: string, walletName: string)` action in `useMultiStepForm` to update the mapping state. b8e0694
-- [ ] Task 1.3: Create unit tests in `src/pages/spending/modals/periodModal/hooks/useMultiStepForm.test.ts` to verify form state initialization and wallet mapping updates.
+- [x] Task 1.3: Create unit tests in `src/pages/spending/modals/periodModal/hooks/useMultiStepForm.test.ts` to verify form state initialization and wallet mapping updates. b59f417
 
 ### Verification
 
