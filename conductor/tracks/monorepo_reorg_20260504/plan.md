@@ -9,14 +9,14 @@
     - [x] Set up base `tsconfig.json` at root for shared TypeScript settings.
 - [x] Task: Conductor - User Manual Verification 'Foundation & Scaffolding' (Protocol in workflow.md) 2ffab12
 
-## Phase 2: Migration of Existing Repos
+## Phase 2: Migration of Existing Repos [checkpoint: 0b04b6e]
 - [x] Task: Move Current PWA to `apps/mobile-pwa` bea847e
     - [x] Relocate current root files into `apps/mobile-pwa`.
 - [x] Task: Move Sibling `spendless.cloud.functions` to `apps/cloud-functions` 4cae35c
     - [x] Relocate sibling repo files into `apps/cloud-functions`.
 - [x] Task: Move Sibling `spendless.website` to `apps/website` c5cc5d8
     - [x] Relocate sibling repo files into `apps/website`.
-- [~] Task: Conductor - User Manual Verification 'Migration of Existing Repos' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Migration of Existing Repos' (Protocol in workflow.md) 0b04b6e
 
 ## Phase 3: Integration & Project Fixes
 - [ ] Task: Update Project Configurations
