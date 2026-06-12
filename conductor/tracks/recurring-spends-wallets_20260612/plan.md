@@ -44,8 +44,8 @@ Persist the selected wallet mappings to the database when the period is finalize
 
 ### Tasks
 
-- [ ] Task 3.1: Import `useUpdateRecurringSpend` hook in `PeriodModalV2.tsx`.
-- [ ] Task 3.2: Update `PeriodModalV2.tsx`'s `handleFormSubmit` function to update the mapped recurring spends in Firestore before finalizing period creation. Iterate over `recurringSpendsWalletMapping` and update each recurring spend's `walletName` in the global `recurringSpending` subcollection.
+- [x] Task 3.1: Import `useUpdateRecurringSpend` hook in `PeriodModalV2.tsx`. 92b3d56
+- [x] Task 3.2: Update `PeriodModalV2.tsx`'s `handleFormSubmit` function to update the mapped recurring spends in Firestore before finalizing period creation. Iterate over `recurringSpendsWalletMapping` and update each recurring spend's `walletName` in the global `recurringSpending` subcollection. 92b3d56
 
 ### Verification
 
