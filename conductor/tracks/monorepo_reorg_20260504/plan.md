@@ -4,9 +4,9 @@
 - [x] Task: Initialize Root Workspace bea847e
     - [x] Create root `package.json` with `workspaces` field (`apps/*`, `packages/*`).
     - [x] Set up root `.gitignore` to handle monorepo structure.
-- [ ] Task: Centralize Tooling
-    - [ ] Move `biome.json` to root and configure for workspace-wide linting.
-    - [ ] Set up base `tsconfig.json` at root for shared TypeScript settings.
+- [x] Task: Centralize Tooling b810d16
+    - [x] Move `biome.json` to root and configure for workspace-wide linting.
+    - [x] Set up base `tsconfig.json` at root for shared TypeScript settings.
 - [ ] Task: Conductor - User Manual Verification 'Foundation & Scaffolding' (Protocol in workflow.md)
 
 ## Phase 2: Migration of Existing Repos
