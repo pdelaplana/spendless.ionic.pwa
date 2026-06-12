@@ -1,0 +1,148 @@
+name: Deploy Firebase Functions
+
+on:
+  push:
+    branches:
+      - main
+      - development
+    paths:
+      - 'functions/**'
+  workflow_dispatch: # Manual trigger option
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - prod
+      debug_mode:
+        description: "Enable debug mode"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  test:
+    name: Test & Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'functions/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd functions
+          npm ci
+
+      - name: Run Biome lint & format check
+        run: |
+          cd functions
+          npm run biome:check
+
+      - name: Run unit tests
+        run: |
+          cd functions
+          npm test
+
+      - name: Generate test coverage report
+        run: |
+          cd functions
+          npm run test:coverage
+
+      - name: Archive test coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: functions/coverage/
+          retention-days: 14
+
+  deploy:
+    name: Deploy Firebase Functions
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development' || github.event_name == 'workflow_dispatch'
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || github.event.inputs.environment || 'dev' }}
+    env:
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'prod' || github.event.inputs.environment || 'dev' }}
+      DATABASE_ID: ${{ vars.DATABASE_ID }}
+      STORAGE_BUCKET: ${{ vars.STORAGE_BUCKET }}
+      FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'functions/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd functions
+          npm ci
+
+      - name: Install Firebase CLI
+        run: |
+          cd functions
+          npm install --no-save firebase-tools
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Create Firebase service account file
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > functions/spendless-firebase-adminsdk.json
+
+      - name: Create Environment
+        run: |
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" > functions/.env
+          echo "ENVIRONMENT=${{ env.ENVIRONMENT }}" >> functions/.env
+          echo "DEBUG_MODE=${{ github.event.inputs.debug_mode || 'false' }}" >> functions/.env
+          echo "MAILGUN_API_KEY=${{ secrets.MAILGUN_API_KEY }}" >> functions/.env
+          echo "MAILGUN_DOMAIN=${{ secrets.MAILGUN_DOMAIN }}" >> functions/.env
+          echo "DATABASE_ID=${{ env.DATABASE_ID }}" >> functions/.env
+          echo "STORAGE_BUCKET=${{ env.STORAGE_BUCKET }}" >> functions/.env
+          echo "PROJECT_ID=${{ env.FIREBASE_PROJECT_ID }}" >> functions/.env
+          # Stripe price IDs (non-sensitive, can be env vars)
+          echo "STRIPE_PRICE_ID_MONTHLY=${{ secrets.STRIPE_PRICE_ID_MONTHLY }}" >> functions/.env
+          echo "STRIPE_PRICE_ID_ANNUAL=${{ secrets.STRIPE_PRICE_ID_ANNUAL }}" >> functions/.env
+          # NOTE: STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET are NOT written to .env
+          # They come from Cloud Secret Manager via defineSecret() in the code
+
+      - name: Ensure Stripe secrets exist in Secret Manager
+        run: |
+          cd functions
+          # Create or update STRIPE_SECRET_KEY secret (use echo -n to avoid newlines)
+          echo -n "${{ secrets.STRIPE_SECRET_KEY }}" | npx firebase functions:secrets:set STRIPE_SECRET_KEY --project ${{ env.FIREBASE_PROJECT_ID }} --force || true
+          # Create or update STRIPE_WEBHOOK_SECRET secret (use echo -n to avoid newlines)
+          echo -n "${{ secrets.STRIPE_WEBHOOK_SECRET }}" | npx firebase functions:secrets:set STRIPE_WEBHOOK_SECRET --project ${{ env.FIREBASE_PROJECT_ID }} --force || true
+
+      - name: Build functions
+        run: |
+          cd functions
+          npm run build
+
+      - name: Deploy to Firebase
+        env:
+          DATABASE_ID: ${{ env.DATABASE_ID }}
+          STORAGE_BUCKET: ${{ env.STORAGE_BUCKET }}
+          FIREBASE_PROJECT_ID: ${{ env.FIREBASE_PROJECT_ID }}
+        run: |
+          cd functions
+          npx firebase use ${{ env.FIREBASE_PROJECT_ID }}
+          npx firebase deploy --only functions --force
