@@ -2,7 +2,7 @@
   "name": "spendless-functions",
   "scripts": {
     "build:templates": "tsc && npm run copy:templates",
-    "build": "tsc",
+    "build": "tsc && npm run copy:templates",
     "copy:templates": "node scripts/copy-templates.js",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
