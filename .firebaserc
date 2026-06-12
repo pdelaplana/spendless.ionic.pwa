@@ -4,8 +4,21 @@
     "production": "spendless-prod-24e2c"
   },
   "targets": {
+    "spendless-dev-15971": {
+      "hosting": {
+        "pwa": [
+          "spendless-dev-15971"
+        ],
+        "website": [
+          "spendless-dev-landing"
+        ]
+      }
+    },
     "spendless-prod-24e2c": {
       "hosting": {
+        "pwa": [
+          "spendless-prod-24e2c"
+        ],
         "website": [
           "spendless-landing-page"
         ]
