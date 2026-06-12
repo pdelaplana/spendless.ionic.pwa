@@ -59,16 +59,10 @@ jobs:
           VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
 
-  deploy:
-    name: Build & Deploy
+  build:
+    name: Build Apps & Functions
     runs-on: ubuntu-latest
     needs: test_and_lint
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.event.inputs.environment || 'development' }}
-    env:
-      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || github.event.inputs.environment || 'development' }}
-      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-      DATABASE_ID: ${{ vars.DATABASE_ID }}
-      STORAGE_BUCKET: ${{ vars.STORAGE_BUCKET }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -112,6 +106,63 @@ jobs:
           VITE_STRIPE_PRICE_ID_ANNUAL: ${{ secrets.STRIPE_PRICE_ID_ANNUAL }}
         run: npm run build
 
+      - name: Upload PWA Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pwa-dist
+          path: apps/mobile-pwa/dist/
+          retention-days: 1
+
+      - name: Upload Functions Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: functions-lib
+          path: apps/cloud-functions/functions/lib/
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Firebase
+    runs-on: ubuntu-latest
+    needs: build
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.event.inputs.environment || 'development' }}
+    env:
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || github.event.inputs.environment || 'development' }}
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      DATABASE_ID: ${{ vars.DATABASE_ID }}
+      STORAGE_BUCKET: ${{ vars.STORAGE_BUCKET }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare npm@11.16.0 --activate
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Download PWA Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: pwa-dist
+          path: apps/mobile-pwa/dist
+
+      - name: Download Functions Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: functions-lib
+          path: apps/cloud-functions/functions/lib
+
+      - name: Install Firebase CLI
+        run: npm install --no-save firebase-tools
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -153,7 +204,7 @@ jobs:
       - name: Deploy Cloud Functions to Firebase
         run: |
           npx firebase use ${{ secrets.FIREBASE_PROJECT_ID }}
-          npx firebase deploy --only functions --force
+          npx firebase deploy --only functions --force --no-predeploy
 
       - name: Create Development Tag
         if: github.ref == 'refs/heads/development'
