@@ -1,3 +1,18 @@
+# [1.16.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.15.1...v1.16.0) (2026-06-12)
+
+
+### Bug Fixes
+
+* apply safety improvements and validation enhancements for recurring spends ([ebef96c](https://github.com/pdelaplana/spendless.ionic.pwa/commit/ebef96cb98e078736655fbd87a12ed6e057a15d7))
+
+
+### Features
+
+* **period:** add recurringSpendsWalletMapping to PeriodFormData (recurring-spends-wallets_20260612) ([4db3bfb](https://github.com/pdelaplana/spendless.ionic.pwa/commit/4db3bfba10e1b577f0f73d524f76ab8734f23a91))
+* **period:** implement updateRecurringSpendWalletMapping in useMultiStepForm (recurring-spends-wallets_20260612) ([b8e0694](https://github.com/pdelaplana/spendless.ionic.pwa/commit/b8e06941bc5d5968acf7e12937f351f031fdbee0))
+* **period:** persist chosen wallet mappings to recurring spends in Firestore on submit (recurring-spends-wallets_20260612) ([92b3d56](https://github.com/pdelaplana/spendless.ionic.pwa/commit/92b3d566460b65e71624a0fe6b8d67b1e8f78e53))
+* **ui:** render wallet selector for recurring spends in period wizard (recurring-spends-wallets_20260612) ([8efcd3f](https://github.com/pdelaplana/spendless.ionic.pwa/commit/8efcd3fa3b5ca934ab81dade8b406b6d0163bc55))
+
 ## [1.15.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.15.0...v1.15.1) (2026-03-14)
 
 
