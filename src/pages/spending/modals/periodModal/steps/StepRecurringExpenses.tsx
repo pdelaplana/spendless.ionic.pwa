@@ -55,25 +55,7 @@ const RecurringSchedule = styled.div`
   gap: ${designSystem.spacing.xs};
 `;
 
-const WalletSelectorContainer = styled.div`
-  margin-top: ${designSystem.spacing.xs};
-  display: flex;
-  align-items: center;
-  gap: ${designSystem.spacing.sm};
-  background: ${designSystem.colors.surface};
-  border: 1px solid ${designSystem.colors.gray[200]};
-  border-radius: ${designSystem.borderRadius.md};
-  padding: 4px 12px;
-  
-  ion-select {
-    width: 100%;
-    --padding-start: 0;
-    --padding-end: 0;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    font-size: ${designSystem.typography.fontSize.sm};
-  }
-`;
+
 
 const OccurrencesList = styled.div`
   background: ${designSystem.colors.surface};
@@ -253,24 +235,25 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
                     <IonIcon icon={repeatOutline} />
                     {getScheduleDescription(item.recurringSpend)}
                   </RecurringSchedule>
-                  <WalletSelectorContainer>
-                    <IonIcon icon={walletOutline} style={{ fontSize: '14px', color: designSystem.colors.text.secondary }} />
-                    <IonSelect
-                      value={getSelectedWalletName(item.recurringSpend)}
-                      interface="popover"
-                      onIonChange={(e) => {
-                        if (item.recurringSpend.id) {
-                          onUpdateWalletMapping(item.recurringSpend.id, e.detail.value);
-                        }
-                      }}
-                    >
-                      {formData.wallets.map((wallet) => (
-                        <IonSelectOption key={wallet.id} value={wallet.name}>
-                          {wallet.name}
-                        </IonSelectOption>
-                      ))}
-                    </IonSelect>
-                  </WalletSelectorContainer>
+                  <IonSelect
+                    value={getSelectedWalletName(item.recurringSpend)}
+                    interface="popover"
+                    fill="outline"
+                    label="Wallet"
+                    labelPlacement="floating"
+                    className="ion-margin-top"
+                    onIonChange={(e) => {
+                      if (item.recurringSpend.id) {
+                        onUpdateWalletMapping(item.recurringSpend.id, e.detail.value);
+                      }
+                    }}
+                  >
+                    {formData.wallets.map((wallet) => (
+                      <IonSelectOption key={wallet.id} value={wallet.name}>
+                        {wallet.name}
+                      </IonSelectOption>
+                    ))}
+                  </IonSelect>
                 </RecurringHeader>
                 <OccurrencesList>
                   {item.occurrences.map((date) => (
