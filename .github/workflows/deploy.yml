@@ -191,10 +191,11 @@ jobs:
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > apps/cloud-functions/functions/spendless-firebase-adminsdk.json
 
-      - name: Ensure Stripe secrets exist in Secret Manager
+      - name: Ensure secrets exist in Secret Manager
         run: |
           echo -n "${{ secrets.STRIPE_SECRET_KEY }}" | npx firebase functions:secrets:set STRIPE_SECRET_KEY --project ${{ secrets.FIREBASE_PROJECT_ID }} --force || true
           echo -n "${{ secrets.STRIPE_WEBHOOK_SECRET }}" | npx firebase functions:secrets:set STRIPE_WEBHOOK_SECRET --project ${{ secrets.FIREBASE_PROJECT_ID }} --force || true
+          echo -n "${{ secrets.GEMINI_API_KEY }}" | npx firebase functions:secrets:set GEMINI_API_KEY --project ${{ secrets.FIREBASE_PROJECT_ID }} --force || true
 
       - name: Deploy Cloud Functions to Firebase
         run: |
