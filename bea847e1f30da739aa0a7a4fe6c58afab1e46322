@@ -1,0 +1,7 @@
+Task: Initialize Root Workspace
+Summary: Created root package.json with npm workspaces configuration and updated root .gitignore to handle monorepo paths correctly. Moved all original PWA files into apps/mobile-pwa.
+Files modified:
+- .gitignore
+- package.json
+- apps/mobile-pwa/
+Core why: Reorganize the Spendless ecosystem into a workspace-aware monorepo starting with root workspace initialization and PWA isolation.
