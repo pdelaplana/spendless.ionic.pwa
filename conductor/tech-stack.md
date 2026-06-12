@@ -29,6 +29,11 @@
 
 ## Tooling & Quality
 - **Build Tool:** [Vite](https://vitejs.dev/)
+- **Monorepo Architecture:** npm workspaces mapping:
+  - `apps/mobile-pwa` (React PWA client)
+  - `apps/cloud-functions/functions` (Firebase Cloud Functions)
+  - `apps/website` (Static landing page & blog)
+  - `packages/shared` (Shared domain types & utils)
 - **Linting & Formatting:** [Biome](https://biomejs.dev/)
 - **Testing:**
   - **Unit Testing:** [Vitest](https://vitest.dev/)
