@@ -1,0 +1,15 @@
+{
+  "name": "spendless-website",
+  "version": "1.0.0",
+  "description": "Spendless landing page and blog",
+  "scripts": {
+    "build:blog": "node scripts/build-blog.js",
+    "serve": "http-server -p 8080"
+  },
+  "dependencies": {
+    "front-matter": "^4.0.2",
+    "marked": "^15.0.6"
+  },
+  "devDependencies": {},
+  "private": true
+}

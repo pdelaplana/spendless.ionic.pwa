@@ -1,0 +1,674 @@
+/* ==========================================================================
+   Blog Styles
+   Uses CSS variables from variables.css for design system compliance
+   ========================================================================== */
+
+/* ==========================================================================
+   Blog Container - Shared between listing and article pages
+   ========================================================================== */
+
+.blog-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+}
+
+/* ==========================================================================
+   Blog Header - Page title area (listing page)
+   ========================================================================== */
+
+.blog-header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+  padding-top: var(--space-6);
+}
+
+.blog-header h1 {
+  font-size: 36px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.blog-header-subtitle {
+  font-size: var(--font-size-body-large);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ==========================================================================
+   Blog Grid - Responsive layout for article cards
+   ========================================================================== */
+
+.blog-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ==========================================================================
+   Blog Card - Article preview card with hover effects
+   Following .feature-item-modern and .pricing-card-modern patterns
+   ========================================================================== */
+
+.blog-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+}
+
+.blog-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(139, 95, 191, 0.15);
+}
+
+.blog-card-content {
+  flex: 1;
+}
+
+.blog-card-title {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2) 0;
+  line-height: var(--line-height-snug);
+}
+
+.blog-card-description {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.blog-card-arrow {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  font-size: 24px;
+  transition: transform var(--transition-fast);
+}
+
+.blog-card:hover .blog-card-arrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   Blog Card Meta - Date and read time styling
+   ========================================================================== */
+
+.blog-card-meta,
+.blog-article-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-body-small);
+  color: var(--color-text-tertiary);
+}
+
+.blog-date,
+.blog-reading-time {
+  display: inline-block;
+}
+
+.blog-separator {
+  color: var(--color-text-tertiary);
+}
+
+/* ==========================================================================
+   Back Link - Following privacy.html pattern
+   ========================================================================== */
+
+.blog-article .back-link,
+.blog-listing .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-bottom: var(--space-6);
+  font-weight: var(--font-weight-semibold);
+}
+
+.blog-article .back-link:hover,
+.blog-listing .back-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Blog Article Header
+   ========================================================================== */
+
+.blog-article-header {
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.blog-article-header h1 {
+  font-size: 36px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4) 0;
+  line-height: var(--line-height-tight);
+}
+
+.blog-article-meta {
+  margin-top: var(--space-3);
+}
+
+/* ==========================================================================
+   Blog Body - Article prose styling (headings, paragraphs, lists, code)
+   Following privacy.html .legal-content patterns
+   ========================================================================== */
+
+.blog-body {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-loose);
+  color: var(--color-text-primary);
+}
+
+.blog-body h2 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+}
+
+.blog-body h3 {
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+}
+
+.blog-body h4 {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+}
+
+.blog-body p {
+  margin-bottom: var(--space-4);
+}
+
+.blog-body ul,
+.blog-body ol {
+  margin-bottom: var(--space-4);
+  padding-left: var(--space-6);
+}
+
+.blog-body li {
+  margin-bottom: var(--space-2);
+  line-height: var(--line-height-loose);
+}
+
+.blog-body strong {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.blog-body a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-body a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* Code blocks */
+.blog-body code {
+  background: var(--color-bg-page);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--color-primary-dark);
+}
+
+.blog-body pre {
+  background: var(--color-bg-dark);
+  color: var(--color-text-inverse);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-bottom: var(--space-4);
+}
+
+.blog-body pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+/* Blockquotes */
+.blog-body blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: var(--space-4);
+  margin: var(--space-6) 0;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* Horizontal rules */
+.blog-body hr {
+  border: none;
+  border-top: 1px solid var(--color-border-light);
+  margin: var(--space-8) 0;
+}
+
+/* Images */
+.blog-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: var(--space-4) 0;
+}
+
+/* Videos */
+.blog-body .video {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-4) 0;
+}
+
+.blog-body video {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+/* ==========================================================================
+   iPhone Frame - Device mockup for video content
+   ========================================================================== */
+
+.iphone-frame {
+  position: relative;
+  display: inline-block;
+  background: #1a1a1a;
+  border-radius: 32px;
+  padding: 10px;
+  max-width: 240px;
+  box-shadow:
+    0 0 0 2px #333,
+    0 15px 40px rgba(0, 0, 0, 0.3),
+    inset 0 0 2px rgba(255, 255, 255, 0.1);
+  /* Video loading state - hidden until video loads */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Show frame when video is loaded */
+.iphone-frame.video-loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.iphone-frame::after {
+  /* Side button accent */
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 100px;
+  width: 3px;
+  height: 60px;
+  background: #333;
+  border-radius: 0 2px 2px 0;
+}
+
+/* iPhone screen container */
+.iphone-screen {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Status bar */
+.iphone-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px 6px 16px;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  position: relative;
+  z-index: 5;
+}
+
+.iphone-status-bar::before {
+  /* Dynamic Island */
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 18px;
+  background: #1a1a1a;
+  border-radius: 12px;
+}
+
+.iphone-status-time {
+  min-width: 36px;
+}
+
+.iphone-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 50px;
+  justify-content: flex-end;
+}
+
+/* Signal bars */
+.iphone-signal {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 9px;
+}
+
+.iphone-signal span {
+  width: 2.5px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.iphone-signal span:nth-child(1) { height: 3px; }
+.iphone-signal span:nth-child(2) { height: 5px; }
+.iphone-signal span:nth-child(3) { height: 7px; }
+.iphone-signal span:nth-child(4) { height: 9px; }
+
+/* WiFi icon */
+.iphone-wifi {
+  width: 13px;
+  height: 10px;
+  position: relative;
+}
+
+.iphone-wifi::before,
+.iphone-wifi::after,
+.iphone-wifi span::before,
+.iphone-wifi span::after {
+  content: '';
+  position: absolute;
+  border: 1.5px solid transparent;
+  border-top-color: #fff;
+  border-radius: 50%;
+}
+
+.iphone-wifi::before {
+  width: 11px;
+  height: 11px;
+  top: -2px;
+  left: 1px;
+}
+
+.iphone-wifi::after {
+  width: 7px;
+  height: 7px;
+  top: 1px;
+  left: 3px;
+}
+
+.iphone-wifi span::before {
+  width: 4px;
+  height: 4px;
+  top: 3px;
+  left: 4.5px;
+}
+
+.iphone-wifi span::after {
+  width: 2px;
+  height: 2px;
+  top: 6px;
+  left: 5.5px;
+  border: none;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* Battery icon */
+.iphone-battery {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.iphone-battery-body {
+  width: 18px;
+  height: 9px;
+  border: 1.5px solid #fff;
+  border-radius: 2px;
+  padding: 1px;
+  position: relative;
+}
+
+.iphone-battery-level {
+  height: 100%;
+  width: 85%;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.iphone-battery-cap {
+  width: 1.5px;
+  height: 4px;
+  background: #fff;
+  border-radius: 0 1px 1px 0;
+}
+
+.iphone-frame video {
+  display: block;
+  width: 100%;
+  margin-top: -4px;
+}
+
+/* Ensure video wrapper centers the iPhone frame */
+.blog-body .video:has(.iphone-frame) {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-6) 0;
+}
+
+/* Mobile adjustments for iPhone frame */
+@media (max-width: 767px) {
+  .iphone-frame {
+    border-radius: 28px;
+    padding: 8px;
+    max-width: 200px;
+  }
+
+  .iphone-screen {
+    border-radius: 20px;
+  }
+
+  .iphone-status-bar {
+    padding: 6px 12px 4px 12px;
+    font-size: 10px;
+  }
+
+  .iphone-status-bar::before {
+    width: 50px;
+    height: 14px;
+    top: 5px;
+    border-radius: 10px;
+  }
+
+  .iphone-signal span {
+    width: 2px;
+  }
+
+  .iphone-signal span:nth-child(1) { height: 2px; }
+  .iphone-signal span:nth-child(2) { height: 4px; }
+  .iphone-signal span:nth-child(3) { height: 6px; }
+  .iphone-signal span:nth-child(4) { height: 8px; }
+
+  .iphone-battery-body {
+    width: 15px;
+    height: 7px;
+  }
+}
+
+/* ==========================================================================
+   Blog Article Footer
+   ========================================================================== */
+
+.blog-article-footer {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.blog-author {
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   Blog CTA Section - Conversion section at end of articles
+   ========================================================================== */
+
+.blog-cta-section {
+  background: var(--color-bg-purple-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-top: var(--space-8);
+  text-align: center;
+}
+
+.blog-cta-section h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.blog-cta-section p {
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+/* ==========================================================================
+   Header Navigation - Centered nav links
+   ========================================================================== */
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.header-nav .nav-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body);
+  transition: color var(--transition-fast);
+}
+
+.header-nav .nav-link:hover {
+  color: var(--color-primary);
+}
+
+/* ==========================================================================
+   Responsive Styles
+   ========================================================================== */
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .blog-container {
+    padding: var(--space-10) var(--space-6);
+  }
+
+  .blog-header {
+    padding-top: var(--space-8);
+  }
+
+  .blog-header h1 {
+    font-size: 42px;
+  }
+
+  .blog-article-header h1 {
+    font-size: 42px;
+  }
+
+  .blog-card {
+    padding: var(--space-6);
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .blog-container {
+    padding: var(--space-6) var(--space-3);
+  }
+
+  .blog-header {
+    padding-top: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .blog-header h1 {
+    font-size: 28px;
+  }
+
+  .blog-article-header h1 {
+    font-size: 28px;
+  }
+
+  .blog-card {
+    padding: var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .blog-card-arrow {
+    display: none;
+  }
+
+  .blog-card-title {
+    font-size: var(--font-size-body-large);
+  }
+
+  .blog-body h2 {
+    font-size: 20px;
+  }
+
+  .blog-cta-section {
+    padding: var(--space-5);
+  }
+
+  .blog-cta-section h3 {
+    font-size: var(--font-size-body-large);
+  }
+
+  /* Desktop header is hidden on mobile via styles.css */
+}
