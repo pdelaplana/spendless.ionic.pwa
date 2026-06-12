@@ -4,6 +4,8 @@
   "description": "Spendless landing page and blog",
   "scripts": {
     "build:blog": "node scripts/build-blog.js",
+    "build": "npm run build:blog",
+    "lint": "biome check .",
     "serve": "http-server -p 8080"
   },
   "dependencies": {
