@@ -190,8 +190,12 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
 
   // Helper function to get the currently selected wallet name, falling back to default matching logic
   const getSelectedWalletName = (recurringSpend: IRecurringSpend): string => {
+    if (!recurringSpend.id) {
+      console.warn('recurringSpend is missing an id:', recurringSpend);
+      return getWalletName(recurringSpend);
+    }
     return (
-      formData.recurringSpendsWalletMapping[recurringSpend.id || ''] ||
+      formData.recurringSpendsWalletMapping[recurringSpend.id] ||
       getWalletName(recurringSpend)
     );
   };
@@ -235,25 +239,47 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
                     <IonIcon icon={repeatOutline} />
                     {getScheduleDescription(item.recurringSpend)}
                   </RecurringSchedule>
-                  <IonSelect
-                    value={getSelectedWalletName(item.recurringSpend)}
-                    interface="popover"
-                    fill="outline"
-                    label="Wallet"
-                    labelPlacement="floating"
-                    className="ion-margin-top"
-                    onIonChange={(e) => {
-                      if (item.recurringSpend.id) {
-                        onUpdateWalletMapping(item.recurringSpend.id, e.detail.value);
-                      }
-                    }}
-                  >
-                    {formData.wallets.map((wallet) => (
-                      <IonSelectOption key={wallet.id} value={wallet.name}>
-                        {wallet.name}
-                      </IonSelectOption>
-                    ))}
-                  </IonSelect>
+                  {item.recurringSpend.id ? (
+                    <>
+                      <IonSelect
+                        value={getSelectedWalletName(item.recurringSpend)}
+                        interface="popover"
+                        fill="outline"
+                        label="Wallet"
+                        labelPlacement="floating"
+                        className="ion-margin-top"
+                        aria-label={`Select wallet for ${item.recurringSpend.description}`}
+                        disabled={formData.wallets.length === 0}
+                        onIonChange={(e) => {
+                          const spendId = item.recurringSpend.id;
+                          if (spendId) {
+                            onUpdateWalletMapping(spendId, e.detail.value);
+                          }
+                        }}
+                      >
+                        {formData.wallets.length === 0 ? (
+                          <IonSelectOption value="" disabled>
+                            No wallets available
+                          </IonSelectOption>
+                        ) : (
+                          formData.wallets.map((wallet) => (
+                            <IonSelectOption key={wallet.id} value={wallet.name}>
+                              {wallet.name}
+                            </IonSelectOption>
+                          ))
+                        )}
+                      </IonSelect>
+                      {!getSelectedWalletName(item.recurringSpend) && (
+                        <div style={{ color: designSystem.colors.danger, fontSize: '12px', marginTop: '4px' }}>
+                          Wallet selection is required
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div style={{ color: designSystem.colors.danger, fontSize: '12px', marginTop: '8px' }}>
+                      Unable to configure: Recurring spend has no ID
+                    </div>
+                  )}
                 </RecurringHeader>
                 <OccurrencesList>
                   {item.occurrences.map((date) => (

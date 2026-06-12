@@ -46,9 +46,21 @@ export function useUpdateRecurringSpend() {
           }
 
           const existingRecurringSpend = mapFromFirestore(recurringSpendId, docSnap.data());
+          let resolvedWalletId = data.walletId;
+          if (resolvedWalletId === undefined) {
+            if (data.walletName !== undefined) {
+              resolvedWalletId = data.walletName === existingRecurringSpend.walletName
+                ? existingRecurringSpend.walletId
+                : '';
+            } else {
+              resolvedWalletId = existingRecurringSpend.walletId;
+            }
+          }
+
           const updatedRecurringSpend = {
             ...existingRecurringSpend,
             ...data,
+            walletId: resolvedWalletId,
             updatedAt: new Date(),
           };
 

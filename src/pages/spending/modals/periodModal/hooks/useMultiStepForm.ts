@@ -135,14 +135,32 @@ export const useMultiStepForm = (
 
   // Recurring expenses management
   const setRecurringExpenses = (expenses: PeriodFormData['recurringExpenses']) => {
-    setFormData((prev) => ({ ...prev, recurringExpenses: expenses }));
+    setFormData((prev) => {
+      const expenseIds = new Set(expenses.map((e) => e.id));
+      const updatedMapping = { ...prev.recurringSpendsWalletMapping };
+      for (const key of Object.keys(updatedMapping)) {
+        if (!expenseIds.has(key)) {
+          delete updatedMapping[key];
+        }
+      }
+      return {
+        ...prev,
+        recurringExpenses: expenses,
+        recurringSpendsWalletMapping: updatedMapping,
+      };
+    });
   };
 
   const removeRecurringExpense = (expenseId: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      recurringExpenses: prev.recurringExpenses.filter((e) => e.id !== expenseId),
-    }));
+    setFormData((prev) => {
+      const updatedMapping = { ...prev.recurringSpendsWalletMapping };
+      delete updatedMapping[expenseId];
+      return {
+        ...prev,
+        recurringExpenses: prev.recurringExpenses.filter((e) => e.id !== expenseId),
+        recurringSpendsWalletMapping: updatedMapping,
+      };
+    });
   };
 
   const updateRecurringSpendWalletMapping = (recurringSpendId: string, walletName: string) => {

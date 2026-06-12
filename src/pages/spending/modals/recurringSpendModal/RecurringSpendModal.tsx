@@ -114,7 +114,7 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
   } = useForm<RecurringSpendFormData>({
     defaultValues: {
       accountId: recurringSpend?.accountId || '',
-      walletId: recurringSpend?.walletId || '',
+      walletId: recurringSpend?.walletId || wallets.find((w) => w.isDefault)?.id || wallets[0]?.id || '',
       startDate: recurringSpend?.startDate
         ? new Date(recurringSpend.startDate).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0],
@@ -217,12 +217,18 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
   );
 
   const onSubmit: SubmitHandler<RecurringSpendFormData> = async (formData) => {
-    const selectedWallet = wallets.find((w) => w.id === formData.walletId);
+    const resolvedWalletId = formData.walletId || wallets.find((w) => w.isDefault)?.id || wallets[0]?.id;
+    if (!resolvedWalletId) {
+      console.error('Submit blocked: No valid walletId found.');
+      return;
+    }
+
+    const selectedWallet = wallets.find((w) => w.id === resolvedWalletId);
 
     const newRecurringSpend = createRecurringSpend({
       accountId: formData.accountId,
-      walletId: formData.walletId,
-      walletName: selectedWallet?.name,
+      walletId: selectedWallet?.id || resolvedWalletId,
+      walletName: selectedWallet?.name || '',
       startDate: new Date(formData.startDate),
       description: formData.description,
       amount: Number(formData.amount),
@@ -298,7 +304,11 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
         (recurringSpend.walletName
           ? wallets.find((w) => w.name.toLowerCase() === recurringSpend.walletName?.toLowerCase())
               ?.id
-          : wallets.find((w) => w.id === recurringSpend.walletId)?.id) ?? recurringSpend.walletId;
+          : wallets.find((w) => w.id === recurringSpend.walletId)?.id) ??
+        recurringSpend.walletId ??
+        wallets.find((w) => w.isDefault)?.id ??
+        wallets[0]?.id ??
+        '';
 
       reset({
         id: recurringSpend.id,

@@ -6,7 +6,7 @@ import type { ISpend } from '@/domain/Spend';
 import type { IWallet } from '@/domain/Wallet';
 import { usePrompt } from '@/hooks';
 import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
-import { useUpdateRecurringSpend } from '@/hooks/api';
+import { useFetchRecurringSpends, useUpdateRecurringSpend } from '@/hooks/api';
 import { designSystem } from '@/theme/designSystem';
 import { dateUtils } from '@/utils';
 import { IonTitle } from '@ionic/react';
@@ -62,6 +62,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   const { showErrorNotification } = useAppNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mutateAsync: updateRecurringSpend } = useUpdateRecurringSpend();
+  const { data: recurringSpends = [] } = useFetchRecurringSpends(accountId);
 
   // Initialize form with existing period data if editing
   const initialData = period
@@ -228,19 +229,28 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
       updateBasics(currentFormValues);
 
       // Update global recurring spends with chosen wallet mappings in Firestore
-      const mappingEntries = Object.entries(formData.recurringSpendsWalletMapping);
+      const activeSpendIds = new Set(recurringSpends.map((rs) => rs.id));
+      const mappingEntries = Object.entries(formData.recurringSpendsWalletMapping).filter(
+        ([recurringSpendId]) => activeSpendIds.has(recurringSpendId)
+      );
+
       if (mappingEntries.length > 0) {
-        await Promise.all(
-          mappingEntries.map(async ([recurringSpendId, walletName]) => {
-            await updateRecurringSpend({
+        const results = await Promise.allSettled(
+          mappingEntries.map(([recurringSpendId, walletName]) =>
+            updateRecurringSpend({
               accountId,
               recurringSpendId,
               data: {
                 walletName,
               },
-            });
-          })
+            })
+          )
         );
+
+        const rejected = results.filter((res) => res.status === 'rejected');
+        if (rejected.length > 0) {
+          throw new Error('Failed to update some recurring spends wallet mappings');
+        }
       }
 
       // Create period data manually to ensure we use the current form values

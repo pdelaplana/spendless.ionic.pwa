@@ -40,7 +40,7 @@ As a mindful spender setting up a new spending period, I want to choose which wa
 ## Technical Notes
 
 - Update `StepRecurringExpenses.tsx` to retrieve available wallets from the context/provider.
-- Bind each recurring spend's `walletId` field to the selected option in the UI.
+- Bind each recurring spend's `walletName` field to the selected option in the UI.
 
 ---
 
