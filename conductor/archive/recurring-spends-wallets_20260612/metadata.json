@@ -1,0 +1,16 @@
+{
+  "id": "recurring-spends-wallets_20260612",
+  "title": "Select Wallet for Recurring Spends on Period Creation",
+  "type": "feature",
+  "status": "complete",
+  "created": "2026-06-12T08:53:51.000Z",
+  "updated": "2026-06-12T10:38:34.000Z",
+  "phases": {
+    "total": 3,
+    "completed": 3
+  },
+  "tasks": {
+    "total": 8,
+    "completed": 8
+  }
+}

@@ -102,6 +102,11 @@ export function useGenerateRecurringSpends() {
               walletId = defaultWalletId;
             }
 
+            // If still empty, fall back to the first available wallet ID in the period as a safety measure
+            if (!walletId && walletsSnapshot.docs.length > 0) {
+              walletId = walletsSnapshot.docs[0].id;
+            }
+
             // Create a spend record for each occurrence
             for (const occurrenceDate of occurrences) {
               const spendData: CreateSpendDTO = {

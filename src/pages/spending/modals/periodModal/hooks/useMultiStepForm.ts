@@ -28,6 +28,7 @@ export interface PeriodFormData {
     category: string;
     walletId: string;
   }>;
+  recurringSpendsWalletMapping: Record<string, string>; // recurringSpendId -> walletName
 
   // Internal state
   currentStep: 0 | 1 | 2 | 3;
@@ -45,6 +46,7 @@ const getInitialFormData = (currentPeriod?: IPeriod): PeriodFormData => {
     endAt: dateUtils.toDateInput(addWeeks(defaultStartDate, 4)),
     wallets: [],
     recurringExpenses: [],
+    recurringSpendsWalletMapping: {},
     currentStep: 0,
   };
 };
@@ -133,13 +135,41 @@ export const useMultiStepForm = (
 
   // Recurring expenses management
   const setRecurringExpenses = (expenses: PeriodFormData['recurringExpenses']) => {
-    setFormData((prev) => ({ ...prev, recurringExpenses: expenses }));
+    setFormData((prev) => {
+      const expenseIds = new Set(expenses.map((e) => e.id));
+      const updatedMapping = { ...prev.recurringSpendsWalletMapping };
+      for (const key of Object.keys(updatedMapping)) {
+        if (!expenseIds.has(key)) {
+          delete updatedMapping[key];
+        }
+      }
+      return {
+        ...prev,
+        recurringExpenses: expenses,
+        recurringSpendsWalletMapping: updatedMapping,
+      };
+    });
   };
 
   const removeRecurringExpense = (expenseId: string) => {
+    setFormData((prev) => {
+      const updatedMapping = { ...prev.recurringSpendsWalletMapping };
+      delete updatedMapping[expenseId];
+      return {
+        ...prev,
+        recurringExpenses: prev.recurringExpenses.filter((e) => e.id !== expenseId),
+        recurringSpendsWalletMapping: updatedMapping,
+      };
+    });
+  };
+
+  const updateRecurringSpendWalletMapping = (recurringSpendId: string, walletName: string) => {
     setFormData((prev) => ({
       ...prev,
-      recurringExpenses: prev.recurringExpenses.filter((e) => e.id !== expenseId),
+      recurringSpendsWalletMapping: {
+        ...prev.recurringSpendsWalletMapping,
+        [recurringSpendId]: walletName,
+      },
     }));
   };
 
@@ -258,6 +288,7 @@ export const useMultiStepForm = (
     // Recurring expenses management
     setRecurringExpenses,
     removeRecurringExpense,
+    updateRecurringSpendWalletMapping,
 
     // Validation
     isStep1Valid,
