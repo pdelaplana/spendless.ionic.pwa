@@ -1,0 +1,5 @@
+Task Summary: Implement Root-Level Tooling
+- Added build, lint, test, and deploy scripts to root package.json.
+- Added alias test script to apps/mobile-pwa/package.json.
+- Added build and lint scripts to apps/website/package.json to integrate website generation and code quality checks into workspace workflows.
+- Confirmed that npm run build, npm run lint, and npm test execute cleanly workspace-wide.
