@@ -1,0 +1,4 @@
+Task Summary: Move Sibling spendless.cloud.functions to apps/cloud-functions
+- Relocated files from sibling spendless.cloud.functions repository into apps/cloud-functions.
+- Removed git files from the migrated folder to treat it as part of the monorepo structure.
+- Created files under apps/cloud-functions.
