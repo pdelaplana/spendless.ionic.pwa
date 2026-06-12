@@ -1,0 +1,1 @@
+Chore: Remove the wallet selection field from RecurringSpendModal.tsx since wallet assignment is now done in the period creation wizard.
