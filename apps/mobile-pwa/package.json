@@ -14,6 +14,7 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check --apply .",
+    "typecheck": "tsc --noEmit",
     "fetch-indexes": "powershell -File scripts/fetchFirestoreIndexes.ps1",
     "deploy:firebase-prod": "powershell -File scripts/deploy-to-prod.ps1",
     "generate-pwa-assets": "pwa-assets-generator ./public/favicon.png ./public/images/icons --background \"#ffffff\" --icon-only",

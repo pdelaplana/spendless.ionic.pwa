@@ -49,6 +49,9 @@ jobs:
       - name: Run Biome Lint
         run: npm run lint
 
+      - name: Run Type Check
+        run: npm run typecheck
+
       - name: Run Unit Tests
         run: npm test
         env:

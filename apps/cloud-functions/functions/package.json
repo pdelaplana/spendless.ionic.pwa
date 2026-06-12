@@ -11,6 +11,7 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "lint": "biome check src",
+    "typecheck": "tsc --noEmit",
     "lint:fix": "biome check --apply src",
     "format": "biome format src",
     "format:fix": "biome format --write src",
