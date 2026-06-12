@@ -1,0 +1,6 @@
+Task Summary: Update Project Configurations
+- Updated package.json names inside apps/ to spendless-mobile-pwa and spendless-functions.
+- Fixed vite path resolution in PWA build script.
+- Configured root-level firebase.json and .firebaserc to support multi-workspace hosting.
+- Cleaned up biome ignore rules to allow configuration files formatting.
+- Resolved explicit any lint issues in tests.
