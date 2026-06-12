@@ -1,0 +1,7 @@
+Task: Centralize Tooling
+Summary: Updated root biome.json to ignore workspace-wide node_modules and builds. Created a root tsconfig.json defining base compiler settings, and updated PWA tsconfig.json to extend the base configuration.
+Files modified:
+- biome.json
+- tsconfig.json
+- apps/mobile-pwa/tsconfig.json
+Core why: Centralize typescript and biome configurations at the root of the monorepo to ensure consistent compilation, formatting, and linting rules across all workspaces.
