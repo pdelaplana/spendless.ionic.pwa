@@ -29,6 +29,6 @@
 - [x] Task: Initialize `packages/shared` 4fccbf0
     - [x] Create shared package for domain types and common utilities.
     - [x] Migrate common types from PWA to `shared`.
-- [~] Task: Implement Root-Level Tooling
-    - [ ] Add `build`, `lint`, `test`, and `deploy` scripts to root `package.json`.
-- [ ] Task: Conductor - User Manual Verification 'Shared Packages & Unified Workflow' (Protocol in workflow.md)
+- [x] Task: Implement Root-Level Tooling 4d76cc9
+    - [x] Add `build`, `lint`, `test`, and `deploy` scripts to root `package.json`.
+- [~] Task: Conductor - User Manual Verification 'Shared Packages & Unified Workflow' (Protocol in workflow.md)
