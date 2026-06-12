@@ -12,9 +12,9 @@
 ## Phase 2: Migration of Existing Repos
 - [x] Task: Move Current PWA to `apps/mobile-pwa` bea847e
     - [x] Relocate current root files into `apps/mobile-pwa`.
-- [~] Task: Move Sibling `spendless.cloud.functions` to `apps/cloud-functions`
-    - [ ] Relocate sibling repo files into `apps/cloud-functions`.
-- [ ] Task: Move Sibling `spendless.website` to `apps/website`
+- [x] Task: Move Sibling `spendless.cloud.functions` to `apps/cloud-functions` 4cae35c
+    - [x] Relocate sibling repo files into `apps/cloud-functions`.
+- [~] Task: Move Sibling `spendless.website` to `apps/website`
     - [ ] Relocate sibling repo files into `apps/website`.
 - [ ] Task: Conductor - User Manual Verification 'Migration of Existing Repos' (Protocol in workflow.md)
 
