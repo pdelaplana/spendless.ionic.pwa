@@ -345,24 +345,7 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
               </IonLabel>
             </IonItem>
 
-            <IonItem>
-              <IonLabel>
-                <SelectFormField
-                  label={t('recurringSpend.modal.wallet.label')}
-                  name='walletId'
-                  fill='outline'
-                  placeholder={t('recurringSpend.modal.wallet.placeholder')}
-                  setValue={setValue}
-                  getValues={getValues}
-                  error={errors.walletId}
-                  validationRules={{ required: t('recurringSpend.modal.wallet.required') }}
-                  optionsList={wallets.map((wallet: IWallet) => ({
-                    label: wallet.name,
-                    value: wallet.id || '',
-                  }))}
-                />
-              </IonLabel>
-            </IonItem>
+
 
             <IonItem>
               <IonLabel>
