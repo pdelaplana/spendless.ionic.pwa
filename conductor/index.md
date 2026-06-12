@@ -12,3 +12,6 @@
 ## Management
 - [Tracks Registry](./tracks.md)
 - [Tracks Directory](./tracks/)
+
+## Active Tracks
+- [Select Wallet for Recurring Spends on Period Creation](./tracks/recurring-spends-wallets_20260612/)
