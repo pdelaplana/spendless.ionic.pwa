@@ -128,8 +128,8 @@ jobs:
     env:
       ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || github.event.inputs.environment || 'development' }}
       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-      DATABASE_ID: ${{ vars.DATABASE_ID }}
-      STORAGE_BUCKET: ${{ vars.STORAGE_BUCKET }}
+      DATABASE_ID: ${{ vars.DATABASE_ID || '(default)' }}
+      STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
