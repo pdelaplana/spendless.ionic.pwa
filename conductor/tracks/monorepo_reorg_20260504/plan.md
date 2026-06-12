@@ -1,9 +1,9 @@
 # Implementation Plan: Monorepo Reorganization
 
 ## Phase 1: Foundation & Scaffolding
-- [ ] Task: Initialize Root Workspace
-    - [ ] Create root `package.json` with `workspaces` field (`apps/*`, `packages/*`).
-    - [ ] Set up root `.gitignore` to handle monorepo structure.
+- [x] Task: Initialize Root Workspace bea847e
+    - [x] Create root `package.json` with `workspaces` field (`apps/*`, `packages/*`).
+    - [x] Set up root `.gitignore` to handle monorepo structure.
 - [ ] Task: Centralize Tooling
     - [ ] Move `biome.json` to root and configure for workspace-wide linting.
     - [ ] Set up base `tsconfig.json` at root for shared TypeScript settings.
