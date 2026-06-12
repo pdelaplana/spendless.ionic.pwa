@@ -1,5 +1,5 @@
 {
-  "name": "functions",
+  "name": "spendless-functions",
   "scripts": {
     "build:templates": "tsc && npm run copy:templates",
     "build": "tsc",

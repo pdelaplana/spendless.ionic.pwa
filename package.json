@@ -1,12 +1,7 @@
 {
   "name": "spendless-monorepo",
   "private": true,
-  "workspaces": [
-    "apps/mobile-pwa",
-    "apps/cloud-functions/functions",
-    "apps/website",
-    "packages/*"
-  ],
+  "workspaces": ["apps/mobile-pwa", "apps/cloud-functions/functions", "apps/website", "packages/*"],
   "scripts": {
     "dev": "npm run dev --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",

@@ -3,9 +3,7 @@
  * Handles interactions, animations, analytics, and PWA features
  */
 
-(function() {
-  'use strict';
-
+(() => {
   // ================================
   // 0. Mobile Menu Toggle
   // ================================
@@ -31,7 +29,7 @@
       // Track menu interaction
       trackEvent('mobile_menu_toggle', {
         event_category: 'Navigation',
-        event_label: 'Open'
+        event_label: 'Open',
       });
     }
 
@@ -47,12 +45,12 @@
       // Track menu interaction
       trackEvent('mobile_menu_toggle', {
         event_category: 'Navigation',
-        event_label: 'Close'
+        event_label: 'Close',
       });
     }
 
     // Toggle sidebar on hamburger click
-    menuToggle.addEventListener('click', function() {
+    menuToggle.addEventListener('click', () => {
       if (mobileSidebar.classList.contains('active')) {
         closeSidebar();
       } else {
@@ -67,12 +65,12 @@
     mobileOverlay?.addEventListener('click', closeSidebar);
 
     // Close when clicking a nav link
-    mobileSidebar.querySelectorAll('.mobile-nav-link').forEach(link => {
+    mobileSidebar.querySelectorAll('.mobile-nav-link').forEach((link) => {
       link.addEventListener('click', closeSidebar);
     });
 
     // Close on escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && mobileSidebar.classList.contains('active')) {
         closeSidebar();
       }
@@ -84,8 +82,8 @@
   // ================================
 
   function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
 
         // Skip if it's just "#"
@@ -98,7 +96,7 @@
           e.preventDefault();
           target.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'start',
           });
 
           // Track CTA clicks
@@ -116,11 +114,11 @@
     const observerOptions = {
       root: null,
       rootMargin: '0px',
-      threshold: 0.1
+      threshold: 0.1,
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('fade-in-up');
           observer.unobserve(entry.target);
@@ -130,10 +128,10 @@
 
     // Observe all cards, steps, and sections
     const animatedElements = document.querySelectorAll(
-      '.card, .step, .category-card, .philosophy-item, .pricing-card, .problem-box, .solution-box'
+      '.card, .step, .category-card, .philosophy-item, .pricing-card, .problem-box, .solution-box',
     );
 
-    animatedElements.forEach(el => {
+    animatedElements.forEach((el) => {
       el.style.opacity = '0';
       observer.observe(el);
     });
@@ -156,7 +154,7 @@
       // Track that install prompt was shown
       trackEvent('pwa_install_prompt_shown', {
         event_category: 'PWA',
-        event_label: 'Install Prompt Available'
+        event_label: 'Install Prompt Available',
       });
 
       // Optionally show custom install button
@@ -167,7 +165,7 @@
     window.addEventListener('appinstalled', () => {
       trackEvent('pwa_install_success', {
         event_category: 'PWA',
-        event_label: 'App Installed'
+        event_label: 'App Installed',
       });
       deferredPrompt = null;
     });
@@ -181,14 +179,14 @@
     trackEvent('cta_click', {
       event_category: 'engagement',
       event_label: buttonText,
-      destination: destination
+      destination: destination,
     });
   }
 
   function initCTATracking() {
     // Track all button clicks
-    document.querySelectorAll('.btn').forEach(button => {
-      button.addEventListener('click', function() {
+    document.querySelectorAll('.btn').forEach((button) => {
+      button.addEventListener('click', function () {
         const buttonText = this.textContent.trim();
         const destination = this.getAttribute('href') || 'button_action';
         trackCTAClick(buttonText, destination);
@@ -205,7 +203,7 @@
       25: false,
       50: false,
       75: false,
-      100: false
+      100: false,
     };
 
     function checkScrollDepth() {
@@ -215,13 +213,13 @@
       const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
 
       // Check each milestone
-      Object.keys(milestones).forEach(milestone => {
-        if (scrollPercent >= parseInt(milestone) && !milestones[milestone]) {
+      Object.keys(milestones).forEach((milestone) => {
+        if (scrollPercent >= Number.parseInt(milestone) && !milestones[milestone]) {
           milestones[milestone] = true;
           trackEvent('scroll_depth', {
             event_category: 'engagement',
             event_label: `${milestone}%`,
-            value: parseInt(milestone)
+            value: Number.parseInt(milestone),
           });
         }
       });
@@ -248,17 +246,17 @@
     const observerOptions = {
       root: null,
       rootMargin: '0px',
-      threshold: 0.5
+      threshold: 0.5,
     };
 
     const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id;
           if (sectionId) {
             trackEvent('section_view', {
               event_category: 'engagement',
-              event_label: sectionId
+              event_label: sectionId,
             });
           }
         }
@@ -267,7 +265,7 @@
 
     // Observe key sections
     const sections = document.querySelectorAll('section[id]');
-    sections.forEach(section => sectionObserver.observe(section));
+    sections.forEach((section) => sectionObserver.observe(section));
   }
 
   // ================================
@@ -285,7 +283,7 @@
         // Track exit intent
         trackEvent('exit_intent', {
           event_category: 'engagement',
-          event_label: 'Mouse Leave Top'
+          event_label: 'Mouse Leave Top',
         });
 
         // Show exit modal (implement your modal here)
@@ -331,7 +329,7 @@
     trackEvent('page_view', {
       page_title: document.title,
       page_location: window.location.href,
-      page_path: window.location.pathname
+      page_path: window.location.pathname,
     });
   }
 
@@ -349,9 +347,11 @@
         if (perfData) {
           trackEvent('performance', {
             event_category: 'technical',
-            dom_load_time: Math.round(perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart),
+            dom_load_time: Math.round(
+              perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+            ),
             page_load_time: Math.round(perfData.loadEventEnd - perfData.loadEventStart),
-            event_label: 'Page Performance'
+            event_label: 'Page Performance',
           });
         }
       }
@@ -365,7 +365,7 @@
             const lastEntry = entries[entries.length - 1];
             trackEvent('web_vitals_lcp', {
               event_category: 'technical',
-              value: Math.round(lastEntry.renderTime || lastEntry.loadTime)
+              value: Math.round(lastEntry.renderTime || lastEntry.loadTime),
             });
           });
           lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
@@ -373,10 +373,10 @@
           // First Input Delay (FID)
           const fidObserver = new PerformanceObserver((list) => {
             const entries = list.getEntries();
-            entries.forEach(entry => {
+            entries.forEach((entry) => {
               trackEvent('web_vitals_fid', {
                 event_category: 'technical',
-                value: Math.round(entry.processingStart - entry.startTime)
+                value: Math.round(entry.processingStart - entry.startTime),
               });
             });
           });
@@ -396,7 +396,7 @@
     // Find all iPhone frames containing videos
     const iphoneFrames = document.querySelectorAll('.iphone-frame');
 
-    iphoneFrames.forEach(frame => {
+    iphoneFrames.forEach((frame) => {
       const video = frame.querySelector('video');
 
       if (!video) {
@@ -411,7 +411,8 @@
       }
 
       // Check if video is already loaded (cached)
-      if (video.readyState >= 3) { // HAVE_FUTURE_DATA or better
+      if (video.readyState >= 3) {
+        // HAVE_FUTURE_DATA or better
         showFrame();
         return;
       }
@@ -420,10 +421,14 @@
       video.addEventListener('canplaythrough', showFrame, { once: true });
 
       // Fallback: also listen for loadeddata in case canplaythrough doesn't fire
-      video.addEventListener('loadeddata', function() {
-        // Small delay to ensure first frame is rendered
-        setTimeout(showFrame, 100);
-      }, { once: true });
+      video.addEventListener(
+        'loadeddata',
+        () => {
+          // Small delay to ensure first frame is rendered
+          setTimeout(showFrame, 100);
+        },
+        { once: true },
+      );
 
       // Timeout fallback - show frame after 5 seconds even if video hasn't loaded
       // This prevents infinite loading state
@@ -438,7 +443,8 @@
       video.preload = 'auto';
 
       // Force load if not already loading
-      if (video.networkState === 0) { // NETWORK_EMPTY
+      if (video.networkState === 0) {
+        // NETWORK_EMPTY
         video.load();
       }
     });
@@ -457,7 +463,7 @@
     // Fallback for older browsers
     const images = document.querySelectorAll('img[loading="lazy"]');
     const imageObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const img = entry.target;
           img.src = img.dataset.src || img.src;
@@ -466,7 +472,7 @@
       });
     });
 
-    images.forEach(img => imageObserver.observe(img));
+    images.forEach((img) => imageObserver.observe(img));
   }
 
   // ================================
@@ -475,19 +481,19 @@
 
   function initDarkMode() {
     // Detect user's color scheme preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
       trackEvent('dark_mode_detected', {
         event_category: 'user_preference',
-        event_label: 'Dark Mode Active'
+        event_label: 'Dark Mode Active',
       });
     }
 
     // Listen for changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       const newColorScheme = e.matches ? 'dark' : 'light';
       trackEvent('color_scheme_change', {
         event_category: 'user_preference',
-        event_label: newColorScheme
+        event_label: newColorScheme,
       });
     });
   }
@@ -526,5 +532,4 @@
 
   // Start the app
   init();
-
 })();

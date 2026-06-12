@@ -2,7 +2,7 @@
 
 :root {
   /* Colors - Primary */
-  --color-primary: #8B5FBF;
+  --color-primary: #8b5fbf;
   --color-primary-hover: #7c3aed;
   --color-primary-light: #c084fc;
   --color-primary-dark: #6d42a1;
@@ -29,7 +29,8 @@
   --color-border-medium: #d4d4d8;
 
   /* Typography - Font Family */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, 'Helvetica Neue', Arial, sans-serif;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Helvetica Neue",
+    Arial, sans-serif;
 
   /* Typography - Font Sizes */
   --font-size-h1: 48px;

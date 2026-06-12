@@ -114,7 +114,8 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
   } = useForm<RecurringSpendFormData>({
     defaultValues: {
       accountId: recurringSpend?.accountId || '',
-      walletId: recurringSpend?.walletId || wallets.find((w) => w.isDefault)?.id || wallets[0]?.id || '',
+      walletId:
+        recurringSpend?.walletId || wallets.find((w) => w.isDefault)?.id || wallets[0]?.id || '',
       startDate: recurringSpend?.startDate
         ? new Date(recurringSpend.startDate).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0],
@@ -217,7 +218,8 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
   );
 
   const onSubmit: SubmitHandler<RecurringSpendFormData> = async (formData) => {
-    const resolvedWalletId = formData.walletId || wallets.find((w) => w.isDefault)?.id || wallets[0]?.id;
+    const resolvedWalletId =
+      formData.walletId || wallets.find((w) => w.isDefault)?.id || wallets[0]?.id;
     if (!resolvedWalletId) {
       console.error('Submit blocked: No valid walletId found.');
       return;
@@ -354,8 +356,6 @@ const RecurringSpendModal: React.FC<RecurringSpendModalProps> = ({
                 />
               </IonLabel>
             </IonItem>
-
-
 
             <IonItem>
               <IonLabel>

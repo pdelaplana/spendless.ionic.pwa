@@ -49,9 +49,10 @@ export function useUpdateRecurringSpend() {
           let resolvedWalletId = data.walletId;
           if (resolvedWalletId === undefined) {
             if (data.walletName !== undefined) {
-              resolvedWalletId = data.walletName === existingRecurringSpend.walletName
-                ? existingRecurringSpend.walletId
-                : '';
+              resolvedWalletId =
+                data.walletName === existingRecurringSpend.walletName
+                  ? existingRecurringSpend.walletId
+                  : '';
             } else {
               resolvedWalletId = existingRecurringSpend.walletId;
             }

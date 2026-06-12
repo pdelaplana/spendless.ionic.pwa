@@ -6,7 +6,7 @@
  */
 
 const admin = require('firebase-admin');
-const path = require('path');
+const path = require('node:path');
 
 // Get arguments
 const userId = process.argv[2];
@@ -35,7 +35,7 @@ if (environment === 'dev') {
 }
 
 // Check if service account file exists
-const fs = require('fs');
+const fs = require('node:fs');
 if (!fs.existsSync(serviceAccountPath)) {
   console.error(`Error: Service account file not found at: ${serviceAccountPath}`);
   console.error('Please download the service account key from Firebase Console');
@@ -70,7 +70,9 @@ admin
     console.log('');
     console.log('To use this token:');
     console.log('1. Exchange it for an ID token at:');
-    console.log(`   https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=<API_KEY>`);
+    console.log(
+      '   https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=<API_KEY>',
+    );
     console.log('2. Or copy it to use in your test scripts');
     console.log('');
     process.exit(0);

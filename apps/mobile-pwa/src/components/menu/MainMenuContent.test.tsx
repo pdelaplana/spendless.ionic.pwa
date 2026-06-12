@@ -82,7 +82,7 @@ describe('MainMenuContent', () => {
   it('hides the Inbox item and Notifications heading for non-premium users', () => {
     vi.mocked(useSpendingAccount).mockReturnValueOnce({
       account: { subscriptionTier: 'essentials' },
-    } as any);
+    } as unknown as ReturnType<typeof useSpendingAccount>);
 
     render(<MainMenuContent />);
 

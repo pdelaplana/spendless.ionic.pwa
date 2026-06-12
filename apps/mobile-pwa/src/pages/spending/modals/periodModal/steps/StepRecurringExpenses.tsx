@@ -3,7 +3,7 @@ import type { IRecurringSpend } from '@/domain/RecurringSpend';
 import { calculateOccurrencesInPeriod, getScheduleDescription } from '@/domain/RecurringSpend';
 import { useFetchRecurringSpends } from '@/hooks/api';
 import { designSystem } from '@/theme/designSystem';
-import { IonIcon, IonSpinner, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonIcon, IonSelect, IonSelectOption, IonSpinner } from '@ionic/react';
 import { calendarOutline, repeatOutline, walletOutline } from 'ionicons/icons';
 import type React from 'react';
 import { useMemo } from 'react';
@@ -54,8 +54,6 @@ const RecurringSchedule = styled.div`
   align-items: center;
   gap: ${designSystem.spacing.xs};
 `;
-
-
 
 const OccurrencesList = styled.div`
   background: ${designSystem.colors.surface};
@@ -195,8 +193,7 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
       return getWalletName(recurringSpend);
     }
     return (
-      formData.recurringSpendsWalletMapping[recurringSpend.id] ||
-      getWalletName(recurringSpend)
+      formData.recurringSpendsWalletMapping[recurringSpend.id] || getWalletName(recurringSpend)
     );
   };
 
@@ -243,11 +240,11 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
                     <>
                       <IonSelect
                         value={getSelectedWalletName(item.recurringSpend)}
-                        interface="popover"
-                        fill="outline"
-                        label="Wallet"
-                        labelPlacement="floating"
-                        className="ion-margin-top"
+                        interface='popover'
+                        fill='outline'
+                        label='Wallet'
+                        labelPlacement='floating'
+                        className='ion-margin-top'
                         aria-label={`Select wallet for ${item.recurringSpend.description}`}
                         disabled={formData.wallets.length === 0}
                         onIonChange={(e) => {
@@ -258,7 +255,7 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
                         }}
                       >
                         {formData.wallets.length === 0 ? (
-                          <IonSelectOption value="" disabled>
+                          <IonSelectOption value='' disabled>
                             No wallets available
                           </IonSelectOption>
                         ) : (
@@ -270,13 +267,25 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
                         )}
                       </IonSelect>
                       {!getSelectedWalletName(item.recurringSpend) && (
-                        <div style={{ color: designSystem.colors.danger, fontSize: '12px', marginTop: '4px' }}>
+                        <div
+                          style={{
+                            color: designSystem.colors.danger,
+                            fontSize: '12px',
+                            marginTop: '4px',
+                          }}
+                        >
                           Wallet selection is required
                         </div>
                       )}
                     </>
                   ) : (
-                    <div style={{ color: designSystem.colors.danger, fontSize: '12px', marginTop: '8px' }}>
+                    <div
+                      style={{
+                        color: designSystem.colors.danger,
+                        fontSize: '12px',
+                        marginTop: '8px',
+                      }}
+                    >
                       Unable to configure: Recurring spend has no ID
                     </div>
                   )}
@@ -305,4 +314,3 @@ const StepRecurringExpenses: React.FC<StepRecurringExpensesProps> = ({
 };
 
 export default StepRecurringExpenses;
-

@@ -47,7 +47,12 @@ button {
    2. Typography
    ================================ */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   margin-bottom: var(--space-3);
@@ -104,7 +109,7 @@ p {
 }
 
 .underline-accent::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: 2px;
@@ -549,7 +554,7 @@ p {
 }
 
 .phone-frame::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 12px;
   left: 50%;
@@ -562,7 +567,7 @@ p {
 }
 
 .phone-frame::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 19px;
   left: 50%;
@@ -932,7 +937,6 @@ p {
     font-size: 14px;
   }
 }
-
 
 /* Mobile: Add breathing room for image containers */
 @media (max-width: 767px) {
@@ -1630,7 +1634,7 @@ p {
 }
 
 .btn.loading::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 16px;
   height: 16px;
@@ -1695,7 +1699,7 @@ button:focus-visible {
    19. Product Launch Badge
    ================================ */
 
-.product-hunt-badge{
+.product-hunt-badge {
   display: flex;
   justify-content: center;
   overflow: hidden;

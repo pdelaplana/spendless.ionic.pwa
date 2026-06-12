@@ -1,11 +1,11 @@
 {
-  "name": "app",
+  "name": "spendless-mobile-pwa",
   "private": true,
   "version": "1.11.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && node --max-old-space-size=4096 node_modules/vite/bin/vite.js build",
+    "build": "tsc && node --max-old-space-size=4096 ../../node_modules/vite/bin/vite.js build",
     "build:pwa": "tsc && vite build && powershell -File scripts/optimize-pwa.ps1",
     "preview": "vite preview",
     "test.e2e": "cypress run",

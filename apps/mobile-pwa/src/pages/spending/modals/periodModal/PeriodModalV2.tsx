@@ -5,8 +5,8 @@ import type { IPeriod } from '@/domain/Period';
 import type { ISpend } from '@/domain/Spend';
 import type { IWallet } from '@/domain/Wallet';
 import { usePrompt } from '@/hooks';
-import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { useFetchRecurringSpends, useUpdateRecurringSpend } from '@/hooks/api';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
 import { designSystem } from '@/theme/designSystem';
 import { dateUtils } from '@/utils';
 import { IonTitle } from '@ionic/react';
@@ -231,7 +231,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
       // Update global recurring spends with chosen wallet mappings in Firestore
       const activeSpendIds = new Set(recurringSpends.map((rs) => rs.id));
       const mappingEntries = Object.entries(formData.recurringSpendsWalletMapping).filter(
-        ([recurringSpendId]) => activeSpendIds.has(recurringSpendId)
+        ([recurringSpendId]) => activeSpendIds.has(recurringSpendId),
       );
 
       if (mappingEntries.length > 0) {
@@ -243,8 +243,8 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
               data: {
                 walletName,
               },
-            })
-          )
+            }),
+          ),
         );
 
         const rejected = results.filter((res) => res.status === 'rejected');

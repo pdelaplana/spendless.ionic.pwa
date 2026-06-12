@@ -1,5 +1,15 @@
 {
   "projects": {
-    "default": "spendless-dev-15971"
+    "default": "spendless-dev-15971",
+    "production": "spendless-prod-24e2c"
+  },
+  "targets": {
+    "spendless-prod-24e2c": {
+      "hosting": {
+        "website": [
+          "spendless-landing-page"
+        ]
+      }
+    }
   }
 }

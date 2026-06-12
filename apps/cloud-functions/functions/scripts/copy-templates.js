@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 // Source and destination directories
 const srcDir = path.join(__dirname, '..', 'src', 'templates');

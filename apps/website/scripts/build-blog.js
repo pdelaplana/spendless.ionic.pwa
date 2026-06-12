@@ -9,8 +9,8 @@
  * Usage: node scripts/build-blog.js
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const frontMatter = require('front-matter');
 const { marked } = require('marked');
 
@@ -19,7 +19,7 @@ const renderer = new marked.Renderer();
 
 // Custom HTML renderer for iPhone frame embeds
 const originalHtmlRenderer = renderer.html.bind(renderer);
-renderer.html = function(html) {
+renderer.html = (html) => {
   // Ensure html is a string
   if (typeof html === 'object' && html.text) {
     html = html.text;
@@ -27,7 +27,7 @@ renderer.html = function(html) {
   if (typeof html !== 'string') {
     return originalHtmlRenderer(html) || '';
   }
-  
+
   // Check if it's a video tag with data-iphone-frame attribute
   const iphoneVideoMatch = html.match(/<video[^>]*data-iphone-frame[^>]*src="([^"]+)"[^>]*>/i);
   if (iphoneVideoMatch) {
@@ -57,7 +57,7 @@ renderer.html = function(html) {
 marked.setOptions({
   gfm: true,
   breaks: true,
-  renderer: renderer
+  renderer: renderer,
 });
 
 // Paths
@@ -96,7 +96,7 @@ function formatDate(dateStr) {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
 }
 
@@ -234,7 +234,7 @@ function generateArticlePage(article) {
   <meta property="article:modified_time" content="${isoDateModified}">
   <meta property="article:author" content="${article.author}">
   <meta property="article:section" content="Finance">
-${articleTags.map(tag => `  <meta property="article:tag" content="${tag}">`).join('\n')}
+${articleTags.map((tag) => `  <meta property="article:tag" content="${tag}">`).join('\n')}
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
@@ -286,8 +286,12 @@ ${articleTags.map(tag => `  <meta property="article:tag" content="${tag}">`).joi
       "@type": "WebPage",
       "@id": "${SITE_URL}/blog/${article.slug}/"
     },
-    "wordCount": ${article.content.trim().split(/\s+/).length}${articleTags.length > 0 ? `,
-    "keywords": "${articleTags.join(', ')}"` : ''}
+    "wordCount": ${article.content.trim().split(/\s+/).length}${
+      articleTags.length > 0
+        ? `,
+    "keywords": "${articleTags.join(', ')}"`
+        : ''
+    }
   }
   </script>
 
@@ -378,15 +382,14 @@ ${articleTags.map(tag => `  <meta property="article:tag" content="${tag}">`).joi
  */
 function generateListingPage(articles) {
   // Sort articles by date (newest first)
-  const sortedArticles = [...articles].sort((a, b) =>
-    new Date(b.date) - new Date(a.date)
-  );
+  const sortedArticles = [...articles].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  const articleCards = sortedArticles.map(article => {
-    const readingTime = calculateReadingTime(article.content);
-    const formattedDate = formatDate(article.date);
+  const articleCards = sortedArticles
+    .map((article) => {
+      const readingTime = calculateReadingTime(article.content);
+      const formattedDate = formatDate(article.date);
 
-    return `
+      return `
         <a href="${article.slug}/" class="blog-card">
           <div class="blog-card-content">
             <h2 class="blog-card-title">${article.title}</h2>
@@ -401,7 +404,8 @@ function generateListingPage(articles) {
             <ion-icon name="arrow-forward"></ion-icon>
           </div>
         </a>`;
-  }).join('\n');
+    })
+    .join('\n');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -551,7 +555,7 @@ function build() {
   }
 
   // Read all markdown files
-  const files = fs.readdirSync(ARTICLES_DIR).filter(f => f.endsWith('.md'));
+  const files = fs.readdirSync(ARTICLES_DIR).filter((f) => f.endsWith('.md'));
 
   if (files.length === 0) {
     console.log('⚠️  No articles found in blog/_articles/');
@@ -587,12 +591,12 @@ function build() {
       title: attributes.title,
       description: attributes.description,
       date: attributes.date,
-      modified: attributes.modified || null,  // Optional: date last modified
+      modified: attributes.modified || null, // Optional: date last modified
       author: attributes.author || 'The Spendless Team',
-      image: attributes.image || null,  // Optional: custom og:image URL
-      tags: attributes.tags || [],  // Optional: array of tags for SEO
+      image: attributes.image || null, // Optional: custom og:image URL
+      tags: attributes.tags || [], // Optional: array of tags for SEO
       content: body,
-      htmlContent
+      htmlContent,
     };
 
     articles.push(article);
@@ -625,10 +629,10 @@ function build() {
     const listingHTML = generateListingPage(articles);
     const listingPath = path.join(BLOG_DIR, 'index.html');
     fs.writeFileSync(listingPath, listingHTML);
-    console.log(`   ✅ blog/index.html`);
+    console.log('   ✅ blog/index.html');
   }
 
-  console.log(`\n✨ Blog built successfully!`);
+  console.log('\n✨ Blog built successfully!');
   console.log(`   ${rebuiltCount} article(s) rebuilt`);
   console.log(`   ${skippedCount} article(s) skipped (up to date)`);
 }

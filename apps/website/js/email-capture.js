@@ -3,9 +3,7 @@
  * Handles form validation, submission, and user feedback
  */
 
-(function() {
-  'use strict';
-
+(() => {
   // Configuration
   const CONFIG = {
     // Replace with your actual endpoint (Mailchimp, ConvertKit, custom API, etc.)
@@ -229,7 +227,7 @@
       gtag('event', 'email_signup', {
         event_category: 'engagement',
         event_label: 'landing_page',
-        value: 1
+        value: 1,
       });
     }
 
@@ -237,7 +235,7 @@
     if (typeof fbq === 'function') {
       fbq('track', 'Lead', {
         content_name: 'Email Signup',
-        content_category: 'Landing Page'
+        content_category: 'Landing Page',
       });
     }
 
@@ -255,5 +253,4 @@
     }
   `;
   document.head.appendChild(style);
-
 })();

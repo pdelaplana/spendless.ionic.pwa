@@ -43,14 +43,7 @@
     }
   },
   "files": {
-    "include": [
-      "src/**/*.js",
-      "src/**/*.ts"
-    ],
-    "ignore": [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/.github/**"
-    ]
+    "include": ["src/**/*.js", "src/**/*.ts"],
+    "ignore": ["**/node_modules/**", "**/dist/**", "**/.github/**"]
   }
 }
