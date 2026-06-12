@@ -1,0 +1,4 @@
+Task Summary: Initialize packages/shared
+- Created the packages/shared workspace.
+- Added package.json, tsconfig.json, src/index.ts, and src/types.ts.
+- Extracted common domain and contract types (SubscriptionTier, StripeSubscriptionStatus, CreateCheckoutSessionRequest/Response, CreateCustomerPortalSessionRequest/Response, AiChatNotification, etc.) to share between frontend and backend.
