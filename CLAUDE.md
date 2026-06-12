@@ -235,8 +235,12 @@ Development requires these environment variables:
 
 ## CI/CD Pipeline
 
-GitHub Actions workflows:
-- **Pull Requests**: Build and deploy preview to Firebase Hosting
-- **Main Branch**: Run tests, build, and deploy to production
-- Unit tests must pass before deployment
-- Firebase service account required for deployments
+The project uses a single unified GitHub Actions pipeline ([deploy.yml](file:///D:/repos/spendless/spendless.ionic.pwa/.github/workflows/deploy.yml)) for building and deploying web applications and Cloud Functions:
+
+- **Triggers**: Pushes/merges to `development` and `main` branches, or manual trigger (`workflow_dispatch`).
+- **Pipeline Jobs**:
+  1. **`test_and_lint`**: Runs workspace-wide lint checks (skipping `apps/website`), TypeScript checks (`npm run typecheck`), and unit tests.
+  2. **`build`**: Runs compilation (`npm run build`) and uploads build artifacts (`pwa-dist`, `functions-lib`). Runs without environment bounds so builds run immediately.
+  3. **`deploy`**: Dynamically binds to the target environment (`development` or `production`), which prompts for reviewer approval if configured. It downloads the pre-built artifacts and deploys Firestore rules, Hosting, and Cloud Functions (running with `--no-predeploy` to prevent rebuilding).
+- **Git Tagging**: Automatically tags successful builds on `development` branch pushes and runs Semantic Release on `main` pushes.
+- **Pull Request Previews**: Managed separately via the [firebase-hosting-pull-request.yml](file:///D:/repos/spendless/spendless.ionic.pwa/.github/workflows/firebase-hosting-pull-request.yml) workflow for Hosting preview channels.
