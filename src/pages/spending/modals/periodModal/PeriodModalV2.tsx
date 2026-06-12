@@ -6,6 +6,7 @@ import type { ISpend } from '@/domain/Spend';
 import type { IWallet } from '@/domain/Wallet';
 import { usePrompt } from '@/hooks';
 import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
+import { useUpdateRecurringSpend } from '@/hooks/api';
 import { designSystem } from '@/theme/designSystem';
 import { dateUtils } from '@/utils';
 import { IonTitle } from '@ionic/react';
@@ -60,6 +61,7 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
   const { showConfirmPrompt } = usePrompt();
   const { showErrorNotification } = useAppNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutateAsync: updateRecurringSpend } = useUpdateRecurringSpend();
 
   // Initialize form with existing period data if editing
   const initialData = period
@@ -224,6 +226,22 @@ const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
         endAt: watchedEndAt || formData.endAt || '',
       };
       updateBasics(currentFormValues);
+
+      // Update global recurring spends with chosen wallet mappings in Firestore
+      const mappingEntries = Object.entries(formData.recurringSpendsWalletMapping);
+      if (mappingEntries.length > 0) {
+        await Promise.all(
+          mappingEntries.map(async ([recurringSpendId, walletName]) => {
+            await updateRecurringSpend({
+              accountId,
+              recurringSpendId,
+              data: {
+                walletName,
+              },
+            });
+          })
+        );
+      }
 
       // Create period data manually to ensure we use the current form values
       const walletSetup = formData.wallets.map((w) => ({
