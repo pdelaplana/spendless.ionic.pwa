@@ -1,0 +1,4 @@
+Task Summary: Move Sibling spendless.website to apps/website
+- Relocated files from sibling spendless.website repository into apps/website.
+- Removed git files from the migrated folder to treat it as part of the monorepo structure.
+- Created files under apps/website.
