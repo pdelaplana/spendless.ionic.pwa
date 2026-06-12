@@ -1,0 +1,3 @@
+Task Summary: Update GitHub Actions workflows for monorepo paths and scripts
+- Corrected test run scripts from npm run test.unit to npm test in deploy-development, deploy-production, and firebase-hosting-pull-request workflows.
+- Fixed version tag path extraction in deploy-development to point to apps/mobile-pwa/package.json.
