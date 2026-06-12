@@ -26,7 +26,7 @@
 - [x] Task: Conductor - User Manual Verification 'Integration & Project Fixes' (Protocol in workflow.md) 9a379d1
 
 ## Phase 4: Shared Packages & Unified Workflow
-- [ ] Task: Initialize `packages/shared`
+- [~] Task: Initialize `packages/shared`
     - [ ] Create shared package for domain types and common utilities.
     - [ ] Migrate common types from PWA to `shared`.
 - [ ] Task: Implement Root-Level Tooling
