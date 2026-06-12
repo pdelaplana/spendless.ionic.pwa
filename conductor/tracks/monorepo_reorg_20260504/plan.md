@@ -19,7 +19,7 @@
 - [x] Task: Conductor - User Manual Verification 'Migration of Existing Repos' (Protocol in workflow.md) 0b04b6e
 
 ## Phase 3: Integration & Project Fixes
-- [ ] Task: Update Project Configurations
+- [~] Task: Update Project Configurations
     - [ ] Update `package.json` names and relative paths in `apps/`.
     - [ ] Fix PWA configs (`vite.config.ts`, `ionic.config.json`).
     - [ ] Update `firebase.json` for new directory structure.
