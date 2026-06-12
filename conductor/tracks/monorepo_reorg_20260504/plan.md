@@ -10,9 +10,9 @@
 - [x] Task: Conductor - User Manual Verification 'Foundation & Scaffolding' (Protocol in workflow.md) 2ffab12
 
 ## Phase 2: Migration of Existing Repos
-- [ ] Task: Move Current PWA to `apps/mobile-pwa`
-    - [ ] Relocate current root files into `apps/mobile-pwa`.
-- [ ] Task: Move Sibling `spendless.cloud.functions` to `apps/cloud-functions`
+- [x] Task: Move Current PWA to `apps/mobile-pwa` bea847e
+    - [x] Relocate current root files into `apps/mobile-pwa`.
+- [~] Task: Move Sibling `spendless.cloud.functions` to `apps/cloud-functions`
     - [ ] Relocate sibling repo files into `apps/cloud-functions`.
 - [ ] Task: Move Sibling `spendless.website` to `apps/website`
     - [ ] Relocate sibling repo files into `apps/website`.
