@@ -1,0 +1,34 @@
+# Implementation Plan: Monorepo Reorganization
+
+## Phase 1: Foundation & Scaffolding [checkpoint: 2ffab12]
+- [x] Task: Initialize Root Workspace bea847e
+    - [x] Create root `package.json` with `workspaces` field (`apps/*`, `packages/*`).
+    - [x] Set up root `.gitignore` to handle monorepo structure.
+- [x] Task: Centralize Tooling b810d16
+    - [x] Move `biome.json` to root and configure for workspace-wide linting.
+    - [x] Set up base `tsconfig.json` at root for shared TypeScript settings.
+- [x] Task: Conductor - User Manual Verification 'Foundation & Scaffolding' (Protocol in workflow.md) 2ffab12
+
+## Phase 2: Migration of Existing Repos [checkpoint: 0b04b6e]
+- [x] Task: Move Current PWA to `apps/mobile-pwa` bea847e
+    - [x] Relocate current root files into `apps/mobile-pwa`.
+- [x] Task: Move Sibling `spendless.cloud.functions` to `apps/cloud-functions` 4cae35c
+    - [x] Relocate sibling repo files into `apps/cloud-functions`.
+- [x] Task: Move Sibling `spendless.website` to `apps/website` c5cc5d8
+    - [x] Relocate sibling repo files into `apps/website`.
+- [x] Task: Conductor - User Manual Verification 'Migration of Existing Repos' (Protocol in workflow.md) 0b04b6e
+
+## Phase 3: Integration & Project Fixes [checkpoint: 9a379d1]
+- [x] Task: Update Project Configurations 8fdaa1f
+    - [x] Update `package.json` names and relative paths in `apps/`.
+    - [x] Fix PWA configs (`vite.config.ts`, `ionic.config.json`).
+    - [x] Update `firebase.json` for new directory structure.
+- [x] Task: Conductor - User Manual Verification 'Integration & Project Fixes' (Protocol in workflow.md) 9a379d1
+
+## Phase 4: Shared Packages & Unified Workflow [checkpoint: 33ba0c3]
+- [x] Task: Initialize `packages/shared` 4fccbf0
+    - [x] Create shared package for domain types and common utilities.
+    - [x] Migrate common types from PWA to `shared`.
+- [x] Task: Implement Root-Level Tooling 4d76cc9
+    - [x] Add `build`, `lint`, `test`, and `deploy` scripts to root `package.json`.
+- [x] Task: Conductor - User Manual Verification 'Shared Packages & Unified Workflow' (Protocol in workflow.md) 33ba0c3

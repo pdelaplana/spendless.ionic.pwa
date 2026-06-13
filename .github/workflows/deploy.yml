@@ -1,0 +1,214 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - production
+      debug_mode:
+        description: "Enable debug mode"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  test_and_lint:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare npm@11.16.0 --activate
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Biome Lint
+        run: npm run lint
+
+      - name: Run Type Check
+        run: npm run typecheck
+
+      - name: Run Unit Tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+
+  build:
+    name: Build Apps & Functions
+    runs-on: ubuntu-latest
+    needs: test_and_lint
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ github.ref == 'refs/heads/main' && secrets.SEMANTIC_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare npm@11.16.0 --activate
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Semantic Release
+        if: github.ref == 'refs/heads/main'
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+        run: npx semantic-release
+
+      - name: Build Workspace Apps
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+          VITE_STRIPE_PRICE_ID_MONTHLY: ${{ secrets.STRIPE_PRICE_ID_MONTHLY }}
+          VITE_STRIPE_PRICE_ID_ANNUAL: ${{ secrets.STRIPE_PRICE_ID_ANNUAL }}
+        run: npm run build
+
+      - name: Upload PWA Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pwa-dist
+          path: apps/mobile-pwa/dist/
+          retention-days: 1
+
+      - name: Upload Functions Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: functions-lib
+          path: apps/cloud-functions/functions/lib/
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Firebase
+    runs-on: ubuntu-latest
+    needs: build
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.event.inputs.environment || 'development' }}
+    env:
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || github.event.inputs.environment || 'development' }}
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      DATABASE_ID: ${{ vars.DATABASE_ID || '(default)' }}
+      STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare npm@11.16.0 --activate
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Download PWA Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: pwa-dist
+          path: apps/mobile-pwa/dist
+
+      - name: Download Functions Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: functions-lib
+          path: apps/cloud-functions/functions/lib
+
+      - name: Install Firebase CLI
+        run: npm install --no-save firebase-tools
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Deploy Firestore Configuration
+        run: npx firebase-tools deploy --only firestore:indexes,firestore:rules --project ${{ secrets.FIREBASE_PROJECT_ID }} --non-interactive
+
+      - name: Deploy Hosting (PWA only) to Firebase
+        run: npx firebase deploy --only hosting:pwa --project ${{ secrets.FIREBASE_PROJECT_ID }} --non-interactive
+
+      - name: Create Functions Environment Config
+        run: |
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" > apps/cloud-functions/functions/.env
+          echo "ENVIRONMENT=${{ env.ENVIRONMENT }}" >> apps/cloud-functions/functions/.env
+          echo "DEBUG_MODE=${{ github.event.inputs.debug_mode || 'false' }}" >> apps/cloud-functions/functions/.env
+          echo "MAILGUN_API_KEY=${{ secrets.MAILGUN_API_KEY }}" >> apps/cloud-functions/functions/.env
+          echo "MAILGUN_DOMAIN=${{ secrets.MAILGUN_DOMAIN }}" >> apps/cloud-functions/functions/.env
+          echo "DATABASE_ID=${{ env.DATABASE_ID }}" >> apps/cloud-functions/functions/.env
+          echo "STORAGE_BUCKET=${{ env.STORAGE_BUCKET }}" >> apps/cloud-functions/functions/.env
+          echo "PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}" >> apps/cloud-functions/functions/.env
+          echo "STRIPE_PRICE_ID_MONTHLY=${{ secrets.STRIPE_PRICE_ID_MONTHLY }}" >> apps/cloud-functions/functions/.env
+          echo "STRIPE_PRICE_ID_ANNUAL=${{ secrets.STRIPE_PRICE_ID_ANNUAL }}" >> apps/cloud-functions/functions/.env
+
+      - name: Create Firebase service account file for Admin SDK
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > apps/cloud-functions/functions/spendless-firebase-adminsdk.json
+
+      - name: Ensure secrets exist in Secret Manager
+        run: |
+          echo -n "${{ secrets.STRIPE_SECRET_KEY }}" | npx firebase functions:secrets:set STRIPE_SECRET_KEY --project ${{ secrets.FIREBASE_PROJECT_ID }} --force || true
+          echo -n "${{ secrets.STRIPE_WEBHOOK_SECRET }}" | npx firebase functions:secrets:set STRIPE_WEBHOOK_SECRET --project ${{ secrets.FIREBASE_PROJECT_ID }} --force || true
+          echo -n "${{ secrets.GEMINI_API_KEY }}" | npx firebase functions:secrets:set GEMINI_API_KEY --project ${{ secrets.FIREBASE_PROJECT_ID }} --force || true
+
+      - name: Deploy Cloud Functions to Firebase
+        run: |
+          npx firebase use ${{ secrets.FIREBASE_PROJECT_ID }}
+          npx firebase deploy --only functions --force
+
+      - name: Create Development Tag
+        if: github.ref == 'refs/heads/development'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          VERSION=$(node -p "require('./apps/mobile-pwa/package.json').version")
+          BUILD_NUMBER=${{ github.run_number }}
+          TAG="v${VERSION}-dev.${BUILD_NUMBER}"
+          git tag $TAG
+          git push origin $TAG

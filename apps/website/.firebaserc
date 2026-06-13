@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "spendless-prod-24e2c"
+  },
+  "targets": {
+    "spendless-prod-24e2c": {
+      "hosting": {
+        "website": [
+          "spendless-landing-page"
+        ]
+      }
+    }
+  }
+}

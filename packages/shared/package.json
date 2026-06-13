@@ -1,0 +1,16 @@
+{
+  "name": "@spendless/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src",
+    "format": "biome format --write src"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}

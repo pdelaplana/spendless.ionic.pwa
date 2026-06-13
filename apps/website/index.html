@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta Tags -->
+  <title>Spendless - Mindful Spending Tracker | Financial Wellness Without Guilt</title>
+  <meta name="title" content="Spendless - Mindful Spending Tracker | Financial Wellness Without Guilt">
+  <meta name="description" content="Track your spending with awareness, not guilt. Spendless helps you understand the 'why' behind purchases through 6 mindful categories. Privacy-first, no bank linking.">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://spendless.app/">
+  <meta property="og:title" content="Spendless - Mindful Spending Tracker">
+  <meta property="og:description" content="Track your spending with awareness, not guilt. Build financial wellness through mindful awareness.">
+  <meta property="og:image" content="https://spendless.app/images/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://spendless.app/">
+  <meta property="twitter:title" content="Spendless - Mindful Spending Tracker">
+  <meta property="twitter:description" content="Track your spending with awareness, not guilt. Build financial wellness through mindful awareness.">
+  <meta property="twitter:image" content="https://spendless.app/images/twitter-card.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/blog.css">
+
+  <!-- Ionic Icons -->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://spendless.app/">
+
+  <!-- AI Crawler Tags -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+
+  <!-- AI-specific metadata for better context understanding -->
+  <meta name="ai:title" content="Spendless - Mindful Spending Tracker">
+  <meta name="ai:description" content="Spendless is a Progressive Web App (PWA) that helps users track spending manually through 6 mindful categories based on the Japanese Kakeibo method. Privacy-first with no bank linking, no ads, and offline-first design. Free tier available with 1 month history, Premium tier ($2.99/month) offers unlimited history and advanced features.">
+  <meta name="ai:keywords" content="mindful spending, spending tracker, budget app, Kakeibo method, financial wellness, PWA, privacy-first, no bank linking, manual tracking, financial awareness">
+  <meta name="ai:category" content="Finance, Personal Finance, Budgeting, Financial Wellness">
+  <meta name="ai:features" content="6 mindful categories, manual entry, unlimited wallets and tags, offline-first, data export, privacy-first architecture, no advertisements">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Spendless",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "url": "https://spendless.app",
+    "description": "Mindful spending tracker that helps you understand the 'why' behind your purchases through 6 emotional categories based on the Japanese Kakeibo method. Track spending manually with privacy-first architecture, no bank linking, and offline-first design.",
+    "featureList": [
+      "6 mindful spending categories (Essentials, Rituals, Rewards, Growth, Connection, Unexpected)",
+      "Manual transaction tracking for mindful awareness",
+      "Unlimited wallets and custom tags",
+      "Offline-first Progressive Web App (PWA)",
+      "Privacy-first architecture with no bank linking",
+      "Data export in CSV and JSON formats",
+      "Real-time spending balance and projections",
+      "Cross-platform support (Web, iOS, Android)"
+    ],
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Essentials (Free)",
+        "price": "0",
+        "priceCurrency": "AUD",
+        "description": "Free tier with 1 month history, unlimited periods/wallets/tags, core mindfulness features"
+      },
+      {
+        "@type": "Offer",
+        "name": "Premium",
+        "price": "8.99",
+        "priceCurrency": "AUD",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "8.99",
+          "priceCurrency": "AUD",
+          "unitText": "MONTH"
+        },
+        "description": "Premium tier with unlimited history, trend analysis, reflection prompts, goal tracking"
+      }
+    ],
+    "screenshot": "https://spendless.app/images/wallet-dashboard.png",
+    "author": {
+      "@type": "Organization",
+      "name": "Spendless",
+      "url": "https://spendless.app"
+    },
+    "browserRequirements": "Requires JavaScript. Modern browser with PWA support recommended.",
+    "softwareVersion": "1.0",
+    "releaseNotes": "Initial release with core mindful spending tracking features",
+    "keywords": "mindful spending, budget tracker, Kakeibo method, financial wellness, privacy-first, manual tracking, PWA, offline-first"
+  }
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y3PKKQC2F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-7Y3PKKQC2F');
+  </script>
+</head>
+<body>
+
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+
+  <!-- Desktop Header (visible on larger viewports) -->
+  <header class="site-header desktop-header">
+    <div class="container">
+      <a href="/" class="logo-link">
+        <img src="images/spendless-header-logo.png" alt="Spendless" class="site-logo">
+      </a>
+
+      <nav class="header-nav">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="/blog/" class="nav-link">Blog</a>
+      </nav>
+
+      <div class="header-cta">
+        <a href="https://app.getspendless.com/signup" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Header (visible on smaller viewports) -->
+  <header class="site-header mobile-header">
+    <div class="container">
+      <a href="/" class="logo-link">
+        <img src="images/spendless-header-logo.png" alt="Spendless" class="site-logo">
+      </a>
+
+      <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="hamburger-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar (slides in from right) -->
+  <aside class="mobile-sidebar" aria-hidden="true">
+    <div class="mobile-sidebar-header">
+      <button class="mobile-sidebar-close" aria-label="Close menu">
+        <span>&times;</span>
+      </button>
+    </div>
+    <nav class="mobile-sidebar-nav">
+      <a href="#features" class="mobile-nav-link">Features</a>
+      <a href="#pricing" class="mobile-nav-link">Pricing</a>
+      <a href="/blog/" class="mobile-nav-link">Blog</a>
+    </nav>
+    <div class="mobile-sidebar-cta">
+      <a href="https://app.getspendless.com/signup" class="btn btn-primary">Get Started</a>
+    </div>
+  </aside>
+
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay"></div>
+
+  <!-- Hero Section - Centered, Bold, Modern -->
+  <section class="hero-modern" id="main-content">
+    <div class="container">
+      <div class="hero-modern-content">
+        <h1>
+          Financial Wellness through <span class="underline-accent">Mindful Spending</span>
+        </h1>
+        <p class="hero-subtitle">
+          Spendless is a mindful spending tracker that helps you become more aware of your financial habits. Unlike traditional budgeting apps, we focus on emotional awareness and understanding why you spend, not just what you spend on.
+        </p>
+
+        <div class="cta-group">
+          <a href="https://app.getspendless.com/signup" class="btn btn-primary btn-large">Get Started Free</a>
+        </div>
+
+        <div class="hero-image-container">
+          <div class="phone-frame">
+            <img src="images/wallet-dashboard.png" alt="Spendless app dashboard showing spending wallets and mindful categories" class="hero-image-large" loading="eager">
+          </div>
+        </div>
+
+        <div class="trust-indicators">
+          <span><ion-icon name="lock-closed"></ion-icon> Privacy-first</span>
+          <span><ion-icon name="close-circle"></ion-icon> No ads</span>
+          <span><ion-icon name="shield-checkmark"></ion-icon> No bank linking</span>
+        </div>
+      </div>
+
+      <div class="product-hunt-badge">
+        <a href="https://www.producthunt.com/products/spendless-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-spendless&#0045;2" target="_blank" rel="noopener"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1041291&theme=neutral&t=1763852237796" alt="Spendless - Mindful&#0032;spending&#0032;tracker&#0032;&#0124;&#0032;financial&#0032;wellness&#0032;without&#0032;guilt | Product Hunt" width="250" height="54" /></a>
+      </div>
+
+      
+    </div>
+  </section>
+
+  <!-- Value Proposition 1: Know Your Spending Power -->
+  <section class="value-prop-section" id="features">
+    <div class="container">
+      <div class="value-prop-content">
+        <div class="value-prop-text">
+          <div class="value-prop-header">
+            <div class="value-prop-icon">
+              <ion-icon name="wallet-outline"></ion-icon>
+            </div>
+            <h2>Know what you can actually spend</h2>
+          </div>
+          <p>Your bank balance doesn't tell the full story. See your real spending power after bills, savings goals, and planned expenses.</p>
+          <ul class="value-prop-list">
+            <li><ion-icon name="checkmark-circle"></ion-icon> Real-time spending balance - not just your bank balance</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Smart projections show what you'll have by month-end</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Green/yellow/red status so you always know where you stand</li>
+          </ul>
+        </div>
+        <div class="value-prop-images-cascade">
+          <img src="images/balance-over-time-chart.png" alt="Balance over time projection chart" loading="lazy" >
+          <img src="images/balance-remaining-chart.png" alt="Chart showing remaining budget and scheduled expenses" loading="lazy" class="cascade-chart">
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Proposition 2: Understand WHY You Spend -->
+  <section class="value-prop-section alt-bg">
+    <div class="container">
+      <div class="value-prop-content reverse">
+        <div class="value-prop-text">
+          <div class="value-prop-header">
+            <div class="value-prop-icon">
+              <ion-icon name="heart-outline"></ion-icon>
+            </div>
+            <h2>Understand the WHY behind every purchase</h2>
+          </div>
+          <p>Based on the Japanese Kakeibo method, track spending through mindful categories that reveal purpose and meaning, not just transaction types.</p>
+          <ul class="value-prop-list">
+            <li><ion-icon name="checkmark-circle"></ion-icon> Purpose-based reflection - categorize by WHY, not WHAT</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> 6 mindful categories: Essentials, Rituals, Treats, Growth, Connection, Unexpected</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Change behavior through awareness, not restriction</li>
+          </ul>
+        </div>
+        <div class="value-prop-images-cascade">
+          <img src="images/categories-chart.png" alt="Spending by category chart showing breakdown" loading="lazy" class="cascade-chart">
+          <img src="images/mindful-categories.png" alt="App showing mindful spending categories" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Proposition 3: Track Your Way -->
+  <section class="value-prop-section">
+    <div class="container">
+      <div class="value-prop-content">
+        <div class="value-prop-text">
+          <div class="value-prop-header">
+            <div class="value-prop-icon">
+              <ion-icon name="options-outline"></ion-icon>
+            </div>
+            <h2>Track spending exactly how you think about it</h2>
+          </div>
+          <p>Flexible wallets and unlimited tags let you organize money your way. No rigid categories, no forced structure.</p>
+          <ul class="value-prop-list">
+            <li><ion-icon name="checkmark-circle"></ion-icon> Unlimited wallets - separate accounts, cash envelopes, projects</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Custom tags - track any dimension that matters to YOU</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Cross-wallet insights - see patterns across all your money</li>
+          </ul>
+        </div>
+        <div class="value-prop-images-cascade">
+          <img src="images/wallets-list.png" alt="Multiple wallets showing spent and remaining balances" loading="lazy">
+          <img src="images/spending-by-tags.png" alt="Spending breakdown by custom tags chart" loading="lazy" class="cascade-chart">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Proposition 4: Manual Entry by Design -->
+  <section class="value-prop-section alt-bg">
+    <div class="container">
+      <div class="value-prop-content reverse">
+        <div class="value-prop-text">
+          <div class="value-prop-header">
+            <div class="value-prop-icon">
+              <ion-icon name="hand-right-outline"></ion-icon>
+            </div>
+            <h2>Manual tracking builds mindful awareness</h2>
+          </div>
+          <p>We chose manual entry deliberately. Taking 10 seconds to log a purchase creates a moment of reflection—you naturally pause and think about your spending habits.</p>
+          <ul class="value-prop-list">
+            <li><ion-icon name="checkmark-circle"></ion-icon> Moment of reflection with every purchase</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Enhanced security—no bank linking required</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> You control what to track and when</li>
+          </ul>
+        </div>
+        <div class="value-prop-image">
+          <img src="images/manual-entry.png" alt="Manual entry interface for tracking spending with mindfulness categories" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Proposition 5: Mood-Based Spending Analysis -->
+  <section class="value-prop-section">
+    <div class="container">
+      <div class="value-prop-content">
+        <div class="value-prop-text">
+          <div class="value-prop-header">
+            <div class="value-prop-icon">
+              <ion-icon name="happy-outline"></ion-icon>
+            </div>
+            <h2>Track your mood, master your money</h2>
+          </div>
+          <p>Understand how your emotions affect your spending. Our mood-based tracking helps you identify emotional triggers and build healthier financial habits.</p>
+          <ul class="value-prop-list">
+            <li><ion-icon name="checkmark-circle"></ion-icon> 1-tap mood logging - capture how you feel with every purchase</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Visual mood analysis - see which emotions drive your spending</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Smart insights - get alerts when stress or emotions are affecting your budget</li>
+          </ul>
+        </div>
+        <div class="value-prop-images-cascade">
+          <img src="images/mood-tracking-entry.png" alt="Mood tracking interface showing emotion selection" loading="lazy">
+          <img src="images/mood-analysis-chart.png" alt="Chart showing spending breakdown by mood" loading="lazy" class="cascade-chart">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories - Compact Grid -->
+  <section class="categories-modern section">
+    <div class="container">
+      <div class="section-header-centered">
+        <h2>6 mindful spending categories</h2>
+        <p class="subtitle">Understand the 'why' behind every purchase</p>
+      </div>
+
+      <div class="categories-grid-compact">
+        <div class="category-item-compact">
+          <div class="category-icon">
+            <ion-icon name="home"></ion-icon>
+          </div>
+          <h4>Essentials</h4>
+          <p>Things you need to survive and function</p>
+        </div>
+
+        <div class="category-item-compact">
+          <div class="category-icon">
+            <ion-icon name="cafe"></ion-icon>
+          </div>
+          <h4>Rituals</h4>
+          <p>Daily habits that bring comfort</p>
+        </div>
+
+        <div class="category-item-compact">
+          <div class="category-icon">
+            <ion-icon name="gift"></ion-icon>
+          </div>
+          <h4>Rewards</h4>
+          <p>Treating yourself because you deserve it</p>
+        </div>
+
+        <div class="category-item-compact">
+          <div class="category-icon">
+            <ion-icon name="school"></ion-icon>
+          </div>
+          <h4>Growth</h4>
+          <p>Investments in your future self</p>
+        </div>
+
+        <div class="category-item-compact">
+          <div class="category-icon">
+            <ion-icon name="people"></ion-icon>
+          </div>
+          <h4>Connection</h4>
+          <p>Spending that strengthens relationships</p>
+        </div>
+
+        <div class="category-item-compact">
+          <div class="category-icon">
+            <ion-icon name="flash"></ion-icon>
+          </div>
+          <h4>Unexpected</h4>
+          <p>Life happens—unplanned but necessary</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust & Technology Section -->
+  <section class="trust-tech-section section alt-bg">
+    <div class="container">
+      <div class="section-header-centered">
+        <h2>Built with your privacy & experience in mind</h2>
+        <p class="subtitle">Modern technology that respects your data and works everywhere</p>
+      </div>
+
+      <div class="trust-tech-grid">
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="phone-portrait-outline"></ion-icon>
+          </div>
+          <h4>Progressive Web App (PWA)</h4>
+          <p>Install directly from your browser—no app store needed. Works on iPhone, Android, and desktop. Updates automatically, saves space, and works offline.</p>
+        </div>
+
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+          </div>
+          <h4>Privacy-First Architecture</h4>
+          <p>Your data stays yours, always. No tracking, no ads, no selling your information. We don't use your data for anything except providing you the service.</p>
+        </div>
+
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="ban-outline"></ion-icon>
+          </div>
+          <h4>No Bank Linking Required</h4>
+          <p>We deliberately don't connect to your bank. This means enhanced security, no third-party access to your accounts, and you control what gets tracked.</p>
+        </div>
+
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="cloud-offline-outline"></ion-icon>
+          </div>
+          <h4>Offline-First Design</h4>
+          <p>Track spending anywhere, even without internet. Your data syncs automatically when you're back online. Perfect for travel or spotty connections.</p>
+        </div>
+
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="speedometer-outline"></ion-icon>
+          </div>
+          <h4>Lightning Fast Performance</h4>
+          <p>Optimized for speed and responsiveness. No lag, no waiting. Add a transaction in under 3 seconds, see insights instantly.</p>
+        </div>
+
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+          </div>
+          <h4>Secure by Design</h4>
+          <p>Your data is securely hosted on Google Firebase with industry-leading end-to-end encryption. Your financial data is protected at every layer.</p>
+        </div>
+
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="refresh-outline"></ion-icon>
+          </div>
+          <h4>Always Up-to-Date</h4>
+          <p>Automatic updates mean you always have the latest features and security improvements without visiting an app store.</p>
+        </div>
+
+        <div class="trust-tech-item">
+          <div class="trust-tech-icon">
+            <ion-icon name="code-slash-outline"></ion-icon>
+          </div>
+          <h4>Open & Transparent</h4>
+          <p>Code is publicly available. No hidden algorithms, no black boxes. You can verify exactly what we're doing with your data (nothing!).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section - Clean, Centered -->
+  <section class="pricing-modern section-large" id="pricing">
+    <div class="container">
+      <div class="section-header-centered">
+        <h2>Simple, transparent pricing</h2>
+        <p class="subtitle">Start free, upgrade when you're ready</p>
+      </div>
+
+      <div class="pricing-cards-modern">
+        <!-- Free Plan -->
+        <div class="pricing-card-modern featured">
+          <h3>Essentials</h3>
+          <div class="pricing-amount">
+            <span class="price">$0</span>
+            <span class="period">/forever</span>
+          </div>
+           <p class="pricing-alt-period">(uprade to Premium when you want)</p>
+          <p class="pricing-description">
+            Full mindful spending experience with essential features
+          </p>
+          <ul class="pricing-features-list">
+            <li><ion-icon name="checkmark-circle"></ion-icon> Unimited periods, wallets, & tags</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> 1 month history</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Core mindfulness features</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Insights & analytics per wallet</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Data export (CSV)</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Email support</li>
+          </ul>
+          <a href="https://app.getspendless.com/signup" class="btn btn-secondary pricing-cta">Start Free</a>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="pricing-card-modern">
+          <div class="pricing-badge">Coming Soon</div>
+          <h3>Premium</h3>
+          <div class="pricing-amount">
+            <span class="price">$8.99</span>
+            <span class="period">/month</span>
+          </div>
+          <p class="pricing-alt-period">(or $74.99/year)</p>
+          <p class="pricing-description">Enhanced mindful spending with advanced insights and unlimited features</p>
+          <ul class="pricing-features-list">
+            <li><ion-icon name="checkmark-circle"></ion-icon> Unlimited everything</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Unlimited history</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Trend analysis across periods</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Reflection prompts & journaling</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Goal setting & achievement tracking</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> Data export (PDF, JSON)</li>
+            <li><ion-icon name="checkmark-circle"></ion-icon> And access to all new features</li>
+          </ul>
+          <a href="https://app.getspendless.com/signup" class="btn btn-primary pricing-cta">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA - Bold Purple -->
+  <section class="final-cta-modern">
+    <div class="container">
+      <div class="final-cta-content">
+        <h2>Start tracking mindfully today</h2>
+        <p class="final-cta-subtitle">Join early access and start building financial wellness</p>
+        <a href="https://app.getspendless.com/signup" class="btn btn-large btn-white">Get Started Free</a>
+        <p class="final-cta-note">No credit card required • Free forever</p>
+      </div>
+    </div>
+
+    
+   
+
+  </section>
+
+  <!-- Footer - Minimal -->
+  <footer class="footer-modern">
+    <div class="container">
+      <div class="footer-content-modern">
+        <div class="footer-logo-modern">Spendless</div>
+        <div class="footer-links">
+          <a href="blog/">Blog</a>
+          <span>•</span>
+          <a href="privacy.html">Privacy</a>
+          <span>•</span>
+          <a href="terms.html">Terms</a>
+          <span>•</span>
+          <a href="mailto:patrick@getspendless.com">Contact</a>
+        </div>
+        <div class="footer-copyright">© 2025 Spendless</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/email-capture.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- Analytics Placeholder (Add your tracking IDs) -->
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7Y3PKKQC2F');
+  </script>
+
+  <!-- Facebook Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR_PIXEL_ID');
+    fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+  </noscript>
+
+</body>
+</html>

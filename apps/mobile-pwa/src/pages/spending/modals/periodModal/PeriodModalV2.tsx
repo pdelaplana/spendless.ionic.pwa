@@ -1,0 +1,404 @@
+import { CenterContainer } from '@/components/layouts';
+import ModalPageLayout from '@/components/layouts/ModalPageLayout';
+import { StepIndicator } from '@/components/ui';
+import type { IPeriod } from '@/domain/Period';
+import type { ISpend } from '@/domain/Spend';
+import type { IWallet } from '@/domain/Wallet';
+import { usePrompt } from '@/hooks';
+import { useFetchRecurringSpends, useUpdateRecurringSpend } from '@/hooks/api';
+import { useAppNotifications } from '@/hooks/ui/useAppNotifications';
+import { designSystem } from '@/theme/designSystem';
+import { dateUtils } from '@/utils';
+import { IonTitle } from '@ionic/react';
+import { addDays, differenceInDays } from 'date-fns';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
+import NavigationButtons from './components/NavigationButtons';
+import { type PeriodFormData, useMultiStepForm } from './hooks/useMultiStepForm';
+import StepBasics from './steps/StepBasics';
+import StepRecurringExpenses from './steps/StepRecurringExpenses';
+import StepReview from './steps/StepReview';
+import StepWallets from './steps/StepWallets';
+
+const ModalHeader = styled.div`
+  text-align: center;
+  margin-bottom: ${designSystem.spacing.lg};
+`;
+
+const ModalTitle = styled(IonTitle)`
+  font-size: ${designSystem.typography.fontSize['2xl']};
+  font-weight: ${designSystem.typography.fontWeight.bold};
+  color: ${designSystem.colors.text.primary};
+`;
+
+const StepContent = styled.div`
+  min-height: 400px;
+  margin-bottom: ${designSystem.spacing.lg};
+`;
+
+interface PeriodModalV2Props {
+  period?: IPeriod;
+  currentWallets?: IWallet[];
+  currentRecurringExpenses?: ISpend[];
+  currentPeriod?: IPeriod;
+  accountId: string;
+  onSave: (period: Partial<IPeriod>) => void;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  onDismiss: (data?: any, role?: string) => void;
+}
+
+const PeriodModalV2: React.FC<PeriodModalV2Props> = ({
+  period,
+  currentWallets,
+  currentRecurringExpenses,
+  currentPeriod,
+  accountId,
+  onSave,
+  onDismiss,
+}) => {
+  const { showConfirmPrompt } = usePrompt();
+  const { showErrorNotification } = useAppNotifications();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutateAsync: updateRecurringSpend } = useUpdateRecurringSpend();
+  const { data: recurringSpends = [] } = useFetchRecurringSpends(accountId);
+
+  // Initialize form with existing period data if editing
+  const initialData = period
+    ? {
+        goals: period.goals,
+        startAt: dateUtils.toDateInput(period.startAt),
+        endAt: dateUtils.toDateInput(period.endAt),
+        wallets:
+          period.walletSetup?.map((wallet, index) => ({
+            id: `existing-${index}`,
+            name: wallet.name,
+            spendingLimit: wallet.spendingLimit.toString(),
+            isDefault: wallet.isDefault,
+          })) || [],
+        currentStep: 0 as const, // Start with basics for editing
+      }
+    : undefined;
+
+  const {
+    formData,
+    currentStep,
+    totalBudget,
+    goToStep,
+    nextStep,
+    prevStep,
+    canGoNext,
+    canGoBack,
+    updateBasics,
+    addWallet,
+    removeWallet,
+    setDefaultWallet,
+    setRecurringExpenses,
+    removeRecurringExpense,
+    updateRecurringSpendWalletMapping,
+    toPeriodData,
+    reset,
+  } = useMultiStepForm(initialData, currentPeriod);
+
+  // React Hook Form for validation
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    formState: { errors, isDirty },
+  } = useForm<PeriodFormData>({
+    defaultValues: formData,
+    mode: 'onChange',
+  });
+
+  // Watch form values for validation
+  const watchedGoals = watch('goals');
+  const watchedStartAt = watch('startAt');
+  const watchedEndAt = watch('endAt');
+
+  // Sync React Hook Form with multi-step form state
+  useEffect(() => {
+    setValue('goals', formData.goals);
+    setValue('startAt', formData.startAt);
+    setValue('endAt', formData.endAt);
+  }, [formData.goals, formData.startAt, formData.endAt, setValue]);
+
+  // Calculate recurring expenses with new dates whenever the start date changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: setRecurringExpenses is stable and doesn't need to be in deps
+  useEffect(() => {
+    if (
+      currentRecurringExpenses &&
+      currentRecurringExpenses.length > 0 &&
+      currentPeriod &&
+      formData.startAt
+    ) {
+      const recurringExpensesData = currentRecurringExpenses.map((expense) => {
+        // Calculate the offset from the current period start date
+        const daysFromCurrentPeriodStart = differenceInDays(expense.date, currentPeriod.startAt);
+
+        // Apply the same offset to the new period start date
+        const newPeriodStartDate = dateUtils.fromDateInput(formData.startAt);
+        const newDate = addDays(newPeriodStartDate, daysFromCurrentPeriodStart);
+
+        return {
+          id: expense.id || '',
+          description: expense.description,
+          amount: expense.amount,
+          originalDate: expense.date,
+          newDate,
+          category: expense.category || '',
+          walletId: expense.walletId || '',
+        };
+      });
+
+      setRecurringExpenses(recurringExpensesData);
+    }
+  }, [currentRecurringExpenses, currentPeriod, formData.startAt]);
+
+  // Custom validation function that uses React Hook Form state
+  const isStep0ValidRHF = () => {
+    const goals = watchedGoals || formData.goals || '';
+    const startAt = watchedStartAt || formData.startAt || '';
+    const endAt = watchedEndAt || formData.endAt || '';
+
+    return (
+      goals.trim().length >= 3 &&
+      startAt &&
+      endAt &&
+      dateUtils.fromDateInput(endAt) > dateUtils.fromDateInput(startAt)
+    );
+  };
+
+  const stepLabels = ['Period', 'Wallets', 'Expenses', 'Review'];
+
+  const getModalTitle = () => {
+    if (period) return 'Edit Period';
+
+    switch (currentStep) {
+      case 0:
+        return 'Start a New Period';
+      case 1:
+        return 'Setup Your Wallets';
+      case 2:
+        return 'Recurring Expenses';
+      case 3:
+        return 'Review & Create';
+      default:
+        return 'Create Period';
+    }
+  };
+
+  const handleNext = () => {
+    // Sync React Hook Form values to multi-step form before navigating
+    const currentFormValues = {
+      goals: watchedGoals || formData.goals || '',
+      startAt: watchedStartAt || formData.startAt || '',
+      endAt: watchedEndAt || formData.endAt || '',
+    };
+    updateBasics(currentFormValues);
+
+    // Navigation validation is handled by useMultiStepForm's canGoNext()
+    nextStep();
+  };
+
+  const handleBack = () => {
+    prevStep();
+  };
+
+  const handleEditStep = (step: 0 | 1 | 2) => {
+    goToStep(step);
+  };
+
+  const handleFormSubmit = async () => {
+    if (formData.wallets.length === 0) {
+      showErrorNotification('Please add at least one wallet before creating the period');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Sync React Hook Form values to multi-step form before creating period data
+      const currentFormValues = {
+        goals: watchedGoals || formData.goals || '',
+        startAt: watchedStartAt || formData.startAt || '',
+        endAt: watchedEndAt || formData.endAt || '',
+      };
+      updateBasics(currentFormValues);
+
+      // Update global recurring spends with chosen wallet mappings in Firestore
+      const activeSpendIds = new Set(recurringSpends.map((rs) => rs.id));
+      const mappingEntries = Object.entries(formData.recurringSpendsWalletMapping).filter(
+        ([recurringSpendId]) => activeSpendIds.has(recurringSpendId),
+      );
+
+      if (mappingEntries.length > 0) {
+        const results = await Promise.allSettled(
+          mappingEntries.map(([recurringSpendId, walletName]) =>
+            updateRecurringSpend({
+              accountId,
+              recurringSpendId,
+              data: {
+                walletName,
+              },
+            }),
+          ),
+        );
+
+        const rejected = results.filter((res) => res.status === 'rejected');
+        if (rejected.length > 0) {
+          throw new Error('Failed to update some recurring spends wallet mappings');
+        }
+      }
+
+      // Create period data manually to ensure we use the current form values
+      const walletSetup = formData.wallets.map((w) => ({
+        name: w.name,
+        spendingLimit: Number.parseFloat(w.spendingLimit),
+        isDefault: w.isDefault,
+      }));
+
+      const totalBudget = walletSetup.reduce((total, wallet) => total + wallet.spendingLimit, 0);
+
+      // Generate period name from date range
+      const startDate = dateUtils
+        .fromDateInput(currentFormValues.startAt)
+        .toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+        });
+      const endDate = dateUtils.fromDateInput(currentFormValues.endAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+      const periodName = `${startDate} - ${endDate}`;
+
+      const periodData = {
+        name: periodName,
+        goals: currentFormValues.goals,
+        startAt: dateUtils.fromDateInput(currentFormValues.startAt),
+        endAt: dateUtils.fromDateInput(currentFormValues.endAt),
+        walletSetup,
+        targetSpend: totalBudget,
+        targetSavings: 0,
+        reflection: '',
+      };
+
+      if (period) {
+        // Editing existing period
+        await onSave({ ...periodData, id: period.id });
+      } else {
+        // Creating new period
+        await onSave(periodData);
+      }
+
+      onDismiss();
+    } catch (error) {
+      console.error('Failed to save period:', error);
+      // Show error toast notification to user
+      showErrorNotification('Failed to save period. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const showPrompt = (message: string) => {
+    showConfirmPrompt({
+      title: 'Validation Error',
+      message,
+      onConfirm: () => {},
+      onCancel: () => {},
+    });
+  };
+
+  const handleDismiss = () => {
+    if (isDirty || currentStep > 0) {
+      showConfirmPrompt({
+        title: 'Unsaved Changes',
+        message: 'You have unsaved changes. Are you sure you want to close?',
+        onConfirm: () => {
+          reset();
+          onDismiss();
+        },
+        onCancel: () => {},
+      });
+    } else {
+      onDismiss();
+    }
+  };
+
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <StepBasics
+            formData={formData}
+            register={register}
+            control={control}
+            setValue={setValue}
+            errors={errors}
+            onUpdate={updateBasics}
+          />
+        );
+      case 1:
+        return (
+          <StepWallets
+            formData={formData}
+            totalBudget={totalBudget}
+            currentWallets={currentWallets}
+            onAddWallet={addWallet}
+            onRemoveWallet={removeWallet}
+            onSetDefaultWallet={setDefaultWallet}
+          />
+        );
+      case 2:
+        return (
+          <StepRecurringExpenses
+            formData={formData}
+            accountId={accountId}
+            onUpdateWalletMapping={updateRecurringSpendWalletMapping}
+          />
+        );
+      case 3:
+        return (
+          <StepReview
+            formData={formData}
+            totalBudget={totalBudget}
+            accountId={accountId}
+            onEditStep={handleEditStep}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <ModalPageLayout onDismiss={handleDismiss}>
+      <CenterContainer>
+        <ModalHeader>
+          <ModalTitle>{getModalTitle()}</ModalTitle>
+        </ModalHeader>
+
+        <StepIndicator currentStep={currentStep + 1} totalSteps={4} stepLabels={stepLabels} />
+
+        <StepContent>{renderCurrentStep()}</StepContent>
+
+        <NavigationButtons
+          currentStep={currentStep}
+          canGoBack={canGoBack()}
+          canGoNext={currentStep === 0 ? Boolean(isStep0ValidRHF()) : Boolean(canGoNext())}
+          isLoading={isSubmitting}
+          onBack={handleBack}
+          onNext={handleNext}
+          onSubmit={handleFormSubmit}
+        />
+      </CenterContainer>
+    </ModalPageLayout>
+  );
+};
+
+export default PeriodModalV2;

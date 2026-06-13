@@ -1,0 +1,16 @@
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/
+*.local
+
+# Environment files with secrets
+.env
+
+# Firebase service account keys (if any)
+*-firebase-adminsdk-*.json
