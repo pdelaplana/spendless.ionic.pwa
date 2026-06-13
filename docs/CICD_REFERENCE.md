@@ -112,7 +112,9 @@ Following project guidelines, the landing page website ([apps/website](file:///D
 
 1. **Excluded from Linting**: The directory is ignored in root [biome.json](file:///D:/repos/spendless/spendless.ionic.pwa/biome.json) to prevent validation errors in local codechecks.
 2. **Excluded from Deployments**: The `Deploy Hosting` step in `deploy.yml` targets only `hosting:pwa`. The website is never deployed automatically.
-3. **Manual Deployment**: Deployment is performed manually via separate local commands.
+3. **Manual Deployment**: Deployment is performed manually either:
+   * **Via GitHub Actions**: Run the **Deploy Landing Page (Website)** manual workflow ([deploy-website.yml](file:///D:/repos/spendless/spendless.ionic.pwa/.github/workflows/deploy-website.yml)) from the Actions tab (targets the `production` environment).
+   * **Via Local CLI**: Run separate local CLI commands.
 
 ---
 

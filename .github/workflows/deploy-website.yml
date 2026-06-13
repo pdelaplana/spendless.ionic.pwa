@@ -1,0 +1,44 @@
+name: Deploy Landing Page (Website)
+
+on:
+  workflow_dispatch: # Manual trigger only
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_deploy:
+    name: Build & Deploy Website
+    runs-on: ubuntu-latest
+    environment: production # Only deploys to production
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1d0ff469b62b6d0ad9b0af0fb3b1e40be53ce9b9 # v4.2.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          # Pinned intentionally to 11.16.0 to match the monorepo root package manager and lockfile
+          corepack prepare npm@11.16.0 --activate
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Website
+        run: npm run build -w spendless-website
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@6fc4af4b145ae7821d527454aa9bd537d1f2dc5f # v2.1.7
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Deploy Website to Firebase
+        run: npx firebase deploy --only hosting:website --project ${{ secrets.FIREBASE_PROJECT_ID }} --non-interactive
