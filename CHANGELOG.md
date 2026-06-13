@@ -1,3 +1,25 @@
+# [1.17.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.16.0...v1.17.0) (2026-06-13)
+
+
+### Bug Fixes
+
+* add hosting target mappings for dev and prod environments in .firebaserc ([0e2dec7](https://github.com/pdelaplana/spendless.ionic.pwa/commit/0e2dec71f09e3e8da7fd307a7c0b84a1b10ecdec))
+* **monorepo:** Relocate USER_GUIDE.md to mobile-pwa to fix import resolution ([4ea828d](https://github.com/pdelaplana/spendless.ionic.pwa/commit/4ea828d4cd5862ca9e7b5ddc412a0f1004e8b963))
+* remove invalid --no-predeploy flag from firebase deploy functions command ([5b6d429](https://github.com/pdelaplana/spendless.ionic.pwa/commit/5b6d429553aee9c7396124b5ecfab1e52fb60349))
+* resolve empty DATABASE_ID and STORAGE_BUCKET variables in functions deployment ([3d7f55e](https://github.com/pdelaplana/spendless.ionic.pwa/commit/3d7f55e4ccc0be3b2f429673f7f7b3e0288fb859))
+* sync GEMINI_API_KEY secret to Firebase Secret Manager during deployment ([1220758](https://github.com/pdelaplana/spendless.ionic.pwa/commit/1220758f5d8b1e3914599aa20e27688b1e5a49b4))
+
+
+### Features
+
+* **monorepo:** Centralize biome.json and tsconfig.json configuration at root ([b810d16](https://github.com/pdelaplana/spendless.ionic.pwa/commit/b810d169525621ca21a61de0ed271ca8843c2eef))
+* **monorepo:** Implement root-level build, lint, test, and deploy tooling ([4d76cc9](https://github.com/pdelaplana/spendless.ionic.pwa/commit/4d76cc9914a4a6e7fe7c81575ca496b1273aa379))
+* **monorepo:** Initialize packages/shared with common types ([4fccbf0](https://github.com/pdelaplana/spendless.ionic.pwa/commit/4fccbf044b21724e971283575bd8676d1f23054c))
+* **monorepo:** Initialize root workspace and migrate PWA structure ([bea847e](https://github.com/pdelaplana/spendless.ionic.pwa/commit/bea847e1f30da739aa0a7a4fe6c58afab1e46322))
+* **monorepo:** Migrate spendless.cloud.functions to apps/cloud-functions ([4cae35c](https://github.com/pdelaplana/spendless.ionic.pwa/commit/4cae35c0d3404658b96cb470122fa9e95bf00d4a))
+* **monorepo:** Migrate spendless.website to apps/website ([c5cc5d8](https://github.com/pdelaplana/spendless.ionic.pwa/commit/c5cc5d8ae711a3ef20e3054e0ccad094273f6cb4))
+* **monorepo:** Update project configurations, workspace names, and firebase configs ([8fdaa1f](https://github.com/pdelaplana/spendless.ionic.pwa/commit/8fdaa1fbfba1c8abd599d1f31198232edd6d7181))
+
 # [1.16.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.15.1...v1.16.0) (2026-06-12)
 
 
