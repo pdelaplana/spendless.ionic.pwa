@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.17.0...v1.17.1) (2026-06-13)
+
+
+### Bug Fixes
+
+* add environment context to build job to resolve secrets during compilation ([30fa9d5](https://github.com/pdelaplana/spendless.ionic.pwa/commit/30fa9d51af099a692de538626b7432c07ea4fa52))
+
 # [1.17.0](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.16.0...v1.17.0) (2026-06-13)
 
 
