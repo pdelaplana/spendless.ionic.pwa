@@ -1,0 +1,41 @@
+name: Deploy Landing Page (Website)
+
+on:
+  workflow_dispatch: # Manual trigger only
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_deploy:
+    name: Build & Deploy Website
+    runs-on: ubuntu-latest
+    environment: production # Only deploys to production
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare npm@11.16.0 --activate
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Website
+        run: npm run build -w spendless-website
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Deploy Website to Firebase
+        run: npx firebase deploy --only hosting:website --project ${{ secrets.FIREBASE_PROJECT_ID }} --non-interactive
