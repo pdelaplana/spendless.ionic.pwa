@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.17.2...v1.17.3) (2026-06-14)
+
+
+### Bug Fixes
+
+* correct setup-node v4.2.0 commit SHA to 1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a ([e90f8d5](https://github.com/pdelaplana/spendless.ionic.pwa/commit/e90f8d5c76ea287b3ed1a9423a4c44fbe58ca877))
+
 ## [1.17.2](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.17.1...v1.17.2) (2026-06-14)
 
 
