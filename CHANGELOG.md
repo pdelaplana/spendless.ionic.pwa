@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.17.1...v1.17.2) (2026-06-14)
+
+
+### Bug Fixes
+
+* correct setup-node action commit hash in deploy-website.yml ([c5123c6](https://github.com/pdelaplana/spendless.ionic.pwa/commit/c5123c6d744cab04a69dd3006d77d9c6d4a4385a))
+
 ## [1.17.1](https://github.com/pdelaplana/spendless.ionic.pwa/compare/v1.17.0...v1.17.1) (2026-06-13)
 
 
